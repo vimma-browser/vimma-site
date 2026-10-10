@@ -5,7 +5,7 @@ tmux-style `ctrl+b` prefix. It looks like a terminal: Tokyo Night (Vimma's built
 light variant for light systems, monospace throughout, a prompt header with the page position, and Vim
 keys on the site itself (press `?`).
 
-**Deployed** on Cloudflare Pages at [vimma.dev](https://vimma.dev), behind a Cloudflare Access
+**Deployed** on Cloudflare Workers at [vimma.dev](https://vimma.dev), behind a Cloudflare Access
 login until Vimma is published. A push to `main` goes live in a minute or two. See
 [Deploying](#deploying).
 
@@ -110,15 +110,19 @@ The hero's text screen is `aria-hidden`; its numbered list of keys says the same
 
 ## Deploying
 
-Cloudflare Pages builds the repository and serves `dist/` at **vimma.dev**:
+Cloudflare's Workers Builds (the `vimma-site` Worker) builds the repository and serves `dist/` at
+**vimma.dev**:
 
-- **Production** is `main`. Each push builds (`npm ci && npm run build`, output directory
-  `dist`, Node 22) and is live about a minute later; Pages clears its cache on deploy.
+- **Production** is `main`. Each push to it builds and deploys; the new version is live a minute
+  or so later. A failed build leaves the previous version live. The build and deploy commands are
+  set in the Cloudflare dashboard (Workers → `vimma-site` → Settings → Build); the repository has
+  no `wrangler` config.
+- **Other branches** also get a Workers Builds run, which shows as a check on pull requests.
 - **Access:** vimma.dev sits behind Cloudflare Access, so only signed-in people can see it
   while Vimma is unpublished. Remove the Access application to open the site.
 - **CI** (`.github/workflows/ci.yml`) builds and runs `npm run check` on every push and pull
-  request. It does not deploy, and Pages does not wait for it, so a red CI run can still go live:
-  check it before merging.
+  request. It does not deploy, and Cloudflare does not wait for it, so a red CI run can still go
+  live: check it before merging.
 
 Keep the site's guarantees on Cloudflare: Web Analytics and other injected scripts stay off, no
 CDN fonts, and the CSP should become a real response header (`frame-ancestors 'none'` too, which a
