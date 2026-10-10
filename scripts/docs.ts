@@ -7,10 +7,10 @@
 // hand-written intros in src/docs/. The site build wraps each body in the shared layout.
 
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { join, posix } from "node:path";
 
 import { escapeHtml } from "../src/ts/hero.js";
-import type { BindingsFile } from "./bindings-types.js";
+import { type BindingsFile, VIMMA_REPO } from "./bindings-types.js";
 import { type Block, DOC_PAGES, type DocPage, GUIDE_REWRITES, LIMIT_SECTIONS, STALE_LIMITS, STALE_PREFIXES } from "./docs-pages.js";
 import { keysTables, slug } from "./keys-html.js";
 import {
@@ -82,8 +82,10 @@ function linker(ids: IdMap, here: string, root: string): RenderOptions["link"] {
     if (path === "bindings.md") return `${root}keys/`;
     if (path === "limits.md") return `${root}docs/limits/`;
     if (path.endsWith("README.md")) return `${root}docs/install/`;
-    // specs, ADRs, the runbook and the plan live in Vimma's repository, which is not public yet
-    return null;
+    // specs, ADRs, the runbook and the plan: the file in Vimma's repository on GitHub
+    const file = posix.normalize(`docs/${path}`);
+    if (file.startsWith("..")) return null;
+    return `${VIMMA_REPO}/blob/main/${file}${hash === "" ? "" : `#${hash}`}`;
   };
 }
 
@@ -355,7 +357,7 @@ ${keysTables(secs, { level: 3, idPrefix: "keys-", filterable: false })}`;
     const head = page ? `<h1>${escapeHtml(title)}</h1>\n${intro}` : "";
     const content = page ? `${head}\n${sections}` : sections;
     const src = page
-      ? `<p class="source">The guide at the top is written for this site; the details are built from Vimma's <code>docs/${page.slug === "limits" ? "limits" : "guide"}.md</code> and <code>bindings.md</code> at <code>${escapeHtml(source.commit)}</code> (${escapeHtml(source.date)}).</p>`
+      ? `<p class="source">The guide at the top is written for this site; the details are built from Vimma's <code>docs/${page.slug === "limits" ? "limits" : "guide"}.md</code> and <code>bindings.md</code> at <a href="${VIMMA_REPO}/commit/${escapeHtml(source.commit)}"><code>${escapeHtml(source.commit)}</code></a> (${escapeHtml(source.date)}).</p>`
       : "";
     const body = `<div class="docs">
 ${sidebar(nav, entry.slug, root)}
