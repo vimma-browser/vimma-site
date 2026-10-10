@@ -1,0 +1,38 @@
+<!-- Hand-written guide for the routing page; the build adds the details from guide.md. -->
+<p class="lead">Routing puts each link where it belongs without you thinking about it. Send GitHub to your <code>work</code> workspace, or every link Slack opens, and it arrives there with that workspace's logins, wherever you clicked it.</p>
+
+<h2 id="first-rule">Write your first rule</h2>
+
+<ol class="steps-list">
+  <li>Go to a site that belongs in a workspace, such as <code>github.com</code>.</li>
+  <li>Type <code>:route add work</code> and press <kbd>Enter</kbd>. Vimma appends a rule for the site to <code>config.toml</code>.</li>
+  <li>From now on, an address you type, a bookmark or a link from another app on that site opens in <code>work</code>.</li>
+</ol>
+
+<p>Or write the rules yourself in <a href="{{root}}docs/config/">config.toml</a>. The first rule that matches, top to bottom, wins:</p>
+
+<pre class="code">schema = 2
+
+[[routes]]
+domain = &quot;github.com&quot;<span class="c">   # the site and its subdomains</span>
+workspace = &quot;work&quot;
+
+[[routes]]
+app = &quot;slack&quot;<span class="c">           # every link Slack opens</span>
+workspace = &quot;work&quot;</pre>
+
+<h2 id="route-commands">Commands</h2>
+
+<div class="table-wrap"><table class="plain"><thead><tr><th scope="col">To</th><th scope="col">Type</th></tr></thead><tbody>
+<tr><td>See every rule, and which one matches this tab</td><td><code>:route</code></td></tr>
+<tr><td>Send this site to this workspace, or to <code>work</code></td><td><code>:route add</code>, <code>:route add work</code></td></tr>
+<tr><td>Move this tab to the workspace its rule names</td><td><code>:route move</code></td></tr>
+</tbody></table></div>
+
+<h2 id="good-to-know">Good to know</h2>
+
+<ul>
+  <li>Rules apply to what you open: an address you type, <code>:open</code>, a bookmark, a link from another app. A link a page opens stays in that page's workspace, so no site can open another with your other logins; the status bar names the workspace its rule would choose, and <code>:route move</code> takes it there.</li>
+  <li>Routing by app works through <code>vimma-open</code>, which Vimma's packages set up as the browser's command. A link from an app Vimma cannot name (a Flatpak, say) follows the <code>domain</code> and <code>url</code> rules only.</li>
+  <li>Private windows are never routed.</li>
+</ul>

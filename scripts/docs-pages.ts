@@ -42,6 +42,7 @@ export const LIMIT_SECTIONS = [
   "Tabs and window",
   "Workspaces (M3, by design)",
   "Bookmarks",
+  "Add-ons",
   "Panes",
   "Privacy, security and services",
   "Compatibility and versions",
@@ -51,17 +52,14 @@ export const LIMIT_SECTIONS = [
 ];
 
 /**
- * limits.md bullets left out of the site because the guide (the same commit) contradicts them:
- * they predate M4's split panes. Matched by their opening words. Each one is reported at build
- * time, so the list empties itself as upstream fixes limits.md.
+ * limits.md bullets left out of the site because the guide (the same commit) contradicts them,
+ * matched by their opening words. Each one is reported at build time. Empty while limits.md and
+ * the guide agree.
  */
-export const STALE_LIMITS = [
-  "No split panes yet:",
-  "`:q` and `ctrl+b x` close the tab: with no split panes yet",
-];
+export const STALE_LIMITS: string[] = [];
 
 /** limits.md bullet prefixes that are out of date upstream and are dropped from the text. */
-export const STALE_PREFIXES = ["Planned for M4: "];
+export const STALE_PREFIXES: string[] = [];
 
 /**
  * Rewrites of guide.md text before it is parsed: internal names (milestones, specs, the
@@ -153,12 +151,20 @@ export const DOC_PAGES: DocPage[] = [
     title: "Workspaces as containers",
     nav: "Workspaces",
     group: "Tabs, panes, workspaces",
-    description: "Each workspace is a Firefox container: switch, pick, create, rename, delete, move tabs, route links.",
+    description: "Each workspace is a Firefox container: switch, pick, create, rename, delete, move tabs.",
     blocks: [
-      { guide: "Workspaces", exclude: ["Side panel"] },
+      { guide: "Workspaces", exclude: ["Side panel", "Routing: which workspace a link opens in"] },
       { keys: ["Workspaces"] },
       { limits: ["Workspaces (M3, by design)"] },
     ],
+  },
+  {
+    slug: "routing",
+    title: "Routing links to workspaces",
+    nav: "Routing",
+    group: "Tabs, panes, workspaces",
+    description: "Send a site, or every link an app opens, to the workspace it belongs in.",
+    blocks: [{ guide: "Routing: which workspace a link opens in" }, { limits: ["Workspaces (M3, by design)"] }],
   },
   {
     slug: "side-panel",
@@ -192,6 +198,7 @@ export const DOC_PAGES: DocPage[] = [
     group: "Make it yours",
     description: "Options, key bindings and workspaces in one TOML file, reloaded as you save.",
     blocks: [
+      { guide: "Every key is yours" },
       { guide: "config.toml" },
       { guide: "Settings (about:config)" },
       { guide: "about:vimma" },
@@ -200,11 +207,26 @@ export const DOC_PAGES: DocPage[] = [
     ],
   },
   {
+    slug: "firefox-shortcuts",
+    title: "Firefox's shortcuts",
+    nav: "Firefox shortcuts",
+    group: "Make it yours",
+    description: "Which Firefox shortcuts Vimma switches off so no key means two things, and how to get them back.",
+    blocks: [{ guide: "Firefox's own shortcuts" }, { guide: "Keyboard layouts" }, { limits: ["Features"] }],
+  },
+  {
     slug: "theming",
     title: "Theming",
     group: "Make it yours",
     description: "Tokyo Night by default, your own colours in config.toml, or your Omarchy theme, live.",
     blocks: [{ guide: "Colours: your Omarchy theme" }, { limits: ["Features"] }],
+  },
+  {
+    slug: "add-ons",
+    title: "Add-ons",
+    group: "Make it yours",
+    description: "Firefox's add-ons, driven from the keyboard: popups, options, enable, remove, updates.",
+    blocks: [{ guide: "Add-ons" }, { keys: ["Add-ons"] }, { limits: ["Add-ons"] }],
   },
   {
     slug: "privacy",

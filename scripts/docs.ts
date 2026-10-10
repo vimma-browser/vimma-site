@@ -40,11 +40,11 @@ export interface SearchEntry {
   p: string;
   /** section heading ("" for the page itself) */
   h: string;
-  /** URL from the site root */
+  /** URL from the docs root (docs/), to keep the index small */
   u: string;
   /** a short snippet */
   s: string;
-  /** the section's distinct words, lower case, space-separated */
+  /** the section's distinct words, lower case, space-separated, minus those in p and h */
   w: string;
 }
 
@@ -267,11 +267,14 @@ function indexPage(title: string, slugName: string, body: string): SearchEntry[]
     // no scheme-qualified URLs in the shipped index: it is data, and `npm run check` keeps the
     // site's JS free of URLs; `example.com` still finds them
     const text = textOf(m ? part.slice(m[0].length) : part).replace(/\b[a-z]+:\/\//g, "");
-    const words = [...new Set(`${title} ${heading} ${text}`.toLowerCase().split(/[\s,;()"“”'’!?]+|\.(?=\s|$)/))]
-      .filter((w) => w.length > 1 && !STOP.has(w))
+    // the page title and heading are in the entry already (p, h), and the search matches them
+    // there, so the word list leaves out the words they hold
+    const head = new Set(`${title} ${heading}`.toLowerCase().split(/[\s,;()"“”'’!?]+|\.(?=\s|$)/));
+    const words = [...new Set(text.toLowerCase().split(/[\s,;()"“”'’!?]+|\.(?=\s|$)/))]
+      .filter((w) => w.length > 1 && !STOP.has(w) && !head.has(w))
       .join(" ");
     const s = text.length > 80 ? `${text.slice(0, 77).replace(/\s\S*$/, "")}…` : text;
-    return [{ p: title, h: heading, u: `${pageUrl(slugName)}${m ? `#${m[1]}` : ""}`, s, w: words }];
+    return [{ p: title, h: heading, u: `${pageUrl(slugName).slice("docs/".length)}${m ? `#${m[1]}` : ""}`, s, w: words }];
   });
 }
 

@@ -358,10 +358,11 @@ if (search && results && status) {
     let n = 0;
     const head = `${e.p} ${e.h}`.toLowerCase();
     for (const t of terms) {
-      if (!e.w.includes(t)) return 0;
+      const inHead = head.includes(t);
+      if (!inHead && !e.w.includes(t)) return 0;
       n += 1;
-      if (head.includes(t)) n += 4;
-      if (` ${e.w} `.includes(` ${t} `)) n += 1;
+      if (inHead) n += 4;
+      if (` ${e.w} ${head} `.includes(` ${t} `)) n += 1;
     }
     return n;
   };
@@ -382,7 +383,7 @@ if (search && results && status) {
     for (const [e] of hits) {
       const li = document.createElement("li");
       const a = document.createElement("a");
-      a.href = ROOT + e.u;
+      a.href = `${ROOT}docs/${e.u}`;
       const where = document.createElement("span");
       where.className = "where";
       where.textContent = e.h ? `${e.p} ›` : "";

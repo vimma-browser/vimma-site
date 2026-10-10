@@ -1,6 +1,6 @@
 {
   "source": "docs/bindings.md",
-  "commit": "90ff720",
+  "commit": "3e1d761",
   "sections": [
     {
       "title": "Help",
@@ -10,10 +10,9 @@
           "name": "show_keybinds",
           "bindings": [
             {
-              "raw": "prefix+?",
+              "raw": "ctrl+b ?",
               "chords": [
-                "ctrl+b",
-                "?"
+                "ctrl+b ?"
               ]
             }
           ]
@@ -23,9 +22,9 @@
           "name": "help_close",
           "bindings": [
             {
-              "raw": "<Esc> [help]",
+              "raw": "esc [help]",
               "chords": [
-                "Esc"
+                "esc"
               ],
               "mode": "help"
             },
@@ -61,10 +60,9 @@
           "name": "new_tab",
           "bindings": [
             {
-              "raw": "prefix+c",
+              "raw": "ctrl+b c",
               "chords": [
-                "ctrl+b",
-                "c"
+                "ctrl+b c"
               ]
             },
             {
@@ -80,10 +78,9 @@
           "name": "next_tab",
           "bindings": [
             {
-              "raw": "prefix+n",
+              "raw": "ctrl+b n",
               "chords": [
-                "ctrl+b",
-                "n"
+                "ctrl+b n"
               ]
             },
             {
@@ -99,10 +96,9 @@
           "name": "previous_tab",
           "bindings": [
             {
-              "raw": "prefix+p",
+              "raw": "ctrl+b p",
               "chords": [
-                "ctrl+b",
-                "p"
+                "ctrl+b p"
               ]
             },
             {
@@ -118,10 +114,9 @@
           "name": "select_tab_1",
           "bindings": [
             {
-              "raw": "prefix+1",
+              "raw": "ctrl+b 1",
               "chords": [
-                "ctrl+b",
-                "1"
+                "ctrl+b 1"
               ]
             }
           ]
@@ -131,10 +126,9 @@
           "name": "select_tab_2",
           "bindings": [
             {
-              "raw": "prefix+2",
+              "raw": "ctrl+b 2",
               "chords": [
-                "ctrl+b",
-                "2"
+                "ctrl+b 2"
               ]
             }
           ]
@@ -144,10 +138,9 @@
           "name": "select_tab_3",
           "bindings": [
             {
-              "raw": "prefix+3",
+              "raw": "ctrl+b 3",
               "chords": [
-                "ctrl+b",
-                "3"
+                "ctrl+b 3"
               ]
             }
           ]
@@ -157,10 +150,9 @@
           "name": "select_tab_4",
           "bindings": [
             {
-              "raw": "prefix+4",
+              "raw": "ctrl+b 4",
               "chords": [
-                "ctrl+b",
-                "4"
+                "ctrl+b 4"
               ]
             }
           ]
@@ -170,10 +162,9 @@
           "name": "select_tab_5",
           "bindings": [
             {
-              "raw": "prefix+5",
+              "raw": "ctrl+b 5",
               "chords": [
-                "ctrl+b",
-                "5"
+                "ctrl+b 5"
               ]
             }
           ]
@@ -183,10 +174,9 @@
           "name": "select_tab_6",
           "bindings": [
             {
-              "raw": "prefix+6",
+              "raw": "ctrl+b 6",
               "chords": [
-                "ctrl+b",
-                "6"
+                "ctrl+b 6"
               ]
             }
           ]
@@ -196,10 +186,9 @@
           "name": "select_tab_7",
           "bindings": [
             {
-              "raw": "prefix+7",
+              "raw": "ctrl+b 7",
               "chords": [
-                "ctrl+b",
-                "7"
+                "ctrl+b 7"
               ]
             }
           ]
@@ -209,10 +198,9 @@
           "name": "select_tab_8",
           "bindings": [
             {
-              "raw": "prefix+8",
+              "raw": "ctrl+b 8",
               "chords": [
-                "ctrl+b",
-                "8"
+                "ctrl+b 8"
               ]
             }
           ]
@@ -222,10 +210,9 @@
           "name": "select_tab_9",
           "bindings": [
             {
-              "raw": "prefix+9",
+              "raw": "ctrl+b 9",
               "chords": [
-                "ctrl+b",
-                "9"
+                "ctrl+b 9"
               ]
             }
           ]
@@ -235,10 +222,9 @@
           "name": "rename_tab",
           "bindings": [
             {
-              "raw": "prefix+shift+t",
+              "raw": "ctrl+b shift+t",
               "chords": [
-                "ctrl+b",
-                "shift+t"
+                "ctrl+b shift+t"
               ]
             }
           ]
@@ -248,10 +234,9 @@
           "name": "close_tab",
           "bindings": [
             {
-              "raw": "prefix+shift+x",
+              "raw": "ctrl+b shift+x",
               "chords": [
-                "ctrl+b",
-                "shift+x"
+                "ctrl+b shift+x"
               ]
             },
             {
@@ -272,10 +257,9 @@
           "name": "split_vertical",
           "bindings": [
             {
-              "raw": "prefix+v",
+              "raw": "ctrl+b v",
               "chords": [
-                "ctrl+b",
-                "v"
+                "ctrl+b v"
               ]
             }
           ]
@@ -285,10 +269,9 @@
           "name": "split_horizontal",
           "bindings": [
             {
-              "raw": "prefix+minus",
+              "raw": "ctrl+b -",
               "chords": [
-                "ctrl+b",
-                "-"
+                "ctrl+b -"
               ]
             }
           ]
@@ -298,17 +281,15 @@
           "name": "focus_pane_left",
           "bindings": [
             {
-              "raw": "prefix+h",
+              "raw": "ctrl+b h",
               "chords": [
-                "ctrl+b",
-                "h"
+                "ctrl+b h"
               ]
             },
             {
-              "raw": "<C-w>h",
+              "raw": "ctrl+w h",
               "chords": [
-                "ctrl+w",
-                "h"
+                "ctrl+w h"
               ]
             }
           ]
@@ -318,17 +299,15 @@
           "name": "focus_pane_down",
           "bindings": [
             {
-              "raw": "prefix+j",
+              "raw": "ctrl+b j",
               "chords": [
-                "ctrl+b",
-                "j"
+                "ctrl+b j"
               ]
             },
             {
-              "raw": "<C-w>j",
+              "raw": "ctrl+w j",
               "chords": [
-                "ctrl+w",
-                "j"
+                "ctrl+w j"
               ]
             }
           ]
@@ -338,17 +317,15 @@
           "name": "focus_pane_up",
           "bindings": [
             {
-              "raw": "prefix+k",
+              "raw": "ctrl+b k",
               "chords": [
-                "ctrl+b",
-                "k"
+                "ctrl+b k"
               ]
             },
             {
-              "raw": "<C-w>k",
+              "raw": "ctrl+w k",
               "chords": [
-                "ctrl+w",
-                "k"
+                "ctrl+w k"
               ]
             }
           ]
@@ -358,17 +335,15 @@
           "name": "focus_pane_right",
           "bindings": [
             {
-              "raw": "prefix+l",
+              "raw": "ctrl+b l",
               "chords": [
-                "ctrl+b",
-                "l"
+                "ctrl+b l"
               ]
             },
             {
-              "raw": "<C-w>l",
+              "raw": "ctrl+w l",
               "chords": [
-                "ctrl+w",
-                "l"
+                "ctrl+w l"
               ]
             }
           ]
@@ -378,17 +353,15 @@
           "name": "swap_pane_left",
           "bindings": [
             {
-              "raw": "prefix+shift+h",
+              "raw": "ctrl+b shift+h",
               "chords": [
-                "ctrl+b",
-                "shift+h"
+                "ctrl+b shift+h"
               ]
             },
             {
-              "raw": "<C-w>H",
+              "raw": "ctrl+w H",
               "chords": [
-                "ctrl+w",
-                "H"
+                "ctrl+w H"
               ]
             }
           ]
@@ -398,17 +371,15 @@
           "name": "swap_pane_down",
           "bindings": [
             {
-              "raw": "prefix+shift+j",
+              "raw": "ctrl+b shift+j",
               "chords": [
-                "ctrl+b",
-                "shift+j"
+                "ctrl+b shift+j"
               ]
             },
             {
-              "raw": "<C-w>J",
+              "raw": "ctrl+w J",
               "chords": [
-                "ctrl+w",
-                "J"
+                "ctrl+w J"
               ]
             }
           ]
@@ -418,17 +389,15 @@
           "name": "swap_pane_up",
           "bindings": [
             {
-              "raw": "prefix+shift+k",
+              "raw": "ctrl+b shift+k",
               "chords": [
-                "ctrl+b",
-                "shift+k"
+                "ctrl+b shift+k"
               ]
             },
             {
-              "raw": "<C-w>K",
+              "raw": "ctrl+w K",
               "chords": [
-                "ctrl+w",
-                "K"
+                "ctrl+w K"
               ]
             }
           ]
@@ -438,17 +407,15 @@
           "name": "swap_pane_right",
           "bindings": [
             {
-              "raw": "prefix+shift+l",
+              "raw": "ctrl+b shift+l",
               "chords": [
-                "ctrl+b",
-                "shift+l"
+                "ctrl+b shift+l"
               ]
             },
             {
-              "raw": "<C-w>L",
+              "raw": "ctrl+w L",
               "chords": [
-                "ctrl+w",
-                "L"
+                "ctrl+w L"
               ]
             }
           ]
@@ -458,17 +425,15 @@
           "name": "zoom",
           "bindings": [
             {
-              "raw": "prefix+z",
+              "raw": "ctrl+b z",
               "chords": [
-                "ctrl+b",
-                "z"
+                "ctrl+b z"
               ]
             },
             {
-              "raw": "<C-w>o",
+              "raw": "ctrl+w o",
               "chords": [
-                "ctrl+w",
-                "o"
+                "ctrl+w o"
               ]
             }
           ]
@@ -478,10 +443,9 @@
           "name": "close_pane",
           "bindings": [
             {
-              "raw": "prefix+x",
+              "raw": "ctrl+b x",
               "chords": [
-                "ctrl+b",
-                "x"
+                "ctrl+b x"
               ]
             }
           ]
@@ -491,10 +455,9 @@
           "name": "resize_mode",
           "bindings": [
             {
-              "raw": "prefix+r",
+              "raw": "ctrl+b r",
               "chords": [
-                "ctrl+b",
-                "r"
+                "ctrl+b r"
               ]
             }
           ]
@@ -504,16 +467,16 @@
           "name": "resize_exit",
           "bindings": [
             {
-              "raw": "<Esc> [resize]",
+              "raw": "esc [resize]",
               "chords": [
-                "Esc"
+                "esc"
               ],
               "mode": "resize"
             },
             {
-              "raw": "<CR> [resize]",
+              "raw": "enter [resize]",
               "chords": [
-                "Enter"
+                "enter"
               ],
               "mode": "resize"
             },
@@ -531,10 +494,9 @@
           "name": "resize_narrower",
           "bindings": [
             {
-              "raw": "<C-w><",
+              "raw": "ctrl+w <",
               "chords": [
-                "ctrl+w",
-                "<"
+                "ctrl+w <"
               ]
             },
             {
@@ -545,14 +507,14 @@
               "mode": "resize"
             },
             {
-              "raw": "<Left> [resize]",
+              "raw": "left [resize]",
               "chords": [
-                "Left"
+                "left"
               ],
               "mode": "resize"
             },
             {
-              "raw": "<lt> [resize]",
+              "raw": "< [resize]",
               "chords": [
                 "<"
               ],
@@ -565,10 +527,9 @@
           "name": "resize_wider",
           "bindings": [
             {
-              "raw": "<C-w>>",
+              "raw": "ctrl+w >",
               "chords": [
-                "ctrl+w",
-                ">"
+                "ctrl+w >"
               ]
             },
             {
@@ -579,9 +540,9 @@
               "mode": "resize"
             },
             {
-              "raw": "<Right> [resize]",
+              "raw": "right [resize]",
               "chords": [
-                "Right"
+                "right"
               ],
               "mode": "resize"
             },
@@ -599,10 +560,9 @@
           "name": "resize_taller",
           "bindings": [
             {
-              "raw": "<C-w>+",
+              "raw": "ctrl+w +",
               "chords": [
-                "ctrl+w",
-                "+"
+                "ctrl+w +"
               ]
             },
             {
@@ -613,9 +573,9 @@
               "mode": "resize"
             },
             {
-              "raw": "<Down> [resize]",
+              "raw": "down [resize]",
               "chords": [
-                "Down"
+                "down"
               ],
               "mode": "resize"
             },
@@ -633,10 +593,9 @@
           "name": "resize_shorter",
           "bindings": [
             {
-              "raw": "<C-w>-",
+              "raw": "ctrl+w -",
               "chords": [
-                "ctrl+w",
-                "-"
+                "ctrl+w -"
               ]
             },
             {
@@ -647,9 +606,9 @@
               "mode": "resize"
             },
             {
-              "raw": "<Up> [resize]",
+              "raw": "up [resize]",
               "chords": [
-                "Up"
+                "up"
               ],
               "mode": "resize"
             },
@@ -672,9 +631,9 @@
           "name": "next_workspace",
           "bindings": [
             {
-              "raw": "ctrl+i",
+              "raw": "ctrl+b )",
               "chords": [
-                "ctrl+i"
+                "ctrl+b )"
               ]
             }
           ]
@@ -684,9 +643,9 @@
           "name": "previous_workspace",
           "bindings": [
             {
-              "raw": "ctrl+u",
+              "raw": "ctrl+b (",
               "chords": [
-                "ctrl+u"
+                "ctrl+b ("
               ]
             }
           ]
@@ -701,10 +660,9 @@
           "name": "workspace_picker",
           "bindings": [
             {
-              "raw": "prefix+w",
+              "raw": "ctrl+b w",
               "chords": [
-                "ctrl+b",
-                "w"
+                "ctrl+b w"
               ]
             }
           ]
@@ -714,10 +672,9 @@
           "name": "new_workspace",
           "bindings": [
             {
-              "raw": "prefix+shift+n",
+              "raw": "ctrl+b shift+n",
               "chords": [
-                "ctrl+b",
-                "shift+n"
+                "ctrl+b shift+n"
               ]
             }
           ]
@@ -727,10 +684,9 @@
           "name": "rename_workspace",
           "bindings": [
             {
-              "raw": "prefix+shift+w",
+              "raw": "ctrl+b shift+w",
               "chords": [
-                "ctrl+b",
-                "shift+w"
+                "ctrl+b shift+w"
               ]
             }
           ]
@@ -740,10 +696,9 @@
           "name": "close_workspace",
           "bindings": [
             {
-              "raw": "prefix+shift+d",
+              "raw": "ctrl+b shift+d",
               "chords": [
-                "ctrl+b",
-                "shift+d"
+                "ctrl+b shift+d"
               ]
             }
           ]
@@ -768,10 +723,9 @@
           "name": "goto_picker",
           "bindings": [
             {
-              "raw": "prefix+g",
+              "raw": "ctrl+b g",
               "chords": [
-                "ctrl+b",
-                "g"
+                "ctrl+b g"
               ]
             },
             {
@@ -787,10 +741,9 @@
           "name": "toggle_sidebar",
           "bindings": [
             {
-              "raw": "prefix+b",
+              "raw": "ctrl+b b",
               "chords": [
-                "ctrl+b",
-                "b"
+                "ctrl+b b"
               ]
             }
           ]
@@ -804,6 +757,12 @@
               "chords": [
                 "j"
               ]
+            },
+            {
+              "raw": "ctrl+e",
+              "chords": [
+                "ctrl+e"
+              ]
             }
           ]
         },
@@ -815,6 +774,12 @@
               "raw": "k",
               "chords": [
                 "k"
+              ]
+            },
+            {
+              "raw": "ctrl+y",
+              "chords": [
+                "ctrl+y"
               ]
             }
           ]
@@ -852,6 +817,12 @@
               "chords": [
                 "d"
               ]
+            },
+            {
+              "raw": "ctrl+d",
+              "chords": [
+                "ctrl+d"
+              ]
             }
           ]
         },
@@ -863,6 +834,12 @@
               "raw": "u",
               "chords": [
                 "u"
+              ]
+            },
+            {
+              "raw": "ctrl+u",
+              "chords": [
+                "ctrl+u"
               ]
             }
           ]
@@ -900,6 +877,12 @@
               "chords": [
                 "H"
               ]
+            },
+            {
+              "raw": "ctrl+o",
+              "chords": [
+                "ctrl+o"
+              ]
             }
           ]
         },
@@ -911,6 +894,12 @@
               "raw": "L",
               "chords": [
                 "L"
+              ]
+            },
+            {
+              "raw": "ctrl+i",
+              "chords": [
+                "ctrl+i"
               ]
             }
           ]
@@ -953,6 +942,32 @@
               "chords": [
                 "gU"
               ]
+            }
+          ]
+        },
+        {
+          "action": "Focus the address bar (as ctrl+l)",
+          "name": "focus_urlbar",
+          "bindings": [
+            {
+              "raw": "I",
+              "chords": [
+                "I"
+              ]
+            },
+            {
+              "raw": "I [visual]",
+              "chords": [
+                "I"
+              ],
+              "mode": "visual"
+            },
+            {
+              "raw": "I [panel]",
+              "chords": [
+                "I"
+              ],
+              "mode": "panel"
             }
           ]
         }
@@ -1055,9 +1070,9 @@
           "name": "hint_cancel",
           "bindings": [
             {
-              "raw": "<Esc> [hint]",
+              "raw": "esc [hint]",
               "chords": [
-                "Esc"
+                "esc"
               ],
               "mode": "hint"
             }
@@ -1126,16 +1141,16 @@
           "name": "normal_mode",
           "bindings": [
             {
-              "raw": "<Esc> [insert]",
+              "raw": "esc [insert]",
               "chords": [
-                "Esc"
+                "esc"
               ],
               "mode": "insert"
             },
             {
-              "raw": "<Esc> [visual]",
+              "raw": "esc [visual]",
               "chords": [
-                "Esc"
+                "esc"
               ],
               "mode": "visual"
             }
@@ -1158,10 +1173,9 @@
           "name": "copy_mode",
           "bindings": [
             {
-              "raw": "prefix+[",
+              "raw": "ctrl+b [",
               "chords": [
-                "ctrl+b",
-                "["
+                "ctrl+b ["
               ]
             },
             {
@@ -1189,9 +1203,9 @@
           "name": "command_cancel",
           "bindings": [
             {
-              "raw": "<Esc> [command]",
+              "raw": "esc [command]",
               "chords": [
-                "Esc"
+                "esc"
               ],
               "mode": "command"
             }
@@ -1758,9 +1772,9 @@
           "name": "panel_open",
           "bindings": [
             {
-              "raw": "<CR> [panel]",
+              "raw": "enter [panel]",
               "chords": [
-                "Enter"
+                "enter"
               ],
               "mode": "panel"
             }
@@ -1771,9 +1785,35 @@
           "name": "panel_close",
           "bindings": [
             {
-              "raw": "<Esc> [panel]",
+              "raw": "esc [panel]",
               "chords": [
-                "Esc"
+                "esc"
+              ],
+              "mode": "panel"
+            }
+          ]
+        },
+        {
+          "action": "Close the selected tab; the panel stays open",
+          "name": "panel_close_tab",
+          "bindings": [
+            {
+              "raw": "x [panel]",
+              "chords": [
+                "x"
+              ],
+              "mode": "panel"
+            }
+          ]
+        },
+        {
+          "action": "Reopen the last closed tab (Firefox's ctrl+shift+t)",
+          "name": "restore_tab",
+          "bindings": [
+            {
+              "raw": "ctrl+shift+t [panel]",
+              "chords": [
+                "ctrl+shift+t"
               ],
               "mode": "panel"
             }
@@ -1789,10 +1829,9 @@
           "name": "toggle_bookmarks",
           "bindings": [
             {
-              "raw": "prefix+shift+b",
+              "raw": "ctrl+b shift+b",
               "chords": [
-                "ctrl+b",
-                "shift+b"
+                "ctrl+b shift+b"
               ]
             }
           ]
@@ -1802,10 +1841,9 @@
           "name": "add_bookmark",
           "bindings": [
             {
-              "raw": "prefix+a",
+              "raw": "ctrl+b a",
               "chords": [
-                "ctrl+b",
-                "a"
+                "ctrl+b a"
               ]
             }
           ]
@@ -1979,6 +2017,28 @@
         {
           "action": "Open config.toml in a tab",
           "name": "edit_config",
+          "bindings": []
+        }
+      ]
+    },
+    {
+      "title": "Add-ons",
+      "rows": [
+        {
+          "action": "Add-on picker: popup, options, on/off, remove, update",
+          "name": "addon_picker",
+          "bindings": [
+            {
+              "raw": "ctrl+b e",
+              "chords": [
+                "ctrl+b e"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Open an add-on's popup by name (:addon name)",
+          "name": "addon_popup",
           "bindings": []
         }
       ]
