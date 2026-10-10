@@ -1,6 +1,6 @@
 <!-- Hand-written. {{docs_list}} is the generated walk through the pages. -->
 <h1>Start here</h1>
-<p class="lead">Vimma is Firefox with a keyboard layer on top. Bare keys drive the page, as in Vim. <kbd>ctrl+b</kbd> drives tabs, panes and workspaces, as in tmux. These docs walk through it in the order you will meet it.</p>
+<p class="lead">Vimma is Firefox with a keyboard layer on top. Bare keys drive the page, as in Vim. <kbd>ctrl+b</kbd>, tmux's default prefix, drives tabs, panes and workspaces. These docs walk through it in the order you will meet it.</p>
 <ul class="cta">
   <li><a href="{{root}}docs/install/">install and first launch</a></li>
   <li><a href="{{root}}docs/modes/">learn the modes</a></li>
@@ -39,6 +39,14 @@
   <li><code>&lt;leader&gt;n</code>: the leader is <kbd>space</kbd>, so <kbd>space</kbd> then <kbd>n</kbd>.</li>
   <li>A count before a key repeats it, as in Vim: <kbd>3j</kbd> scrolls three steps.</li>
 </ul>
+
+<h2 id="every-key-is-yours">Every key is yours</h2>
+<p>The defaults follow Vim and tmux, but none of them is fixed. Every binding, the <kbd>ctrl+b</kbd> prefix and the <kbd>space</kbd> leader can be remapped in <code>~/.config/vimma/config.toml</code>, by the action names on the <a href="{{root}}keys/">keys page</a>. Save the file and Vimma picks it up; a mistake leaves your last working setup in place.</p>
+<pre class="code"><span class="c"># ~/.config/vimma/config.toml</span>
+[keys]
+prefix = "ctrl+a"         <span class="c"># the prefix, as tmux users often remap it</span>
+new_tab = ["prefix+t"]    <span class="c"># any action, any keys</span></pre>
+<p>The leader is <code>leader</code> under <code>[modal]</code>. The whole format is on the <a href="{{root}}docs/config/">config.toml</a> page.</p>
 
 <h2 id="these-pages">Getting around these pages</h2>
 <p>This site has a few keys of its own. Press <kbd>?</kbd> for the list. In the docs, <kbd>]</kbd> and <kbd>[</kbd> go to the next and previous page, and <kbd>/</kbd> searches every page.</p>

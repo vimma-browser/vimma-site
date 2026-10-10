@@ -1,13 +1,22 @@
 <!--{"title": "Keys · Vimma", "short": "keys", "out": "keys/", "cmd": "cat keys.md", "description": "Every default key binding in Vimma: Vim-style modal keys and the tmux-style ctrl+b prefix, filterable."}-->
 <h1>Keys</h1>
-<p>Vimma's default keymap, {{keys_total}} actions. It comes from the same table as Vimma's own <kbd>ctrl+b</kbd> <kbd>?</kbd> overlay (<code>docs/bindings.md</code> at <code>{{keys_commit}}</code>), so the two agree.</p>
+<p>Vimma's default keymap, {{keys_total}} actions. It comes from the same table as Vimma's own <kbd>ctrl+b</kbd> <kbd>?</kbd> overlay (<code>docs/bindings.md</code> at <code>{{keys_commit}}</code>), so the two agree. These are only defaults: <a href="#remap">every key is yours</a>.</p>
 <ul>
-  <li><kbd>ctrl+b</kbd> is the prefix: press it, let go, then press the next key. <kbd>ctrl+b</kbd> <kbd>v</kbd> splits right.</li>
+  <li><kbd>ctrl+b</kbd> is the prefix, tmux's default: press it, let go, then press the next key. <kbd>ctrl+b</kbd> <kbd>v</kbd> splits right.</li>
   <li>Bare keys such as <kbd>j</kbd> or <kbd>f</kbd> work in normal mode; in a text field you are in insert, and they type.</li>
   <li>A tag such as <span class="binding"><kbd>q</kbd><span class="mode">help</span></span> means the key works only in that mode. <kbd>space</kbd> is the leader key.</li>
-  <li>Every action has a name: bind it in <code>config.toml</code>, or run it from the <kbd>:</kbd> line.</li>
+  <li>Every action has a name: remap it in <code>config.toml</code> (below), or run it from the <kbd>:</kbd> line.</li>
   <li>New to all this? The <a href="{{root}}docs/">docs</a> walk through the keys in order.</li>
 </ul>
+<section class="box" aria-labelledby="remap">
+  <h2 class="box-title" id="remap">every key is yours</h2>
+  <p>Every binding below can be remapped, and so can the <kbd>ctrl+b</kbd> prefix and the <kbd>space</kbd> leader (<code>leader</code> under <code>[modal]</code>). Put the action's name and your keys in <code>~/.config/vimma/config.toml</code>; Vimma picks the file up within two seconds of a save.</p>
+<pre class="code"><span class="c"># ~/.config/vimma/config.toml</span>
+[keys]
+prefix = "ctrl+a"         <span class="c"># the prefix, as tmux users often remap it</span>
+new_tab = ["prefix+t"]    <span class="c"># any action, any keys</span></pre>
+  <p>More in the <a href="{{root}}docs/config/">config.toml docs</a>.</p>
+</section>
 <div class="filter" data-js-only hidden>
   <label for="filter"><span aria-hidden="true">/</span><span class="sr-only">Filter keys</span></label>
   <input id="filter" type="search" placeholder="filter: split, ctrl+b, workspace…" autocomplete="off" spellcheck="false" aria-describedby="filter-count">

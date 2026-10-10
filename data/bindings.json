@@ -1,6 +1,6 @@
 {
   "source": "docs/bindings.md",
-  "commit": "6bc271e",
+  "commit": "042673e",
   "sections": [
     {
       "title": "Help",
@@ -752,6 +752,11 @@
           "action": "Move the tab to another workspace (reopens it there)",
           "name": "move_to_workspace",
           "bindings": []
+        },
+        {
+          "action": "Routing rules: list them; :route add [workspace], :route move",
+          "name": "route_rules",
+          "bindings": []
         }
       ]
     },
@@ -933,6 +938,95 @@
           "action": "Open a URL or search in this tab",
           "name": "open_url",
           "bindings": []
+        },
+        {
+          "action": "Go up a level in the URL path",
+          "name": "url_up",
+          "bindings": [
+            {
+              "raw": "gu",
+              "chords": [
+                "gu"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Go to the site's root",
+          "name": "url_root",
+          "bindings": [
+            {
+              "raw": "gU",
+              "chords": [
+                "gU"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Page",
+      "rows": [
+        {
+          "action": "Copy the page's URL",
+          "name": "yank_url",
+          "bindings": [
+            {
+              "raw": "yy",
+              "chords": [
+                "yy"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Open the clipboard's URL or search in this tab",
+          "name": "open_clipboard",
+          "bindings": [
+            {
+              "raw": "p",
+              "chords": [
+                "p"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Open the clipboard's URL or search in a new tab",
+          "name": "open_clipboard_tab",
+          "bindings": [
+            {
+              "raw": "P",
+              "chords": [
+                "P"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Focus the first text field (with a count: the Nth)",
+          "name": "focus_input",
+          "bindings": [
+            {
+              "raw": "gi",
+              "chords": [
+                "gi"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "View the page's source in a new tab",
+          "name": "view_source",
+          "bindings": [
+            {
+              "raw": "gf",
+              "chords": [
+                "gf"
+              ]
+            }
+          ]
         }
       ]
     },
@@ -1246,6 +1340,188 @@
           ]
         },
         {
+          "action": "Move caret to the end of the word",
+          "name": "caret_word_end",
+          "bindings": [
+            {
+              "raw": "e [visual]",
+              "chords": [
+                "e"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
+          "action": "Move caret to the previous word's end",
+          "name": "caret_prev_word_end",
+          "bindings": [
+            {
+              "raw": "ge [visual]",
+              "chords": [
+                "ge"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
+          "action": "Move caret to the next WORD (by spaces)",
+          "name": "caret_bigword_next",
+          "bindings": [
+            {
+              "raw": "W [visual]",
+              "chords": [
+                "W"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
+          "action": "Move caret to the WORD's start",
+          "name": "caret_bigword_back",
+          "bindings": [
+            {
+              "raw": "B [visual]",
+              "chords": [
+                "B"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
+          "action": "Move caret to the end of the WORD",
+          "name": "caret_bigword_end",
+          "bindings": [
+            {
+              "raw": "E [visual]",
+              "chords": [
+                "E"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
+          "action": "Move caret to the line's first non-blank",
+          "name": "caret_first_char",
+          "bindings": [
+            {
+              "raw": "^ [visual]",
+              "chords": [
+                "^"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
+          "action": "Move caret to the paragraph's start",
+          "name": "caret_para_back",
+          "bindings": [
+            {
+              "raw": "{ [visual]",
+              "chords": [
+                "{"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
+          "action": "Move caret to the paragraph's end",
+          "name": "caret_para_next",
+          "bindings": [
+            {
+              "raw": "} [visual]",
+              "chords": [
+                "}"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
+          "action": "Find a character forward on the line",
+          "name": "caret_find_forward",
+          "bindings": [
+            {
+              "raw": "f [visual]",
+              "chords": [
+                "f"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
+          "action": "Find a character backward on the line",
+          "name": "caret_find_backward",
+          "bindings": [
+            {
+              "raw": "F [visual]",
+              "chords": [
+                "F"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
+          "action": "Till a character forward on the line",
+          "name": "caret_till_forward",
+          "bindings": [
+            {
+              "raw": "t [visual]",
+              "chords": [
+                "t"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
+          "action": "Till a character backward on the line",
+          "name": "caret_till_backward",
+          "bindings": [
+            {
+              "raw": "T [visual]",
+              "chords": [
+                "T"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
+          "action": "Repeat the last f, F, t or T",
+          "name": "caret_find_repeat",
+          "bindings": [
+            {
+              "raw": "; [visual]",
+              "chords": [
+                ";"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
+          "action": "Repeat the last find, reversed",
+          "name": "caret_find_reverse",
+          "bindings": [
+            {
+              "raw": ", [visual]",
+              "chords": [
+                ","
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
           "action": "Start or drop a selection at the caret",
           "name": "toggle_selection",
           "bindings": [
@@ -1259,6 +1535,58 @@
           ]
         },
         {
+          "action": "Start or drop a line-wise selection",
+          "name": "line_selection",
+          "bindings": [
+            {
+              "raw": "V [visual]",
+              "chords": [
+                "V"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
+          "action": "Swap the selection's ends",
+          "name": "swap_selection_ends",
+          "bindings": [
+            {
+              "raw": "o [visual]",
+              "chords": [
+                "o"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
+          "action": "Select the word at the caret",
+          "name": "select_inner_word",
+          "bindings": [
+            {
+              "raw": "iw [visual]",
+              "chords": [
+                "iw"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
+          "action": "Select the word at the caret and its spaces",
+          "name": "select_a_word",
+          "bindings": [
+            {
+              "raw": "aw [visual]",
+              "chords": [
+                "aw"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
           "action": "Copy selection and leave copy mode",
           "name": "yank_selection",
           "bindings": [
@@ -1266,6 +1594,19 @@
               "raw": "y [visual]",
               "chords": [
                 "y"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
+          "action": "Copy the selection's whole lines and leave",
+          "name": "yank_lines",
+          "bindings": [
+            {
+              "raw": "Y [visual]",
+              "chords": [
+                "Y"
               ],
               "mode": "visual"
             }
@@ -1440,6 +1781,200 @@
               "raw": "<Esc> [panel]",
               "chords": [
                 "Esc"
+              ],
+              "mode": "panel"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Bookmarks",
+      "rows": [
+        {
+          "action": "Open / close the bookmarks panel",
+          "name": "toggle_bookmarks",
+          "bindings": [
+            {
+              "raw": "prefix+shift+b",
+              "chords": [
+                "ctrl+b",
+                "shift+b"
+              ]
+            },
+            {
+              "raw": "<leader>b",
+              "chords": [
+                "space",
+                "b"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Bookmark this page (folders/title files it in folders)",
+          "name": "add_bookmark",
+          "bindings": [
+            {
+              "raw": "prefix+a",
+              "chords": [
+                "ctrl+b",
+                "a"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Bookmarks: close the folder, or go to its parent",
+          "name": "bookmarks_collapse",
+          "bindings": [
+            {
+              "raw": "h [panel]",
+              "chords": [
+                "h"
+              ],
+              "mode": "panel"
+            }
+          ]
+        },
+        {
+          "action": "Bookmarks: open the folder or the bookmark",
+          "name": "bookmarks_expand",
+          "bindings": [
+            {
+              "raw": "l [panel]",
+              "chords": [
+                "l"
+              ],
+              "mode": "panel"
+            }
+          ]
+        },
+        {
+          "action": "Bookmarks: open in a new background tab",
+          "name": "bookmarks_open_tab",
+          "bindings": [
+            {
+              "raw": "t [panel]",
+              "chords": [
+                "t"
+              ],
+              "mode": "panel"
+            }
+          ]
+        },
+        {
+          "action": "Bookmarks: open in a split right",
+          "name": "bookmarks_vsplit",
+          "bindings": [
+            {
+              "raw": "s [panel]",
+              "chords": [
+                "s"
+              ],
+              "mode": "panel"
+            }
+          ]
+        },
+        {
+          "action": "Bookmarks: open in a split below",
+          "name": "bookmarks_hsplit",
+          "bindings": [
+            {
+              "raw": "S [panel]",
+              "chords": [
+                "S"
+              ],
+              "mode": "panel"
+            }
+          ]
+        },
+        {
+          "action": "Bookmarks: add this page here (a/b/ makes folders)",
+          "name": "bookmarks_add",
+          "bindings": [
+            {
+              "raw": "a [panel]",
+              "chords": [
+                "a"
+              ],
+              "mode": "panel"
+            }
+          ]
+        },
+        {
+          "action": "Bookmarks: add a folder here",
+          "name": "bookmarks_folder",
+          "bindings": [
+            {
+              "raw": "A [panel]",
+              "chords": [
+                "A"
+              ],
+              "mode": "panel"
+            }
+          ]
+        },
+        {
+          "action": "Bookmarks: rename",
+          "name": "bookmarks_rename",
+          "bindings": [
+            {
+              "raw": "r [panel]",
+              "chords": [
+                "r"
+              ],
+              "mode": "panel"
+            }
+          ]
+        },
+        {
+          "action": "Bookmarks: move to a folder",
+          "name": "bookmarks_move",
+          "bindings": [
+            {
+              "raw": "m [panel]",
+              "chords": [
+                "m"
+              ],
+              "mode": "panel"
+            }
+          ]
+        },
+        {
+          "action": "Bookmarks: delete (asks y/N)",
+          "name": "bookmarks_delete",
+          "bindings": [
+            {
+              "raw": "d [panel]",
+              "chords": [
+                "d"
+              ],
+              "mode": "panel"
+            }
+          ]
+        },
+        {
+          "action": "Bookmarks: copy the URL",
+          "name": "bookmarks_yank",
+          "bindings": [
+            {
+              "raw": "y [panel]",
+              "chords": [
+                "y"
+              ],
+              "mode": "panel"
+            }
+          ]
+        },
+        {
+          "action": "Bookmarks: filter",
+          "name": "bookmarks_filter",
+          "bindings": [
+            {
+              "raw": "/ [panel]",
+              "chords": [
+                "/"
               ],
               "mode": "panel"
             }

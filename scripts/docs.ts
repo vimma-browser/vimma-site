@@ -158,7 +158,11 @@ function limitsPage(limits: MdSection, opts: RenderOptions): string {
       })
       .filter((b) => b.length);
     const title = t.replace(/\s*\(.*\)$/, "");
-    return `<h2 id="${LIMIT_ID(t)}">${escapeHtml(title)}</h2>\n${blocks.map((b) => renderBlocks(b, opts)).join("\n")}`;
+    const subs = sec.children.map((c) => {
+      const plain = c.title.replace(/\s*\(\[.*$/, "");
+      return `<h3 id="${LIMIT_ID(plain)}">${escapeHtml(plain)}</h3>\n${renderBlocks(c.body, opts)}`;
+    });
+    return [`<h2 id="${LIMIT_ID(t)}">${escapeHtml(title)}</h2>`, ...blocks.map((b) => renderBlocks(b, opts)), ...subs].join("\n");
   });
   if (dropped.length) console.log(`  docs: left out ${dropped.length} stale limits.md line(s): ${dropped.join(" | ")}…`);
   return parts.join("\n");
@@ -264,7 +268,7 @@ function indexPage(title: string, slugName: string, body: string): SearchEntry[]
     const words = [...new Set(`${title} ${heading} ${text}`.toLowerCase().split(/[\s,;()"“”'’!?]+|\.(?=\s|$)/))]
       .filter((w) => w.length > 1 && !STOP.has(w))
       .join(" ");
-    const s = text.length > 100 ? `${text.slice(0, 97).replace(/\s\S*$/, "")}…` : text;
+    const s = text.length > 80 ? `${text.slice(0, 77).replace(/\s\S*$/, "")}…` : text;
     return [{ p: title, h: heading, u: `${pageUrl(slugName)}${m ? `#${m[1]}` : ""}`, s, w: words }];
   });
 }
