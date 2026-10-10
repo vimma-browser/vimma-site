@@ -44,7 +44,7 @@ export interface SearchEntry {
   u: string;
   /** a short snippet */
   s: string;
-  /** the section's distinct words, lower case, space-separated, minus those in p and h */
+  /** the section's distinct words, lower case, space-separated, minus those in p, h and s */
   w: string;
 }
 
@@ -258,6 +258,9 @@ const STOP = new Set(
   ),
 );
 
+/** How the index splits text into words; site.ts splits the snippet the same way. */
+const WORD_SPLIT = /[\s,;()"“”'’!?]+|\.(?=\s|$)/;
+
 function indexPage(title: string, slugName: string, body: string): SearchEntry[] {
   const parts = body.split(/(?=<h[23] id=")/);
   return parts.flatMap((part, i) => {
@@ -269,13 +272,13 @@ function indexPage(title: string, slugName: string, body: string): SearchEntry[]
     // no scheme-qualified URLs in the shipped index: it is data, and `npm run check` keeps the
     // site's JS free of URLs; `example.com` still finds them
     const text = textOf(m ? part.slice(m[0].length) : part).replace(/\b[a-z]+:\/\//g, "");
-    // the page title and heading are in the entry already (p, h), and the search matches them
-    // there, so the word list leaves out the words they hold
-    const head = new Set(`${title} ${heading}`.toLowerCase().split(/[\s,;()"“”'’!?]+|\.(?=\s|$)/));
-    const words = [...new Set(text.toLowerCase().split(/[\s,;()"“”'’!?]+|\.(?=\s|$)/))]
+    // the page title, heading and snippet are in the entry already (p, h, s), and the search
+    // matches them there (site.ts), so the word list leaves out the words they hold
+    const s = text.length > 80 ? `${text.slice(0, 77).replace(/\s\S*$/, "")}…` : text;
+    const head = new Set(`${title} ${heading} ${s.replace(/…$/, "")}`.toLowerCase().split(WORD_SPLIT));
+    const words = [...new Set(text.toLowerCase().split(WORD_SPLIT))]
       .filter((w) => w.length > 1 && !STOP.has(w) && !head.has(w))
       .join(" ");
-    const s = text.length > 80 ? `${text.slice(0, 77).replace(/\s\S*$/, "")}…` : text;
     return [{ p: title, h: heading, u: `${pageUrl(slugName).slice("docs/".length)}${m ? `#${m[1]}` : ""}`, s, w: words }];
   });
 }

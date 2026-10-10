@@ -142,6 +142,7 @@ export const DOC_PAGES: DocPage[] = [
         id: "panes-and-tabs",
       },
       { guide: "Resize mode" },
+      { guide: "Layouts" },
       { keys: ["Panes"] },
       { limits: ["Panes"] },
     ],
@@ -238,6 +239,13 @@ export const DOC_PAGES: DocPage[] = [
       { guide: "Firefox behaviour Vimma changes" },
       { limits: ["Privacy, security and services", "Compatibility and versions"] },
     ],
+  },
+  {
+    slug: "accessibility",
+    title: "Accessibility",
+    group: "Make it yours",
+    description: "Screen readers, focus, announcements, contrast and motion in Vimma's own UI.",
+    blocks: [{ guide: "Accessibility" }],
   },
   {
     slug: "vimma-ctl",

@@ -5,6 +5,8 @@
 
 <div class="table-wrap"><table class="plain"><thead><tr><th scope="col">To</th><th scope="col">Press</th></tr></thead><tbody>
 <tr><td>Split right / down</td><td><kbd>ctrl+b</kbd> <kbd>v</kbd> / <kbd>ctrl+b</kbd> <kbd>-</kbd></td></tr>
+<tr><td>Split along the longer side (a spiral, as in Hyprland)</td><td><kbd>ctrl+b</kbd> <kbd>enter</kbd></td></tr>
+<tr><td>Rearrange into the next layout preset</td><td><kbd>ctrl+b</kbd> <kbd>space</kbd>, or <code>:layout tiled</code></td></tr>
 <tr><td>Move to the pane left / below / above / right</td><td><kbd>ctrl+b</kbd> <kbd>h</kbd> <kbd>j</kbd> <kbd>k</kbd> <kbd>l</kbd>, or <kbd>ctrl+w</kbd> <kbd>h</kbd> … in normal mode</td></tr>
 <tr><td>Zoom the pane to the whole window, and back</td><td><kbd>ctrl+b</kbd> <kbd>z</kbd></td></tr>
 <tr><td>Close the pane (its tab stays open)</td><td><kbd>ctrl+b</kbd> <kbd>x</kbd></td></tr>
@@ -21,6 +23,10 @@
   <li>Four panes at most. Change that with <code>[panes] max</code> in config.toml.</li>
   <li>Each <a href="{{root}}docs/workspaces/">workspace</a> keeps its own split, and a restart brings it back as you left it.</li>
 </ul>
+
+<h2 id="tiling">Tiling layouts</h2>
+
+<p>As in tmux, <kbd>ctrl+b</kbd> <kbd>space</kbd> moves the panes you have into the next preset: <code>even-horizontal</code>, <code>even-vertical</code>, <code>main-vertical</code>, <code>main-horizontal</code>, <code>tiled</code> and <code>dwindle</code>. The status bar names the one you get. No page reloads: each keeps its scroll position, form text and history. In the <code>main-*</code> presets the focused pane is the big one, and each workspace remembers its last preset.</p>
 
 <h2 id="resizing">Resizing</h2>
 
