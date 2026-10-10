@@ -1,7 +1,7 @@
 # vimma-site
 
 The website for Vimma, a keyboard-first Firefox fork with a Neovim-style modal layer and a
-tmux-style `ctrl+b` prefix. It looks like a terminal: Tokyo Night (Vimma's built-in theme), a
+tmux-style `ctrl+b` prefix. It looks like a terminal in Vimma's own colours, the mint and near-black of its logo, a
 light variant for light systems, monospace throughout, a prompt header with the page position, and Vim
 keys on the site itself (press `?`).
 
