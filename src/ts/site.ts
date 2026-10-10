@@ -4,7 +4,8 @@
 
 // The site's one script, loaded as a module. Everything here is an enhancement: every page reads
 // and works without it. It adds Vim-style keys (j k d u gg G / ? [ ] g h g d g k g i g a), the ?
-// help overlay, the status bar's live parts, the keys filter, the docs search and the hero.
+// help overlay, the keys filter, the docs search and the hero. There is no status bar of its own:
+// viewed in Vimma, a second one at the foot of the window would be confusing.
 
 import { STATIC_STEP, STEPS, frameHtml, escapeHtml } from "./hero-frames.js";
 
@@ -41,11 +42,8 @@ function setKeysEnabled(on: boolean): void {
 
 root.classList.toggle("keys-off", !keysEnabled());
 
-// --- status bar -------------------------------------------------------------------------------
+// --- focus -----------------------------------------------------------------------------------
 
-const sbMode = $("#sb-mode");
-const sbPending = $("#sb-pending");
-const sbPos = $("#sb-pos");
 const help = $<HTMLDialogElement>("#keyhelp");
 
 function isEditable(el: Element | null): boolean {
@@ -60,48 +58,14 @@ function isEditable(el: Element | null): boolean {
   return false;
 }
 
-function setMode(mode: "normal" | "insert" | "help"): void {
-  if (!sbMode) return;
-  sbMode.textContent = mode.toUpperCase();
-  sbMode.className = `badge badge-${mode}`;
-}
-
-function syncMode(): void {
-  if (help?.open) setMode("help");
-  else setMode(isEditable(document.activeElement) ? "insert" : "normal");
-}
-
-document.addEventListener("focusin", syncMode);
-document.addEventListener("focusout", () => setTimeout(syncMode, 0));
-
-function setPending(keys: string): void {
-  if (!sbPending) return;
-  sbPending.textContent = keys;
-  sbPending.hidden = keys === "";
-}
-
-function syncPosition(): void {
-  if (!sbPos) return;
-  const max = root.scrollHeight - window.innerHeight;
-  const y = window.scrollY;
-  sbPos.textContent =
-    max <= 2 ? "All" : y <= 2 ? "Top" : y >= max - 2 ? "Bot" : `${Math.round((y / max) * 100)}%`;
-}
-
-window.addEventListener("scroll", syncPosition, { passive: true });
-window.addEventListener("resize", syncPosition);
-syncPosition();
-
 // --- the ? overlay ----------------------------------------------------------------------------
 
 function openHelp(): void {
   if (!help || help.open) return;
   help.showModal();
-  syncMode();
 }
 
 if (help) {
-  help.addEventListener("close", syncMode);
   // A click on the backdrop (outside the box) closes it, as Esc does.
   help.addEventListener("click", (e) => {
     if (e.target === help) help.close();
@@ -127,7 +91,6 @@ let pendingTimer = 0;
 function clearPending(): void {
   pending = "";
   window.clearTimeout(pendingTimer);
-  setPending("");
 }
 
 function scrollByPx(top: number, smooth: boolean): void {
@@ -197,7 +160,6 @@ document.addEventListener("keydown", (e) => {
       break;
     case "g":
       pending = "g";
-      setPending("g");
       pendingTimer = window.setTimeout(clearPending, 1500);
       break;
     case "/":

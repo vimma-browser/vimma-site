@@ -28,6 +28,7 @@
 {{nav}}
           </ul>
         </nav>
+        <p class="whereami"><span class="pos">{{pos}} · {{short}}</span> <button type="button" class="keyhint keyhint-on" data-open-help data-js-only hidden>press <kbd>?</kbd> for keys</button><button type="button" class="keyhint keyhint-off" data-open-help data-js-only hidden>site keys off · <kbd>?</kbd></button></p>
       </div>
     </header>
     <main id="main" class="{{main_class}}" tabindex="-1">
@@ -37,20 +38,9 @@
       <div class="wrap">
         <p>Vimma · pre-alpha · <a href="{{root}}about/#licence">MPL-2.0</a> · source: coming soon</p>
         <p>This site sets no cookies, runs no analytics and loads nothing from other servers.</p>
+        <p>Keys here: <button type="button" class="keyhint" data-open-help data-js-only hidden>press <kbd>?</kbd></button><span class="nojs-keys"> <kbd>?</kbd> with JavaScript on</span>. In Vimma itself: <kbd>ctrl+b</kbd> <kbd>?</kbd>.</p>
       </div>
     </footer>
-    <div class="statusbar">
-      <span id="sb-mode" class="badge badge-normal">NORMAL</span>
-      <span id="sb-pending" class="pend" hidden></span>
-      <span class="ws">1:vimma</span>
-      <span class="page">{{pos}}<span class="title"> {{short}}</span></span>
-      <span class="right">
-        <span class="vimkey">in Vimma: <kbd>ctrl+b ?</kbd></span>
-        <button type="button" class="keyhint-on" data-open-help data-js-only hidden>press <kbd>?</kbd> for keys</button>
-        <button type="button" class="keyhint-off" data-open-help data-js-only hidden>keys off · <kbd>?</kbd></button>
-        <span id="sb-pos" class="pos" aria-hidden="true"></span>
-      </span>
-    </div>
     <dialog id="keyhelp" aria-labelledby="keyhelp-title">
       <h2 id="keyhelp-title">Keys on this site</h2>
       <table>

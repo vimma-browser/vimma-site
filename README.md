@@ -2,7 +2,7 @@
 
 The website for Vimma, a keyboard-first Firefox fork with a Neovim-style modal layer and a
 tmux-style `ctrl+b` prefix. It looks like a terminal: Tokyo Night (Vimma's built-in theme), a
-light variant for light systems, monospace throughout, a prompt header, a status bar, and Vim
+light variant for light systems, monospace throughout, a prompt header with the page position, and Vim
 keys on the site itself (press `?`).
 
 **Not deployed.** Vimma is not published until its owner has daily-driven it. See
@@ -48,11 +48,11 @@ npm run keys:sync                  # regenerate data/bindings.json from data/doc
 
 ## How it is built
 
-- `src/layout.html` is the shared shell (prompt header, footer, status bar, `?` overlay);
+- `src/layout.html` is the shared shell (prompt header with the page position and the `?` hint, footer, `?` overlay);
   `src/pages/*.html` are page bodies with a one-line JSON meta comment on top.
   `build.ts` fills `{{placeholders}}`; an unknown one fails the build.
 - `src/ts/site.ts` is the one browser script (an ES module): the keys (`j k d u gg G / ? [ ]
-  g h g d g k g i g a`), the overlay, the status bar's mode and scroll position, the keys filter,
+  g h g d g k g i g a`), the overlay, the keys filter,
   the docs search and the hero animation. Every page works without it.
 - `src/ts/hero-frames.ts` draws the hero's frames in box-drawing characters. The build renders
   the split-pane frame into the HTML as the no-JS and reduced-motion fallback; the script
@@ -93,8 +93,9 @@ taken from the main repository's `origin/main` by `npm run docs:sync` (which run
 ## Accessibility
 
 Semantic landmarks and headings, a skip link, visible focus, AA contrast in both schemes, and a
-layout that works down to 320 px. The status bar is fixed at the foot and the page reserves room
-for it. The site's single-key shortcuts never fire while typing in a field or with a modifier
+layout that works down to 320 px. Nothing is fixed to the foot of the viewport: viewed in Vimma,
+a second status bar under Vimma's own was confusing, so the page position and the `?` hint sit
+in the header. The site's single-key shortcuts never fire while typing in a field or with a modifier
 held, and can be turned off in the `?` overlay (WCAG 2.1.4); `?` keeps working so they can be
 turned back on. The blinking cursor and the hero animation stop under `prefers-reduced-motion`.
 The hero's text screen is `aria-hidden`; its numbered list of keys says the same thing.

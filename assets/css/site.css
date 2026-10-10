@@ -58,7 +58,6 @@
 :root {
   --font: ui-monospace, "JetBrains Mono", "CaskaydiaMono Nerd Font", "Cascadia Mono",
     "SF Mono", Menlo, "DejaVu Sans Mono", "Liberation Mono", Consolas, monospace;
-  --sb-h: 1.9rem;
   --measure: 104ch;
   font-family: var(--font);
   font-size: 15px;
@@ -84,7 +83,6 @@
 body {
   margin: 0;
   min-height: 100vh;
-  padding-bottom: calc(var(--sb-h) + 1rem);
   background: var(--bg);
 }
 
@@ -942,7 +940,7 @@ table.plain th {
   grid-area: nav;
   position: sticky;
   top: 1rem;
-  max-height: calc(100vh - var(--sb-h) - 2rem);
+  max-height: calc(100vh - 2rem);
   overflow-y: auto;
   padding-right: 1ch;
   border-right: 1px solid var(--border);
@@ -962,7 +960,7 @@ table.plain th {
   grid-area: toc;
   position: sticky;
   top: 1rem;
-  max-height: calc(100vh - var(--sb-h) - 2rem);
+  max-height: calc(100vh - 2rem);
   overflow-y: auto;
   padding-left: 1.5ch;
   border-left: 1px solid var(--border);
@@ -1349,66 +1347,21 @@ table.plain th {
   margin: 0 0 0.4rem;
 }
 
-/* --- status bar ------------------------------------------------------------------------- */
+/* --- where am I: page position and the keys hint, in the header ----------------------- */
 
-.statusbar {
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 10;
+.whereami {
+  flex-basis: 100%;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 1ch;
-  height: var(--sb-h);
-  padding: 0 1ch 0 0;
-  background: var(--bg-dark);
-  border-top: 1px solid var(--selection);
-  color: var(--fg);
-  white-space: nowrap;
-  overflow: hidden;
+  justify-content: space-between;
+  gap: 0.25rem 2ch;
+  margin: 0;
+  color: var(--fg-muted);
   font-size: 0.9rem;
 }
 
-.statusbar .badge {
-  align-self: stretch;
-  display: flex;
-  align-items: center;
-  padding: 0 1ch;
-}
-
-.statusbar .pend {
-  color: var(--red);
-  font-weight: 700;
-}
-
-.statusbar .ws {
-  color: var(--fg-bright);
-}
-
-.statusbar .ws::before {
-  content: "● " / "";
-  color: var(--accent);
-}
-
-.statusbar .page {
-  color: var(--fg-muted);
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.statusbar .right {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 2ch;
-}
-
-.statusbar .vimkey {
-  color: var(--fg-muted);
-}
-
-.statusbar button {
+.keyhint {
   padding: 0 1ch;
   border: 1px solid var(--border);
   background: var(--bg-light);
@@ -1416,38 +1369,18 @@ table.plain th {
   cursor: pointer;
 }
 
-.statusbar button:hover {
+.keyhint:hover {
   border-color: var(--accent);
 }
 
-.statusbar .pos {
-  min-width: 4ch;
-  text-align: right;
-  color: var(--fg-muted);
+.keyhint kbd {
+  padding: 0 0.4ch;
 }
 
-html.keys-off .statusbar .keyhint-on,
-html:not(.keys-off) .statusbar .keyhint-off {
+html.keys-off .keyhint-on,
+html:not(.keys-off) .keyhint-off,
+html.js .nojs-keys {
   display: none;
-}
-
-@media (max-width: 760px) {
-  .statusbar .vimkey {
-    display: none;
-  }
-}
-
-@media (max-width: 480px) {
-  .statusbar .page .title,
-  .statusbar .ws {
-    display: none;
-  }
-}
-
-@media (max-width: 360px) {
-  .statusbar .page {
-    display: none;
-  }
 }
 
 /* --- the ? overlay ---------------------------------------------------------------------- */
@@ -1533,7 +1466,6 @@ dialog button {
 }
 
 @media print {
-  .statusbar,
   .topbar nav,
   .skip,
   .term-bar button {
