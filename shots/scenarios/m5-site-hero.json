@@ -1,6 +1,6 @@
 {
   "name": "m5-site-hero",
-  "description": "The website's front-page screenshots (vimma-site, npm run shots), not a test: a work workspace with a mail tab, then on main the hero's steps, one screenshot each. Pages come from vimma-site's shots/pages through an HTTP proxy on 127.0.0.1:8139, so the URL bar shows news.example and mail.example. Dark chrome and content to match the site. Workspaces are switched with the ctrl+b w picker, not ctrl+i / ctrl+u: those show a stray \"no workspaces in this window\" notice after a successful switch (VimmaHost workspaceStep: null ?? NO_WORKSPACES).",
+  "description": "The website's front-page screenshots (vimma-site, npm run shots), not a test: a work workspace with a mail tab, then on main the hero's steps, one screenshot each. Pages come from vimma-site's shots/pages through an HTTP proxy on 127.0.0.1:8139, so the URL bar shows news.example and mail.example. Dark chrome and content to match the site. Workspaces are switched with ctrl+b ( and ctrl+b ), the keys the hero shows.",
   "timeoutSeconds": 120,
   "prefs": {
     "network.proxy.type": 1,
@@ -49,15 +49,7 @@
       }
     },
     {
-      "keys": "ctrl+b w"
-    },
-    {
-      "wait-for-state": {
-        "mode": "help"
-      }
-    },
-    {
-      "keys": "k enter"
+      "keys": "ctrl+b ("
     },
     {
       "wait-for-state": {
@@ -124,15 +116,7 @@
       }
     },
     {
-      "keys": "ctrl+b w"
-    },
-    {
-      "wait-for-state": {
-        "mode": "help"
-      }
-    },
-    {
-      "keys": "j enter"
+      "keys": "ctrl+b )"
     },
     {
       "wait-for-state": {

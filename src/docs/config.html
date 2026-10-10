@@ -4,7 +4,7 @@
 <h2 id="edit-the-file">Edit the file</h2>
 
 <ol class="steps-list">
-  <li>Vimma creates the file the first time it starts, with every default written out and commented, so it changes nothing yet. <kbd>:</kbd> <code>config</code> shows it in a tab.</li>
+  <li>Vimma creates the file on a profile's first launch, with every default written out and commented, so it changes nothing yet; the status bar says <code>created ~/.config/vimma/config.toml</code> once. A file you already have is never touched. <code>:config</code> shows it in a tab.</li>
   <li>Open it in your editor, uncomment or add what you want to change, and save.</li>
   <li>Vimma picks it up within two seconds, in every window. Nothing to restart. <code>:source</code> reloads it at once.</li>
 </ol>
@@ -32,10 +32,12 @@ leader = &quot;,&quot;<span class="c">                  # the leader key; space 
 <tr><td><code>[sites."example.com"]</code></td><td><code>insert</code>: <code>auto</code>, <code>never</code> or <code>always</code>, whether text fields on that site put you in insert mode.</td></tr>
 <tr><td><code>[theme]</code></td><td><code>source = "file"</code> for Tokyo Night instead of your Omarchy theme; <code>[theme.colors]</code> to change single colours (<a href="{{root}}docs/theming/">theming</a>).</td></tr>
 <tr><td><code>[workspaces]</code></td><td>Workspaces that always exist (<a href="{{root}}docs/workspaces/">workspaces</a>).</td></tr>
-<tr><td><code><kbd>routes</kbd></code></td><td>Send a site, or every link an app opens, to a workspace (<a href="{{root}}docs/workspaces/#routing-which-workspace-a-link-opens-in">routing</a>).</td></tr>
+<tr><td><code>[[routes]]</code></td><td>Send a site, or every link an app opens, to a workspace (<a href="{{root}}docs/routing/">routing</a>).</td></tr>
+<tr><td><code>[firefox]</code></td><td><code>disable</code> and <code>enable</code>: which of Firefox's own shortcuts are off (<a href="{{root}}docs/firefox-shortcuts/">Firefox's shortcuts</a>).</td></tr>
+<tr><td><code>[modal]</code></td><td><code>insert_editing = false</code> turns off <kbd>ctrl+w</kbd>, <kbd>ctrl+u</kbd> and <kbd>ctrl+h</kbd> in text fields.</td></tr>
 </tbody></table></div>
 
-<p>Keep <code>schema = 2</code> as the first line: it enables <code>[panes]</code>, <code>[sites]</code> and hint characters.</p>
+<p>Keep <code>schema = 2</code> as the first line: it enables <code>[panes]</code>, <code>[sites]</code>, <code>[firefox]</code>, <code>insert_editing</code> and hint characters.</p>
 
 <h2 id="mistakes">If you make a mistake</h2>
 

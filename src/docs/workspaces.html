@@ -1,21 +1,21 @@
 <!-- Hand-written guide for the workspaces page; the build adds the keys table and the details from guide.md. -->
 <p class="lead">A workspace is a set of tabs with its own cookies and logins, like a separate browser profile one key away. Keep work in one and personal browsing in another: signing in to a site in one does not sign you in to it in the other.</p>
 
-<p>Under the hood each workspace is a Firefox container. A window shows one workspace at a time; the others' tabs are hidden, not closed, and everything comes back after a restart.</p>
+<p>Under the hood each workspace is a Firefox container. <kbd>ctrl+b</kbd> <kbd>(</kbd> and <kbd>ctrl+b</kbd> <kbd>)</kbd> step through them, as tmux's session keys do. A window shows one workspace at a time; the others' tabs are hidden, not closed, and everything comes back after a restart.</p>
 
 <h2 id="first-workspace">Make your first workspace</h2>
 
 <ol class="steps-list">
   <li>Press <kbd>ctrl+b</kbd> <kbd>shift+n</kbd>. The command line opens with <code>:wsnew</code> typed for you.</li>
   <li>Type a name, such as <code>work</code>, and press <kbd>Enter</kbd>. You are now in it: the status bar shows <code>● 2:work</code>.</li>
-  <li>Sign in to something. Press <kbd>ctrl+u</kbd> to go back to <code>main</code>: you are not signed in there.</li>
-  <li><kbd>ctrl+i</kbd> takes you forward to <code>work</code> again.</li>
+  <li>Sign in to something. Press <kbd>ctrl+b</kbd> <kbd>(</kbd> to go back to <code>main</code>: you are not signed in there.</li>
+  <li><kbd>ctrl+b</kbd> <kbd>)</kbd> takes you forward to <code>work</code> again.</li>
 </ol>
 
 <h2 id="workspace-keys">Workspace keys</h2>
 
 <div class="table-wrap"><table class="plain"><thead><tr><th scope="col">To</th><th scope="col">Press</th></tr></thead><tbody>
-<tr><td>Next / previous workspace</td><td><kbd>ctrl+i</kbd> / <kbd>ctrl+u</kbd></td></tr>
+<tr><td>Next / previous workspace</td><td><kbd>ctrl+b</kbd> <kbd>)</kbd> / <kbd>ctrl+b</kbd> <kbd>(</kbd></td></tr>
 <tr><td>Pick from a list</td><td><kbd>ctrl+b</kbd> <kbd>w</kbd></td></tr>
 <tr><td>Go to one by name or number</td><td><code>:workspace work</code>, <code>:workspace 2</code></td></tr>
 <tr><td>New workspace</td><td><kbd>ctrl+b</kbd> <kbd>shift+n</kbd></td></tr>
@@ -31,5 +31,5 @@
   <li><strong>Moving a tab reopens it</strong> in the other workspace: it keeps its address, but loses its back/forward history and anything typed into forms.</li>
   <li>New tabs open in the workspace you are in. A link you click opens in the page's own workspace, even in a new tab.</li>
   <li>Tab numbers, <kbd>ctrl+b</kbd> <kbd>n</kbd> / <kbd>ctrl+b</kbd> <kbd>p</kbd> and closing tabs stay within the workspace; <kbd>ctrl+b</kbd> <kbd>g</kbd> lists every workspace's tabs.</li>
-  <li>You can declare workspaces in <a href="{{root}}docs/config/">config.toml</a>, and send sites or apps to one automatically: see <a href="#routing-which-workspace-a-link-opens-in">Routing</a> below.</li>
+  <li>You can declare workspaces in <a href="{{root}}docs/config/">config.toml</a>, and send sites or apps to one automatically: see <a href="{{root}}docs/routing/">Routing</a>.</li>
 </ul>

@@ -20,11 +20,11 @@
   </li>
   <li class="card">
     <h3>Coming from tmux</h3>
-    <p>The prefix is right where you left it, and <kbd>ctrl+b c</kbd>, <kbd>n</kbd>, <kbd>p</kbd>, <kbd>v</kbd>, <kbd>z</kbd>, <kbd>w</kbd> do what your fingers expect. Start at <a href="{{root}}docs/tabs/">The prefix and tabs</a>, then <a href="{{root}}docs/panes/">Split panes</a>.</p>
+    <p>The prefix is right where you left it, and <kbd>ctrl+b c</kbd>, <kbd>n</kbd>, <kbd>p</kbd>, <kbd>v</kbd>, <kbd>z</kbd>, <kbd>w</kbd> do what your fingers expect, and <kbd>(</kbd> <kbd>)</kbd> step through workspaces as they step through sessions. Start at <a href="{{root}}docs/tabs/">The prefix and tabs</a>, then <a href="{{root}}docs/panes/">Split panes</a>.</p>
   </li>
   <li class="card">
     <h3>Coming from Vimium or Tridactyl</h3>
-    <p>The page keys will feel familiar, and here they also work in the URL bar, on <code>about:</code> pages and in the PDF viewer. Firefox is underneath, so your add-ons come along. What is new is the window: <a href="{{root}}docs/workspaces/">workspaces</a>, <a href="{{root}}docs/panes/">panes</a> and the status bar.</p>
+    <p>The page keys will feel familiar, and here they also work in the URL bar, on <code>about:</code> pages and in the PDF viewer. Firefox is underneath, so your <a href="{{root}}docs/add-ons/">add-ons</a> come along, now on <kbd>ctrl+b</kbd> <kbd>e</kbd>. What is new is the window: <a href="{{root}}docs/workspaces/">workspaces</a>, <a href="{{root}}docs/panes/">panes</a> and the status bar.</p>
   </li>
 </ul>
 
@@ -41,7 +41,7 @@
 </ul>
 
 <h2 id="every-key-is-yours">Every key is yours</h2>
-<p>The defaults follow Vim and tmux, but they are a starting point, not a rule. Every binding, the <kbd>ctrl+b</kbd> prefix and the <kbd>space</kbd> leader can be remapped in <code>~/.config/vimma/config.toml</code>, by the action names on the <a href="{{root}}keys/">keys page</a>. Save the file and Vimma picks it up; a mistake leaves your last working setup in place.</p>
+<p>The defaults follow Vim and tmux, but they are a starting point, not a rule. Vimma writes a commented <code>config.toml</code> on its first launch, so the whole format is there to start from. Every binding, the <kbd>ctrl+b</kbd> prefix and the <kbd>space</kbd> leader can be remapped in <code>~/.config/vimma/config.toml</code>, by the action names on the <a href="{{root}}keys/">keys page</a>. Save the file and Vimma picks it up; a mistake leaves your last working setup in place.</p>
 <pre class="code"><span class="c"># ~/.config/vimma/config.toml</span>
 [keys]
 prefix = "ctrl+a"         <span class="c"># the prefix, as tmux users often remap it</span>
