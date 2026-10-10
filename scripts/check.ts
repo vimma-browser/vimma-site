@@ -214,12 +214,25 @@ for (const file of cssFiles) {
 
 const NETWORK = /\b(fetch|XMLHttpRequest|WebSocket|EventSource|sendBeacon|importScripts)\b|https?:\/\//;
 for (const file of jsFiles) {
+  if (file.endsWith("docs-index.js")) {
+    // data, not code: it must be `export default <JSON>` and hold no scheme-qualified URL
+    const body = readFileSync(file, "utf8").replace(/^\/\/.*\n/gm, "");
+    const m = /^export default ([\s\S]*);\s*$/.exec(body);
+    try {
+      if (!m) throw new Error("not `export default <JSON>;`");
+      JSON.parse(m[1] ?? "");
+    } catch (e) {
+      fail(rel(file), `not a plain data module: ${(e as Error).message}`);
+    }
+    if (/[a-z]+:\/\//i.test(body)) fail(rel(file), "contains a URL");
+    continue;
+  }
   // comments may name URLs (the licence header); code may not
   const js = readFileSync(file, "utf8")
     .replace(/\/\*[\s\S]*?\*\//g, (c) => c.replace(/[^\n]/g, " "))
     .replace(/^\s*\/\/.*$/gm, "");
   js.split("\n").forEach((l, i) => {
-    if (NETWORK.test(l)) fail(`${rel(file)} line ${i + 1}`, `network call or URL: ${l.trim()}`);
+    if (NETWORK.test(l)) fail(`${rel(file)} line ${i + 1}`, `network call or URL: ${l.trim().slice(0, 120)}`);
   });
 }
 
@@ -290,8 +303,38 @@ for (const [name, pal] of [["dark", dark], ["light", light]] as const) {
 // --- weight -----------------------------------------------------------------------------------
 
 const size = (f: string): number => statSync(f).size;
-const shared = [...cssFiles, ...jsFiles].reduce((n, f) => n + size(f), 0);
-const weights = htmlFiles.map((f) => [rel(f), size(f) + shared] as const);
+
+/** A JS file and everything it imports statically. */
+function withImports(file: string, seen = new Set<string>()): Set<string> {
+  if (seen.has(file) || !existsSync(file)) return seen;
+  seen.add(file);
+  const js = readFileSync(file, "utf8");
+  for (const m of js.matchAll(/\bfrom\s*["'](\.[^"']+)["']|^\s*import\s*["'](\.[^"']+)["']/gm)) {
+    withImports(join(dirname(file), m[1] ?? m[2] ?? ""), seen);
+  }
+  return seen;
+}
+
+/** What a page loads: itself, its stylesheets and scripts with their imports, and the docs
+ * search index on pages with the docs search (imported on first use, counted anyway). */
+function pageWeight(file: string): number {
+  const html = readFileSync(file, "utf8");
+  const files = new Set<string>([file]);
+  for (const t of tags(html)) {
+    if (t.close) continue;
+    const href = t.name === "link" && t.attrs.get("rel") === "stylesheet" ? t.attrs.get("href") : undefined;
+    const src = t.name === "script" ? t.attrs.get("src") : undefined;
+    const url = href ?? src;
+    if (!url) continue;
+    const path = target(file, decode(url));
+    if (src) for (const f of withImports(path)) files.add(f);
+    else files.add(path);
+  }
+  if (html.includes('id="docsearch"')) files.add(join(DIST, "assets/js/docs-index.js"));
+  return [...files].reduce((n, f) => n + (existsSync(f) ? size(f) : 0), 0);
+}
+
+const weights = htmlFiles.map((f) => [rel(f), pageWeight(f)] as const);
 for (const [page, w] of weights) {
   if (w > BUDGET) fail(page, `${(w / 1024).toFixed(1)} KB of HTML, CSS and JS, over ${BUDGET / 1024} KB`);
 }

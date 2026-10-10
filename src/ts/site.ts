@@ -3,14 +3,14 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 // The site's one script, loaded as a module. Everything here is an enhancement: every page reads
-// and works without it. It adds Vim-style keys (j k d u gg G / ? g h g k g i g a), the ? help
-// overlay, the status bar's live parts, the keys filter and the hero animation.
+// and works without it. It adds Vim-style keys (j k d u gg G / ? [ ] g h g d g k g i g a), the ?
+// help overlay, the status bar's live parts, the keys filter, the docs search and the hero.
 
 import { STATIC_STEP, STEPS, frameHtml, escapeHtml } from "./hero-frames.js";
 
 const root = document.documentElement;
 const ROOT = root.dataset["root"] ?? "./";
-const PAGES: Record<string, string> = { h: "", k: "keys/", i: "install/", a: "about/" };
+const PAGES: Record<string, string> = { h: "", d: "docs/", k: "keys/", i: "install/", a: "about/" };
 const KEYS_PREF = "vimma-site:keys";
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
@@ -141,9 +141,10 @@ function go(page: string): void {
 const filter = $<HTMLInputElement>("#filter");
 
 function focusFilter(): boolean {
-  if (!filter) return false;
-  filter.focus();
-  filter.select();
+  const box = filter ?? $<HTMLInputElement>("#docsearch");
+  if (!box) return false;
+  box.focus();
+  box.select();
   return true;
 }
 
@@ -202,6 +203,13 @@ document.addEventListener("keydown", (e) => {
     case "/":
       if (!focusFilter()) go(`${PAGES["k"]}#filter`);
       break;
+    case "]":
+    case "[": {
+      const a = $<HTMLAnchorElement>(`.pager a[rel="${key === "]" ? "next" : "prev"}"]`);
+      if (!a) return;
+      window.location.href = a.href;
+      break;
+    }
     case "?":
       openHelp();
       break;
@@ -332,4 +340,118 @@ if (screenEl && keysEl && toggleBtn) {
   } else {
     setPlaying(false);
   }
+}
+
+// --- docs: the sidebar and the search ----------------------------------------------------------
+
+const pagesBox = $<HTMLDetailsElement>(".docs-pages");
+if (window.matchMedia("(max-width: 900px)").matches) {
+  // on phones the page list and the contents start folded, so the page itself comes first
+  if (pagesBox) pagesBox.open = false;
+  const tocBox = $<HTMLDetailsElement>(".toc details");
+  if (tocBox) tocBox.open = false;
+}
+
+interface SearchEntry {
+  p: string;
+  h: string;
+  u: string;
+  s: string;
+  w: string;
+}
+
+const search = $<HTMLInputElement>("#docsearch");
+const results = $<HTMLOListElement>("#docsearch-results");
+const status = $("#docsearch-status");
+
+if (search && results && status) {
+  let index: SearchEntry[] | null = null;
+  let loading: Promise<void> | null = null;
+
+  const load = (): Promise<void> =>
+    (loading ??= import(`${ROOT}assets/js/docs-index.js`).then((m: { default: SearchEntry[] }) => {
+      index = m.default;
+    }));
+
+  const score = (e: SearchEntry, terms: string[]): number => {
+    let n = 0;
+    const head = `${e.p} ${e.h}`.toLowerCase();
+    for (const t of terms) {
+      if (!e.w.includes(t)) return 0;
+      n += 1;
+      if (head.includes(t)) n += 4;
+      if (` ${e.w} `.includes(` ${t} `)) n += 1;
+    }
+    return n;
+  };
+
+  const run = (): void => {
+    const terms = search.value.toLowerCase().split(/\s+/).filter(Boolean);
+    results.replaceChildren();
+    if (!terms.length || !index) {
+      results.hidden = true;
+      status.textContent = "";
+      return;
+    }
+    const hits = index
+      .map((e) => [e, score(e, terms)] as const)
+      .filter(([, n]) => n > 0)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 12);
+    for (const [e] of hits) {
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+      a.href = ROOT + e.u;
+      const where = document.createElement("span");
+      where.className = "where";
+      where.textContent = e.h ? `${e.p} ›` : "";
+      const head = document.createElement("span");
+      head.className = "head";
+      head.textContent = e.h || e.p;
+      const snip = document.createElement("span");
+      snip.className = "snip";
+      snip.textContent = e.s;
+      a.append(where, head, snip);
+      li.append(a);
+      results.append(li);
+    }
+    results.hidden = hits.length === 0;
+    status.textContent = hits.length ? `${hits.length}${hits.length === 12 ? "+" : ""} matches` : "no matches";
+  };
+
+  search.addEventListener("focus", () => void load().then(run));
+  search.addEventListener("input", () => void load().then(run));
+  search.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      e.preventDefault();
+      if (search.value) {
+        search.value = "";
+        run();
+      } else search.blur();
+    } else if (e.key === "Enter") {
+      const first = results.querySelector("a");
+      if (first) {
+        e.preventDefault();
+        first.click();
+      }
+    } else if (e.key === "ArrowDown") {
+      const first = results.querySelector("a");
+      if (first) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+  });
+  results.addEventListener("keydown", (e) => {
+    const links = [...results.querySelectorAll("a")];
+    const i = links.indexOf(document.activeElement as HTMLAnchorElement);
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      const next = links[i + (e.key === "ArrowDown" ? 1 : -1)];
+      (next ?? search).focus();
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      search.focus();
+    }
+  });
 }

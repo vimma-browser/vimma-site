@@ -2,14 +2,16 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-// Builds the site into dist/: wraps each page in src/pages/ in src/layout.html, renders the keys
-// tables from data/bindings.json and the hero's static frame, and copies the assets and the
-// compiled script. Run through `npm run build` (tsc first, then this, as .build/build.js).
+// Builds the site into dist/: wraps each page in src/pages/ and each docs page (scripts/docs.ts)
+// in src/layout.html, renders the keys tables from data/bindings.json, the hero's static frame
+// and the docs search index, and copies the assets and the compiled scripts. Run through `npm run build` (tsc first, then this, as .build/build.js).
 
 import { cpSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 
-import type { Binding, BindingsFile } from "./scripts/bindings-types.js";
+import type { BindingsFile } from "./scripts/bindings-types.js";
+import { buildDocs } from "./scripts/docs.js";
+import { keysTables } from "./scripts/keys-html.js";
 import { STATIC_STEP, STEPS, checkFrames, escapeHtml, frameHtml } from "./src/ts/hero-frames.js";
 
 const ROOT = resolve(import.meta.dirname, "..");
@@ -23,8 +25,12 @@ interface PageMeta {
   out: string;
   cmd: string;
   description: string;
-  /** false: not in the tab list (the 404 page). */
+  /** false: not in the tab list (the 404 page, docs pages other than Start here). */
   nav?: boolean;
+  /** The tab-list entry (its `out`) that stays current on this page. */
+  section?: string;
+  /** Wide layout (the docs). */
+  wide?: boolean;
 }
 
 interface Page {
@@ -48,59 +54,6 @@ function fill(template: string, vars: Record<string, string>, where: string): st
   });
 }
 
-// --- keys -------------------------------------------------------------------------------------
-
-const slug = (s: string): string =>
-  s
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
-
-function bindingHtml(b: Binding): string {
-  const keys = b.chords.map((c) => `<kbd>${escapeHtml(c)}</kbd>`).join(" ");
-  const mode = b.mode ? `<span class="mode">${escapeHtml(b.mode)}</span>` : "";
-  return `<span class="binding">${keys}${mode}</span>`;
-}
-
-function keysTables(data: BindingsFile): string {
-  return data.sections
-    .map((s) => {
-      const id = `k-${slug(s.title)}`;
-      const rows = s.rows
-        .map((r) => {
-          const search = [
-            s.title,
-            r.action,
-            r.name,
-            r.name.replace(/_/g, " "),
-            ...r.bindings.map((b) => `${b.raw} ${b.chords.join(" ")} ${b.mode ?? ""}`),
-          ]
-            .join(" ")
-            .toLowerCase();
-          const keys = r.bindings.length
-            ? r.bindings.map(bindingHtml).join("")
-            : '<span class="nokey">no default key</span>';
-          return (
-            `<tr data-search="${escapeHtml(search)}">` +
-            `<td>${escapeHtml(r.action)}</td>` +
-            `<td><span class="bindings">${keys}</span></td>` +
-            `<td><code class="name">${escapeHtml(r.name)}</code></td></tr>`
-          );
-        })
-        .join("\n");
-      return `<section class="keys-section" data-keys-section aria-labelledby="${id}">
-<h2 id="${id}">${escapeHtml(s.title)} <span class="n">(${s.rows.length})</span></h2>
-<table class="keys-table">
-<thead><tr><th scope="col">Action</th><th scope="col">Keys</th><th scope="col">Name</th></tr></thead>
-<tbody>
-${rows}
-</tbody>
-</table>
-</section>`;
-    })
-    .join("\n");
-}
-
 // --- hero -------------------------------------------------------------------------------------
 
 function heroSteps(): string {
@@ -117,7 +70,8 @@ function nav(pages: Page[], current: Page, root: string): string {
   return pages
     .filter((p) => p.meta.nav !== false)
     .map((p, i) => {
-      const cur = p === current ? ' aria-current="page"' : "";
+      const here = p === current || p.meta.out === current.meta.section;
+      const cur = here ? (p === current ? ' aria-current="page"' : ' aria-current="true"') : "";
       const href = p.meta.out === "" ? root : root + p.meta.out;
       return `            <li><a href="${href}"${cur}><span class="n">${i + 1}:</span>${p.meta.short}</a></li>`;
     })
@@ -148,8 +102,24 @@ function main(): void {
   mkdirSync(DIST, { recursive: true });
 
   const layout = readFileSync(at("src/layout.html"), "utf8");
-  const order = ["index.html", "keys.html", "install.html", "about.html", "404.html"];
-  const pages = order.map(readPage);
+  const docs = buildDocs(ROOT);
+  const docPages: Page[] = docs.pages.map((d) => ({
+    meta: {
+      title: `${d.title} · Vimma docs`,
+      short: d.slug ? `docs/${d.slug}` : "docs",
+      out: d.out,
+      cmd: `less docs/${d.slug || "start-here"}.md`,
+      description: d.description,
+      nav: d.slug === "",
+      section: "docs/",
+      wide: true,
+    },
+    body: d.body,
+  }));
+  const [home, keysPage, install, about, notFound] = ["index.html", "keys.html", "install.html", "about.html", "404.html"].map(readPage);
+  const start = docPages[0];
+  if (!home || !keysPage || !install || !about || !notFound || !start) throw new Error("missing page");
+  const pages = [home, start, keysPage, install, about, notFound, ...docPages.slice(1)];
   const navPages = pages.filter((p) => p.meta.nav !== false);
   const keys = JSON.parse(readFileSync(at("data/bindings.json"), "utf8")) as BindingsFile;
   const total = keys.sections.reduce((n, s) => n + s.rows.length, 0);
@@ -158,13 +128,13 @@ function main(): void {
 
   for (const page of pages) {
     const root = rootFor(page.meta.out);
-    const n = navPages.indexOf(page);
+    const n = navPages.findIndex((p) => p === page || p.meta.out === page.meta.section);
     const vars: Record<string, string> = {
       root,
       hero_frame: frameHtml(staticStep),
       hero_keys: staticStep.keys.map((k) => `<kbd>${escapeHtml(k)}</kbd>`).join(" "),
       hero_steps: heroSteps(),
-      keys_tables: keysTables(keys),
+      keys_tables: keysTables(keys.sections),
       keys_total: String(total),
       keys_commit: escapeHtml(keys.commit),
     };
@@ -179,6 +149,8 @@ function main(): void {
         short: escapeHtml(page.meta.short),
         pos: n >= 0 ? `page ${n + 1}/${navPages.length}` : "page -/-",
         nav: nav(pages, page, root),
+        main_class: page.meta.wide ? "wrap wide md" : "wrap md",
+        skip: page.meta.wide ? "#doc" : "#main",
         content,
       },
       "layout",
@@ -194,11 +166,16 @@ function main(): void {
     if (f.endsWith(".js")) cpSync(at(".build/site", f), join(DIST, "assets/js", f));
   }
   cpSync(at("LICENSE"), join(DIST, "LICENSE.txt"));
+  // The docs search index: an ES module the docs pages import when the search is first used.
+  writeFileSync(
+    join(DIST, "assets/js/docs-index.js"),
+    `// Generated by build.ts from the docs pages (Vimma ${docs.source.commit}).\nexport default ${JSON.stringify(docs.index)};\n`,
+  );
 
   const img = sizeOf(join(DIST, "assets/img"));
   const all = sizeOf(DIST);
   const kb = (n: number): string => `${(n / 1024).toFixed(1)} KB`;
-  console.log(`built ${pages.length} pages into dist/: ${kb(all)} in all,`);
+  console.log(`built ${pages.length} pages (${docPages.length} docs) into dist/: ${kb(all)} in all,`);
   console.log(`  ${kb(all - img)} without images (logo variants and icons: ${kb(img)})`);
 }
 

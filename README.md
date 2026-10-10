@@ -13,6 +13,7 @@ keys on the site itself (press `?`).
 | Path       | Source                   | What                                                               |
 | ---------- | ------------------------ | ------------------------------------------------------------------ |
 | `/`        | `src/pages/index.html`   | Logo, pitch, the animated session, features, the name, status      |
+| `/docs/`   | `src/docs/`, `data/docs/`| Start here, then 14 pages built from Vimma's guide (see below)     |
 | `/keys/`   | `src/pages/keys.html`    | Every default binding, filterable, from `data/bindings.json`       |
 | `/install/`| `src/pages/install.html` | Build from source; Linux x86_64 only; no binaries yet              |
 | `/about/`  | `src/pages/about.html`   | Why another browser, privacy defaults, Firefox base, licence, FAQ  |
@@ -27,7 +28,8 @@ npm ci
 npm run build       # tsc, then .build/build.js: dist/
 npm run serve       # dist/ at http://127.0.0.1:8080/ (PORT=… to change)
 npm run check       # tsc --noEmit (both projects), then the dist/ checks below
-npm run keys:sync -- ../VimHerdr   # regenerate data/bindings.json from Vimma's docs/bindings.md
+npm run docs:sync -- ../VimHerdr   # copy guide/bindings/limits.md from its origin/main, regen keys
+npm run keys:sync                  # regenerate data/bindings.json from data/docs/bindings.md only
 ```
 
 `npm run check` runs on the built `dist/`:
@@ -40,21 +42,46 @@ npm run keys:sync -- ../VimHerdr   # regenerate data/bindings.json from Vimma's 
 - **external**: nothing loads from another origin (resource elements, CSS `url()`/`@import`, and
   network calls or URLs in the shipped JS). Plain `<a>` links to other sites are allowed.
 - **contrast**: each text/background token pair, in both palettes, is at least 4.5:1 (WCAG AA).
-- **weight**: each page's HTML + CSS + JS stays under 150 KB (about 74 KB today, the keys page).
+- **weight**: what each page loads (HTML, stylesheet, scripts and their imports, and the docs
+  search index on docs pages) stays under 150 KB. The heaviest today is the known-limits page,
+  about 133 KB, most of it the 55 KB search index loaded on first search.
 
 ## How it is built
 
 - `src/layout.html` is the shared shell (prompt header, footer, status bar, `?` overlay);
   `src/pages/*.html` are page bodies with a one-line JSON meta comment on top.
   `build.ts` fills `{{placeholders}}`; an unknown one fails the build.
-- `src/ts/site.ts` is the one browser script (an ES module): the keys (`j k d u gg G / ? g h
-  g k g i g a`), the overlay, the status bar's mode and scroll position, the keys filter and the
-  hero animation. Every page works without it.
+- `src/ts/site.ts` is the one browser script (an ES module): the keys (`j k d u gg G / ? [ ]
+  g h g d g k g i g a`), the overlay, the status bar's mode and scroll position, the keys filter,
+  the docs search and the hero animation. Every page works without it.
 - `src/ts/hero-frames.ts` draws the hero's frames in box-drawing characters. The build renders
   the split-pane frame into the HTML as the no-JS and reduced-motion fallback; the script
   animates the rest, with a pause button, and stops when the hero is off screen.
 - `data/bindings.json` is generated from Vimma's `docs/bindings.md` by `scripts/gen-keys.ts` and
   committed, so the site builds without Vimma's repository. It records the source commit.
+
+## The docs
+
+`/docs/` is modelled on a classic docs site: a sidebar of pages, an "on this page" list, a search
+box, previous/next links (`[` and `]`). Only "Start here" (`src/docs/start-here.html`) and each
+page's intro (`src/docs/<slug>.html`) are written by hand. The rest is cut at build time from
+copies of Vimma's `docs/guide.md`, `docs/limits.md` and `docs/bindings.md` in `data/docs/`,
+taken from the main repository's `origin/main` by `npm run docs:sync` (which runs only
+`git fetch` and `git show` there) and committed with the commit they came from.
+
+- `scripts/docs-pages.ts` lists the pages and what each is made of: guide sections by heading,
+  rows of the guide's keys table by their first cell, paragraphs by their opening words,
+  bindings sections, and links to the known-limits sections. If upstream renames or drops any
+  of them, the build fails and names it: re-sync, then update that file.
+- `scripts/md.ts` is a small Markdown reader for the subset the guide uses. Links to other
+  guide headings are pointed at whichever docs page renders them; links to specs, ADRs and the
+  runbook stay as plain text, since that repository is not public yet.
+- The known-limits page leaves out the `limits.md` lines the same commit's guide contradicts
+  (listed in `STALE_LIMITS`, reported at build time), so they disappear when upstream fixes them.
+- Search: the build writes `assets/js/docs-index.js` (each section's heading, a snippet and its
+  distinct words; no URLs), which the docs pages import on first use. No server, no third party.
+- Not documented yet, on purpose: features still in flight in the browser repository
+  (bookmarks, workspace routing by domain or app). They get pages once merged.
 - `assets/img/` holds the logo as AVIF, WebP and PNG at 256 and 512 px, made by
   `scripts/optimize-logo.sh` (ImageMagick, avifenc) and committed.
 - Fonts: the system's monospace stack (`ui-monospace`, JetBrains Mono, Cascadia, SF Mono, Menlo,
