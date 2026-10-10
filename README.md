@@ -82,8 +82,10 @@ taken from the main repository's `origin/main` by `npm run docs:sync` (which run
   distinct words; no URLs), which the docs pages import on first use. No server, no third party.
 - Not documented yet, on purpose: features still in flight in the browser repository
   (bookmarks, workspace routing by domain or app). They get pages once merged.
-- `assets/img/` holds the logo as AVIF, WebP and PNG at 256 and 512 px, made by
-  `scripts/optimize-logo.sh` (ImageMagick, avifenc) and committed.
+- `assets/img/` holds the logo (with its tagline) as AVIF, WebP and PNG at 256 and 512 px, and
+  the window+V mark as 16/32/48 px favicons and the 180 px apple-touch-icon, made by
+  `scripts/optimize-logo.sh` (ImageMagick, avifenc) from the main repository's
+  `docs/assets/vimma-logo-square.png` and `vimma-mark.png`, and committed.
 - Fonts: the system's monospace stack (`ui-monospace`, JetBrains Mono, Cascadia, SF Mono, Menlo,
   DejaVu Sans Mono, …). No font is downloaded.
 - Privacy: no cookies, no analytics, no third-party requests. A CSP meta (`default-src 'none'`,

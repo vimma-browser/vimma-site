@@ -408,6 +408,9 @@ main:focus {
   display: block;
   width: 168px;
   height: 168px;
+  /* the logo is transparent; its white wordmark needs a dark tile on the light palette, as on
+     Vimma's start page (light-dark() follows the used color-scheme) */
+  background: light-dark(#080c10, transparent);
   border-radius: 8%;
 }
 
