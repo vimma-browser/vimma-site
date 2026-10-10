@@ -219,7 +219,7 @@ export const DOC_PAGES: DocPage[] = [
         guideRows: {
           section: "Keys",
           header: KEYS_HEADER,
-          rows: ["`ctrl+b a`", "`ctrl+b shift+b`, `space b`"],
+          rows: ["`ctrl+b a`", "`ctrl+b shift+b`"],
         },
         title: "The keys",
         id: "the-keys",

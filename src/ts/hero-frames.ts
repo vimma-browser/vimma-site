@@ -209,7 +209,7 @@ const HALF = COLS / 2;
 export const STEPS: readonly Step[] = [
   {
     keys: [],
-    label: "A page in normal mode: bare keys go to Vimma, not the page.",
+    label: "A page in normal mode. Your keys drive it; the mouse can rest.",
     rows: screen(pane("news.example", front(false), COLS, false), {
       mode: "normal",
       ws: "1:main",
@@ -219,7 +219,7 @@ export const STEPS: readonly Step[] = [
   },
   {
     keys: ["f"],
-    label: "labels every link on screen.",
+    label: "puts a short label on every link you can see.",
     rows: screen(pane("news.example", front(true), COLS, false), {
       mode: "hint",
       ws: "1:main",
@@ -229,7 +229,7 @@ export const STEPS: readonly Step[] = [
   },
   {
     keys: ["a"],
-    label: "types a label: the link opens.",
+    label: "is a label: type it and the link opens.",
     rows: screen(pane("news.example/show", ARTICLE_WIDE, COLS, false), {
       mode: "normal",
       ws: "1:main",
@@ -239,7 +239,7 @@ export const STEPS: readonly Step[] = [
   },
   {
     keys: ["ctrl+b"],
-    label: "is the prefix, as in tmux.",
+    label: "is the prefix, as in tmux: the next key acts on the window.",
     rows: screen(pane("news.example/show", ARTICLE_WIDE, COLS, false), {
       mode: "normal",
       pending: "prefix",
@@ -250,7 +250,7 @@ export const STEPS: readonly Step[] = [
   },
   {
     keys: ["v"],
-    label: "then splits right: two pages side by side.",
+    label: "splits right: two pages side by side.",
     rows: screen(
       sideBySide(pane("news.example", ARTICLE, HALF, false), pane("vimma", START, HALF, true)),
       { mode: "normal", ws: "1:main", where: "tab 1/3  pane 2/2", right: "start page" },
@@ -258,7 +258,7 @@ export const STEPS: readonly Step[] = [
   },
   {
     keys: ["ctrl+i"],
-    label: "goes to the next workspace: its own container, cookies and logins.",
+    label: "goes to the next workspace, with cookies and logins of its own.",
     rows: screen(pane("mail.example", INBOX, COLS, false), {
       mode: "normal",
       ws: "2:work",
@@ -268,7 +268,7 @@ export const STEPS: readonly Step[] = [
   },
   {
     keys: ["ctrl+b", "?"],
-    label: "lists every binding; / filters them.",
+    label: "shows every binding; / filters them.",
     rows: screen(
       pane("mail.example", INBOX, COLS, false),
       { mode: "help", ws: "2:work", where: "tab 1/2", right: "esc to close" },

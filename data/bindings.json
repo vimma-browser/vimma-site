@@ -1,6 +1,6 @@
 {
   "source": "docs/bindings.md",
-  "commit": "042673e",
+  "commit": "90ff720",
   "sections": [
     {
       "title": "Help",
@@ -791,13 +791,6 @@
               "chords": [
                 "ctrl+b",
                 "b"
-              ]
-            },
-            {
-              "raw": "<leader>n",
-              "chords": [
-                "space",
-                "n"
               ]
             }
           ]
@@ -1800,13 +1793,6 @@
               "chords": [
                 "ctrl+b",
                 "shift+b"
-              ]
-            },
-            {
-              "raw": "<leader>b",
-              "chords": [
-                "space",
-                "b"
               ]
             }
           ]

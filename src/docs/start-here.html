@@ -1,6 +1,6 @@
 <!-- Hand-written. {{docs_list}} is the generated walk through the pages. -->
 <h1>Start here</h1>
-<p class="lead">Vimma is Firefox with a keyboard layer on top. Bare keys drive the page, as in Vim. <kbd>ctrl+b</kbd>, tmux's default prefix, drives tabs, panes and workspaces. These docs walk through it in the order you will meet it.</p>
+<p class="lead">Vimma is a browser for the way you already work. Bare keys drive the page, as in Vim. <kbd>ctrl+b</kbd>, tmux's default prefix, drives tabs, panes and workspaces. Your hands stay on the keys, so reading, searching and switching context keep the same flow as your editor and terminal. These pages take you through it in the order you will meet it.</p>
 <ul class="cta">
   <li><a href="{{root}}docs/install/">install and first launch</a></li>
   <li><a href="{{root}}docs/modes/">learn the modes</a></li>
@@ -9,39 +9,39 @@
 
 <section class="box note" aria-labelledby="pre-alpha">
 <h2 class="box-title" id="pre-alpha">pre-alpha</h2>
-<p>Vimma is being daily-driven by its author before any release. There are no binaries: you build it from source, on Linux x86_64 only. What is written here works on <code>main</code> today; what does not is on the <a href="{{root}}docs/limits/">known limits</a> page, and each topic links to its own.</p>
+<p>Vimma is in daily use by its author ahead of a first release. There are no binaries yet: you build it from source, on Linux x86_64 only. Everything described here works on <code>main</code> today. What does not is on the <a href="{{root}}docs/limits/">known limits</a> page, and each topic links to its own.</p>
 </section>
 
 <h2 id="pick-your-path">Pick your path</h2>
 <ul class="grid paths">
   <li class="card">
     <h3>New to Vim keys</h3>
-    <p>Read <a href="{{root}}docs/modes/">Modes</a> and <a href="{{root}}docs/moving/">Moving around</a> first. Five keys get you far: <kbd>j</kbd> <kbd>k</kbd> to scroll, <kbd>f</kbd> to follow a link, <kbd>/</kbd> to find, <kbd>Esc</kbd> to get back.</p>
+    <p>Start with <a href="{{root}}docs/modes/">Modes</a> and <a href="{{root}}docs/moving/">Moving around</a>. Five keys take you a long way: <kbd>j</kbd> <kbd>k</kbd> to scroll, <kbd>f</kbd> to follow a link, <kbd>/</kbd> to find, <kbd>Esc</kbd> to get back.</p>
   </li>
   <li class="card">
     <h3>Coming from tmux</h3>
-    <p>The prefix is where you left it. <kbd>ctrl+b c</kbd>, <kbd>n</kbd>, <kbd>p</kbd>, <kbd>v</kbd>, <kbd>z</kbd>, <kbd>w</kbd> do what you expect. Start at <a href="{{root}}docs/tabs/">The prefix and tabs</a>, then <a href="{{root}}docs/panes/">Split panes</a>.</p>
+    <p>The prefix is right where you left it, and <kbd>ctrl+b c</kbd>, <kbd>n</kbd>, <kbd>p</kbd>, <kbd>v</kbd>, <kbd>z</kbd>, <kbd>w</kbd> do what your fingers expect. Start at <a href="{{root}}docs/tabs/">The prefix and tabs</a>, then <a href="{{root}}docs/panes/">Split panes</a>.</p>
   </li>
   <li class="card">
     <h3>Coming from Vimium or Tridactyl</h3>
-    <p>The page keys will feel familiar, and they also work in the URL bar, on <code>about:</code> pages and in the PDF viewer. What is new is the window: <a href="{{root}}docs/workspaces/">workspaces</a>, <a href="{{root}}docs/panes/">panes</a> and the status bar.</p>
+    <p>The page keys will feel familiar, and here they also work in the URL bar, on <code>about:</code> pages and in the PDF viewer. Firefox is underneath, so your add-ons come along. What is new is the window: <a href="{{root}}docs/workspaces/">workspaces</a>, <a href="{{root}}docs/panes/">panes</a> and the status bar.</p>
   </li>
 </ul>
 
 <h2 id="the-walk">The walk</h2>
-<p>Each page builds on the one before. The prose comes from Vimma's own user guide, at the same commit as the keys, so the two agree.</p>
+<p>Each page builds on the one before. The details come from Vimma's own user guide, at the same commit as the keys, so the two always agree.</p>
 {{docs_list}}
 
 <h2 id="how-keys-are-written">How keys are written</h2>
 <ul>
   <li><kbd>ctrl+b</kbd> <kbd>v</kbd>: press <kbd>ctrl+b</kbd>, let go, then press <kbd>v</kbd>. The status bar shows <code>prefix</code> while it waits.</li>
   <li><kbd>gg</kbd>: two presses of <kbd>g</kbd>. <kbd>G</kbd> is <kbd>shift+g</kbd>.</li>
-  <li><code>&lt;leader&gt;n</code>: the leader is <kbd>space</kbd>, so <kbd>space</kbd> then <kbd>n</kbd>.</li>
+  <li><code>&lt;leader&gt;n</code>, in a binding you add: the leader is <kbd>space</kbd>, so <kbd>space</kbd> then <kbd>n</kbd>. It has no default bindings; it is there for yours.</li>
   <li>A count before a key repeats it, as in Vim: <kbd>3j</kbd> scrolls three steps.</li>
 </ul>
 
 <h2 id="every-key-is-yours">Every key is yours</h2>
-<p>The defaults follow Vim and tmux, but none of them is fixed. Every binding, the <kbd>ctrl+b</kbd> prefix and the <kbd>space</kbd> leader can be remapped in <code>~/.config/vimma/config.toml</code>, by the action names on the <a href="{{root}}keys/">keys page</a>. Save the file and Vimma picks it up; a mistake leaves your last working setup in place.</p>
+<p>The defaults follow Vim and tmux, but they are a starting point, not a rule. Every binding, the <kbd>ctrl+b</kbd> prefix and the <kbd>space</kbd> leader can be remapped in <code>~/.config/vimma/config.toml</code>, by the action names on the <a href="{{root}}keys/">keys page</a>. Save the file and Vimma picks it up; a mistake leaves your last working setup in place.</p>
 <pre class="code"><span class="c"># ~/.config/vimma/config.toml</span>
 [keys]
 prefix = "ctrl+a"         <span class="c"># the prefix, as tmux users often remap it</span>

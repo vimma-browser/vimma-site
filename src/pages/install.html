@@ -3,7 +3,7 @@
 <section class="box note" aria-labelledby="honest">
   <h2 class="box-title" id="honest">the honest version</h2>
   <p>There are <strong>no binaries yet</strong>. Vimma is pre-alpha, and today you build it from source. <strong>Linux x86_64</strong> is the only platform it is built and tested on.</p>
-  <p>The source repository is not public yet; it opens soon. These are the steps for when it does.</p>
+  <p>The source repository is not public yet; it opens before the first release. These are the steps for when it does.</p>
 </section>
 
 <h2 id="requirements">Requirements</h2>
@@ -24,10 +24,10 @@
 <h2 id="run">Run</h2>
 <pre class="code"><span class="p">$ </span>npm start               <span class="c"># your build, with its own profile</span>
 <span class="p">$ </span>npm start -- --fresh    <span class="c"># a throwaway profile instead</span></pre>
-<p><code>npm start</code> runs Vimma with a profile of its own (<code>~/.cache/vimma-dev-profile</code>), so it never touches your Firefox profile. Then press <kbd>ctrl+b</kbd> <kbd>?</kbd> to see every binding.</p>
-<p>After a <code>git pull</code>, run <code>npm run import</code> and <code>npx surfer build</code> again. Vimma has no updater.</p>
+<p><code>npm start</code> runs Vimma with a profile of its own (<code>~/.cache/vimma-dev-profile</code>), so your Firefox profile is never touched. Press <kbd>ctrl+b</kbd> <kbd>?</kbd> to see every binding, and you are ready to go.</p>
+<p>Vimma has no updater yet. To update, pull the latest <code>main</code>, then run <code>npm run import</code> and <code>npx surfer build</code> again.</p>
 
-<p>What next: <a href="{{root}}docs/install/">first launch</a> and the rest of the <a href="{{root}}docs/">docs</a>.</p>
+<p>Next: your <a href="{{root}}docs/install/">first launch</a>, then the rest of the <a href="{{root}}docs/">docs</a>.</p>
 
 <h2 id="planned">Planned packages</h2>
-<p>For a later milestone (M6), not released: a tarball, an AppImage, a <code>.deb</code> and an AUR <code>vimma-bin</code> package for Linux x86_64, each with checksums, an SBOM and signatures. Releases wait until Vimma has been daily-driven for a while.</p>
+<p>Planned for a later milestone (M6), and not released yet: a tarball, an AppImage, a <code>.deb</code> and an AUR <code>vimma-bin</code> package for Linux x86_64, each with checksums, an SBOM and signatures. Releases wait until Vimma has proved itself as a daily browser.</p>
