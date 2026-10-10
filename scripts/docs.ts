@@ -9,7 +9,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { escapeHtml } from "../src/ts/hero-frames.js";
+import { escapeHtml } from "../src/ts/hero.js";
 import type { BindingsFile } from "./bindings-types.js";
 import { type Block, DOC_PAGES, type DocPage, GUIDE_REWRITES, LIMIT_SECTIONS, STALE_LIMITS, STALE_PREFIXES } from "./docs-pages.js";
 import { keysTables, slug } from "./keys-html.js";

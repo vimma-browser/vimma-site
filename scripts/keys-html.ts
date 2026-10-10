@@ -4,7 +4,7 @@
 
 // Key tables from data/bindings.json, for the keys page (filterable) and the docs pages.
 
-import { escapeHtml } from "../src/ts/hero-frames.js";
+import { escapeHtml } from "../src/ts/hero.js";
 import type { Binding, Section } from "./bindings-types.js";
 
 export const slug = (s: string): string =>

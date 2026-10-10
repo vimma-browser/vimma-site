@@ -1,0 +1,24 @@
+/* Shared look for the demo sites the front-page screenshots show. Fictional sites on .example
+   hostnames, served by scripts/shots.ts. */
+:root {
+  color-scheme: dark;
+  --bg: #16161e;
+  --panel: #1f2335;
+  --fg: #c0caf5;
+  --muted: #8089b3;
+  --link: #7aa2f7;
+  --accent: #e0af68;
+  --line: #2f3549;
+}
+* { box-sizing: border-box; }
+html { background: var(--bg); color: var(--fg); font: 17px/1.55 system-ui, "Cantarell", "Noto Sans", sans-serif; }
+body { margin: 0; }
+a { color: var(--link); text-decoration: none; }
+header { display: flex; align-items: center; gap: 24px; padding: 14px 32px; background: var(--panel); border-bottom: 1px solid var(--line); }
+header .brand { font-weight: 700; color: var(--accent); font-size: 19px; }
+header nav a { color: var(--muted); margin-right: 18px; }
+main { max-width: 860px; margin: 0 auto; padding: 24px 32px; }
+.muted { color: var(--muted); font-size: 14px; }
+/* Xvfb leaves the pointer at the middle of the screen, where it would hover a link and show its
+   address. This empty block under it takes the hover instead. */
+body::after { content: ""; position: fixed; left: calc(50% - 30px); top: calc(50% - 70px); width: 60px; height: 60px; z-index: 2147483647; }

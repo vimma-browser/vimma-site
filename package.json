@@ -14,7 +14,8 @@
     "serve": "npm run compile && node .build/scripts/serve.js",
     "check": "tsc -p tsconfig.json --noEmit && tsc -p src/ts/tsconfig.json --noEmit && node .build/scripts/check.js",
     "keys:sync": "npm run compile && node .build/scripts/gen-keys.js",
-    "docs:sync": "npm run compile && node .build/scripts/sync-docs.js"
+    "docs:sync": "npm run compile && node .build/scripts/sync-docs.js",
+    "shots": "npm run compile && node .build/scripts/shots.js"
   },
   "devDependencies": {
     "@types/node": "22.20.5",
