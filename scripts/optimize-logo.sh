@@ -9,7 +9,7 @@
 # The results are committed, so building the site needs neither this script nor its tools
 # (ImageMagick 7 and avifenc from libavif).
 #
-#   scripts/optimize-logo.sh ../VimHerdr/docs/assets/vimma-logo-square.png ../VimHerdr/docs/assets/vimma-mark.png
+#   scripts/optimize-logo.sh ../vimma/docs/assets/vimma-logo-square.png ../vimma/docs/assets/vimma-mark.png
 set -eu
 src=${1:?usage: optimize-logo.sh path/to/vimma-logo-square.png path/to/vimma-mark.png}
 mark=${2:?usage: optimize-logo.sh path/to/vimma-logo-square.png path/to/vimma-mark.png}

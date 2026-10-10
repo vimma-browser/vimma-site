@@ -14,7 +14,7 @@ login until Vimma is published. A push to `main` goes live in a minute or two. S
 | Path       | Source                   | What                                                               |
 | ---------- | ------------------------ | ------------------------------------------------------------------ |
 | `/`        | `src/pages/index.html`   | Logo, pitch, the session (real screenshots), features, name, status |
-| `/docs/`   | `src/docs/`, `data/docs/`| Start here, then 14 pages built from Vimma's guide (see below)     |
+| `/docs/`   | `src/docs/`, `data/docs/`| Start here, then 17 pages built from Vimma's guide (see below)     |
 | `/keys/`   | `src/pages/keys.html`    | Every default binding, filterable, from `data/bindings.json`       |
 | `/install/`| `src/pages/install.html` | Build from source; Linux x86_64 only; no binaries yet              |
 | `/about/`  | `src/pages/about.html`   | Why another browser, privacy defaults, Firefox base, licence, FAQ  |
@@ -29,9 +29,9 @@ npm ci
 npm run build       # tsc, then .build/build.js: dist/
 npm run serve       # dist/ at http://127.0.0.1:8080/ (PORT=… to change)
 npm run check       # tsc --noEmit (both projects), then the dist/ checks below
-npm run docs:sync -- ../VimHerdr   # copy guide/bindings/limits.md from its origin/main, regen keys
+npm run docs:sync -- ../vimma      # copy guide/bindings/limits.md from its origin/main, regen keys
 npm run keys:sync                  # regenerate data/bindings.json from data/docs/bindings.md only
-npm run shots -- ../VimHerdr       # retake the home page's screenshots from that checkout's build
+npm run shots -- ../vimma          # retake the home page's screenshots from that checkout's build
 ```
 
 `npm run check` runs on the built `dist/`:
@@ -45,8 +45,10 @@ npm run shots -- ../VimHerdr       # retake the home page's screenshots from tha
   network calls or URLs in the shipped JS). Plain `<a>` links to other sites are allowed.
 - **contrast**: each text/background token pair, in both palettes, is at least 4.5:1 (WCAG AA).
 - **weight**: what each page loads (HTML, stylesheet, scripts and their imports, and the docs
-  search index on docs pages) stays under 150 KB. The heaviest today is the known-limits page,
-  about 133 KB, most of it the 55 KB search index loaded on first search.
+  search index on docs pages) stays under 150 KB. The heaviest is the known-limits page, just
+  under the budget, about half of it the 75 KB search index loaded on first search. The index
+  leaves out words already in a section's page title or heading; if a sync pushes a page over,
+  slim the index or the page, not the budget.
 
 ## How it is built
 
@@ -95,7 +97,7 @@ box, previous/next links (`[` and `]`). Each page has two tiers:
 - The known-limits page leaves out the `limits.md` lines the same commit's guide contradicts
   (listed in `STALE_LIMITS`, reported at build time), so they disappear when upstream fixes them.
 - Search: the build writes `assets/js/docs-index.js` (each section's heading, a snippet and its
-  distinct words; no URLs), which the docs pages import on first use. No server, no third party.
+  distinct words; no full URLs, only paths under `docs/`), which the docs pages import on first use. No server, no third party.
 - `assets/img/` holds the logo (with its tagline) as AVIF, WebP and PNG at 256 and 512 px, and
   the window+V mark as 16/32/48 px favicons and the 180 px apple-touch-icon, made by
   `scripts/optimize-logo.sh` (ImageMagick, avifenc) from the main repository's
