@@ -1,5 +1,5 @@
-# Build and check the site on every push and pull request. No deployment: Vimma is not published
-# until its owner has daily-driven it (see README, "Deploying later").
+# Build and check the site on every push and pull request. Deployment is Cloudflare Pages' own
+# build of main (see README, "Deploying"), not this workflow.
 name: ci
 
 on:

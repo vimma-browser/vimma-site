@@ -5,8 +5,9 @@ tmux-style `ctrl+b` prefix. It looks like a terminal: Tokyo Night (Vimma's built
 light variant for light systems, monospace throughout, a prompt header with the page position, and Vim
 keys on the site itself (press `?`).
 
-**Not deployed.** Vimma is not published until its owner has daily-driven it. See
-[Deploying later](#deploying-later).
+**Deployed** on Cloudflare Pages at [vimma.dev](https://vimma.dev), behind a Cloudflare Access
+login until Vimma is published. A push to `main` goes live in a minute or two. See
+[Deploying](#deploying).
 
 ## Pages
 
@@ -63,16 +64,23 @@ npm run keys:sync                  # regenerate data/bindings.json from data/doc
 ## The docs
 
 `/docs/` is modelled on a classic docs site: a sidebar of pages, an "on this page" list, a search
-box, previous/next links (`[` and `]`). Only "Start here" (`src/docs/start-here.html`) and each
-page's intro (`src/docs/<slug>.html`) are written by hand. The rest is cut at build time from
-copies of Vimma's `docs/guide.md`, `docs/limits.md` and `docs/bindings.md` in `data/docs/`,
-taken from the main repository's `origin/main` by `npm run docs:sync` (which runs only
-`git fetch` and `git show` there) and committed with the commit they came from.
+box, previous/next links (`[` and `]`). Each page has two tiers:
+
+1. **A hand-written guide** (`src/docs/<slug>.html`, and "Start here" in `src/docs/start-here.html`):
+   task first ("to do X, press Y"), plain words, the common keys only. Keep its keys and facts in
+   line with the synced guide below; nothing checks that automatically.
+2. **The reference**, cut at build time: the page's keys table from `bindings.md`, then the
+   matching `guide.md` sections under one "Details" heading, then links to the known limits.
+   They come from copies of Vimma's `docs/guide.md`, `docs/limits.md` and `docs/bindings.md` in
+   `data/docs/`, taken from the main repository's `origin/main` by `npm run docs:sync` (which runs
+   only `git fetch` and `git show` there) and committed with the commit they came from.
 
 - `scripts/docs-pages.ts` lists the pages and what each is made of: guide sections by heading,
   rows of the guide's keys table by their first cell, paragraphs by their opening words,
   bindings sections, and links to the known-limits sections. If upstream renames or drops any
-  of them, the build fails and names it: re-sync, then update that file.
+  of them, the build fails and names it: re-sync, then update that file. `GUIDE_REWRITES` there
+  strips internal names (milestones, spec links, code names) from the guide's text; a rewrite
+  that no longer matches is reported at build time.
 - `scripts/md.ts` is a small Markdown reader for the subset the guide uses. Links to other
   guide headings are pointed at whichever docs page renders them; links to specs, ADRs and the
   runbook stay as plain text, since that repository is not public yet.
@@ -80,8 +88,6 @@ taken from the main repository's `origin/main` by `npm run docs:sync` (which run
   (listed in `STALE_LIMITS`, reported at build time), so they disappear when upstream fixes them.
 - Search: the build writes `assets/js/docs-index.js` (each section's heading, a snippet and its
   distinct words; no URLs), which the docs pages import on first use. No server, no third party.
-- Not documented yet, on purpose: features still in flight in the browser repository
-  (bookmarks, workspace routing by domain or app). They get pages once merged.
 - `assets/img/` holds the logo (with its tagline) as AVIF, WebP and PNG at 256 and 512 px, and
   the window+V mark as 16/32/48 px favicons and the 180 px apple-touch-icon, made by
   `scripts/optimize-logo.sh` (ImageMagick, avifenc) from the main repository's
@@ -102,24 +108,21 @@ held, and can be turned off in the `?` overlay (WCAG 2.1.4); `?` keeps working s
 turned back on. The blinking cursor and the hero animation stop under `prefers-reduced-motion`.
 The hero's text screen is `aria-hidden`; its numbered list of keys says the same thing.
 
-## Deploying later
+## Deploying
 
-Not now: publishing waits until Vimma has been daily-driven, and GitHub Pages is not free for a
-private repository. The domain idea is **vimma.dev** (not bought yet). `dist/` is a plain static
-site, so either host works:
+Cloudflare Pages builds the repository and serves `dist/` at **vimma.dev**:
 
-- **GitHub Pages** (needs a public repository or a paid plan): add a `deploy` job after `check`
-  using `actions/upload-pages-artifact` and `actions/deploy-pages` (pinned by SHA), with
-  `pages: write` and `id-token: write` on that job only, and set Settings → Pages → Source to
-  "GitHub Actions". Add `dist/CNAME` containing `vimma.dev` from the build. Without a custom
-  domain the site lives under `/vimma-site/`; pages link relatively, but `404.html` uses
-  root-absolute links and would need the base path.
-- **Cloudflare Pages**: connect the repository, build command `npm ci && npm run build`, output
-  directory `dist`, Node 22. Add `vimma.dev` as a custom domain. Cloudflare's Web Analytics must
-  stay off.
+- **Production** is `main`. Each push builds (`npm ci && npm run build`, output directory
+  `dist`, Node 22) and is live about a minute later; Pages clears its cache on deploy.
+- **Access:** vimma.dev sits behind Cloudflare Access, so only signed-in people can see it
+  while Vimma is unpublished. Remove the Access application to open the site.
+- **CI** (`.github/workflows/ci.yml`) builds and runs `npm run check` on every push and pull
+  request. It does not deploy, and Pages does not wait for it, so a red CI run can still go live:
+  check it before merging.
 
-On either host, keep the guarantees: no analytics snippet, no CDN fonts, and add the CSP as a
-real response header (`frame-ancestors 'none'` too, which a meta tag cannot set).
+Keep the site's guarantees on Cloudflare: Web Analytics and other injected scripts stay off, no
+CDN fonts, and the CSP should become a real response header (`frame-ancestors 'none'` too, which a
+meta tag cannot set), for example in a `_headers` file copied into `dist/`.
 
 ## Licence
 
