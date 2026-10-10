@@ -3,7 +3,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 // The docs section: which pages exist, in what order, and what each is made of. Only the intros
-// (src/docs/<slug>.html) and "Start here" are written by hand; everything else is cut from the
+// (src/docs/<slug>.html), "Start here" and "Why Vimma" are written by hand; everything else is cut from the
 // synced copies of Vimma's guide.md, limits.md and bindings.json at build time. Every heading,
 // table row and paragraph named here must exist upstream, or the build fails: that is the
 // drift alarm. Run `npm run docs:sync`, then fix this file.
@@ -32,6 +32,8 @@ export interface DocPage {
   blocks: Block[];
   /** Render the guide.md blocks as the page's main content, not as "Details" (the FAQ). */
   noDetails?: boolean;
+  /** Written for this site only, nothing from guide.md: no "built from" source line. */
+  handWritten?: boolean;
 }
 
 /** limits.md sections shown on the Known limits page, in this order. */
@@ -75,6 +77,14 @@ export const GUIDE_REWRITES: [RegExp, string][] = [
 ];
 
 export const DOC_PAGES: DocPage[] = [
+  {
+    slug: "why",
+    title: "Why Vimma",
+    group: "Start",
+    description: "A browser, not an extension: what that changes for your keys, and what stays Firefox.",
+    blocks: [],
+    handWritten: true,
+  },
   {
     slug: "install",
     title: "Install and first launch",

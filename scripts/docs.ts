@@ -253,7 +253,7 @@ const textOf = (html: string): string =>
 
 /** Words too common to search by; dropped from the index to keep it small. */
 const STOP = new Set(
-  "the and for are but not you your with that this from have has its it's into one can when then than them they their there what which who will would also only each any all was were been being more most other some such out off over too very just about after before again here how why our yet own same both few nor".split(
+  "the and for are but not you your with that this from have has its it's into one can when then than them they their there what which who will would also only each any all was were been being more most other some such out off over too very just about after before again here how why our yet own same both few nor on in it to or is as so of by at an up if be".split(
     " ",
   ),
 );
@@ -359,7 +359,7 @@ ${keysTables(secs, { level: 3, idPrefix: "keys-", filterable: false })}`;
     const title = page?.title ?? START.title;
     const head = page ? `<h1>${escapeHtml(title)}</h1>\n${intro}` : "";
     const content = page ? `${head}\n${sections}` : sections;
-    const src = page
+    const src = page && !page.handWritten
       ? `<p class="source">The guide at the top is written for this site; the details are built from Vimma's <code>docs/${page.slug === "limits" ? "limits" : "guide"}.md</code> and <code>bindings.md</code> at <a href="${VIMMA_REPO}/commit/${escapeHtml(source.commit)}"><code>${escapeHtml(source.commit)}</code></a> (${escapeHtml(source.date)}).</p>`
       : "";
     const body = `<div class="docs">

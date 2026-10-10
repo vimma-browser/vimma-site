@@ -14,7 +14,7 @@ login until Vimma is published. A push to `main` goes live in a minute or two. S
 | Path       | Source                   | What                                                               |
 | ---------- | ------------------------ | ------------------------------------------------------------------ |
 | `/`        | `src/pages/index.html`   | Logo, pitch, the session (real screenshots), features, name, status |
-| `/docs/`   | `src/docs/`, `data/docs/`| Start here, then 17 pages built from Vimma's guide (see below)     |
+| `/docs/`   | `src/docs/`, `data/docs/`| Start here, Why Vimma, then pages built from Vimma's guide (below) |
 | `/keys/`   | `src/pages/keys.html`    | Every default binding, filterable, from `data/bindings.json`       |
 | `/install/`| `src/pages/install.html` | Build from source; Linux x86_64 only; no binaries yet              |
 | `/about/`  | `src/pages/about.html`   | Why another browser, privacy defaults, Firefox base, licence, FAQ  |
@@ -46,9 +46,9 @@ npm run shots -- ../vimma          # retake the home page's screenshots from tha
 - **contrast**: each text/background token pair, in both palettes, is at least 4.5:1 (WCAG AA).
 - **weight**: what each page loads (HTML, stylesheet, scripts and their imports, and the docs
   search index on docs pages) stays under 150 KB. The heaviest is the known-limits page, just
-  under the budget, about half of it the 75 KB search index loaded on first search. The index
-  leaves out words already in a section's page title or heading; if a sync pushes a page over,
-  slim the index or the page, not the budget.
+  under the budget, about half of it the 69 KB search index loaded on first search. The index
+  leaves out common words (a stop list) and words already in a section's page title or heading;
+  if a sync pushes a page over, slim the index or the page, not the budget.
 
 ## How it is built
 
@@ -84,6 +84,10 @@ box, previous/next links (`[` and `]`). Each page has two tiers:
    They come from copies of Vimma's `docs/guide.md`, `docs/limits.md` and `docs/bindings.md` in
    `data/docs/`, taken from the main repository's `origin/main` by `npm run docs:sync` (which runs
    only `git fetch` and `git show` there) and committed with the commit they came from.
+
+"Why Vimma" (`src/docs/why.html`, `handWritten` in `docs-pages.ts`) has only the first tier: why a
+browser and not an extension, the long version of the home page's block. Its claims are checked
+by hand against Vimma's guide and source, like the other hand-written text.
 
 - `scripts/docs-pages.ts` lists the pages and what each is made of: guide sections by heading,
   rows of the guide's keys table by their first cell, paragraphs by their opening words,
