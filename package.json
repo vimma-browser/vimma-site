@@ -1,0 +1,22 @@
+{
+  "name": "vimma-site",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The website for Vimma, a keyboard-first Firefox fork.",
+  "license": "MPL-2.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "compile": "tsc -p tsconfig.json && tsc -p src/ts/tsconfig.json",
+    "build": "npm run compile && node .build/build.js",
+    "serve": "npm run compile && node .build/scripts/serve.js",
+    "check": "tsc -p tsconfig.json --noEmit && tsc -p src/ts/tsconfig.json --noEmit && node .build/scripts/check.js",
+    "keys:sync": "npm run compile && node .build/scripts/gen-keys.js"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "typescript": "7.0.2"
+  }
+}

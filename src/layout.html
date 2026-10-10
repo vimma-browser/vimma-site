@@ -1,0 +1,74 @@
+<!doctype html>
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+<html lang="en" data-root="{{root}}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'">
+    <meta name="referrer" content="no-referrer">
+    <meta name="color-scheme" content="dark light">
+    <meta name="theme-color" content="#13141c" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#d5d6db" media="(prefers-color-scheme: light)">
+    <title>{{title}}</title>
+    <meta name="description" content="{{description}}">
+    <link rel="icon" href="{{root}}assets/img/favicon.png" type="image/png">
+    <link rel="apple-touch-icon" href="{{root}}assets/img/apple-touch-icon.png">
+    <link rel="stylesheet" href="{{root}}assets/css/site.css">
+    <script type="module" src="{{root}}assets/js/site.js"></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap">
+        <p class="prompt"><a class="cwd" href="{{root}}">~/vimma</a> <span class="sigil">$</span> <span class="cmd">{{cmd}}</span><span class="cursor" aria-hidden="true"></span></p>
+        <nav class="tabs" aria-label="Site">
+          <ul>
+{{nav}}
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main id="main" class="wrap md" tabindex="-1">
+{{content}}
+    </main>
+    <footer class="site-foot">
+      <div class="wrap">
+        <p>Vimma · pre-alpha · <a href="{{root}}about/#licence">MPL-2.0</a> · source: coming soon</p>
+        <p>This site sets no cookies, runs no analytics and loads nothing from other servers.</p>
+      </div>
+    </footer>
+    <div class="statusbar">
+      <span id="sb-mode" class="badge badge-normal">NORMAL</span>
+      <span id="sb-pending" class="pend" hidden></span>
+      <span class="ws">1:vimma</span>
+      <span class="page">{{pos}}<span class="title"> {{short}}</span></span>
+      <span class="right">
+        <span class="vimkey">in Vimma: <kbd>ctrl+b ?</kbd></span>
+        <button type="button" class="keyhint-on" data-open-help data-js-only hidden>press <kbd>?</kbd> for keys</button>
+        <button type="button" class="keyhint-off" data-open-help data-js-only hidden>keys off · <kbd>?</kbd></button>
+        <span id="sb-pos" class="pos" aria-hidden="true"></span>
+      </span>
+    </div>
+    <dialog id="keyhelp" aria-labelledby="keyhelp-title">
+      <h2 id="keyhelp-title">Keys on this site</h2>
+      <table>
+        <caption class="sr-only">Keyboard shortcuts for this website</caption>
+        <tbody>
+          <tr><th scope="row"><kbd>j</kbd> <kbd>k</kbd></th><td>scroll down, up</td></tr>
+          <tr><th scope="row"><kbd>d</kbd> <kbd>u</kbd></th><td>half a page down, up</td></tr>
+          <tr><th scope="row"><kbd>gg</kbd> <kbd>G</kbd></th><td>top, bottom</td></tr>
+          <tr><th scope="row"><kbd>/</kbd></th><td>filter the keys page</td></tr>
+          <tr><th scope="row"><kbd>g</kbd> <kbd>h</kbd></th><td>go home</td></tr>
+          <tr><th scope="row"><kbd>g</kbd> <kbd>k</kbd></th><td>go to keys</td></tr>
+          <tr><th scope="row"><kbd>g</kbd> <kbd>i</kbd></th><td>go to install</td></tr>
+          <tr><th scope="row"><kbd>g</kbd> <kbd>a</kbd></th><td>go to about</td></tr>
+          <tr><th scope="row"><kbd>?</kbd></th><td>this help; <kbd>Esc</kbd> closes it</td></tr>
+        </tbody>
+      </table>
+      <label><input type="checkbox" id="keys-toggle" checked> Single-key shortcuts on</label>
+      <p class="foot"><span>In Vimma, <kbd>ctrl+b ?</kbd> lists every binding.</span> <button type="button" data-close-help>close</button></p>
+    </dialog>
+  </body>
+</html>

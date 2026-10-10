@@ -1,0 +1,107 @@
+<!--{"title": "Vimma: a keyboard-first browser", "short": "home", "out": "", "cmd": "cat README.md", "description": "Vimma is a keyboard-first Firefox fork: Vim modes on every page, tmux-style workspaces and splits behind ctrl+b, themed by Omarchy."}-->
+<section class="hero-head" aria-labelledby="title">
+  <picture class="logo">
+    <source type="image/avif" srcset="{{root}}assets/img/vimma-logo-256.avif 1x, {{root}}assets/img/vimma-logo-512.avif 2x">
+    <source type="image/webp" srcset="{{root}}assets/img/vimma-logo-256.webp 1x, {{root}}assets/img/vimma-logo-512.webp 2x">
+    <img src="{{root}}assets/img/vimma-logo-256.png" srcset="{{root}}assets/img/vimma-logo-512.png 2x" width="168" height="168" alt="The Vimma logo: a browser window with a green V, and the words Vim and Tmux inspired">
+  </picture>
+  <div>
+    <h1 id="title" class="sr-only">Vimma</h1>
+    <p class="pitch">A keyboard-first browser: Vim modes on every page, tmux-style workspaces and splits, themed by Omarchy.</p>
+    <p>Browse the way you edit text and juggle terminal sessions. A Firefox fork; your hands never leave the keyboard.</p>
+    <ul class="cta">
+      <li><a href="{{root}}keys/">see the keys</a></li>
+      <li><a href="{{root}}install/">build it</a></li>
+      <li><a href="{{root}}about/">why another browser</a></li>
+    </ul>
+  </div>
+</section>
+
+<section class="box term" aria-labelledby="session-title">
+  <h2 class="box-title" id="session-title">session</h2>
+  <div class="term-bar">
+    <span>A Vimma window, drawn in text, and the keys that drive it.</span>
+    <button type="button" id="hero-toggle" data-js-only hidden>pause</button>
+  </div>
+  <div class="term-body">
+    <div class="screen-wrap">
+<pre class="screen" id="hero-screen" aria-hidden="true">{{hero_frame}}</pre>
+      <p class="term-keys" id="hero-keys" aria-hidden="true">{{hero_keys}}</p>
+    </div>
+    <ol class="steps" id="hero-steps">
+{{hero_steps}}
+    </ol>
+  </div>
+</section>
+
+<section aria-labelledby="features">
+  <h2 id="features">What it does</h2>
+  <ul class="grid">
+    <li class="card">
+      <h3>Modal pages</h3>
+      <p class="k"><kbd>j</kbd> <kbd>k</kbd> <kbd>gg</kbd> <kbd>G</kbd> <kbd>/</kbd> <kbd>:</kbd></p>
+      <p>Normal mode scrolls, finds and runs <code>:</code> commands. Focus a field and you are in insert; <kbd>Esc</kbd> brings you back.</p>
+    </li>
+    <li class="card">
+      <h3>Link hints</h3>
+      <p class="k"><kbd>f</kbd> <kbd>F</kbd></p>
+      <p>Labels every link, button and field on screen, frames from other sites too. Type a label to follow it, or open it in a background tab.</p>
+    </li>
+    <li class="card">
+      <h3>Workspaces as containers</h3>
+      <p class="k"><kbd>ctrl+i</kbd> <kbd>ctrl+u</kbd> <kbd>ctrl+b w</kbd></p>
+      <p>Each workspace is its own Firefox container, with separate cookies and logins, its own tabs and split. All of it comes back after a restart.</p>
+    </li>
+    <li class="card">
+      <h3>Split panes</h3>
+      <p class="k"><kbd>ctrl+b v</kbd> <kbd>ctrl+b -</kbd> <kbd>ctrl+b z</kbd></p>
+      <p>Up to four pages side by side. Move with <kbd>ctrl+b h/j/k/l</kbd>, zoom, swap and resize, as in tmux.</p>
+    </li>
+    <li class="card">
+      <h3>Status bar</h3>
+      <p class="k"><kbd>ctrl+b ?</kbd></p>
+      <p>One line at the foot of the window: mode, pending keys, workspace, <code>tab 2/5</code>, title, URL and find matches. Like the one below.</p>
+    </li>
+    <li class="card">
+      <h3>Side panel</h3>
+      <p class="k"><kbd>space n</kbd> <kbd>ctrl+b b</kbd></p>
+      <p>On demand, the workspace's tabs down the left of the window. <kbd>j</kbd>/<kbd>k</kbd> and <kbd>Enter</kbd>, or <kbd>1</kbd>…<kbd>9</kbd>.</p>
+    </li>
+    <li class="card">
+      <h3>Omarchy theme</h3>
+      <p class="k"><code>omarchy-theme-set</code></p>
+      <p>Takes its colours from your current Omarchy theme and recolours the moment you switch. Without Omarchy: Tokyo Night, as on this page.</p>
+    </li>
+    <li class="card">
+      <h3>Privacy defaults</h3>
+      <p class="k"><code>about:config</code></p>
+      <p>No studies, no telemetry upload, no crash reporter, no sponsored content or promos. Each default is one switch away.</p>
+    </li>
+    <li class="card">
+      <h3>Firefox-compatible</h3>
+      <p class="k"><code>Firefox 157</code></p>
+      <p>Firefox underneath, on the release channel. Sites see Firefox's user agent byte for byte; add-ons treat it as Firefox.</p>
+    </li>
+  </ul>
+</section>
+
+<section class="box" aria-labelledby="name">
+  <h2 class="box-title" id="name">the name</h2>
+  <blockquote>
+    <p><em>Vimma</em> is a Finnish word for a burst of eager, focused energy: the state of being on a roll. You hear it in <em>työvimma</em>, a spell of working when everything flows. It also happens to start with <em>Vim</em>. That is how browsing should feel: fast, fluent and absorbed.</p>
+  </blockquote>
+</section>
+
+<section class="box note" aria-labelledby="status">
+  <h2 class="box-title" id="status">status: pre-alpha</h2>
+  <p>Not yet daily-driven, and no binaries yet: you <a href="{{root}}install/">build from source</a>, on Linux x86_64. Version <code>0.1.0</code>, on Firefox 157.0.1.</p>
+  <ul class="checklist">
+    <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> M0 fork, build pipeline, control socket, end-to-end tests</li>
+    <li><span class="mark part" aria-hidden="true">[~]</span><span class="sr-only">Nearly done:</span> M1 modal page layer (back, forward and reload are in review)</li>
+    <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> M2 tab keys, status bar, goto picker</li>
+    <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> M3 workspaces</li>
+    <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> M4 split panes</li>
+    <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> M5 <code>config.toml</code> and the Omarchy theme</li>
+    <li><span class="mark todo" aria-hidden="true">[ ]</span><span class="sr-only">To do:</span> M6 packages and updates (the tooling exists; releases wait)</li>
+  </ul>
+</section>

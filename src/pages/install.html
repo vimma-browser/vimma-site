@@ -1,0 +1,31 @@
+<!--{"title": "Install · Vimma", "short": "install", "out": "install/", "cmd": "cat INSTALL.md", "description": "How to get Vimma today: build it from source on Linux x86_64. No binaries yet."}-->
+<h1>Install</h1>
+<section class="box note" aria-labelledby="honest">
+  <h2 class="box-title" id="honest">the honest version</h2>
+  <p>There are <strong>no binaries yet</strong>. Vimma is pre-alpha, and today you build it from source. <strong>Linux x86_64</strong> is the only platform it is built and tested on.</p>
+  <p>The source repository is not public yet; it opens soon. These are the steps for when it does.</p>
+</section>
+
+<h2 id="requirements">Requirements</h2>
+<ul>
+  <li>Linux x86_64.</li>
+  <li>About 35 GB of free disk: the Firefox source and full build take 27 GB, the compiler cache 6.8 GB, Mozilla's toolchains 3.1 GB and the source download 0.8 GB.</li>
+  <li>Node.js 20 or later, Python 3, git.</li>
+  <li>Time: the first full build took 39 minutes on a 16-thread Ryzen with 58 GB of RAM, after a 12.5-minute source download.</li>
+</ul>
+
+<h2 id="build">Build</h2>
+<pre class="code"><span class="p">$ </span>npm ci                  <span class="c"># dev tools, including Surfer</span>
+<span class="p">$ </span>npx surfer download     <span class="c"># Firefox source into engine/</span>
+<span class="p">$ </span>npx surfer bootstrap    <span class="c"># Mozilla's toolchains into ~/.mozbuild (once)</span>
+<span class="p">$ </span>npm run import          <span class="c"># apply Vimma's files and patches</span>
+<span class="p">$ </span>npx surfer build        <span class="c"># full build</span></pre>
+
+<h2 id="run">Run</h2>
+<pre class="code"><span class="p">$ </span>npm start               <span class="c"># your build, with its own profile</span>
+<span class="p">$ </span>npm start -- --fresh    <span class="c"># a throwaway profile instead</span></pre>
+<p><code>npm start</code> runs Vimma with a profile of its own (<code>~/.cache/vimma-dev-profile</code>), so it never touches your Firefox profile. Then press <kbd>ctrl+b</kbd> <kbd>?</kbd> to see every binding.</p>
+<p>After a <code>git pull</code>, run <code>npm run import</code> and <code>npx surfer build</code> again. Vimma has no updater.</p>
+
+<h2 id="planned">Planned packages</h2>
+<p>For a later milestone (M6), not released: a tarball, an AppImage, a <code>.deb</code> and an AUR <code>vimma-bin</code> package for Linux x86_64, each with checksums, an SBOM and signatures. Releases wait until Vimma has been daily-driven for a while.</p>

@@ -1,0 +1,1466 @@
+{
+  "source": "docs/bindings.md",
+  "commit": "6a29784",
+  "sections": [
+    {
+      "title": "Help",
+      "rows": [
+        {
+          "action": "Show all bindings (filter with /)",
+          "name": "show_keybinds",
+          "bindings": [
+            {
+              "raw": "prefix+?",
+              "chords": [
+                "ctrl+b",
+                "?"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Close the bindings overlay",
+          "name": "help_close",
+          "bindings": [
+            {
+              "raw": "<Esc> [help]",
+              "chords": [
+                "Esc"
+              ],
+              "mode": "help"
+            },
+            {
+              "raw": "q [help]",
+              "chords": [
+                "q"
+              ],
+              "mode": "help"
+            }
+          ]
+        },
+        {
+          "action": "Filter the bindings overlay",
+          "name": "help_filter",
+          "bindings": [
+            {
+              "raw": "/ [help]",
+              "chords": [
+                "/"
+              ],
+              "mode": "help"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Tabs",
+      "rows": [
+        {
+          "action": "New tab",
+          "name": "new_tab",
+          "bindings": [
+            {
+              "raw": "prefix+c",
+              "chords": [
+                "ctrl+b",
+                "c"
+              ]
+            },
+            {
+              "raw": "t",
+              "chords": [
+                "t"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Next tab (with a count: go to tab N)",
+          "name": "next_tab",
+          "bindings": [
+            {
+              "raw": "prefix+n",
+              "chords": [
+                "ctrl+b",
+                "n"
+              ]
+            },
+            {
+              "raw": "gt",
+              "chords": [
+                "gt"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Previous tab",
+          "name": "previous_tab",
+          "bindings": [
+            {
+              "raw": "prefix+p",
+              "chords": [
+                "ctrl+b",
+                "p"
+              ]
+            },
+            {
+              "raw": "gT",
+              "chords": [
+                "gT"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Jump to tab 1 in this workspace",
+          "name": "select_tab_1",
+          "bindings": [
+            {
+              "raw": "prefix+1",
+              "chords": [
+                "ctrl+b",
+                "1"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Jump to tab 2 in this workspace",
+          "name": "select_tab_2",
+          "bindings": [
+            {
+              "raw": "prefix+2",
+              "chords": [
+                "ctrl+b",
+                "2"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Jump to tab 3 in this workspace",
+          "name": "select_tab_3",
+          "bindings": [
+            {
+              "raw": "prefix+3",
+              "chords": [
+                "ctrl+b",
+                "3"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Jump to tab 4 in this workspace",
+          "name": "select_tab_4",
+          "bindings": [
+            {
+              "raw": "prefix+4",
+              "chords": [
+                "ctrl+b",
+                "4"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Jump to tab 5 in this workspace",
+          "name": "select_tab_5",
+          "bindings": [
+            {
+              "raw": "prefix+5",
+              "chords": [
+                "ctrl+b",
+                "5"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Jump to tab 6 in this workspace",
+          "name": "select_tab_6",
+          "bindings": [
+            {
+              "raw": "prefix+6",
+              "chords": [
+                "ctrl+b",
+                "6"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Jump to tab 7 in this workspace",
+          "name": "select_tab_7",
+          "bindings": [
+            {
+              "raw": "prefix+7",
+              "chords": [
+                "ctrl+b",
+                "7"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Jump to tab 8 in this workspace",
+          "name": "select_tab_8",
+          "bindings": [
+            {
+              "raw": "prefix+8",
+              "chords": [
+                "ctrl+b",
+                "8"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Jump to tab 9 in this workspace",
+          "name": "select_tab_9",
+          "bindings": [
+            {
+              "raw": "prefix+9",
+              "chords": [
+                "ctrl+b",
+                "9"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Rename tab",
+          "name": "rename_tab",
+          "bindings": [
+            {
+              "raw": "prefix+shift+t",
+              "chords": [
+                "ctrl+b",
+                "shift+t"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Close tab",
+          "name": "close_tab",
+          "bindings": [
+            {
+              "raw": "prefix+shift+x",
+              "chords": [
+                "ctrl+b",
+                "shift+x"
+              ]
+            },
+            {
+              "raw": "x",
+              "chords": [
+                "x"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Panes",
+      "rows": [
+        {
+          "action": "Split right",
+          "name": "split_vertical",
+          "bindings": [
+            {
+              "raw": "prefix+v",
+              "chords": [
+                "ctrl+b",
+                "v"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Split down",
+          "name": "split_horizontal",
+          "bindings": [
+            {
+              "raw": "prefix+minus",
+              "chords": [
+                "ctrl+b",
+                "-"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Focus pane to the left",
+          "name": "focus_pane_left",
+          "bindings": [
+            {
+              "raw": "prefix+h",
+              "chords": [
+                "ctrl+b",
+                "h"
+              ]
+            },
+            {
+              "raw": "<C-w>h",
+              "chords": [
+                "ctrl+w",
+                "h"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Focus pane below",
+          "name": "focus_pane_down",
+          "bindings": [
+            {
+              "raw": "prefix+j",
+              "chords": [
+                "ctrl+b",
+                "j"
+              ]
+            },
+            {
+              "raw": "<C-w>j",
+              "chords": [
+                "ctrl+w",
+                "j"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Focus pane above",
+          "name": "focus_pane_up",
+          "bindings": [
+            {
+              "raw": "prefix+k",
+              "chords": [
+                "ctrl+b",
+                "k"
+              ]
+            },
+            {
+              "raw": "<C-w>k",
+              "chords": [
+                "ctrl+w",
+                "k"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Focus pane to the right",
+          "name": "focus_pane_right",
+          "bindings": [
+            {
+              "raw": "prefix+l",
+              "chords": [
+                "ctrl+b",
+                "l"
+              ]
+            },
+            {
+              "raw": "<C-w>l",
+              "chords": [
+                "ctrl+w",
+                "l"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Swap with pane to the left",
+          "name": "swap_pane_left",
+          "bindings": [
+            {
+              "raw": "prefix+shift+h",
+              "chords": [
+                "ctrl+b",
+                "shift+h"
+              ]
+            },
+            {
+              "raw": "<C-w>H",
+              "chords": [
+                "ctrl+w",
+                "H"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Swap with pane below",
+          "name": "swap_pane_down",
+          "bindings": [
+            {
+              "raw": "prefix+shift+j",
+              "chords": [
+                "ctrl+b",
+                "shift+j"
+              ]
+            },
+            {
+              "raw": "<C-w>J",
+              "chords": [
+                "ctrl+w",
+                "J"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Swap with pane above",
+          "name": "swap_pane_up",
+          "bindings": [
+            {
+              "raw": "prefix+shift+k",
+              "chords": [
+                "ctrl+b",
+                "shift+k"
+              ]
+            },
+            {
+              "raw": "<C-w>K",
+              "chords": [
+                "ctrl+w",
+                "K"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Swap with pane to the right",
+          "name": "swap_pane_right",
+          "bindings": [
+            {
+              "raw": "prefix+shift+l",
+              "chords": [
+                "ctrl+b",
+                "shift+l"
+              ]
+            },
+            {
+              "raw": "<C-w>L",
+              "chords": [
+                "ctrl+w",
+                "L"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Zoom pane",
+          "name": "zoom",
+          "bindings": [
+            {
+              "raw": "prefix+z",
+              "chords": [
+                "ctrl+b",
+                "z"
+              ]
+            },
+            {
+              "raw": "<C-w>o",
+              "chords": [
+                "ctrl+w",
+                "o"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Close pane; the last pane closes the tab",
+          "name": "close_pane",
+          "bindings": [
+            {
+              "raw": "prefix+x",
+              "chords": [
+                "ctrl+b",
+                "x"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Resize mode",
+          "name": "resize_mode",
+          "bindings": [
+            {
+              "raw": "prefix+r",
+              "chords": [
+                "ctrl+b",
+                "r"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Leave resize mode",
+          "name": "resize_exit",
+          "bindings": [
+            {
+              "raw": "<Esc> [resize]",
+              "chords": [
+                "Esc"
+              ],
+              "mode": "resize"
+            },
+            {
+              "raw": "<CR> [resize]",
+              "chords": [
+                "Enter"
+              ],
+              "mode": "resize"
+            },
+            {
+              "raw": "q [resize]",
+              "chords": [
+                "q"
+              ],
+              "mode": "resize"
+            }
+          ]
+        },
+        {
+          "action": "Make pane narrower",
+          "name": "resize_narrower",
+          "bindings": [
+            {
+              "raw": "<C-w><",
+              "chords": [
+                "ctrl+w",
+                "<"
+              ]
+            },
+            {
+              "raw": "h [resize]",
+              "chords": [
+                "h"
+              ],
+              "mode": "resize"
+            },
+            {
+              "raw": "<Left> [resize]",
+              "chords": [
+                "Left"
+              ],
+              "mode": "resize"
+            },
+            {
+              "raw": "<lt> [resize]",
+              "chords": [
+                "<"
+              ],
+              "mode": "resize"
+            }
+          ]
+        },
+        {
+          "action": "Make pane wider",
+          "name": "resize_wider",
+          "bindings": [
+            {
+              "raw": "<C-w>>",
+              "chords": [
+                "ctrl+w",
+                ">"
+              ]
+            },
+            {
+              "raw": "l [resize]",
+              "chords": [
+                "l"
+              ],
+              "mode": "resize"
+            },
+            {
+              "raw": "<Right> [resize]",
+              "chords": [
+                "Right"
+              ],
+              "mode": "resize"
+            },
+            {
+              "raw": "> [resize]",
+              "chords": [
+                ">"
+              ],
+              "mode": "resize"
+            }
+          ]
+        },
+        {
+          "action": "Make pane taller",
+          "name": "resize_taller",
+          "bindings": [
+            {
+              "raw": "<C-w>+",
+              "chords": [
+                "ctrl+w",
+                "+"
+              ]
+            },
+            {
+              "raw": "j [resize]",
+              "chords": [
+                "j"
+              ],
+              "mode": "resize"
+            },
+            {
+              "raw": "<Down> [resize]",
+              "chords": [
+                "Down"
+              ],
+              "mode": "resize"
+            },
+            {
+              "raw": "+ [resize]",
+              "chords": [
+                "+"
+              ],
+              "mode": "resize"
+            }
+          ]
+        },
+        {
+          "action": "Make pane shorter",
+          "name": "resize_shorter",
+          "bindings": [
+            {
+              "raw": "<C-w>-",
+              "chords": [
+                "ctrl+w",
+                "-"
+              ]
+            },
+            {
+              "raw": "k [resize]",
+              "chords": [
+                "k"
+              ],
+              "mode": "resize"
+            },
+            {
+              "raw": "<Up> [resize]",
+              "chords": [
+                "Up"
+              ],
+              "mode": "resize"
+            },
+            {
+              "raw": "- [resize]",
+              "chords": [
+                "-"
+              ],
+              "mode": "resize"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Workspaces",
+      "rows": [
+        {
+          "action": "Next workspace",
+          "name": "next_workspace",
+          "bindings": [
+            {
+              "raw": "ctrl+i",
+              "chords": [
+                "ctrl+i"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Previous workspace",
+          "name": "previous_workspace",
+          "bindings": [
+            {
+              "raw": "ctrl+u",
+              "chords": [
+                "ctrl+u"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Switch to a workspace by name or number",
+          "name": "switch_workspace",
+          "bindings": []
+        },
+        {
+          "action": "Workspace picker",
+          "name": "workspace_picker",
+          "bindings": [
+            {
+              "raw": "prefix+w",
+              "chords": [
+                "ctrl+b",
+                "w"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "New workspace",
+          "name": "new_workspace",
+          "bindings": [
+            {
+              "raw": "prefix+shift+n",
+              "chords": [
+                "ctrl+b",
+                "shift+n"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Rename workspace",
+          "name": "rename_workspace",
+          "bindings": [
+            {
+              "raw": "prefix+shift+w",
+              "chords": [
+                "ctrl+b",
+                "shift+w"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Close workspace",
+          "name": "close_workspace",
+          "bindings": [
+            {
+              "raw": "prefix+shift+d",
+              "chords": [
+                "ctrl+b",
+                "shift+d"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Move the tab to another workspace (reopens it there)",
+          "name": "move_to_workspace",
+          "bindings": []
+        }
+      ]
+    },
+    {
+      "title": "Navigation",
+      "rows": [
+        {
+          "action": "Goto picker: every tab in every workspace",
+          "name": "goto_picker",
+          "bindings": [
+            {
+              "raw": "prefix+g",
+              "chords": [
+                "ctrl+b",
+                "g"
+              ]
+            },
+            {
+              "raw": "b",
+              "chords": [
+                "b"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Open / close the side panel",
+          "name": "toggle_sidebar",
+          "bindings": [
+            {
+              "raw": "prefix+b",
+              "chords": [
+                "ctrl+b",
+                "b"
+              ]
+            },
+            {
+              "raw": "<leader>n",
+              "chords": [
+                "space",
+                "n"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Scroll down",
+          "name": "scroll_down",
+          "bindings": [
+            {
+              "raw": "j",
+              "chords": [
+                "j"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Scroll up",
+          "name": "scroll_up",
+          "bindings": [
+            {
+              "raw": "k",
+              "chords": [
+                "k"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Scroll left",
+          "name": "scroll_left",
+          "bindings": [
+            {
+              "raw": "h",
+              "chords": [
+                "h"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Scroll right",
+          "name": "scroll_right",
+          "bindings": [
+            {
+              "raw": "l",
+              "chords": [
+                "l"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Scroll half a page down",
+          "name": "scroll_half_down",
+          "bindings": [
+            {
+              "raw": "d",
+              "chords": [
+                "d"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Scroll half a page up",
+          "name": "scroll_half_up",
+          "bindings": [
+            {
+              "raw": "u",
+              "chords": [
+                "u"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Scroll to top",
+          "name": "scroll_top",
+          "bindings": [
+            {
+              "raw": "gg",
+              "chords": [
+                "gg"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Scroll to bottom",
+          "name": "scroll_bottom",
+          "bindings": [
+            {
+              "raw": "G",
+              "chords": [
+                "G"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Go back",
+          "name": "history_back",
+          "bindings": [
+            {
+              "raw": "H",
+              "chords": [
+                "H"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Go forward",
+          "name": "history_forward",
+          "bindings": [
+            {
+              "raw": "L",
+              "chords": [
+                "L"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Reload page",
+          "name": "reload",
+          "bindings": [
+            {
+              "raw": "r",
+              "chords": [
+                "r"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Open a URL or search in this tab",
+          "name": "open_url",
+          "bindings": []
+        }
+      ]
+    },
+    {
+      "title": "Hints",
+      "rows": [
+        {
+          "action": "Follow link",
+          "name": "follow_link",
+          "bindings": [
+            {
+              "raw": "f",
+              "chords": [
+                "f"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Follow link in new tab",
+          "name": "follow_link_new_tab",
+          "bindings": [
+            {
+              "raw": "F",
+              "chords": [
+                "F"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Leave hint mode",
+          "name": "hint_cancel",
+          "bindings": [
+            {
+              "raw": "<Esc> [hint]",
+              "chords": [
+                "Esc"
+              ],
+              "mode": "hint"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Find",
+      "rows": [
+        {
+          "action": "Search in page",
+          "name": "find_forward",
+          "bindings": [
+            {
+              "raw": "/",
+              "chords": [
+                "/"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Search backwards in page",
+          "name": "find_backward",
+          "bindings": [
+            {
+              "raw": "?",
+              "chords": [
+                "?"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Next match",
+          "name": "find_next",
+          "bindings": [
+            {
+              "raw": "n",
+              "chords": [
+                "n"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Previous match",
+          "name": "find_previous",
+          "bindings": [
+            {
+              "raw": "N",
+              "chords": [
+                "N"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Modes",
+      "rows": [
+        {
+          "action": "Back to normal mode",
+          "name": "normal_mode",
+          "bindings": [
+            {
+              "raw": "<Esc> [insert]",
+              "chords": [
+                "Esc"
+              ],
+              "mode": "insert"
+            },
+            {
+              "raw": "<Esc> [visual]",
+              "chords": [
+                "Esc"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
+          "action": "Insert mode: focus the first input",
+          "name": "insert_mode",
+          "bindings": [
+            {
+              "raw": "i",
+              "chords": [
+                "i"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Copy mode (caret browsing + selection)",
+          "name": "copy_mode",
+          "bindings": [
+            {
+              "raw": "prefix+[",
+              "chords": [
+                "ctrl+b",
+                "["
+              ]
+            },
+            {
+              "raw": "v",
+              "chords": [
+                "v"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Command line",
+          "name": "command_line",
+          "bindings": [
+            {
+              "raw": ":",
+              "chords": [
+                ":"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Close the command line",
+          "name": "command_cancel",
+          "bindings": [
+            {
+              "raw": "<Esc> [command]",
+              "chords": [
+                "Esc"
+              ],
+              "mode": "command"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Copy mode",
+      "rows": [
+        {
+          "action": "Move caret left",
+          "name": "caret_left",
+          "bindings": [
+            {
+              "raw": "h [visual]",
+              "chords": [
+                "h"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
+          "action": "Move caret down",
+          "name": "caret_down",
+          "bindings": [
+            {
+              "raw": "j [visual]",
+              "chords": [
+                "j"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
+          "action": "Move caret up",
+          "name": "caret_up",
+          "bindings": [
+            {
+              "raw": "k [visual]",
+              "chords": [
+                "k"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
+          "action": "Move caret right",
+          "name": "caret_right",
+          "bindings": [
+            {
+              "raw": "l [visual]",
+              "chords": [
+                "l"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
+          "action": "Move caret a word forward",
+          "name": "caret_word_forward",
+          "bindings": [
+            {
+              "raw": "w [visual]",
+              "chords": [
+                "w"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
+          "action": "Move caret a word back",
+          "name": "caret_word_backward",
+          "bindings": [
+            {
+              "raw": "b [visual]",
+              "chords": [
+                "b"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
+          "action": "Move caret to the start of the line",
+          "name": "caret_line_start",
+          "bindings": [
+            {
+              "raw": "0 [visual]",
+              "chords": [
+                "0"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
+          "action": "Move caret to the end of the line",
+          "name": "caret_line_end",
+          "bindings": [
+            {
+              "raw": "$ [visual]",
+              "chords": [
+                "$"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
+          "action": "Move caret to the top of the page",
+          "name": "caret_top",
+          "bindings": [
+            {
+              "raw": "gg [visual]",
+              "chords": [
+                "gg"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
+          "action": "Move caret to the bottom of the page",
+          "name": "caret_bottom",
+          "bindings": [
+            {
+              "raw": "G [visual]",
+              "chords": [
+                "G"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
+          "action": "Start or drop a selection at the caret",
+          "name": "toggle_selection",
+          "bindings": [
+            {
+              "raw": "v [visual]",
+              "chords": [
+                "v"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
+          "action": "Copy selection and leave copy mode",
+          "name": "yank_selection",
+          "bindings": [
+            {
+              "raw": "y [visual]",
+              "chords": [
+                "y"
+              ],
+              "mode": "visual"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Side panel",
+      "rows": [
+        {
+          "action": "Select row 1",
+          "name": "panel_select_1",
+          "bindings": [
+            {
+              "raw": "1 [panel]",
+              "chords": [
+                "1"
+              ],
+              "mode": "panel"
+            }
+          ]
+        },
+        {
+          "action": "Select row 2",
+          "name": "panel_select_2",
+          "bindings": [
+            {
+              "raw": "2 [panel]",
+              "chords": [
+                "2"
+              ],
+              "mode": "panel"
+            }
+          ]
+        },
+        {
+          "action": "Select row 3",
+          "name": "panel_select_3",
+          "bindings": [
+            {
+              "raw": "3 [panel]",
+              "chords": [
+                "3"
+              ],
+              "mode": "panel"
+            }
+          ]
+        },
+        {
+          "action": "Select row 4",
+          "name": "panel_select_4",
+          "bindings": [
+            {
+              "raw": "4 [panel]",
+              "chords": [
+                "4"
+              ],
+              "mode": "panel"
+            }
+          ]
+        },
+        {
+          "action": "Select row 5",
+          "name": "panel_select_5",
+          "bindings": [
+            {
+              "raw": "5 [panel]",
+              "chords": [
+                "5"
+              ],
+              "mode": "panel"
+            }
+          ]
+        },
+        {
+          "action": "Select row 6",
+          "name": "panel_select_6",
+          "bindings": [
+            {
+              "raw": "6 [panel]",
+              "chords": [
+                "6"
+              ],
+              "mode": "panel"
+            }
+          ]
+        },
+        {
+          "action": "Select row 7",
+          "name": "panel_select_7",
+          "bindings": [
+            {
+              "raw": "7 [panel]",
+              "chords": [
+                "7"
+              ],
+              "mode": "panel"
+            }
+          ]
+        },
+        {
+          "action": "Select row 8",
+          "name": "panel_select_8",
+          "bindings": [
+            {
+              "raw": "8 [panel]",
+              "chords": [
+                "8"
+              ],
+              "mode": "panel"
+            }
+          ]
+        },
+        {
+          "action": "Select row 9",
+          "name": "panel_select_9",
+          "bindings": [
+            {
+              "raw": "9 [panel]",
+              "chords": [
+                "9"
+              ],
+              "mode": "panel"
+            }
+          ]
+        },
+        {
+          "action": "Next row",
+          "name": "panel_down",
+          "bindings": [
+            {
+              "raw": "j [panel]",
+              "chords": [
+                "j"
+              ],
+              "mode": "panel"
+            }
+          ]
+        },
+        {
+          "action": "Previous row",
+          "name": "panel_up",
+          "bindings": [
+            {
+              "raw": "k [panel]",
+              "chords": [
+                "k"
+              ],
+              "mode": "panel"
+            }
+          ]
+        },
+        {
+          "action": "Open the selected row",
+          "name": "panel_open",
+          "bindings": [
+            {
+              "raw": "<CR> [panel]",
+              "chords": [
+                "Enter"
+              ],
+              "mode": "panel"
+            }
+          ]
+        },
+        {
+          "action": "Close the side panel",
+          "name": "panel_close",
+          "bindings": [
+            {
+              "raw": "<Esc> [panel]",
+              "chords": [
+                "Esc"
+              ],
+              "mode": "panel"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Config",
+      "rows": [
+        {
+          "action": "Reload config",
+          "name": "reload_config",
+          "bindings": []
+        },
+        {
+          "action": "Open config.toml in a tab",
+          "name": "edit_config",
+          "bindings": []
+        }
+      ]
+    }
+  ]
+}

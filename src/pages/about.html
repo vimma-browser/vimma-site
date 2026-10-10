@@ -1,0 +1,62 @@
+<!--{"title": "About · Vimma", "short": "about", "out": "about/", "cmd": "cat FAQ.md", "description": "Why Vimma exists, its privacy defaults, the Firefox underneath, its licence and where the source will be."}-->
+<h1>About</h1>
+<p>Vimma is a keyboard-first browser, inspired by Vim and tmux. <strong>Vim</strong> brings the modal layer: <kbd>j</kbd>/<kbd>k</kbd> to scroll, <kbd>f</kbd> for link hints, <kbd>/</kbd> to find, <kbd>:</kbd> for commands. <strong>tmux</strong> brings the prefix layer, via <a href="https://herdr.dev/">Herdr</a>'s keymap: <kbd>ctrl+b</kbd> <kbd>c</kbd> for a new tab, <kbd>ctrl+b</kbd> <kbd>v</kbd> to split, <kbd>ctrl+b</kbd> <kbd>w</kbd> to switch workspace.</p>
+
+<dl class="faq">
+  <dt id="why">Why another browser, and not an extension?</dt>
+  <dd>
+    <p>Extensions such as Tridactyl and Vimium get close, but an extension cannot reach every key. Vimma's dispatcher sees each key before Firefox does, including in the URL bar, on <code>about:</code> pages and in the PDF viewer.</p>
+    <p>Splits, workspaces and a status bar belong to the window, and no extension owns the window. In Vimma they are part of it.</p>
+  </dd>
+
+  <dt id="privacy">What are the privacy defaults?</dt>
+  <dd>
+    <p>Off by default: Mozilla's studies and rollouts (Normandy, Nimbus), sponsored new-tab content and suggestions, feature recommendations and Mozilla promos. The build has no crash reporter and no official telemetry, so nothing is uploaded; a crash leaves a local core dump.</p>
+    <p>Kept as in Firefox: certificate revocation (CRLite), the add-on blocklist, Sync and add-ons from addons.mozilla.org. Google Safe Browsing is on in builds made with a Google API key. Each default can be changed in <code>about:config</code>.</p>
+    <p>One caveat today: Firefox's own updater is still built in and asks Mozilla's update server, which has nothing for Vimma. Removing it is in review.</p>
+  </dd>
+
+  <dt id="firefox">What is underneath?</dt>
+  <dd>
+    <p>Firefox 157, on the release channel, built with <a href="https://github.com/zen-browser/surfer">Surfer</a>, the toolchain behind Zen Browser. Vimma's code lives in its own files, with small patches to Firefox. Sites see Firefox's user agent byte for byte, and add-ons see Firefox's version number, so the web treats Vimma as Firefox.</p>
+  </dd>
+
+  <dt id="workspaces">How private are workspaces?</dt>
+  <dd>
+    <p>Each workspace is a Firefox container: cookies, logins and site storage are separate. History, bookmarks, form history and site permissions are shared by all workspaces, as they are between Firefox containers.</p>
+  </dd>
+
+  <dt id="omarchy">Do I need Omarchy?</dt>
+  <dd>
+    <p>No. On <a href="https://omarchy.org/">Omarchy</a>, Vimma follows your theme and recolours when you change it. Elsewhere it uses Tokyo Night, the palette of this site.</p>
+  </dd>
+
+  <dt id="platforms">Which platforms?</dt>
+  <dd>
+    <p>Linux x86_64 is the only platform built and tested. See <a href="{{root}}install/">install</a>.</p>
+  </dd>
+
+  <dt id="licence">What is the licence?</dt>
+  <dd>
+    <p><a href="https://www.mozilla.org/MPL/2.0/">MPL-2.0</a>, like Firefox. This website is MPL-2.0 too, its text and the logo included.</p>
+  </dd>
+
+  <dt id="source">Where is the source?</dt>
+  <dd>
+    <p>Coming soon. The main repository is private while Vimma is pre-alpha, and opens before the first release.</p>
+  </dd>
+
+  <dt id="site">Does this site track me?</dt>
+  <dd>
+    <p>No. It sets no cookies, runs no analytics and loads no fonts, scripts or images from other servers. Its keys (press <kbd>?</kbd>) remember one setting, whether they are on, in your browser's local storage.</p>
+  </dd>
+</dl>
+
+<h2 id="thanks">Thanks</h2>
+<ul>
+  <li><a href="https://www.mozilla.org/firefox/">Firefox</a> and Mozilla, for the browser underneath.</li>
+  <li><a href="https://github.com/zen-browser/surfer">Surfer</a> and <a href="https://zen-browser.app/">Zen Browser</a>, for the toolchain and for showing how to run a Firefox fork.</li>
+  <li><a href="https://herdr.dev/">Herdr</a>, whose keymap is the prefix layer.</li>
+  <li><a href="https://omarchy.org/">Omarchy</a>, whose themes Vimma follows.</li>
+  <li><a href="https://github.com/tridactyl/tridactyl">Tridactyl</a>, the reference for link hints.</li>
+</ul>
