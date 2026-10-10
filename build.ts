@@ -3,16 +3,16 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 // Builds the site into dist/: wraps each page in src/pages/ and each docs page (scripts/docs.ts)
-// in src/layout.html, renders the keys tables from data/bindings.json, the hero's static frame
+// in src/layout.html, renders the keys tables from data/bindings.json, the hero's static screenshot
 // and the docs search index, and copies the assets and the compiled scripts. Run through `npm run build` (tsc first, then this, as .build/build.js).
 
-import { cpSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 
 import type { BindingsFile } from "./scripts/bindings-types.js";
 import { buildDocs } from "./scripts/docs.js";
 import { keysTables } from "./scripts/keys-html.js";
-import { STATIC_STEP, STEPS, checkFrames, escapeHtml, frameHtml } from "./src/ts/hero-frames.js";
+import { STATIC_STEP, STEPS, escapeHtml, shotHtml } from "./src/ts/hero.js";
 
 const ROOT = resolve(import.meta.dirname, "..");
 const DIST = join(ROOT, "dist");
@@ -95,8 +95,10 @@ function sizeOf(path: string): number {
 }
 
 function main(): void {
-  const frameErrors = checkFrames();
-  if (frameErrors.length) throw new Error(frameErrors.join("\n"));
+  const missingShots = STEPS.flatMap((s) =>
+    ["avif", "webp"].map((ext) => `assets/img/shots/${s.shot}.${ext}`).filter((f) => !existsSync(at(f))),
+  );
+  if (missingShots.length) throw new Error(`hero screenshots missing (npm run shots): ${missingShots.join(", ")}`);
 
   rmSync(DIST, { recursive: true, force: true });
   mkdirSync(DIST, { recursive: true });
@@ -131,7 +133,7 @@ function main(): void {
     const n = navPages.findIndex((p) => p === page || p.meta.out === page.meta.section);
     const vars: Record<string, string> = {
       root,
-      hero_frame: frameHtml(staticStep),
+      hero_shot: shotHtml(staticStep, root),
       hero_keys: staticStep.keys.map((k) => `<kbd>${escapeHtml(k)}</kbd>`).join(" "),
       hero_steps: heroSteps(),
       keys_tables: keysTables(keys.sections),

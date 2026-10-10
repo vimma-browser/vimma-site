@@ -498,85 +498,11 @@ main:focus {
   border-color: var(--accent);
 }
 
-.screen-wrap {
-  container-type: inline-size;
-}
-
-@media (min-width: 1000px) {
-  /* beside the steps, the screen takes its natural width: 54 columns at 15px */
-  .screen-wrap {
-    width: calc(54 * 0.6 * 15px + 2px);
-  }
-}
-
-.screen {
-  /* 54 columns; a monospace column is about 0.6em, so the screen fits its box down to phones */
-  font-size: min(15px, calc(100cqi / 33.2));
-  line-height: 1.2;
-  color: var(--fg);
-  overflow: hidden;
-  white-space: pre;
-}
-
-.screen .sbrow {
-  background: var(--bg-dark);
-}
-
-.screen .frame {
-  color: var(--border);
-}
-
-.screen .acc {
-  color: var(--accent);
-}
-
-.screen .dim {
-  color: var(--fg-muted);
-}
-
-.screen .fg {
-  color: var(--fg-bright);
-}
-
-.screen .link {
-  color: var(--accent);
-}
-
-.screen .green {
-  color: var(--green);
-  font-weight: 700;
-}
-
-.screen .cyan {
-  color: var(--cyan);
-}
-
-.screen .hint {
-  background: var(--yellow);
-  color: var(--hint-fg);
-  font-weight: 700;
-}
-
-.badge {
-  font-weight: 700;
-  color: var(--badge-fg);
-  background: var(--accent);
-}
-
-.badge-insert {
-  background: var(--green);
-}
-
-.badge-hint {
-  background: var(--orange);
-}
-
-.badge-help {
-  background: var(--cyan);
-}
-
-.badge-prefix {
-  background: var(--red);
+.shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--border);
 }
 
 .term-keys {
@@ -608,8 +534,8 @@ main:focus {
   grid-template-columns: 3ch 1fr;
 }
 
-.steps li + li {
-  margin-top: 0.45rem;
+.steps li {
+  margin-bottom: 0.45rem;
 }
 
 .steps li::before {
@@ -626,16 +552,15 @@ main:focus {
   color: var(--accent);
 }
 
-@media (min-width: 1000px) {
-  .term-body {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    gap: 0 3ch;
-    align-items: center;
+@media (min-width: 760px) {
+  /* the steps in two columns under the screenshot */
+  .term-body .steps {
+    columns: 2;
+    column-gap: 3ch;
   }
 
-  .term-body .steps {
-    margin-top: 0;
+  .term-body .steps li {
+    break-inside: avoid;
   }
 }
 
@@ -1502,4 +1427,19 @@ pre,
 
 .docs-body .steps-list li + li {
   margin-top: 0.4rem;
+}
+
+.define {
+  margin: 0 0 0.5rem;
+  color: var(--fg-muted);
+}
+
+.define dfn {
+  font-style: normal;
+  font-weight: 700;
+  color: var(--green);
+}
+
+.define .pos {
+  font-style: italic;
 }

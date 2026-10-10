@@ -7,7 +7,7 @@
 // help overlay, the keys filter, the docs search and the hero. There is no status bar of its own:
 // viewed in Vimma, a second one at the foot of the window would be confusing.
 
-import { STATIC_STEP, STEPS, frameHtml, escapeHtml } from "./hero-frames.js";
+import { STATIC_STEP, STEPS, escapeHtml } from "./hero.js";
 
 const root = document.documentElement;
 const ROOT = root.dataset["root"] ?? "./";
@@ -243,10 +243,28 @@ if (screenEl && keysEl && toggleBtn) {
   const sleep = (ms: number): Promise<void> =>
     new Promise((resolve) => window.setTimeout(resolve, ms));
 
+  // The build rendered one screenshot; swap its files and text for each step's.
+  const img = screenEl.querySelector("img");
+  const source = screenEl.querySelector("source");
+  const fileOf = (shot: string, ext: string): string =>
+    (img?.getAttribute("src") ?? "").replace(/[^/]+\.webp$/, `${shot}.${ext}`);
+  let preloaded = false;
+  const preload = (): void => {
+    // fetch every step's screenshot up front, in the format the browser chose, so steps don't flash
+    if (preloaded || !img) return;
+    preloaded = true;
+    const ext = img.currentSrc.endsWith(".avif") ? "avif" : "webp";
+    for (const s of STEPS) new Image().src = fileOf(s.shot, ext);
+  };
+
   const show = (i: number, typed: readonly string[]): void => {
     const step = STEPS[i];
     if (!step) return;
-    screenEl.innerHTML = frameHtml(step);
+    if (img) {
+      source?.setAttribute("srcset", fileOf(step.shot, "avif"));
+      img.src = fileOf(step.shot, "webp");
+      img.alt = step.alt;
+    }
     keysEl.innerHTML = typed.length
       ? typed.map((k) => `<kbd>${escapeHtml(k)}</kbd>`).join(" ")
       : '<span class="dim">waiting for keys…</span>';
@@ -254,6 +272,7 @@ if (screenEl && keysEl && toggleBtn) {
   };
 
   const run = async (gen: number): Promise<void> => {
+    preload();
     for (let i = 0; ; i = (i + 1) % STEPS.length) {
       const step = STEPS[i];
       if (!step) return;
@@ -266,7 +285,7 @@ if (screenEl && keysEl && toggleBtn) {
         if (gen !== generation) return;
       }
       show(i, typed);
-      await sleep(i === STEPS.length - 1 ? 3200 : 2300);
+      await sleep(i === STEPS.length - 1 ? 4000 : 3000);
       if (gen !== generation) return;
     }
   };
