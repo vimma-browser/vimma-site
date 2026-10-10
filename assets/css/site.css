@@ -2,55 +2,56 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-/* vimma-site: one stylesheet. A terminal, in Tokyo Night (Vimma's built-in theme), with a light
-   variant for light systems. Every text colour pair is checked for WCAG AA by `npm run check`,
-   which reads the two palette blocks below by their marker comments. */
+/* vimma-site: one stylesheet. A terminal in Vimma's own colours, taken from its logo: the mint
+   mark on its near-black tile, with an off-white wordmark. A light variant serves light systems.
+   Every text colour pair is checked for WCAG AA by `npm run check`, which reads the two palette
+   blocks below by their marker comments. (The browser itself ships Tokyo Night; that is the
+   browser's theme, not the site's, see docs/theming.) */
 
-/* palette:dark — Omarchy's stock tokyo-night colors.toml, as in Vimma's core/theme.mjs.
-   --fg-muted and --cyan are the two tokens nudged lighter so text in them passes AA. */
+/* palette:dark — sampled from the logo (vimma-mark.png, vimma-logo-wide.jpg): the tile #0a0f13,
+   the mint #1bf587, the wordmark #fcfbf7. --accent-2 is the logo's shaded mint #2ba564. */
 :root {
   color-scheme: dark light;
-  --bg: #1a1b26;
-  --bg-dark: #13141c;
-  --bg-darker: #0e0e14;
-  --bg-light: #24283b;
-  --selection: #292e42;
-  --border: #414868;
-  --fg: #a9b1d6;
-  --fg-muted: #8089b3;
-  --fg-bright: #c0caf5;
-  --accent: #7aa2f7;
-  --red: #f7768e;
-  --yellow: #e0af68;
-  --orange: #eb927b;
-  --green: #9ece6a;
-  --cyan: #4fb3c2;
-  --magenta: #bb9af7;
-  --badge-fg: #13141c;
-  --hint-fg: #13141c;
+  --bg: #0a0f12;
+  --bg-dark: #070b0d;
+  --bg-darker: #040708;
+  --bg-light: #111a1b;
+  --selection: #163327;
+  --border: #2a3d36;
+  --fg: #c4cec8;
+  --fg-muted: #849690;
+  --fg-bright: #fcfbf7;
+  --accent: #1bf587;
+  --accent-2: #2ba564;
+  --mint: #1bf587;
+  --green: #8eeeb8;
+  --yellow: #f2c94c;
+  --red: #ff6b6b;
+  --badge-fg: #04120a;
+  --hint-fg: #1a1300;
 }
 
-/* palette:light — Tokyo Night Light, for systems set to a light scheme. */
+/* palette:light — the logo's off-white for ground. The mint is too pale for text on it, so text
+   and links take a deep green from the same hue; the bright mint stays for decoration only. */
 @media (prefers-color-scheme: light) {
   :root {
-    --bg: #e6e7ed;
-    --bg-dark: #d5d6db;
-    --bg-darker: #cbccd1;
-    --bg-light: #f0f0f4;
-    --selection: #c9cbd6;
-    --border: #9699a3;
-    --fg: #343b58;
-    --fg-muted: #4c5068;
-    --fg-bright: #1f2335;
-    --accent: #2e4f8a;
-    --red: #803a47;
-    --yellow: #6f4810;
-    --orange: #7c4119;
-    --green: #3d5a1e;
-    --cyan: #135d6b;
-    --magenta: #5a4a78;
-    --badge-fg: #f0f0f4;
-    --hint-fg: #f0f0f4;
+    --bg: #f5f4ef;
+    --bg-dark: #eae9e2;
+    --bg-darker: #e1e0d8;
+    --bg-light: #fcfbf7;
+    --selection: #c6efd8;
+    --border: #a3b0a9;
+    --fg: #1d2924;
+    --fg-muted: #4b5a53;
+    --fg-bright: #0a0f12;
+    --accent: #056a39;
+    --accent-2: #0b5c4e;
+    --mint: #1bf587;
+    --green: #2a5a40;
+    --yellow: #7a5200;
+    --red: #a1232d;
+    --badge-fg: #fcfbf7;
+    --hint-fg: #fcfbf7;
   }
 }
 /* end palette */
@@ -94,12 +95,25 @@ body {
 a {
   color: var(--accent);
   text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  text-decoration-color: color-mix(in srgb, var(--mint) 55%, transparent);
   text-underline-offset: 0.2em;
+}
+
+.docs-body a:visited,
+main p a:visited {
+  color: var(--accent-2);
 }
 
 a:hover {
   text-decoration-color: currentColor;
+}
+
+/* on the light ground the mint is decoration only: a full-strength underline under deep green */
+@media (prefers-color-scheme: light) {
+  a:not(:hover) {
+    text-decoration-color: var(--mint);
+    text-decoration-thickness: 2px;
+  }
 }
 
 :focus-visible {
@@ -284,7 +298,7 @@ li + li {
   height: 1.15em;
   margin-left: 0.15ch;
   vertical-align: -0.2em;
-  background: var(--fg);
+  background: var(--mint);
   animation: blink 1.1s steps(1, end) infinite;
 }
 
@@ -410,7 +424,7 @@ main:focus {
   height: 168px;
   /* the logo is transparent; its white wordmark needs a dark tile on the light palette, as on
      Vimma's start page (light-dark() follows the used color-scheme) */
-  background: light-dark(#080c10, transparent);
+  background: light-dark(#0a0f13, transparent);
   border-radius: 8%;
 }
 
@@ -517,7 +531,7 @@ main:focus {
   height: 1.1em;
   margin-left: 0.5ch;
   vertical-align: -0.2em;
-  background: var(--fg);
+  background: var(--mint);
 }
 
 .steps {
@@ -737,7 +751,7 @@ blockquote {
 
 .binding .mode {
   margin-left: 0.5ch;
-  color: var(--magenta);
+  color: var(--accent-2);
   font-size: 0.85em;
 }
 
@@ -1317,7 +1331,7 @@ dialog {
   width: min(52ch, calc(100vw - 2rem));
   max-height: calc(100vh - 4rem);
   padding: 1.5rem 2ch 1.25rem;
-  border: 1px solid var(--cyan);
+  border: 1px solid var(--accent-2);
   background: var(--bg-dark);
   color: var(--fg);
 }
@@ -1328,7 +1342,7 @@ dialog::backdrop {
 
 dialog h2 {
   margin: 0 0 1rem;
-  color: var(--cyan);
+  color: var(--accent);
   font-size: 1rem;
 }
 

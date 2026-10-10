@@ -263,7 +263,7 @@ function contrast(a: string, b: string): number {
 
 /** Text token on background token, as the stylesheet uses them. */
 const PAIRS: [string, string][] = [
-  ...["--fg", "--fg-muted", "--fg-bright", "--accent", "--green", "--yellow", "--red", "--cyan", "--magenta", "--orange"].flatMap(
+  ...["--fg", "--fg-muted", "--fg-bright", "--accent", "--accent-2", "--green", "--yellow", "--red"].flatMap(
     (t): [string, string][] => [
       [t, "--bg"],
       [t, "--bg-dark"],
@@ -271,13 +271,13 @@ const PAIRS: [string, string][] = [
     ],
   ),
   ["--fg", "--bg-light"],
+  ["--fg-muted", "--bg-light"],
+  ["--accent", "--bg-light"],
   ["--fg-bright", "--bg-light"],
   ["--fg", "--selection"],
   ["--fg-bright", "--selection"],
   ["--badge-fg", "--accent"],
   ["--badge-fg", "--green"],
-  ["--badge-fg", "--orange"],
-  ["--badge-fg", "--cyan"],
   ["--badge-fg", "--red"],
   ["--hint-fg", "--yellow"],
 ];
