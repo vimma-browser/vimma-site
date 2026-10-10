@@ -50,6 +50,26 @@ npm run shots -- ../vimma          # retake the home page's screenshots from tha
   leaves out common words (a stop list) and words already in a section's page title or heading;
   if a sync pushes a page over, slim the index or the page, not the budget.
 
+## The promo video
+
+```sh
+npm run video -- ../vimma                    # record fresh footage, render both cuts
+npm run video -- ../vimma --audio song.mp3   # mix in music (faded in and out); none by default
+npm run video -- ../vimma --reuse-footage    # render again from the last recording
+```
+
+`video/render.ts` runs that checkout's `tools/promo/record.mjs` (a real Vimma build under Xvfb,
+driven by `vimma-ctl`, recorded with ffmpeg x11grab; fictional pages, no network), then
+composites the clips with ffmpeg and libass as `video/story.ts` lays them out: terminal-style
+titles, the dusty mouse, captions, key chips from the recorder's key track, zooms and the outro.
+It writes `video/out/vimma-promo-1080p.mp4` (16:9, about 66 s) and
+`video/out/vimma-promo-vertical.mp4` (9:16, about 32 s; recorded in portrait, not cropped) and
+copies them to `~/Videos/vimma/` (`--copy-to DIR`; `--copy-to ""` for none). `--pace MS` slows
+or speeds the keys. Needs the checkout's build and `vimma-ctl`, Xvfb, ffmpeg (x11grab, libx264,
+libass), fontconfig with a monospace font and ImageMagick. No npm dependencies: Motion Canvas
+renders only by driving its editor UI in a headless browser, so plain ffmpeg was the steadier
+choice. The videos and `video/work/` are gitignored.
+
 ## How it is built
 
 - `src/layout.html` is the shared shell (prompt header with the page position and the `?` hint, footer, `?` overlay);
