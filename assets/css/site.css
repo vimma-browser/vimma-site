@@ -1488,3 +1488,18 @@ pre,
   scrollbar-color: var(--border) transparent;
   scrollbar-width: thin;
 }
+
+.docs-body h2.details-head {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--border);
+  color: var(--fg-muted);
+}
+
+.details-note {
+  color: var(--fg-muted);
+}
+
+.docs-body .steps-list li + li {
+  margin-top: 0.4rem;
+}

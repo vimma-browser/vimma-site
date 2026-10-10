@@ -1,2 +1,30 @@
-<!-- Hand-written intro for the privacy page. -->
-<p>Vimma keeps Firefox's protections and turns off what reports back for Mozilla's business: studies, sponsored content, promos, telemetry upload and the crash reporter. Every default is a preference you can change back.</p>
+<!-- Hand-written guide for the privacy page; the build adds the keys table and the details from guide.md. -->
+<p class="lead">Vimma keeps Firefox's protections and turns off what phones home for Mozilla's business. Every default is a preference you can change back in <code>about:config</code>.</p>
+
+<h2 id="turned-off">Turned off</h2>
+
+<ul>
+  <li>Studies and experiments (Normandy and Nimbus).</li>
+  <li>Sponsored stories, shortcuts and address-bar suggestions.</li>
+  <li>Feature and add-on recommendations, and Mozilla's promos (VPN, Relay, mobile).</li>
+  <li>Telemetry upload and the crash reporter: neither is built in. A crash leaves only a local core dump (<code>coredumpctl list vimma</code>).</li>
+</ul>
+
+<h2 id="kept-on">Kept as in Firefox</h2>
+
+<ul>
+  <li><strong>Safe Browsing</strong>: Vimma downloads Google's lists of dangerous sites and warns you before you open one. Your browsing stays local; only an address that matches the list sends Google a short hash of it to confirm.</li>
+  <li>Certificate revocation checks, the add-on blocklist, Firefox Sync and add-ons from addons.mozilla.org.</li>
+</ul>
+
+<h2 id="still-contacts">Still contacts Mozilla</h2>
+
+<p>Firefox's updater is still built in and asks Mozilla's update server, which has no Vimma builds and offers nothing. Removing it is on the <a href="{{root}}docs/limits/">known limits</a> list.</p>
+
+<h2 id="sites-see-firefox">Sites see Firefox</h2>
+
+<p>Vimma sends Firefox's user agent, byte for byte, and add-ons see Firefox's version, so nothing treats it as a different browser.</p>
+
+<h2 id="change-it-back">Change any of it back</h2>
+
+<p>Open <code>about:config</code>, search for the preference and toggle it. The table under Details names the preference for each default.</p>

@@ -11,10 +11,8 @@
 export type Block =
   /** A guide.md section by its heading, with its subsections unless `only` or `exclude`. */
   | { guide: string; exclude?: string[]; only?: boolean }
-  /** Rows of a guide.md table, by the exact text of their first cell, as a new table. */
-  | { guideRows: { section: string; header: string; rows: string[] }; title: string; id: string }
-  /** Top-level paragraphs of a guide.md section, by the text they start with. */
-  | { guideParas: { section: string; startsWith: string[] } }
+  /** Top-level paragraphs of a guide.md section, by the text they start with, under a heading. */
+  | { guideParas: { section: string; startsWith: string[] }; title: string; id: string }
   /** Sections of bindings.md, as key tables under one "Default keys" heading. */
   | { keys: string[] }
   /** Links to the matching sections of the Known limits page. */
@@ -27,7 +25,13 @@ export interface DocPage {
   nav?: string;
   group: string;
   description: string;
+  /**
+   * The page's blocks. The hand-written guide (src/docs/<slug>.html) comes first; then the keys
+   * table; then the guide.md blocks under one "Details" heading; then the limits links.
+   */
   blocks: Block[];
+  /** Render the guide.md blocks as the page's main content, not as "Details" (the FAQ). */
+  noDetails?: boolean;
 }
 
 /** limits.md sections shown on the Known limits page, in this order. */
@@ -59,7 +63,18 @@ export const STALE_LIMITS = [
 /** limits.md bullet prefixes that are out of date upstream and are dropped from the text. */
 export const STALE_PREFIXES = ["Planned for M4: "];
 
-const KEYS_HEADER = "| Keys | What it does |";
+/**
+ * Rewrites of guide.md text before it is parsed: internal names (milestones, specs, the
+ * project's code names) that mean nothing to a reader. Each is [pattern, replacement]; one that
+ * no longer matches is reported at build time, so the list can shrink as upstream changes.
+ */
+export const GUIDE_REWRITES: [RegExp, string][] = [
+  [/\s+Spec:\s+\[[^\]]+\]\([^)]+\)(,\s+protocol:\s*\[[^\]]+\]\([^)]+\))?\./g, ""],
+  [/For workspaces\s+\(\[m3-workspaces\]\([^)]+\)\); each/g, "For workspaces; each"],
+  [/every key,\s+its type and default are in \[[^\]]+\]\([^)]+\)\s+and \[[^\]]+\]\([^)]+\), and\s+/g, ""],
+  [/(\s)planned for M6\./g, "$1planned."],
+  [/\*\*Planned for M6; no release has these files yet\.\*\*/g, "**Planned; no release has these files yet.**"],
+];
 
 export const DOC_PAGES: DocPage[] = [
   {
@@ -97,30 +112,7 @@ export const DOC_PAGES: DocPage[] = [
     group: "Get going",
     description: "Scroll, follow links with hints, find text, and go back, forward and reload.",
     blocks: [
-      {
-        guideRows: {
-          section: "Keys",
-          header: KEYS_HEADER,
-          rows: [
-            "`j` / `k`, `h` / `l`",
-            "`d` / `u`",
-            "`gg` / `G`",
-            "`H` / `L`",
-            "`r`",
-            "`i`",
-            "`gi`",
-            "`yy`",
-            "`p` / `P`",
-            "`gu` / `gU`",
-            "`gf`",
-            "`f` / `F`",
-            "`/` / `?`",
-            "`n` / `N`",
-          ],
-        },
-        title: "The keys",
-        id: "the-keys",
-      },
+      { guideParas: { section: "Keys", startsWith: ["`p` and `P` read"] }, title: "The clipboard keys", id: "clipboard-keys" },
       { guide: "Link hints" },
       { guide: "Find" },
       { keys: ["Navigation", "Page", "Hints", "Find"] },
@@ -134,28 +126,7 @@ export const DOC_PAGES: DocPage[] = [
     group: "Tabs, panes, workspaces",
     description: "ctrl+b, the tab keys, the bindings overlay, the goto picker and tab names.",
     blocks: [
-      {
-        guideRows: {
-          section: "Keys",
-          header: KEYS_HEADER,
-          rows: [
-            "`ctrl+b ?`",
-            "`/` (in the overlay)",
-            "`Esc` or `q` (overlay)",
-            "`ctrl+b c`, `t`",
-            "`ctrl+b n` / `ctrl+b p`",
-            "`ctrl+b 1..9`",
-            "`ctrl+b shift+x`, `x`",
-            "`ctrl+b g`, `b`",
-            "`ctrl+b shift+t`",
-            "`ctrl+b` then anything else",
-            "Firefox's own keys",
-          ],
-        },
-        title: "The keys",
-        id: "the-keys",
-      },
-      { guideParas: { section: "Keys", startsWith: ["While the overlay is open"] } },
+      { guideParas: { section: "Keys", startsWith: ["While the overlay is open"] }, title: "The bindings overlay", id: "the-overlay" },
       { guide: "Goto picker and tab rename" },
       { keys: ["Help", "Tabs"] },
       { limits: ["Tabs and window"] },
@@ -168,22 +139,10 @@ export const DOC_PAGES: DocPage[] = [
     description: "Split, move between, zoom, swap and resize panes, as in tmux.",
     blocks: [
       {
-        guideRows: {
-          section: "Keys",
-          header: KEYS_HEADER,
-          rows: [
-            "`ctrl+b v` / `ctrl+b -`",
-            "`ctrl+b h j k l`",
-            "`ctrl+b z`, `ctrl+w o`",
-            "`ctrl+b x`",
-            "`ctrl+b shift+h j k l`",
-            "`ctrl+b r`",
-          ],
-        },
-        title: "The keys",
-        id: "the-keys",
+        guideParas: { section: "Keys", startsWith: ["Clicking into a pane", "A split made outside Vimma"] },
+        title: "Panes and tabs",
+        id: "panes-and-tabs",
       },
-      { guideParas: { section: "Keys", startsWith: ["Clicking into a pane", "A split made outside Vimma"] } },
       { guide: "Resize mode" },
       { keys: ["Panes"] },
       { limits: ["Panes"] },
@@ -215,15 +174,6 @@ export const DOC_PAGES: DocPage[] = [
     group: "Tabs, panes, workspaces",
     description: "Bookmark a page with ctrl+b a and find it again in a filterable panel.",
     blocks: [
-      {
-        guideRows: {
-          section: "Keys",
-          header: KEYS_HEADER,
-          rows: ["`ctrl+b a`", "`ctrl+b shift+b`"],
-        },
-        title: "The keys",
-        id: "the-keys",
-      },
       { guide: "Bookmarks" },
       { keys: ["Bookmarks"] },
       { limits: ["Bookmarks"] },
@@ -251,10 +201,9 @@ export const DOC_PAGES: DocPage[] = [
   },
   {
     slug: "theming",
-    title: "Omarchy theming",
-    nav: "Omarchy theme",
+    title: "Theming",
     group: "Make it yours",
-    description: "Vimma takes its colours from your Omarchy theme, and Tokyo Night without one.",
+    description: "Tokyo Night by default, your own colours in config.toml, or your Omarchy theme, live.",
     blocks: [{ guide: "Colours: your Omarchy theme" }, { limits: ["Features"] }],
   },
   {
@@ -283,6 +232,7 @@ export const DOC_PAGES: DocPage[] = [
     group: "Reference",
     description: "Answers to the questions people run into first.",
     blocks: [{ guide: "FAQ and troubleshooting" }],
+    noDetails: true,
   },
   {
     slug: "limits",

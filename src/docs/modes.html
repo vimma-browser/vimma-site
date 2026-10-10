@@ -1,2 +1,53 @@
-<!-- Hand-written intro for the modes page. -->
-<p>Modes are what let a few plain keys do so much. Vimma sees every key before Firefox does and decides, by mode, who gets it. In <strong>normal</strong> mode bare keys are Vimma's; in <strong>insert</strong> mode, with focus in a text field, they type. <strong>Visual</strong> is copy mode, <strong>hint</strong> is link hints and <strong>command</strong> is the <kbd>:</kbd> line. The status bar always says which mode you are in, and <kbd>Esc</kbd> takes you back to normal.</p>
+<!-- Hand-written guide for the modes page; the build adds the keys table and the details from guide.md. -->
+<p class="lead">Vimma's keys depend on the mode, as in Vim. Most of the time you are in <strong>normal</strong> mode, where letters are commands: <kbd>j</kbd> scrolls, <kbd>f</kbd> shows link hints. Click into a text field and you are in <strong>insert</strong> mode, where letters type. The badge at the left of the status bar always says which mode you are in, and <kbd>Esc</kbd> takes you back to normal.</p>
+
+<h2 id="the-modes">The modes at a glance</h2>
+
+<div class="table-wrap"><table class="plain"><thead><tr><th scope="col">Badge</th><th scope="col">When you are in it</th><th scope="col">How to get back to normal</th></tr></thead><tbody>
+<tr><td><code>NORMAL</code></td><td>On every page, by default. Letters are Vimma's commands; the page does not see them.</td><td>You are there.</td></tr>
+<tr><td><code>INSERT</code></td><td>While a text field has focus, or after <kbd>i</kbd>. Keys type into the page.</td><td><kbd>Esc</kbd></td></tr>
+<tr><td><code>HINT</code></td><td>After <kbd>f</kbd> or <kbd>F</kbd>: labels on everything you can click.</td><td>Type a label, or <kbd>Esc</kbd></td></tr>
+<tr><td><code>VISUAL</code></td><td>Copy mode, after <kbd>v</kbd>: a caret and a selection (<a href="{{root}}docs/copy-mode/">Copy mode</a>).</td><td><kbd>y</kbd> copies and leaves, or <kbd>Esc</kbd></td></tr>
+<tr><td><code>COMMAND</code></td><td>While you type a <kbd>:</kbd> command or a <kbd>/</kbd> search, at the bottom of the window.</td><td><kbd>Enter</kbd> runs it, <kbd>Esc</kbd> cancels</td></tr>
+<tr><td><code>HELP</code></td><td>While the <kbd>ctrl+b</kbd> <kbd>?</kbd> key list or the <kbd>ctrl+b</kbd> <kbd>g</kbd> tab list is open.</td><td><kbd>Esc</kbd> or <kbd>q</kbd></td></tr>
+<tr><td><code>RESIZE</code></td><td>After <kbd>ctrl+b</kbd> <kbd>r</kbd>, to resize <a href="{{root}}docs/panes/">panes</a>.</td><td><kbd>Esc</kbd></td></tr>
+</tbody></table></div>
+
+<h2 id="two-kinds-of-keys">Two kinds of keys</h2>
+
+<ul>
+  <li><strong>Bare keys</strong> (<kbd>j</kbd>, <kbd>f</kbd>, <kbd>/</kbd>) depend on the mode. In normal mode they are Vimma's; in insert mode they type.</li>
+  <li><strong><kbd>ctrl+b</kbd> keys</strong> work in every mode, even while you type in a field or the URL bar, because <kbd>ctrl+b</kbd> never types anything. Press <kbd>ctrl+b</kbd>, let go, then press the next key. The status bar shows <code>prefix</code> while it waits; <kbd>Esc</kbd> cancels.</li>
+</ul>
+
+<p>Keys Vimma does not use reach the page as usual: a site's own shortcut on <kbd>s</kbd> or <kbd>m</kbd> still works in normal mode.</p>
+
+<h2 id="typing-in-a-page">Typing in a page</h2>
+
+<ul>
+  <li>Click a text field, pick it with <kbd>f</kbd>, or press <kbd>i</kbd> to focus the first one on the page (<kbd>gi</kbd>: the first one you can see; <kbd>3gi</kbd>: the third). You are in insert mode.</li>
+  <li><kbd>Esc</kbd> leaves the field and puts you back in normal mode. The page does not see that <kbd>Esc</kbd>: if a site wanted it (to close its own pop-up), press <kbd>Esc</kbd> once more.</li>
+  <li>On a page with its own keyboard controls, such as a game, <kbd>i</kbd> lets every key through to the page until you press <kbd>Esc</kbd>.</li>
+</ul>
+
+<h2 id="command-line">The command line</h2>
+
+<p><kbd>:</kbd> opens a Vim-style command line at the bottom of the window. Type a command, press <kbd>Enter</kbd> to run it or <kbd>Esc</kbd> to cancel. <kbd>Tab</kbd> completes, and <kbd>Up</kbd> brings back what you ran before. Some to start with:</p>
+
+<div class="table-wrap"><table class="plain"><thead><tr><th scope="col">Command</th><th scope="col">What it does</th></tr></thead><tbody>
+<tr><td><code>:open example.com</code></td><td>Opens the address in this tab; other words are a web search.</td></tr>
+<tr><td><code>:tabnew example.com</code></td><td>The same, in a new tab.</td></tr>
+<tr><td><code>:q</code></td><td>Closes the pane, or the tab when there is one pane.</td></tr>
+<tr><td><code>:workspace work</code></td><td>Switches to the workspace called <code>work</code>.</td></tr>
+<tr><td><code>:help</code></td><td>Lists every key, as <kbd>ctrl+b</kbd> <kbd>?</kbd> does.</td></tr>
+</tbody></table></div>
+
+<p>The full list is under <a href="#the-command-line">Details</a>. Any action on the <a href="{{root}}keys/">keys page</a> runs by its name too, such as <code>:scroll_down</code>.</p>
+
+<h2 id="stuck">If keys seem to do nothing</h2>
+
+<ol class="steps-list">
+  <li>Look at the badge. <code>INSERT</code> means a text field has focus: press <kbd>Esc</kbd>.</li>
+  <li>Settings (<code>about:preferences</code>) focuses its search box when it opens, so it starts in insert mode: press <kbd>Esc</kbd> before <kbd>j</kbd> or <kbd>k</kbd>.</li>
+  <li>Extension pages, <code>data:</code> and <code>view-source:</code> pages stay in insert mode: Vimma does not reach them. <kbd>ctrl+b</kbd> keys still work there. More on the <a href="{{root}}docs/troubleshooting/">troubleshooting</a> page.</li>
+</ol>
