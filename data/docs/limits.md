@@ -1,17 +1,34 @@
 # Known limits
 
-Every known limit or gap of Vimma on `main`, one line each, with the spec, ADR or issue that
-records it. Plan §9's open questions resolve to an ADR or a line here. When a limit is fixed,
-delete its line in the same PR.
+This page lists every known limit or gap in Vimma on `main`, one line each, with the spec, ADR
+or issue that records it, so you know what to expect before you run into it. Each of plan §9's
+open questions ends as an ADR or as a line here. When a limit is fixed, its line is deleted in
+the same PR.
 
 ## Features
 
 - Tab keys count Firefox's visible tabs: the current workspace's and any pinned tab.
 - The first key of a sequence with nothing runnable under it passes through to the page or
   Firefox ([m1-actor-insert-scroll](specs/m1-actor-insert-scroll.md), Settled). `ctrl+w`'s pane keys run
-  only with two panes or more, so with one pane `ctrl+w` closes the tab; with a split, in normal
-  mode, it is Vim's window prefix and does not close the tab
-  ([m4-split-panes](specs/m4-split-panes.md), sub-spec 3).
+  only with two panes or more, so with one pane `ctrl+w` reaches the page; with a split, in
+  normal mode, it is Vim's window prefix ([m4-split-panes](specs/m4-split-panes.md), sub-spec 3).
+- Firefox's shortcuts on Vimma's keys (`ctrl+w` close tab, `ctrl+u` view source, `ctrl+h`
+  history sidebar, `ctrl+d` bookmark, `ctrl+o` Open File, `ctrl+i` Page Info, `ctrl+k` web
+  search, `ctrl+b` bookmarks sidebar) are off in every mode, so they need `x`, `gf`,
+  `ctrl+shift+h`, `ctrl+b a`, `:open`, the menus or `[firefox] enable`. `[firefox]` reaches only
+  the window's `#mainKeyset`: tab switching (`ctrl+tab`, `ctrl+pagedown`) and the developer
+  tools' keys cannot be turned off there ([key-handling-batch](specs/key-handling-batch.md)).
+- The text-field keys (`ctrl+w`, `ctrl+u`, `ctrl+h`) wait for the page: one that takes the key
+  keeps it, and the edit runs a moment after the key, so a key typed in that moment can land
+  before it. A text field with focus in normal mode (a page's autofocus) gets no edit. On macOS
+  `ctrl+h` is Cocoa's own backspace, and only `ctrl+…` (not `cmd`) shortcuts are matched; it is
+  untested there ([key-handling-batch](specs/key-handling-batch.md)).
+- AltGr and Option characters are told from real `alt` chords by what the physical key types
+  on a US layout: on a layout where a key's plain character differs from the US one, a
+  `ctrl+alt` chord on it that types another character counts as AltGr (Windows'
+  `ctrl+alt` stand-in) ([key-handling-batch](specs/key-handling-batch.md), § 3).
+- The side panel takes no count: `3x` selects row 3 and closes the panel, and the `x` then
+  closes that tab in normal mode ([key-handling-batch](specs/key-handling-batch.md), § 4).
 - Pages that take keys outside a text field (games, Google Docs' canvas, Figma) lose their bare
   keys to normal mode; press `i` to let every key through until `Esc`. Text editors are
   detected ([m1-actor-insert-scroll](specs/m1-actor-insert-scroll.md), Limits).
@@ -28,9 +45,9 @@ delete its line in the same PR.
   ([m1-actor-insert-scroll](specs/m1-actor-insert-scroll.md), Settled).
 - After `Esc` in a `designMode` page, it stays in normal until the next click into it
   ([m1-actor-insert-scroll](specs/m1-actor-insert-scroll.md), Settled).
-- Command line: history is kept in memory only, until Vimma quits; arguments are not
-  completed (URLs, workspace names); no
-  `:set`, ranges or counts ([m1-cmdline](specs/m1-cmdline.md), Settled).
+- Command line: history is kept in memory only, until Vimma quits; arguments (URLs, workspace
+  names) are not completed, except `:addon`'s add-on names; there is no `:set`, and no ranges or
+  counts ([m1-cmdline](specs/m1-cmdline.md), Settled; [addon-manager](specs/addon-manager.md)).
 - Link hints label only what the page has as elements: canvas and WebGL apps (Google Docs,
   Figma, maps, games) have nothing to label, and delegated click handlers with no role or
   listener of their own, image-map `<area>` links and pinch-zoomed pages are missed or
@@ -117,7 +134,7 @@ delete its line in the same PR.
 
 ## Workspaces (M3, by design)
 
-These are the limits the workspaces' design accepts
+These are the trade-offs the workspaces' design accepts on purpose
 ([m3-workspaces](specs/m3-workspaces.md)).
 
 - Containers do not isolate history, bookmarks, form history, the downloads list, HSTS or site
@@ -147,7 +164,7 @@ These are the limits the workspaces' design accepts
 - A window saved by a newer Vimma keeps its saved workspaces untouched: this version starts it
   with its tabs sorted into workspaces by container, without its panes, and does not save over
   it.
-- Tabs of hidden workspaces keep playing audio and are never unloaded automatically.
+- Tabs in hidden workspaces keep playing audio, and they are never unloaded automatically.
 - Closing the last tab opens a new tab instead of closing the window
   (`browser.tabs.closeWindowWithLastTab` is `false`); setting it to `true` lets the window close
   with every hidden workspace in it.
@@ -163,8 +180,8 @@ These are the limits the workspaces' design accepts
 - Firefox Sync no longer syncs `browser.startup.page` or `privacy.userContext.enabled` to Vimma.
 - After 3 minutes without input, the session is saved hourly, so a crash can lose an hour of
   changes made by pages (tabs they opened), as in Firefox.
-- Private windows and popups have no workspaces.
-- Firefox's sidebar keys (`ctrl+h`, `ctrl+alt+x`, `ctrl+alt+u`, `ctrl+alt+z`) still open its own
+- Private windows and pop-ups have no workspaces.
+- Firefox's sidebar keys (`ctrl+alt+x`, `ctrl+alt+u`, `ctrl+alt+z`; `ctrl+h` is off) still open its own
   sidebar beside Vimma's side panel; Firefox's four default containers stay in Settings.
 - Extensions that hide or show tabs (`tabs.hide`) conflict with workspace visibility.
 
@@ -202,6 +219,25 @@ These are the limits the workspaces' design accepts
   only `ctrl+b a` and `:bookmark` offer to move the existing one. The filter lists bookmarks,
   not folders ([bookmarks](specs/bookmarks.md), decisions 7 and 10).
 
+## Add-ons
+
+- Installing stays Firefox's: an add-on's page on addons.mozilla.org and the permission prompt.
+  The picker's `u` only checks for an update; Firefox installs it (in the background, or from
+  about:addons), so an update asking for new permissions still gets Firefox's prompt
+  ([addon-manager](specs/addon-manager.md), decision 9).
+- A key cannot open one particular add-on's popup from `config.toml`: keymap actions carry no
+  argument. Bind `addon_popup` (it opens `:addon `) or set the add-on's own shortcut in
+  about:addons → Manage Extension Shortcuts ([addon-manager](specs/addon-manager.md),
+  decision 12).
+- An extension's own shortcut on a key Vimma binds never reaches the add-on: Vimma's wins.
+- Keys inside an add-on's popup are the popup's (no Vim keys there), as on other extension
+  pages; `Esc` closes it.
+- Only browser-action (toolbar button) popups open from Vimma; page actions (the address bar's
+  buttons), sidebar actions and an add-on's context-menu entries need Firefox's own UI
+  ([addon-manager](specs/addon-manager.md), Out of scope).
+- An inline options page (`open_in_tab: false`) opens in a tab of its own, not inside
+  about:addons ([addon-manager](specs/addon-manager.md), decision 6).
+
 ## Panes
 
 - Panes are resized from the keyboard only (resize mode); dividers cannot be dragged with the
@@ -218,7 +254,7 @@ These are the limits the workspaces' design accepts
   "at most N panes". Every visible pane's page stays live, so each one costs memory and CPU;
   a zoomed-away pane is paused (its docshell inactive) until unzoom
   ([m4-split-panes](specs/m4-split-panes.md), sub-spec 2).
-- A tab whose pane is closed stays open in its workspace rather than hidden.
+- A tab whose pane is closed stays open in its workspace; it is not hidden.
 - One split per workspace: a split made outside Vimma (Firefox's split-view command, an
   extension, a restored Firefox session) is adopted as a row of panes; a second one in the same
   workspace, or one whose tabs are in different workspaces, is separated with a notice. Firefox's
@@ -288,16 +324,17 @@ These are the limits the workspaces' design accepts
 
 ## Branding
 
-- The logo is a placeholder "V" ([m0-branding](specs/m0-branding.md)).
+- The about dialog's wordmark (`about-wordmark.svg`) is still the placeholder "VIMMA" in plain
+  strokes; the logo and app icon are the real window+V mark ([m0-branding](specs/m0-branding.md)).
 - Windows and macOS assets (installer bitmaps, `.icns`, MSIX) are still Surfer's `unofficial`
-  copies until M7 ([m0-branding](specs/m0-branding.md), Out of scope).
+  copies until those platforms are built ([m0-branding](specs/m0-branding.md), Out of scope).
 - The default bookmarks are still Mozilla's links ([m0-branding](specs/m0-branding.md)).
 - `--screenshot` on a brand-new profile logs a bookmarks import error, and `--screenshot about:home`
   hangs. Both are upstream headless quirks ([m0-branding](specs/m0-branding.md), Settled).
 
 ## Platforms and packaging
 
-- Only Linux x86_64 is built and tested. aarch64 and macOS are later; Windows is M7, "when cheap"
+- Only Linux x86_64 is built and tested. aarch64, macOS and Windows ("when cheap") come later
   ([plan.md](../plan.md) §6).
 - No binaries, packages or releases: build from source. Tarball, AppImage, `.deb` and AUR are M6
   ([plan.md](../plan.md) §6).

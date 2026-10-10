@@ -37,4 +37,14 @@
 
 <h2 id="firefox-keys">Firefox's own keys</h2>
 
-<p>They still work: <kbd>ctrl+t</kbd>, <kbd>ctrl+w</kbd>, <kbd>ctrl+tab</kbd>, <kbd>alt+1</kbd>…<kbd>alt+9</kbd>, <kbd>ctrl+l</kbd>, <kbd>ctrl+f</kbd> and the rest. The exception is <kbd>ctrl+b</kbd>, which no longer opens Firefox's bookmarks sidebar; Vimma's bookmarks are on <kbd>ctrl+b</kbd> <kbd>shift+b</kbd>.</p>
+<p>Most work as before: <kbd>ctrl+t</kbd>, <kbd>ctrl+shift+t</kbd>, <kbd>ctrl+tab</kbd>, <kbd>alt+1</kbd>…<kbd>alt+9</kbd>, <kbd>ctrl+l</kbd>, <kbd>ctrl+f</kbd> and the rest. The few that clash with Vim and Vimma are off, so the two never fight over a key:</p>
+
+<div class="table-wrap"><table class="plain"><thead><tr><th scope="col">Key</th><th scope="col">Firefox's action, now off</th><th scope="col">Use instead</th></tr></thead><tbody>
+<tr><td><kbd>ctrl+w</kbd></td><td>close tab</td><td><kbd>x</kbd> or <kbd>ctrl+b</kbd> <kbd>shift+x</kbd></td></tr>
+<tr><td><kbd>ctrl+u</kbd></td><td>view page source</td><td><kbd>gf</kbd></td></tr>
+<tr><td><kbd>ctrl+d</kbd></td><td>bookmark this page</td><td><kbd>ctrl+b</kbd> <kbd>a</kbd></td></tr>
+<tr><td><kbd>ctrl+b</kbd></td><td>bookmarks sidebar</td><td><kbd>ctrl+b</kbd> <kbd>shift+b</kbd></td></tr>
+<tr><td><kbd>ctrl+o</kbd>, <kbd>ctrl+i</kbd>, <kbd>ctrl+h</kbd>, <kbd>ctrl+k</kbd></td><td>open file, page info, history, web search</td><td>the menus, or <kbd>I</kbd> to search</td></tr>
+</tbody></table></div>
+
+<p>Want one back? List it under <code>[firefox] enable</code> in <a href="{{root}}docs/config/">config.toml</a>.</p>

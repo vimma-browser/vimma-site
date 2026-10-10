@@ -7,7 +7,7 @@
 // from these copies, so the site builds without the main repository and never drifts silently:
 // a heading or table row the docs config names that disappears upstream fails the build.
 //
-//   npm run docs:sync -- ../VimHerdr      (default ../VimHerdr; ref: origin/main)
+//   npm run docs:sync -- ../vimma      (default ../vimma; ref: origin/main)
 //
 // It runs `git fetch` and `git show` in that repository and changes nothing else there.
 
@@ -18,7 +18,7 @@ import { resolve } from "node:path";
 import { type DocsSource, writeBindingsJson } from "./gen-keys.js";
 
 const ROOT = resolve(import.meta.dirname, "../..");
-const repo = resolve(process.argv[2] ?? "../VimHerdr");
+const repo = resolve(process.argv[2] ?? "../vimma");
 const ref = process.env["VIMMA_REF"] ?? "origin/main";
 const FILES = ["guide.md", "bindings.md", "limits.md"];
 

@@ -50,7 +50,7 @@ export const STEPS: readonly Step[] = [
     alt: "The window split in two: the article on the left, Vimma's start page on the right, and the status bar reading pane 2/2.",
   },
   {
-    keys: ["ctrl+i"],
+    keys: ["ctrl+b", ")"],
     label: "goes to the next workspace, with cookies and logins of its own.",
     shot: "hero-workspace",
     alt: "A mail inbox in the work workspace, signed in; the status bar reads 2:work.",

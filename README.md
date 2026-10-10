@@ -29,9 +29,9 @@ npm ci
 npm run build       # tsc, then .build/build.js: dist/
 npm run serve       # dist/ at http://127.0.0.1:8080/ (PORT=… to change)
 npm run check       # tsc --noEmit (both projects), then the dist/ checks below
-npm run docs:sync -- ../VimHerdr   # copy guide/bindings/limits.md from its origin/main, regen keys
+npm run docs:sync -- ../vimma   # copy guide/bindings/limits.md from its origin/main, regen keys
 npm run keys:sync                  # regenerate data/bindings.json from data/docs/bindings.md only
-npm run shots -- ../VimHerdr       # retake the home page's screenshots from that checkout's build
+npm run shots -- ../vimma       # retake the home page's screenshots from that checkout's build
 ```
 
 `npm run check` runs on the built `dist/`:

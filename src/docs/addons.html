@@ -1,0 +1,21 @@
+<!-- Hand-written guide for the addons page; the build adds the keys table and the details from guide.md. -->
+<p class="lead">Add-ons work as in Firefox: install them from addons.mozilla.org as usual. Vimma adds keyboard control, so you can open a password manager or an ad blocker's panel without reaching for its toolbar button.</p>
+
+<h2 id="the-picker">The add-on picker</h2>
+
+<p><kbd>ctrl+b</kbd> <kbd>e</kbd> (or <code>:addons</code>) lists the add-ons you installed, each with its version and whether it is on.</p>
+
+<div class="table-wrap"><table class="plain"><thead><tr><th scope="col">To</th><th scope="col">Press</th></tr></thead><tbody>
+<tr><td>Move down / up, or filter by name</td><td><kbd>j</kbd> / <kbd>k</kbd>, <kbd>/</kbd></td></tr>
+<tr><td>Open its popup, as clicking its toolbar button</td><td><kbd>Enter</kbd></td></tr>
+<tr><td>Open its options</td><td><kbd>o</kbd></td></tr>
+<tr><td>Turn it on or off</td><td><kbd>x</kbd></td></tr>
+<tr><td>Remove it (asks first)</td><td><kbd>d</kbd></td></tr>
+<tr><td>Check for an update</td><td><kbd>u</kbd></td></tr>
+<tr><td>Allow or stop it in private windows</td><td><kbd>P</kbd></td></tr>
+<tr><td>Close the picker</td><td><kbd>Esc</kbd> or <kbd>q</kbd></td></tr>
+</tbody></table></div>
+
+<h2 id="one-add-on">Open one add-on by name</h2>
+
+<p><code>:addon bw</code> opens the popup of the add-on whose name matches, Bitwarden here; <kbd>Tab</kbd> completes the name. Inside a popup the keys are the popup's, so you can type in its search box at once; <kbd>Esc</kbd> closes it.</p>

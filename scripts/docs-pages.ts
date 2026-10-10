@@ -42,6 +42,7 @@ export const LIMIT_SECTIONS = [
   "Tabs and window",
   "Workspaces (M3, by design)",
   "Bookmarks",
+  "Add-ons",
   "Panes",
   "Privacy, security and services",
   "Compatibility and versions",
@@ -128,6 +129,7 @@ export const DOC_PAGES: DocPage[] = [
     blocks: [
       { guideParas: { section: "Keys", startsWith: ["While the overlay is open"] }, title: "The bindings overlay", id: "the-overlay" },
       { guide: "Goto picker and tab rename" },
+      { guide: "Firefox's own shortcuts" },
       { keys: ["Help", "Tabs"] },
       { limits: ["Tabs and window"] },
     ],
@@ -216,6 +218,13 @@ export const DOC_PAGES: DocPage[] = [
       { guide: "Firefox behaviour Vimma changes" },
       { limits: ["Privacy, security and services", "Compatibility and versions"] },
     ],
+  },
+  {
+    slug: "addons",
+    title: "Add-ons",
+    group: "Make it yours",
+    description: "Add-ons work as in Firefox; ctrl+b e opens a picker for their popups, options and updates.",
+    blocks: [{ guide: "Add-ons" }, { keys: ["Add-ons"] }, { limits: ["Add-ons"] }],
   },
   {
     slug: "vimma-ctl",

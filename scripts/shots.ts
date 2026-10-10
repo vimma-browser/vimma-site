@@ -8,7 +8,7 @@
 // screenshot to assets/img/shots/ as AVIF and WebP. The images are committed, so building the
 // site needs none of this.
 //
-//   npm run shots -- ../VimHerdr        # needs that checkout's build, Xvfb, ImageMagick, avifenc
+//   npm run shots -- ../vimma        # needs that checkout's build, Xvfb, ImageMagick, avifenc
 //   npm run shots -- --serve            # only the proxy, to look at the pages:
 //                                       # curl -x 127.0.0.1:8139 http://news.example/
 
@@ -49,7 +49,7 @@ const server = createServer((req, res) => {
 if (process.argv[2] === "--serve") {
   server.listen(PORT, "127.0.0.1", () => console.log(`demo sites on proxy 127.0.0.1:${PORT}; ctrl+c to stop`));
 } else {
-  await takeShots(resolve(process.argv[2] ?? "../VimHerdr"));
+  await takeShots(resolve(process.argv[2] ?? "../vimma"));
 }
 
 async function takeShots(vimma: string): Promise<void> {
