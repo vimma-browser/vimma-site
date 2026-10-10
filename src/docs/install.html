@@ -1,2 +1,44 @@
-<!-- Hand-written intro for the install page. -->
-<p>There is nothing to download yet. You build Vimma from source, which takes about 40 minutes and 35 GB of disk the first time. It then runs with a profile of its own, so your Firefox profile is never touched. Linux x86_64 is the only platform built and tested.</p>
+<!-- Hand-written guide for the install page; the build adds the keys table and the details from guide.md. -->
+<p class="lead">There is nothing to download yet. You build Vimma from source on Linux x86_64, then start it with a profile of its own, so your Firefox profile is never touched.</p>
+
+<h2 id="build-it">Build it</h2>
+
+<p>The commands, requirements and timings are on the <a href="{{root}}install/">install page</a>. In short: Linux x86_64, about 35 GB of free disk, Node.js, Python 3 and git, and about 40 minutes for the first build.</p>
+
+<h2 id="start-it">Start it</h2>
+
+<p>From the checkout:</p>
+
+<pre class="code">npm start<span class="c">                   # your build, with its own profile</span>
+npm start -- --fresh<span class="c">        # a throwaway profile, deleted when Vimma quits</span>
+npm start -- --profile DIR<span class="c">  # another profile you keep</span></pre>
+
+<p>The profile lives in <code>~/.cache/vimma-dev-profile</code>. Vimma will not open the same profile twice: if it refuses to start, switch to the window that is already open.</p>
+
+<h2 id="what-you-see">What you see first</h2>
+
+<ul>
+  <li><strong>No tab strip.</strong> Vimma hides it. The <strong>status bar</strong>, the line at the bottom of the window, shows the mode, the workspace and which tab you are on (<code>tab 1/1</code>).</li>
+  <li><strong>The start page</strong>, with the three keys to start from: <kbd>ctrl+b</kbd> <kbd>?</kbd> for every key, <kbd>:</kbd> for commands, <kbd>f</kbd> for link hints.</li>
+  <li><strong>The URL bar is focused</strong>, so you can type an address straight away and press <kbd>Enter</kbd>.</li>
+</ul>
+
+<h2 id="first-five-minutes">Your first five minutes</h2>
+
+<ol class="steps-list">
+  <li>Type an address in the URL bar and press <kbd>Enter</kbd>.</li>
+  <li>Scroll with <kbd>j</kbd> and <kbd>k</kbd>. <kbd>d</kbd> and <kbd>u</kbd> move half a page; <kbd>gg</kbd> and <kbd>G</kbd> go to the top and the bottom.</li>
+  <li>Press <kbd>f</kbd>: a yellow label appears on every link. Type a label's letters to follow that link. <kbd>H</kbd> goes back.</li>
+  <li>Press <kbd>ctrl+b</kbd>, let go, then press <kbd>c</kbd>: a new tab. <kbd>ctrl+b</kbd> <kbd>n</kbd> and <kbd>ctrl+b</kbd> <kbd>p</kbd> move between tabs.</li>
+  <li>Click a search box and type: you are in insert mode, and keys type as usual. <kbd>Esc</kbd> leaves the box, and the keys are Vimma's again.</li>
+  <li>Lost? <kbd>ctrl+b</kbd> <kbd>?</kbd> lists every key; type <kbd>/</kbd> to filter the list, <kbd>Esc</kbd> to close it.</li>
+</ol>
+
+<p>Next: <a href="{{root}}docs/modes/">Modes</a> explains when a key is a command and when it types.</p>
+
+<h2 id="where-files-live">Where Vimma keeps its files</h2>
+
+<div class="table-wrap"><table class="plain"><thead><tr><th scope="col">Path</th><th scope="col">What</th></tr></thead><tbody>
+<tr><td><code>~/.config/vimma/config.toml</code></td><td>Your settings and key bindings, if you make the file (see <a href="{{root}}docs/config/">config.toml</a>).</td></tr>
+<tr><td><code>~/.config/vimma/vimma/</code></td><td>Installed Vimma's profiles. A build started with <code>npm start</code> uses <code>~/.cache/vimma-dev-profile</code> instead.</td></tr>
+</tbody></table></div>

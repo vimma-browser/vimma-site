@@ -1,4 +1,4 @@
-<!--{"title": "Vimma: a keyboard-first browser", "short": "home", "out": "", "cmd": "cat README.md", "description": "Vimma is a keyboard-first browser for people who live in Vim and tmux: Vim modes on every page, and tabs, splits and workspaces behind ctrl+b. Built on Firefox."}-->
+<!--{"title": "Vimma: a keyboard-first browser", "short": "home", "out": "", "cmd": "cat README.md", "description": "Vimma is a Firefox fork for people who live in the terminal: Vim modes on every page, tmux-style workspaces and splits behind ctrl+b."}-->
 <section class="hero-head" aria-labelledby="title">
   <picture class="logo">
     <source type="image/avif" srcset="{{root}}assets/img/vimma-logo-256.avif 1x, {{root}}assets/img/vimma-logo-512.avif 2x">
@@ -7,7 +7,7 @@
   </picture>
   <div>
     <h1 id="title" class="sr-only">Vimma</h1>
-    <p class="pitch">A keyboard-first browser for people who live in Vim and tmux.</p>
+    <p class="pitch">A browser for people who live in the terminal: Vim modes on every page, tmux-style workspaces and splits.</p>
     <p>Your fingers already know the keys. Bare keys drive the page, <kbd>ctrl+b</kbd> drives tabs, panes and workspaces, and your hands never leave the keyboard. Firefox is underneath, so your sites and add-ons come along.</p>
     <ul class="cta">
       <li><a href="{{root}}docs/">start here</a></li>
@@ -74,9 +74,9 @@
       <p>The defaults are a starting point. Remap any binding, the <kbd>ctrl+b</kbd> prefix and the <kbd>space</kbd> leader in <code>~/.config/vimma/config.toml</code>; changes apply as you save. <a href="{{root}}keys/#remap">How</a>.</p>
     </li>
     <li class="card">
-      <h3>Omarchy theme</h3>
-      <p class="k"><code>omarchy-theme-set</code></p>
-      <p>Wears your current Omarchy theme and recolours the moment you switch. Without Omarchy, it is Tokyo Night, as on this page.</p>
+      <h3>Themes</h3>
+      <p class="k"><code>[theme]</code></p>
+      <p>Tokyo Night by default, as on this page, with any colour yours to change. It can also follow your desktop's theme. <a href="{{root}}docs/theming/">How</a>.</p>
     </li>
     <li class="card">
       <h3>Privacy defaults</h3>
@@ -107,7 +107,7 @@
     <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> M2 tab keys, status bar, goto picker</li>
     <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> M3 workspaces</li>
     <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> M4 split panes</li>
-    <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> M5 <code>config.toml</code> and the Omarchy theme</li>
+    <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> M5 <code>config.toml</code> and theming</li>
     <li><span class="mark todo" aria-hidden="true">[ ]</span><span class="sr-only">To do:</span> M6 packages and updates (the tooling exists; releases wait)</li>
   </ul>
 </section>

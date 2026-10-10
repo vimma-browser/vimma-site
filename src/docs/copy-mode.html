@@ -1,2 +1,39 @@
-<!-- Hand-written intro for the copy-mode page. -->
-<p>Copy mode puts a caret on the page so you can select and copy text without reaching for the mouse: move with Vim's motions, start a selection with <kbd>v</kbd>, copy it with <kbd>y</kbd>.</p>
+<!-- Hand-written guide for the copy-mode page; the build adds the keys table and the details from guide.md. -->
+<p class="lead">Copy mode lets you select and copy text from a page without the mouse, with Vim's motions.</p>
+
+<h2 id="copy-some-text">Copy some text</h2>
+
+<ol class="steps-list">
+  <li>Press <kbd>v</kbd>. A caret appears at the first text you can see, and the badge says <code>VISUAL</code>.</li>
+  <li>Move the caret to where your text starts: <kbd>j</kbd> and <kbd>k</kbd> by line, <kbd>w</kbd> and <kbd>b</kbd> by word, or <kbd>f</kbd> and a character to jump to it on the line.</li>
+  <li>Press <kbd>v</kbd> to start the selection, then move to extend it.</li>
+  <li>Press <kbd>y</kbd>. The text is on the clipboard, and you are back in normal mode.</li>
+</ol>
+
+<p><kbd>Esc</kbd> leaves without copying. Selecting with the mouse works too: drag or double-click, then <kbd>y</kbd> copies, or the motions extend the selection.</p>
+
+<h2 id="move-the-caret">Move the caret</h2>
+
+<div class="table-wrap"><table class="plain"><thead><tr><th scope="col">To</th><th scope="col">Press</th></tr></thead><tbody>
+<tr><td>A character left / right</td><td><kbd>h</kbd> / <kbd>l</kbd></td></tr>
+<tr><td>A line down / up</td><td><kbd>j</kbd> / <kbd>k</kbd></td></tr>
+<tr><td>A word forward / back / to its end</td><td><kbd>w</kbd> / <kbd>b</kbd> / <kbd>e</kbd></td></tr>
+<tr><td>Start / end of the line</td><td><kbd>0</kbd> / <kbd>$</kbd></td></tr>
+<tr><td>Top / bottom of the page</td><td><kbd>gg</kbd> / <kbd>G</kbd></td></tr>
+<tr><td>To a character on the line (forward / back)</td><td><kbd>f</kbd> / <kbd>F</kbd> and the character</td></tr>
+<tr><td>Start / end of the paragraph</td><td><kbd>{</kbd> / <kbd>}</kbd></td></tr>
+</tbody></table></div>
+
+<p>A number repeats a motion: <kbd>3w</kbd>.</p>
+
+<h2 id="select-and-copy">Select and copy</h2>
+
+<div class="table-wrap"><table class="plain"><thead><tr><th scope="col">To</th><th scope="col">Press</th></tr></thead><tbody>
+<tr><td>Start or drop a selection</td><td><kbd>v</kbd></td></tr>
+<tr><td>Select whole lines</td><td><kbd>V</kbd></td></tr>
+<tr><td>Select the word under the caret</td><td><kbd>iw</kbd></td></tr>
+<tr><td>Copy and leave</td><td><kbd>y</kbd></td></tr>
+<tr><td>Copy the whole lines and leave</td><td><kbd>Y</kbd></td></tr>
+</tbody></table></div>
+
+<p>Text inside a text field is not reachable from copy mode: click the field and select there as usual.</p>

@@ -1,2 +1,27 @@
-<!-- Hand-written intro for the panes page. -->
-<p>Read the docs beside the code review, or a dashboard beside the ticket. A Vimma window holds up to four pages side by side, split and moved between with tmux's keys. Each workspace keeps its own split, and a restart brings it back as you left it.</p>
+<!-- Hand-written guide for the panes page; the build adds the keys table and the details from guide.md. -->
+<p class="lead">Split the window to see up to four pages side by side. Each page in the split is a <strong>pane</strong>, and tmux's keys after <kbd>ctrl+b</kbd> move between them.</p>
+
+<h2 id="split-keys">Pane keys</h2>
+
+<div class="table-wrap"><table class="plain"><thead><tr><th scope="col">To</th><th scope="col">Press</th></tr></thead><tbody>
+<tr><td>Split right / down</td><td><kbd>ctrl+b</kbd> <kbd>v</kbd> / <kbd>ctrl+b</kbd> <kbd>-</kbd></td></tr>
+<tr><td>Move to the pane left / below / above / right</td><td><kbd>ctrl+b</kbd> <kbd>h</kbd> <kbd>j</kbd> <kbd>k</kbd> <kbd>l</kbd>, or <kbd>ctrl+w</kbd> <kbd>h</kbd> … in normal mode</td></tr>
+<tr><td>Zoom the pane to the whole window, and back</td><td><kbd>ctrl+b</kbd> <kbd>z</kbd></td></tr>
+<tr><td>Close the pane (its tab stays open)</td><td><kbd>ctrl+b</kbd> <kbd>x</kbd></td></tr>
+<tr><td>Swap with the pane left / below / above / right</td><td><kbd>ctrl+b</kbd> <kbd>shift+h</kbd> <kbd>j</kbd> <kbd>k</kbd> <kbd>l</kbd></td></tr>
+<tr><td>Resize</td><td><kbd>ctrl+b</kbd> <kbd>r</kbd>, then <kbd>h</kbd> <kbd>j</kbd> <kbd>k</kbd> <kbd>l</kbd>; <kbd>Esc</kbd> when done</td></tr>
+</tbody></table></div>
+
+<h2 id="what-to-expect">What to expect</h2>
+
+<ul>
+  <li>A new pane opens the start page with the URL bar focused: type where it should go.</li>
+  <li>The focused pane has a coloured border, and the status bar says <code>pane 2/2</code>. Page keys such as <kbd>j</kbd>, <kbd>H</kbd> and <kbd>r</kbd> act on it. Clicking a pane focuses it too.</li>
+  <li>Closing a pane keeps its tab: it is still in the workspace, and <kbd>ctrl+b</kbd> <kbd>g</kbd> finds it.</li>
+  <li>Four panes at most. Change that with <code>[panes] max</code> in config.toml.</li>
+  <li>Each <a href="{{root}}docs/workspaces/">workspace</a> keeps its own split, and a restart brings it back as you left it.</li>
+</ul>
+
+<h2 id="resizing">Resizing</h2>
+
+<p><kbd>ctrl+b</kbd> <kbd>r</kbd> enters resize mode (the badge says <code>RESIZE</code>). <kbd>l</kbd> makes the pane wider, <kbd>h</kbd> narrower, <kbd>j</kbd> taller and <kbd>k</kbd> shorter, 5 % at a time; <kbd>4l</kbd> is four steps. <kbd>Esc</kbd>, <kbd>Enter</kbd> or <kbd>q</kbd> leave. Without the mode, <kbd>ctrl+w</kbd> <kbd>&gt;</kbd>, <kbd>ctrl+w</kbd> <kbd>&lt;</kbd>, <kbd>ctrl+w</kbd> <kbd>+</kbd> and <kbd>ctrl+w</kbd> <kbd>-</kbd> resize one step, as in Vim.</p>

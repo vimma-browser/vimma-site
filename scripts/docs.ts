@@ -11,7 +11,7 @@ import { join } from "node:path";
 
 import { escapeHtml } from "../src/ts/hero-frames.js";
 import type { BindingsFile } from "./bindings-types.js";
-import { type Block, DOC_PAGES, type DocPage, LIMIT_SECTIONS, STALE_LIMITS, STALE_PREFIXES } from "./docs-pages.js";
+import { type Block, DOC_PAGES, type DocPage, GUIDE_REWRITES, LIMIT_SECTIONS, STALE_LIMITS, STALE_PREFIXES } from "./docs-pages.js";
 import { keysTables, slug } from "./keys-html.js";
 import {
   type MdSection,
@@ -22,7 +22,6 @@ import {
   rawBlocks,
   renderBlocks,
   renderSection,
-  renderTable,
   sectionIds,
 } from "./md.js";
 
@@ -90,26 +89,27 @@ function linker(ids: IdMap, here: string, root: string): RenderOptions["link"] {
 
 function idsOf(block: Block, guide: MdSection): string[] {
   if ("guide" in block) return sectionIds(need(guide, block.guide), block.exclude ?? [], !block.only);
-  if ("guideRows" in block) return [block.id];
+  if ("guideParas" in block) return [block.id];
   return [];
 }
 
-function guideRows(guide: MdSection, b: Extract<Block, { guideRows: unknown }>, opts: RenderOptions): string {
-  const sec = need(guide, b.guideRows.section);
-  const table = sec.body.filter((l) => /^\s*\|/.test(l));
-  const firstCell = (l: string): string => l.trim().replace(/^\|/, "").split("|")[0]?.trim() ?? "";
-  const rows = b.guideRows.rows.map(
-    (want) => table.find((l) => firstCell(l) === want) ?? fail(`guide.md "${sec.title}" has no table row "${want}"`),
-  );
-  const header = b.guideRows.header;
-  const sep = header.replace(/[^|]+/g, " --- ");
-  return `<h2 id="${b.id}">${escapeHtml(b.title)}</h2>\n${renderTable([header, sep, ...rows], opts)}`;
+/** guide.md with GUIDE_REWRITES applied; reports the rewrites that matched nothing. */
+function rewriteGuide(md: string): string {
+  const unused: string[] = [];
+  for (const [re, to] of GUIDE_REWRITES) {
+    if (!re.test(md)) unused.push(String(re));
+    re.lastIndex = 0;
+    md = md.replace(re, to);
+  }
+  if (unused.length) console.log(`  docs: ${unused.length} guide rewrite(s) matched nothing: ${unused.join(" | ")}`);
+  return md;
 }
 
-function guideParas(guide: MdSection, b: Extract<Block, { guideParas: unknown }>, opts: RenderOptions): string {
+function guideParas(guide: MdSection, b: Extract<Block, { guideParas: unknown }>, opts: RenderOptions, level: number): string {
   const sec = need(guide, b.guideParas.section);
   const blocks = rawBlocks(sec.body);
-  return b.guideParas.startsWith
+  const head = `<h${level} id="${b.id}">${escapeHtml(b.title)}</h${level}>\n`;
+  return head + b.guideParas.startsWith
     .map((start) => {
       const blk = blocks.find((x) => (x[0] ?? "").startsWith(start)) ?? fail(`guide.md "${sec.title}" has no paragraph starting "${start}"`);
       return renderBlocks(blk, opts);
@@ -261,6 +261,8 @@ function indexPage(title: string, slugName: string, body: string): SearchEntry[]
   return parts.flatMap((part, i) => {
     const m = /^<h[23] id="([^"]+)">([\s\S]*?)<\/h[23]>/.exec(part);
     if (i > 0 && !m) return [];
+    // the per-page key tables repeat the keys page, which has its own filter
+    if (m && (m[1] === "default-keys" || m[1]?.startsWith("keys-"))) return [];
     const heading = m ? textOf(m[2] ?? "").replace(/\s*\(\d+\)$/, "") : "";
     // no scheme-qualified URLs in the shipped index: it is data, and `npm run check` keeps the
     // site's JS free of URLs; `example.com` still finds them
@@ -277,7 +279,7 @@ function indexPage(title: string, slugName: string, body: string): SearchEntry[]
 
 export function buildDocs(rootDir: string): { pages: BuiltDoc[]; index: SearchEntry[]; source: Source } {
   const read = (p: string): string => readFileSync(join(rootDir, p), "utf8");
-  const guide = parseSections(read("data/docs/guide.md"));
+  const guide = parseSections(rewriteGuide(read("data/docs/guide.md")));
   const limits = parseSections(read("data/docs/limits.md"));
   const keys = JSON.parse(read("data/bindings.json")) as BindingsFile;
   const source = JSON.parse(read("data/docs/source.json")) as Source;
@@ -307,22 +309,38 @@ export function buildDocs(rootDir: string): { pages: BuiltDoc[]; index: SearchEn
     } else if (page.slug === "limits") {
       sections = limitsPage(limits, opts);
     } else {
-      sections = page.blocks
+      // the guide.md blocks sit under one "Details" heading, a level down, unless they are the page
+      const level = page.noDetails ? 2 : 3;
+      let detailsOpen = false;
+      // keys first, then the guide.md text, then the limits links
+      const rank = (b: Block): number => ("keys" in b ? 0 : "limits" in b ? 2 : 1);
+      sections = [...page.blocks]
+        .sort((a, b) => rank(a) - rank(b))
         .map((b) => {
-          if ("guide" in b) {
-            const sec = need(guide, b.guide);
-            const html = renderSection(sec, opts, 2, b.exclude ?? [], !b.only);
-            // a section named like the page needs no second heading; keep its anchor
-            return sec.title.toLowerCase() === page.title.toLowerCase()
-              ? html.replace(/^<h2 id="([^"]+)">[\s\S]*?<\/h2>/, '<span id="$1"></span>')
-              : html;
+          let html: string;
+          if ("guide" in b || "guideParas" in b) {
+            if ("guide" in b) {
+              const sec = need(guide, b.guide);
+              html = renderSection(sec, opts, level, b.exclude ?? [], !b.only);
+              // a section named like the page needs no second heading; keep its anchor
+              if (sec.title.toLowerCase() === page.title.toLowerCase()) {
+                html = html.replace(/^<h(\d) id="([^"]+)">[\s\S]*?<\/h\1>/, '<span id="$2"></span>');
+              }
+            } else {
+              html = guideParas(guide, b, opts, level);
+            }
+            if (!page.noDetails && !detailsOpen) {
+              detailsOpen = true;
+              html = `<h2 id="details" class="details-head">Details</h2>
+<p class="details-note">Everything below is Vimma's own user guide for this topic, in full: every edge case and exception. You do not need it to get started.</p>
+${html}`;
+            }
+            return html;
           }
-          if ("guideRows" in b) return guideRows(guide, b, opts);
-          if ("guideParas" in b) return guideParas(guide, b, opts);
           if ("keys" in b) {
             const secs = b.keys.map((t) => keys.sections.find((s) => s.title === t) ?? fail(`bindings.md has no section "${t}"`));
-            return `<h2 id="default-keys">Default keys</h2>
-<p>From <code>bindings.md</code>, the table Vimma's own <kbd>ctrl+b</kbd> <kbd>?</kbd> overlay shows. Every key is in the <a href="${root}keys/">keys cheatsheet</a>.</p>
+            return `<h2 id="default-keys">All the keys for this page</h2>
+<p>The default bindings, as Vimma's own <kbd>ctrl+b</kbd> <kbd>?</kbd> overlay lists them. <em>Name</em> is the action's name, which you use to <a href="${root}docs/config/">remap it</a> or to run it as a <code>:</code> command. Every key is on the <a href="${root}keys/">keys page</a>.</p>
 ${keysTables(secs, { level: 3, idPrefix: "keys-", filterable: false })}`;
           }
           return limitsLinks(b.limits, limits, root);
@@ -331,10 +349,10 @@ ${keysTables(secs, { level: 3, idPrefix: "keys-", filterable: false })}`;
     }
 
     const title = page?.title ?? START.title;
-    const head = page ? `<h1>${escapeHtml(title)}</h1>\n<div class="intro">\n${intro}\n</div>` : "";
+    const head = page ? `<h1>${escapeHtml(title)}</h1>\n${intro}` : "";
     const content = page ? `${head}\n${sections}` : sections;
     const src = page
-      ? `<p class="source">The intro is written for this site; the rest is built from Vimma's <code>docs/${page.slug === "limits" ? "limits" : "guide"}.md</code> and <code>bindings.md</code> at <code>${escapeHtml(source.commit)}</code> (${escapeHtml(source.date)}).</p>`
+      ? `<p class="source">The guide at the top is written for this site; the details are built from Vimma's <code>docs/${page.slug === "limits" ? "limits" : "guide"}.md</code> and <code>bindings.md</code> at <code>${escapeHtml(source.commit)}</code> (${escapeHtml(source.date)}).</p>`
       : "";
     const body = `<div class="docs">
 ${sidebar(nav, entry.slug, root)}

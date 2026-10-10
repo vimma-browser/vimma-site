@@ -1,2 +1,28 @@
-<!-- Hand-written intro for the vimma-ctl page. -->
-<p><code>vimma-ctl</code> makes your browser part of your scripts. It is a small command-line client for a running Vimma: send it keys, read its state or open a URL, from a script or a window-manager binding. Its socket is off until you turn it on.</p>
+<!-- Hand-written guide for the vimma-ctl page; the build adds the keys table and the details from guide.md. -->
+<p class="lead"><code>vimma-ctl</code> controls a running Vimma from the command line: send it keys, read its state, open a URL. Use it from scripts or window-manager bindings. It is off until you turn it on.</p>
+
+<section class="box note" aria-labelledby="before-you-turn-it-on">
+<h2 class="box-title" id="before-you-turn-it-on">before you turn it on</h2>
+<p>Turning it on gives full control of the browser to any program that runs as you: it can type into your logged-in sites, change any setting and open local files. Leave it off unless you use it.</p>
+</section>
+
+<h2 id="set-it-up">Set it up</h2>
+
+<ol class="steps-list">
+  <li>In <code>about:config</code>, set <code>vimma.control.enabled</code> to <code>true</code>. It starts at once.</li>
+  <li>Build the client: <code>cargo build --release</code> in <code>tools/vimma-ctl/</code> of Vimma's checkout. Put <code>target/release/vimma-ctl</code> on your <code>PATH</code>.</li>
+</ol>
+
+<h2 id="examples">Examples</h2>
+
+<pre class="code">vimma-ctl state<span class="c">                    # mode, workspace and tabs</span>
+vimma-ctl state --json<span class="c">             # the same, as JSON</span>
+vimma-ctl send-keys &quot;ctrl+b ?&quot;<span class="c">     # as if typed: opens the key list</span>
+vimma-ctl send-keys esc
+vimma-ctl open https://example.com<span class="c"> # in a new tab</span></pre>
+
+<p>In Hyprland, a key that shows Vimma's key list:</p>
+
+<pre class="code">bind = SUPER, slash, exec, vimma-ctl send-keys &quot;ctrl+b ?&quot;</pre>
+
+<p>Keys go to the most recently focused Vimma window, exactly as if you typed them.</p>

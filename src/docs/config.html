@@ -1,2 +1,46 @@
-<!-- Hand-written intro for the config page. -->
-<p>Every key is yours: any binding, the prefix and the leader. Everything you can change lives in one plain file, <code>~/.config/vimma/config.toml</code>: key bindings, per-site insert behaviour, panes, theme colours and workspaces. Save it and Vimma picks it up within two seconds. A mistake never breaks your setup: the file is rejected whole, and the status bar says where.</p>
+<!-- Hand-written guide for the config page; the build adds the keys table and the details from guide.md. -->
+<p class="lead">Everything you can change about Vimma's keys and behaviour lives in one file: <code>~/.config/vimma/config.toml</code>. Until you change something in it, you get the defaults.</p>
+
+<h2 id="edit-the-file">Edit the file</h2>
+
+<ol class="steps-list">
+  <li>Vimma creates the file the first time it starts, with every default written out and commented, so it changes nothing yet. <kbd>:</kbd> <code>config</code> shows it in a tab.</li>
+  <li>Open it in your editor, uncomment or add what you want to change, and save.</li>
+  <li>Vimma picks it up within two seconds, in every window. Nothing to restart. <code>:source</code> reloads it at once.</li>
+</ol>
+
+<h2 id="remap-a-key">Remap a key</h2>
+
+<p>Bindings go under <code>[keys]</code>, by the action names in the <em>Name</em> column of the <a href="{{root}}keys/">keys page</a>. <code>prefix+</code> means after <kbd>ctrl+b</kbd>. A new binding replaces the default.</p>
+
+<pre class="code">schema = 2
+
+[keys]
+prefix = &quot;ctrl+a&quot;<span class="c">             # the prefix itself, as tmux users often remap it</span>
+new_tab = [&quot;prefix+t&quot;]<span class="c">        # ctrl+a t opens a tab, instead of the default</span>
+
+[modal]
+leader = &quot;,&quot;<span class="c">                  # the leader key; space by default</span>
+
+[modal.normal]
+&quot;&lt;leader&gt;ff&quot; = &quot;goto.picker&quot;<span class="c">  # , f f lists every tab</span></pre>
+
+<h2 id="other-settings">Other things you can set</h2>
+
+<div class="table-wrap"><table class="plain"><thead><tr><th scope="col">Section</th><th scope="col">What it changes</th></tr></thead><tbody>
+<tr><td><code>[panes]</code></td><td><code>max</code>: how many panes a split can have (1 to 16, default 4).</td></tr>
+<tr><td><code>[sites."example.com"]</code></td><td><code>insert</code>: <code>auto</code>, <code>never</code> or <code>always</code>, whether text fields on that site put you in insert mode.</td></tr>
+<tr><td><code>[theme]</code></td><td><code>source = "file"</code> for Tokyo Night instead of your Omarchy theme; <code>[theme.colors]</code> to change single colours (<a href="{{root}}docs/theming/">theming</a>).</td></tr>
+<tr><td><code>[workspaces]</code></td><td>Workspaces that always exist (<a href="{{root}}docs/workspaces/">workspaces</a>).</td></tr>
+<tr><td><code><kbd>routes</kbd></code></td><td>Send a site, or every link an app opens, to a workspace (<a href="{{root}}docs/workspaces/#routing-which-workspace-a-link-opens-in">routing</a>).</td></tr>
+</tbody></table></div>
+
+<p>Keep <code>schema = 2</code> as the first line: it enables <code>[panes]</code>, <code>[sites]</code> and hint characters.</p>
+
+<h2 id="mistakes">If you make a mistake</h2>
+
+<p>A file with an error is not applied at all, so your last working setup keeps working. The status bar shows the first error in red, with its line number, for example <code>config.toml:3: keys.new_tabb: unknown action "new_tabb" (did you mean "new_tab"?)</code>. Fix the line and save; the message goes away. <code>about:vimma</code> lists every error.</p>
+
+<h2 id="about-pages">about:config and about:vimma</h2>
+
+<p>A few switches live in <code>about:config</code> instead, such as <code>vimma.ui.tabstrip.hidden</code> to bring Firefox's tab strip back; they are listed under Details. <code>about:vimma</code> (or <code>:about</code>) shows what Vimma is doing: its version, your config and its errors, the theme, the workspaces, and the last keys it saw.</p>
