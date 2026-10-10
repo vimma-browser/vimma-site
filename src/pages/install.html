@@ -3,7 +3,8 @@
 <section class="box note" aria-labelledby="honest">
   <h2 class="box-title" id="honest">the honest version</h2>
   <p>There are <strong>no binaries yet</strong>. Vimma is pre-alpha, and today you build it from source. <strong>Linux x86_64</strong> is the only platform it is built and tested on.</p>
-  <p>The source repository is not public yet; it opens before the first release. These are the steps for when it does.</p>
+  <p>Clone <a href="https://github.com/JRanne/vimma">https://github.com/JRanne/vimma</a>, then follow the steps below.</p>
+  <p>A source build has <strong>Safe Browsing off</strong> unless you add your own Google key: see <a href="#safebrowsing">below</a>.</p>
 </section>
 
 <h2 id="requirements">Requirements</h2>
@@ -15,11 +16,15 @@
 </ul>
 
 <h2 id="build">Build</h2>
-<pre class="code"><span class="p">$ </span>npm ci                  <span class="c"># dev tools, including Surfer</span>
+<pre class="code"><span class="p">$ </span>git clone https://github.com/JRanne/vimma.git &amp;&amp; cd vimma
+<span class="p">$ </span>npm ci                  <span class="c"># dev tools, including Surfer</span>
 <span class="p">$ </span>npx surfer download     <span class="c"># Firefox source into engine/</span>
 <span class="p">$ </span>npx surfer bootstrap    <span class="c"># Mozilla's toolchains into ~/.mozbuild (once)</span>
 <span class="p">$ </span>npm run import          <span class="c"># apply Vimma's files and patches</span>
 <span class="p">$ </span>npx surfer build        <span class="c"># full build</span></pre>
+
+<h3 id="safebrowsing">Google Safe Browsing</h3>
+<p>Google Safe Browsing (phishing and malware protection) needs an API key, which is not in the repository. A build without one works but shows the protection as off. To turn it on, get a free key from Google and save it as <code>~/.config/vimma/keys/safebrowsing</code> before building (<a href="https://github.com/JRanne/vimma/blob/main/docs/runbook.md#google-safe-browsing-key-spec-m0-safebrowsing-key">the runbook</a> has the steps). Release packages will be built with a key.</p>
 
 <h2 id="run">Run</h2>
 <pre class="code"><span class="p">$ </span>npm start               <span class="c"># your build, with its own profile</span>

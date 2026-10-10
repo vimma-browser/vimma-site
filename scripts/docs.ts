@@ -7,10 +7,10 @@
 // hand-written intros in src/docs/. The site build wraps each body in the shared layout.
 
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { join, posix } from "node:path";
 
 import { escapeHtml } from "../src/ts/hero.js";
-import type { BindingsFile } from "./bindings-types.js";
+import { type BindingsFile, VIMMA_REPO } from "./bindings-types.js";
 import { type Block, DOC_PAGES, type DocPage, GUIDE_REWRITES, LIMIT_SECTIONS, STALE_LIMITS, STALE_PREFIXES } from "./docs-pages.js";
 import { keysTables, slug } from "./keys-html.js";
 import {
@@ -44,7 +44,7 @@ export interface SearchEntry {
   u: string;
   /** a short snippet */
   s: string;
-  /** the section's distinct words, lower case, space-separated, minus those in p and h */
+  /** the section's distinct words, lower case, space-separated, minus those in p, h and s */
   w: string;
 }
 
@@ -82,8 +82,10 @@ function linker(ids: IdMap, here: string, root: string): RenderOptions["link"] {
     if (path === "bindings.md") return `${root}keys/`;
     if (path === "limits.md") return `${root}docs/limits/`;
     if (path.endsWith("README.md")) return `${root}docs/install/`;
-    // specs, ADRs, the runbook and the plan live in Vimma's repository, which is not public yet
-    return null;
+    // specs, ADRs, the runbook and the plan: the file in Vimma's repository on GitHub
+    const file = posix.normalize(`docs/${path}`);
+    if (file.startsWith("..")) return null;
+    return `${VIMMA_REPO}/blob/main/${file}${hash === "" ? "" : `#${hash}`}`;
   };
 }
 
@@ -256,6 +258,9 @@ const STOP = new Set(
   ),
 );
 
+/** How the index splits text into words; site.ts splits the snippet the same way. */
+const WORD_SPLIT = /[\s,;()"“”'’!?]+|\.(?=\s|$)/;
+
 function indexPage(title: string, slugName: string, body: string): SearchEntry[] {
   const parts = body.split(/(?=<h[23] id=")/);
   return parts.flatMap((part, i) => {
@@ -267,13 +272,13 @@ function indexPage(title: string, slugName: string, body: string): SearchEntry[]
     // no scheme-qualified URLs in the shipped index: it is data, and `npm run check` keeps the
     // site's JS free of URLs; `example.com` still finds them
     const text = textOf(m ? part.slice(m[0].length) : part).replace(/\b[a-z]+:\/\//g, "");
-    // the page title and heading are in the entry already (p, h), and the search matches them
-    // there, so the word list leaves out the words they hold
-    const head = new Set(`${title} ${heading}`.toLowerCase().split(/[\s,;()"“”'’!?]+|\.(?=\s|$)/));
-    const words = [...new Set(text.toLowerCase().split(/[\s,;()"“”'’!?]+|\.(?=\s|$)/))]
+    // the page title, heading and snippet are in the entry already (p, h, s), and the search
+    // matches them there (site.ts), so the word list leaves out the words they hold
+    const s = text.length > 80 ? `${text.slice(0, 77).replace(/\s\S*$/, "")}…` : text;
+    const head = new Set(`${title} ${heading} ${s.replace(/…$/, "")}`.toLowerCase().split(WORD_SPLIT));
+    const words = [...new Set(text.toLowerCase().split(WORD_SPLIT))]
       .filter((w) => w.length > 1 && !STOP.has(w) && !head.has(w))
       .join(" ");
-    const s = text.length > 80 ? `${text.slice(0, 77).replace(/\s\S*$/, "")}…` : text;
     return [{ p: title, h: heading, u: `${pageUrl(slugName).slice("docs/".length)}${m ? `#${m[1]}` : ""}`, s, w: words }];
   });
 }
@@ -355,7 +360,7 @@ ${keysTables(secs, { level: 3, idPrefix: "keys-", filterable: false })}`;
     const head = page ? `<h1>${escapeHtml(title)}</h1>\n${intro}` : "";
     const content = page ? `${head}\n${sections}` : sections;
     const src = page
-      ? `<p class="source">The guide at the top is written for this site; the details are built from Vimma's <code>docs/${page.slug === "limits" ? "limits" : "guide"}.md</code> and <code>bindings.md</code> at <code>${escapeHtml(source.commit)}</code> (${escapeHtml(source.date)}).</p>`
+      ? `<p class="source">The guide at the top is written for this site; the details are built from Vimma's <code>docs/${page.slug === "limits" ? "limits" : "guide"}.md</code> and <code>bindings.md</code> at <a href="${VIMMA_REPO}/commit/${escapeHtml(source.commit)}"><code>${escapeHtml(source.commit)}</code></a> (${escapeHtml(source.date)}).</p>`
       : "";
     const body = `<div class="docs">
 ${sidebar(nav, entry.slug, root)}

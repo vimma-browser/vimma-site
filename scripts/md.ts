@@ -88,7 +88,7 @@ export function inline(text: string, opts: RenderOptions): string {
       const href = opts.link(m[4] ?? "");
       out +=
         href === null
-          ? `<span class="ref" title="in Vimma's repository, not public yet">${label}</span>`
+          ? `<span class="ref" title="not on this site">${label}</span>`
           : `<a href="${escapeHtml(href)}">${label}</a>`;
     }
     last = (m.index ?? 0) + m[0].length;

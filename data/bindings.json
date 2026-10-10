@@ -1,6 +1,6 @@
 {
   "source": "docs/bindings.md",
-  "commit": "3e1d761",
+  "commit": "1050bcc",
   "sections": [
     {
       "title": "Help",
@@ -620,6 +620,65 @@
               "mode": "resize"
             }
           ]
+        },
+        {
+          "action": "New pane, along the longer side",
+          "name": "new_pane",
+          "bindings": [
+            {
+              "raw": "ctrl+b enter",
+              "chords": [
+                "ctrl+b enter"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Next layout",
+          "name": "next_layout",
+          "bindings": [
+            {
+              "raw": "ctrl+b space",
+              "chords": [
+                "ctrl+b space"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Apply a layout preset by name (:layout name)",
+          "name": "select_layout",
+          "bindings": []
+        },
+        {
+          "action": "Layout: all side by side",
+          "name": "layout_even_horizontal",
+          "bindings": []
+        },
+        {
+          "action": "Layout: all stacked",
+          "name": "layout_even_vertical",
+          "bindings": []
+        },
+        {
+          "action": "Layout: main pane left, rest stacked",
+          "name": "layout_main_vertical",
+          "bindings": []
+        },
+        {
+          "action": "Layout: main pane on top, rest below",
+          "name": "layout_main_horizontal",
+          "bindings": []
+        },
+        {
+          "action": "Layout: a grid",
+          "name": "layout_tiled",
+          "bindings": []
+        },
+        {
+          "action": "Layout: a spiral (dwindle)",
+          "name": "layout_dwindle",
+          "bindings": []
         }
       ]
     },
@@ -635,6 +694,12 @@
               "chords": [
                 "ctrl+b )"
               ]
+            },
+            {
+              "raw": "]w",
+              "chords": [
+                "]w"
+              ]
             }
           ]
         },
@@ -646,6 +711,42 @@
               "raw": "ctrl+b (",
               "chords": [
                 "ctrl+b ("
+              ]
+            },
+            {
+              "raw": "[w",
+              "chords": [
+                "[w"
+              ]
+            }
+          ]
+        },
+        {
+          "action": "Previous workspace you were in; again toggles back (Vim's ctrl+^)",
+          "name": "last_workspace",
+          "bindings": [
+            {
+              "raw": "ctrl+b ^",
+              "chords": [
+                "ctrl+b ^"
+              ]
+            },
+            {
+              "raw": "ctrl+b ctrl+6",
+              "chords": [
+                "ctrl+b ctrl+6"
+              ]
+            },
+            {
+              "raw": "ctrl+^",
+              "chords": [
+                "ctrl+^"
+              ]
+            },
+            {
+              "raw": "ctrl+6",
+              "chords": [
+                "ctrl+6"
               ]
             }
           ]

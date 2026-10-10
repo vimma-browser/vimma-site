@@ -9,7 +9,7 @@
 import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 
-import type { BindingsFile } from "./scripts/bindings-types.js";
+import { type BindingsFile, VIMMA_REPO } from "./scripts/bindings-types.js";
 import { buildDocs } from "./scripts/docs.js";
 import { keysTables } from "./scripts/keys-html.js";
 import { STATIC_STEP, STEPS, escapeHtml, shotHtml } from "./src/ts/hero.js";
@@ -139,6 +139,7 @@ function main(): void {
       keys_tables: keysTables(keys.sections),
       keys_total: String(total),
       keys_commit: escapeHtml(keys.commit),
+      keys_commit_url: `${VIMMA_REPO}/commit/${escapeHtml(keys.commit)}`,
     };
     const content = fill(page.body, vars, page.meta.out || "index");
     const html = fill(

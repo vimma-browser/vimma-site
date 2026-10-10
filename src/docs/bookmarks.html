@@ -1,19 +1,19 @@
 <!-- Hand-written guide for the bookmarks page; the build adds the keys table and the details from guide.md. -->
-<p class="lead">Vimma uses Firefox's own bookmarks, the ones you imported, synced or see in the Library, and gives them keys: one to file a page, one to open a panel where you find it again.</p>
+<p class="lead">Vimma uses Firefox's own bookmarks, the ones you imported, synced or see in the Library, and gives them keys: one to file a page, one to open a panel where you find it again. Each <a href="{{root}}docs/workspaces/">workspace</a> has its own folder of them.</p>
 
 <h2 id="bookmark-a-page">Bookmark a page</h2>
 
 <ol class="steps-list">
   <li>Press <kbd>ctrl+b</kbd> <kbd>a</kbd>. A prompt opens at the bottom of the window with the page's title in it.</li>
-  <li>To file it in folders, type them in front of the title, separated by <code>/</code>: <code>work/docs/My page</code>. Missing folders are made; <kbd>Tab</kbd> completes a folder name.</li>
+  <li>It goes in the current workspace's folder: Bookmarks Toolbar → <code>work</code> when you are in <code>work</code>. To file it in folders there, type them in front of the title, separated by <code>/</code>: <code>docs/My page</code>. Missing folders are made; <kbd>Tab</kbd> completes a folder name. <code>@shop/deals/Cart</code> files it in another workspace's folder.</li>
   <li>Press <kbd>Enter</kbd> to save, or <kbd>Esc</kbd> to cancel.</li>
 </ol>
 
-<p>A page that is already bookmarked shows where it is; edit the path to move or rename it. Paths start in the Bookmarks Menu; begin with <code>toolbar/</code> or <code>other/</code> for the other two top folders.</p>
+<p>A page that is already bookmarked shows where it is; edit the path to move or rename it. Renaming a workspace renames its folder; deleting one asks whether to keep, move or delete its bookmarks.</p>
 
 <h2 id="find-a-bookmark">Find a bookmark</h2>
 
-<p><kbd>ctrl+b</kbd> <kbd>shift+b</kbd> opens your bookmarks as a tree on the left of the window. The quickest way in is <kbd>/</kbd>: type a few letters of a title, address or folder.</p>
+<p><kbd>ctrl+b</kbd> <kbd>shift+b</kbd> opens the current workspace's bookmarks as a tree on the left of the window, and follows you when you switch workspace (<code>[bookmarks] root</code> in config.toml shows the whole toolbar, or every bookmark). The quickest way in is <kbd>/</kbd>: type a few letters of a title, address or folder.</p>
 
 <div class="table-wrap"><table class="plain"><thead><tr><th scope="col">To</th><th scope="col">Press</th></tr></thead><tbody>
 <tr><td>Move down / up</td><td><kbd>j</kbd> / <kbd>k</kbd></td></tr>

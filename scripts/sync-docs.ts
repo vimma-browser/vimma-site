@@ -32,7 +32,7 @@ const date = git("log", "-1", "--format=%cs", ref).trim();
 const dir = resolve(ROOT, "data/docs");
 mkdirSync(dir, { recursive: true });
 for (const f of FILES) writeFileSync(resolve(dir, f), git("show", `${ref}:docs/${f}`));
-const source: DocsSource = { repo: "vimma (private)", ref, commit, date };
+const source: DocsSource = { repo: "https://github.com/JRanne/vimma", ref, commit, date };
 writeFileSync(resolve(dir, "source.json"), JSON.stringify(source, null, 2) + "\n");
 console.log(`synced ${FILES.join(", ")} from ${ref} at ${commit} (${date})`);
 writeBindingsJson();

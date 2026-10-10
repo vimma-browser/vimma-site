@@ -1,0 +1,9 @@
+<!-- Hand-written guide for the accessibility page; the build adds the keys table and the details from guide.md. -->
+<p class="lead">Vimma's own parts, from the status bar and the <kbd>ctrl+b</kbd> <kbd>?</kbd> overlay to the pickers, panels and command line, work with a screen reader on top of Firefox's own support. On Linux that is Orca.</p>
+
+<ul>
+  <li>Each overlay, picker, panel and prompt takes focus when it opens and gives it back when it closes.</li>
+  <li>The status bar is a status bar to your screen reader; it never announces titles or URLs as they change.</li>
+  <li>All text Vimma draws reaches WCAG AA contrast in the built-in themes, and nothing in its UI animates.</li>
+  <li>Every key can be remapped, including one-key bindings that avoid chords: see <a href="{{root}}docs/config/">config.toml</a>.</li>
+</ul>

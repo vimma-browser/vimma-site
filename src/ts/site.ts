@@ -356,13 +356,16 @@ if (search && results && status) {
 
   const score = (e: SearchEntry, terms: string[]): number => {
     let n = 0;
+    // the index leaves the title's, heading's and snippet's words out of w (docs.ts), so they
+    // are matched here; the snippet is split into words as docs.ts splits it
+    const snippet = e.s.replace(/…$/, "").toLowerCase().split(/[\s,;()"“”'’!?]+|\.(?=\s|$)/).join(" ");
     const head = `${e.p} ${e.h}`.toLowerCase();
     for (const t of terms) {
       const inHead = head.includes(t);
-      if (!inHead && !e.w.includes(t)) return 0;
+      if (!inHead && !e.w.includes(t) && !snippet.includes(t)) return 0;
       n += 1;
       if (inHead) n += 4;
-      if (` ${e.w} ${head} `.includes(` ${t} `)) n += 1;
+      if (` ${e.w} ${snippet} ${head} `.includes(` ${t} `)) n += 1;
     }
     return n;
   };

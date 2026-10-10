@@ -93,7 +93,7 @@ box, previous/next links (`[` and `]`). Each page has two tiers:
   that no longer matches is reported at build time.
 - `scripts/md.ts` is a small Markdown reader for the subset the guide uses. Links to other
   guide headings are pointed at whichever docs page renders them; links to specs, ADRs and the
-  runbook stay as plain text, since that repository is not public yet.
+  runbook point at the file in the public repository on GitHub.
 - The known-limits page leaves out the `limits.md` lines the same commit's guide contradicts
   (listed in `STALE_LIMITS`, reported at build time), so they disappear when upstream fixes them.
 - Search: the build writes `assets/js/docs-index.js` (each section's heading, a snippet and its
