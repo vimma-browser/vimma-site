@@ -1,0 +1,64 @@
+<!-- Hand-written: the whole page. Vimma next to the keyboard browsers and extensions people already use; every claim about another project comes from its own site, docs or repository (listed at the bottom, with the date they were checked). -->
+<p class="lead"><strong>Each of these is good at something. Here is what each does well, and where Vimma is different.</strong></p>
+<p>Vimma owes a lot to every project on this page. If one of them already fits the way you work, keep it. The table sets them side by side; the sections under it say more.</p>
+
+<h2 id="at-a-glance">At a glance</h2>
+<div class="table-wrap" tabindex="0" role="region" aria-labelledby="at-a-glance">
+<table class="plain compare">
+<thead>
+<tr><th scope="col"><span class="sr-only">Dimension</span></th><th scope="col">Vimma</th><th scope="col">Vimium</th><th scope="col">Tridactyl</th><th scope="col">qutebrowser</th><th scope="col">Zen Browser</th></tr>
+</thead>
+<tbody>
+<tr><th scope="row">What it is</th><td>A Firefox fork</td><td>An extension</td><td>An extension</td><td>A browser of its own, in Python and Qt</td><td>A Firefox fork</td></tr>
+<tr><th scope="row">Engine</th><td>Firefox (Gecko), release channel</td><td>The browser's: Chrome, Edge or Firefox</td><td>Firefox's (Firefox only)</td><td>Chromium, through Qt WebEngine</td><td>Firefox (Gecko)</td></tr>
+<tr><th scope="row">Modal keys</th><td>Normal, insert, visual (copy mode), hints and a <code>:</code> command line, plus a tmux-style <kbd>ctrl+b</kbd> prefix</td><td>Normal, insert, visual, link hints and find; the Vomnibar opens pages, bookmarks and tabs</td><td>Normal, insert, visual, hints, ignore, and a <code>:</code> line for every command</td><td>Normal, insert, hints, caret, passthrough and a <code>:</code> command line</td><td>No modal keys; Firefox-style shortcuts you can rebind in Settings</td></tr>
+<tr><th scope="row">Where the keys work</th><td>Web pages, <code>about:</code> pages, Settings, the PDF viewer and the add-ons site; not on extension, <code>data:</code> or <code>view-source:</code> pages</td><td>Web pages; browsers switch extensions off on their own pages, the extension store, the PDF viewer, view-source and the new tab page</td><td>Web pages; not on <code>about:</code>, <code>data:</code>, <code>view-source:</code>, some <code>file:</code> pages or addons.mozilla.org</td><td>Everywhere in the browser: the browser handles the keys</td><td>Shortcuts work across the browser</td></tr>
+<tr><th scope="row">Tabs, splits, workspaces</th><td>Tabs, tiling split panes with tmux layouts, workspaces that are Firefox containers</td><td>Keys for the browser's tabs</td><td>Keys for Firefox's tabs</td><td>Tabs (also vertical) and windows</td><td>Vertical tabs, split view of up to four tabs, workspaces with containers</td></tr>
+<tr><th scope="row">Config</th><td>One <code>config.toml</code>, applied as you save</td><td>An options page, with <code>map</code> and <code>unmap</code> lines</td><td><code>:bind</code> and <code>:set</code>, and a <code>tridactylrc</code> file</td><td><code>config.py</code>, or <code>:set</code> saved to <code>autoconfig.yml</code></td><td>Settings, <code>about:config</code> and <code>userChrome.css</code></td></tr>
+<tr><th scope="row">Theming</th><td>A built-in palette, your own colours in <code>config.toml</code>, or your Omarchy theme, live</td><td>Your own CSS for its hints and bars</td><td>Colour schemes (<code>:colourscheme</code>), built-in or your own</td><td>Over a hundred <code>colors.*</code> settings and user stylesheets</td><td>Workspace colours, community mods and <code>userChrome.css</code></td></tr>
+<tr><th scope="row">Platforms</th><td>Linux x86_64, built from source: pre-alpha, no binaries yet</td><td>Wherever Chrome, Edge or Firefox runs</td><td>Wherever desktop Firefox runs</td><td>Linux, macOS, Windows, FreeBSD</td><td>Linux, macOS, Windows</td></tr>
+<tr><th scope="row">Extensions</th><td>Firefox add-ons, driven from the keyboard</td><td>Is one; runs next to your others</td><td>Is one; runs next to your others</td><td>No WebExtensions; Greasemonkey user scripts and a built-in ad blocker</td><td>Firefox add-ons; not Firefox themes</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2 id="vimium">Vimium</h2>
+<p><strong>Good at:</strong> being simple and everywhere. It is mature, its link hints and Vomnibar take minutes to learn, and it runs in Chrome, Edge and Firefox, so the same keys follow you from browser to browser. Vimium C, a fork, adds much more for those who want it.</p>
+<p><strong>Where Vimma differs:</strong> Vimium is a guest in the browser, so it stops where extensions stop: on the browser's own pages, the extension store and the PDF viewer. Tabs, windows and anything beyond the page are the browser's. Vimma's keys are part of the browser, and the <kbd>ctrl+b</kbd> layer adds panes and workspaces. Vimium needs no new browser; Vimma does.</p>
+
+<h2 id="tridactyl">Tridactyl</h2>
+<p><strong>Good at:</strong> depth. It is the closest heir to Vimperator and Pentadactyl: almost everything is an ex command you can bind, chain or put in your <code>tridactylrc</code>, and with its native messenger you can edit any text field in your own Vim.</p>
+<p><strong>Where Vimma differs:</strong> Firefox does not load Tridactyl on <code>about:</code> pages, <code>view-source:</code> and <code>data:</code> pages or addons.mozilla.org. Vimma's keys work on <code>about:</code> pages and addons.mozilla.org too, and Vimma sees each key before the page does. Tridactyl has far more commands today, and works in any Firefox; Vimma is a separate, pre-alpha browser.</p>
+
+<h2 id="qutebrowser">qutebrowser</h2>
+<p><strong>Good at:</strong> being a whole keyboard browser, for a long time. It has a minimal interface, keys that work everywhere, configuration and user scripts in Python, and builds for Linux, macOS and Windows.</p>
+<p><strong>Where Vimma differs:</strong> qutebrowser is built on Qt WebEngine, which is Chromium, and does not run WebExtensions, so add-ons such as uBlock Origin or a password manager's do not run in it (it has its own ad blocker and Greasemonkey user scripts). Vimma is Firefox underneath, with Firefox's add-ons, containers and privacy settings. Vimma also tiles panes inside one window and groups tabs into workspaces, as tmux does; qutebrowser keeps to tabs and windows.</p>
+
+<h2 id="zen-browser">Zen Browser</h2>
+<p><strong>Good at:</strong> making Firefox calm and beautiful. Vertical tabs, workspaces with their own containers and colours, split view, compact mode and a large community of mods, with release builds for Linux, macOS and Windows. Vimma is built with Surfer, the toolchain Zen made, and is grateful for it.</p>
+<p><strong>Where Vimma differs:</strong> Zen's interface is made for the mouse and trackpad as well as shortcuts, and it has no modal layer: for Vim keys you add an extension, with an extension's limits. Vimma is keyboard-first: one keymap for pages, tabs, panes and workspaces, Vim modes on every page and a status bar that shows the mode. Zen is released and cross-platform; Vimma is pre-alpha and Linux only.</p>
+
+<h2 id="also">Also worth a look</h2>
+<ul>
+  <li><strong>Nyxt</strong> is a browser written and configured in Common Lisp, programmable while it runs, with Emacs, vi and CUA key schemes. Its 4.0 release renders with Electron (Chromium); it is supported on Linux, with macOS in development.</li>
+  <li><strong>Vieb</strong> is an Electron (Chromium) browser with the most literal Vim feel of all: modes down to a keyboard pointer, Vim-style splits with <kbd>ctrl+w</kbd>, and a <code>viebrc</code>. It runs on Linux, macOS and Windows, has a built-in ad blocker, and does not support extensions.</li>
+</ul>
+
+<h2 id="pick">Which one?</h2>
+<ul>
+  <li>You want Vim keys in the browser you already use, on any system: <strong>Vimium</strong>, or <strong>Tridactyl</strong> in Firefox.</li>
+  <li>You want a mature keyboard browser and can do without Firefox's add-ons: <strong>qutebrowser</strong>.</li>
+  <li>You want a polished Firefox with workspaces and split view, on any system: <strong>Zen</strong>.</li>
+  <li>You live in Vim and tmux on Linux, want those habits for the whole browser and keep Firefox's add-ons, and don't mind building a pre-alpha from source: <strong>Vimma</strong>. Start with <a href="{{root}}docs/why/">why a browser and not an extension</a>, then <a href="{{root}}docs/install/">install</a>.</li>
+</ul>
+
+<h2 id="sources">Sources</h2>
+<p>Checked on 11 October 2026, from each project's own site, documentation and repository. Projects change: if something here is out of date, <a href="https://github.com/JRanne/vimma-site/issues">open an issue</a>. Vimma's side comes from its <a href="https://github.com/JRanne/vimma/blob/main/docs/guide.md">user guide</a> and <a href="{{root}}docs/limits/">known limits</a>.</p>
+<ul class="sources">
+  <li>Vimium: <a href="https://github.com/philc/vimium">README</a>, <a href="https://github.com/philc/vimium/wiki/FAQ">FAQ</a>, <a href="https://addons.mozilla.org/en-US/firefox/addon/vimium-ff/">Firefox add-on</a>; Vimium C: <a href="https://github.com/gdh1995/vimium-c">README</a></li>
+  <li>Tridactyl: <a href="https://github.com/tridactyl/tridactyl">README</a>, <a href="https://addons.mozilla.org/en-US/firefox/addon/tridactyl-vim/">Firefox add-on</a></li>
+  <li>qutebrowser: <a href="https://qutebrowser.org/">qutebrowser.org</a>, <a href="https://qutebrowser.org/doc/faq.html">FAQ</a>, <a href="https://qutebrowser.org/doc/help/commands.html">commands</a>, <a href="https://qutebrowser.org/doc/help/configuring.html">configuring</a>, <a href="https://qutebrowser.org/doc/install.html">install</a>, <a href="https://github.com/qutebrowser/qutebrowser/issues/30">extension support issue</a></li>
+  <li>Zen Browser: <a href="https://zen-browser.app/">zen-browser.app</a>, <a href="https://docs.zen-browser.app/user-manual/shortcuts">shortcuts</a>, <a href="https://docs.zen-browser.app/user-manual/workspaces">workspaces</a>, <a href="https://docs.zen-browser.app/user-manual/split-view">split view</a>, <a href="https://docs.zen-browser.app/user-manual/extensions">extensions</a>, <a href="https://zen-browser.app/download/">download</a>, <a href="https://github.com/zen-browser/desktop">repository</a></li>
+  <li>Nyxt: <a href="https://nyxt.atlas.engineer/">nyxt.atlas.engineer</a>, <a href="https://github.com/atlas-engineer/nyxt">README</a>, <a href="https://github.com/atlas-engineer/nyxt/releases/tag/4.0.0">4.0.0 release</a></li>
+  <li>Vieb: <a href="https://vieb.dev/features">features</a>, <a href="https://github.com/Jelmerro/Vieb/blob/master/FAQ.md">FAQ</a>, <a href="https://github.com/Jelmerro/Vieb/releases">releases</a></li>
+</ul>

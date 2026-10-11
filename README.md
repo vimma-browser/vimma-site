@@ -14,7 +14,7 @@ login until Vimma is published. A push to `main` goes live in a minute or two. S
 | Path       | Source                   | What                                                               |
 | ---------- | ------------------------ | ------------------------------------------------------------------ |
 | `/`        | `src/pages/index.html`   | Logo, pitch, the session (real screenshots), features, name, status |
-| `/docs/`   | `src/docs/`, `data/docs/`| Start here, Why Vimma, then pages built from Vimma's guide (below) |
+| `/docs/`   | `src/docs/`, `data/docs/`| Start here, Why Vimma, Vimma compared, then pages from the guide   |
 | `/keys/`   | `src/pages/keys.html`    | Every default binding, filterable, from `data/bindings.json`       |
 | `/install/`| `src/pages/install.html` | Build from source; Linux x86_64 only; no binaries yet              |
 | `/about/`  | `src/pages/about.html`   | Why another browser, privacy defaults, Firefox base, licence, FAQ  |
@@ -97,6 +97,13 @@ box, previous/next links (`[` and `]`). Each page has two tiers:
 "Why Vimma" (`src/docs/why.html`, `handWritten` in `docs-pages.ts`) has only the first tier: why a
 browser and not an extension, the long version of the home page's block. Its claims are checked
 by hand against Vimma's guide and source, like the other hand-written text.
+
+"Vimma compared" (`src/docs/compared.html`, `handWritten` too) sets Vimma beside Vimium,
+Tridactyl, qutebrowser and Zen Browser (and Nyxt and Vieb briefly): one table row per dimension,
+then what each does well and where Vimma differs. Every claim about another project comes from
+its own site, docs or repository, listed at the foot of the page with the date they were
+checked; recheck them and update that date when you edit the page. Keep the tone fair: no
+project is put down.
 
 - `scripts/docs-pages.ts` lists the pages and what each is made of: guide sections by heading,
   rows of the guide's keys table by their first cell, paragraphs by their opening words,

@@ -3,10 +3,10 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 // The docs section: which pages exist, in what order, and what each is made of. Only the intros
-// (src/docs/<slug>.html), "Start here" and "Why Vimma" are written by hand; everything else is cut from the
-// synced copies of Vimma's guide.md, limits.md and bindings.json at build time. Every heading,
-// table row and paragraph named here must exist upstream, or the build fails: that is the
-// drift alarm. Run `npm run docs:sync`, then fix this file.
+// (src/docs/<slug>.html), "Start here", "Why Vimma" and "Vimma compared" are written by hand;
+// everything else is cut from the synced copies of Vimma's guide.md, limits.md and bindings.json
+// at build time. Every heading, table row and paragraph named here must exist upstream, or the
+// build fails: that is the drift alarm. Run `npm run docs:sync`, then fix this file.
 
 export type Block =
   /** A guide.md section by its heading, with its subsections unless `only` or `exclude`. */
@@ -85,6 +85,15 @@ export const DOC_PAGES: DocPage[] = [
     headTitle: "Why Vimma: a browser, not an extension",
     group: "Start",
     description: "A browser, not an extension: what that changes for your keys, and what stays Firefox.",
+    blocks: [],
+    handWritten: true,
+  },
+  {
+    slug: "compared",
+    title: "Vimma compared",
+    headTitle: "Vimma compared with Vimium, Tridactyl, qutebrowser and Zen Browser",
+    group: "Start",
+    description: "Vimium, Tridactyl, qutebrowser and Zen Browser side by side with Vimma: what each does well, and where Vimma differs.",
     blocks: [],
     handWritten: true,
   },
