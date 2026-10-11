@@ -23,6 +23,7 @@ const TYPES: Record<string, string> = {
   ".svg": "image/svg+xml",
   ".txt": "text/plain; charset=utf-8",
   ".woff2": "font/woff2",
+  ".mp4": "video/mp4",
 };
 
 if (!existsSync(DIST)) {

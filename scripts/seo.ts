@@ -28,6 +28,24 @@ export const OG_IMAGE = {
 };
 
 /**
+ * The promo video on the home page (src/pages/index.html), put in assets/video/ by
+ * scripts/video.sh. Link previews and the JSON-LD name the 16:9 cut; the vertical cut is for
+ * narrow screens only. Update `duration` (ISO 8601) and `uploadDate` with a new cut.
+ */
+export const PROMO_VIDEO = {
+  path: "assets/video/vimma-promo-1080p.mp4",
+  poster: "assets/video/vimma-promo-1080p.webp",
+  type: "video/mp4",
+  width: 1920,
+  height: 1080,
+  duration: "PT1M5S",
+  uploadDate: "2026-10-11",
+  name: "Vimma in a minute",
+  description:
+    "A real Vimma window, driven from the keyboard: link hints and search, the keys on about:addons, split panes in a spiral and tmux's layouts, marking tabs into panes, flipping workspaces, and a live theme change.",
+};
+
+/**
  * Search-engine ownership checks by <meta> tag, added to every page's <head>. Paste the token
  * Google Search Console or Bing Webmaster Tools gives you, for example
  * `{ name: "google-site-verification", content: "…" }` or `{ name: "msvalidate.01", content: "…" }`.
@@ -46,6 +64,8 @@ export interface HeadPage {
   /** false: no canonical URL and noindex (the 404 page, served at any missing path). */
   indexable: boolean;
   type: "website" | "article";
+  /** true: Open Graph video tags for the promo video (the home page). */
+  video?: boolean;
 }
 
 /** The SEO and link-preview part of a page's <head>, indented to sit in layout.html. */
@@ -66,14 +86,22 @@ export function headTags(p: HeadPage): string {
     meta("property", "og:image:width", String(OG_IMAGE.width)),
     meta("property", "og:image:height", String(OG_IMAGE.height)),
     meta("property", "og:image:alt", OG_IMAGE.alt),
+    ...(p.video
+      ? [
+          meta("property", "og:video", absolute(PROMO_VIDEO.path)),
+          meta("property", "og:video:type", PROMO_VIDEO.type),
+          meta("property", "og:video:width", String(PROMO_VIDEO.width)),
+          meta("property", "og:video:height", String(PROMO_VIDEO.height)),
+        ]
+      : []),
     meta("name", "twitter:card", "summary_large_image"),
   ];
   return lines.join("\n    ");
 }
 
 /**
- * The home page's structured data: the application itself, and the site (for its name in
- * results). No SearchAction: the docs search runs in the page and takes no URL query.
+ * The home page's structured data: the application itself with its promo video, and the site
+ * (for its name in results). No SearchAction: the docs search runs in the page and takes no URL query.
  */
 export function homeJsonLd(description: string): string {
   const data = [
@@ -89,6 +117,18 @@ export function homeJsonLd(description: string): string {
       url: `${SITE_URL}/`,
       image: absolute(OG_IMAGE.path),
       sameAs: [VIMMA_REPO],
+      video: {
+        "@type": "VideoObject",
+        name: PROMO_VIDEO.name,
+        description: PROMO_VIDEO.description,
+        thumbnailUrl: absolute(PROMO_VIDEO.poster),
+        uploadDate: PROMO_VIDEO.uploadDate,
+        contentUrl: absolute(PROMO_VIDEO.path),
+        duration: PROMO_VIDEO.duration,
+        width: PROMO_VIDEO.width,
+        height: PROMO_VIDEO.height,
+        encodingFormat: PROMO_VIDEO.type,
+      },
     },
     {
       "@context": "https://schema.org",

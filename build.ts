@@ -15,6 +15,7 @@ import { keysTables } from "./scripts/keys-html.js";
 import {
   type LlmsLink,
   OG_IMAGE,
+  PROMO_VIDEO,
   TAGLINE,
   headTags,
   homeJsonLd,
@@ -110,6 +111,9 @@ function sizeOf(path: string): number {
 
 function main(): void {
   if (!existsSync(at(OG_IMAGE.path))) throw new Error(`${OG_IMAGE.path} missing (scripts/og-image.sh)`);
+  for (const f of [PROMO_VIDEO.path, PROMO_VIDEO.poster]) {
+    if (!existsSync(at(f))) throw new Error(`${f} missing (scripts/video.sh)`);
+  }
   const missingShots = STEPS.flatMap((s) =>
     ["avif", "webp"].map((ext) => `assets/img/shots/${s.shot}.${ext}`).filter((f) => !existsSync(at(f))),
   );
@@ -154,6 +158,7 @@ function main(): void {
         out: page.meta.out,
         indexable: !notFoundPage(page),
         type: page === home || notFoundPage(page) ? "website" : "article",
+        video: page === home,
       }),
       ...(page === home ? [homeJsonLd(page.meta.description)] : []),
     ].join("\n    ");
@@ -245,10 +250,12 @@ function main(): void {
   );
 
   const img = sizeOf(join(DIST, "assets/img"));
+  const video = sizeOf(join(DIST, "assets/video"));
   const all = sizeOf(DIST);
   const kb = (n: number): string => `${(n / 1024).toFixed(1)} KB`;
   console.log(`built ${pages.length} pages (${docPages.length} docs) into dist/: ${kb(all)} in all,`);
-  console.log(`  ${kb(all - img)} without images (logo variants and icons: ${kb(img)})`);
+  console.log(`  ${kb(all - img - video)} without images (logo variants and icons: ${kb(img)})`);
+  console.log(`  and the promo video, two cuts and their posters: ${kb(video)}`);
 }
 
 main();

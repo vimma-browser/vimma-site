@@ -13,7 +13,7 @@ login until Vimma is published. A push to `main` goes live in a minute or two. S
 
 | Path       | Source                   | What                                                               |
 | ---------- | ------------------------ | ------------------------------------------------------------------ |
-| `/`        | `src/pages/index.html`   | Logo, pitch, the session (real screenshots), features, name, status |
+| `/`        | `src/pages/index.html`   | Logo, pitch, the promo video, the session (real screenshots), features, name, status |
 | `/docs/`   | `src/docs/`, `data/docs/`| Start here, Why Vimma, Vimma compared, then pages from the guide   |
 | `/keys/`   | `src/pages/keys.html`    | Every default binding, filterable, from `data/bindings.json`       |
 | `/install/`| `src/pages/install.html` | Build from source; Linux x86_64 only; no binaries yet              |
@@ -41,7 +41,9 @@ npm run shots -- ../vimma          # retake the home page's screenshots from tha
 `npm run check` runs on the built `dist/`:
 
 - **html**: doctype, `lang`, one `<title>`, `<h1>` and `<main>`, viewport and CSP metas, balanced
-  tags, unique ids, `alt` on images, no inline scripts, styles or handlers. No HTML validator is
+  tags, unique ids, `alt` on images, no inline scripts, styles or handlers, no frames, objects
+  or audio; a `<video>` only with `controls`, `muted`, `playsinline`, a poster, width and height,
+  `preload` `none` or `metadata`, and no `autoplay`. No HTML validator is
   installed on the dev machine or in CI, so this is a structural subset, not full validation.
 - **links**: every internal `href`, `src` and `srcset` resolves to a file, and each `#fragment`
   to an id.
@@ -56,7 +58,9 @@ npm run shots -- ../vimma          # retake the home page's screenshots from tha
   if a sync pushes a page over, slim the index or the page, not the budget.
 - **seo**: one `<link rel="canonical">` per page with its `https://vimma.dev/` address (none, and
   `noindex`, on the 404 page), the Open Graph and `twitter:card` tags, titles and descriptions
-  unique across pages, JSON-LD that parses, a well-formed `sitemap.xml` that lists every page but
+  unique across pages, JSON-LD that parses, each `VideoObject` in it with a name, description,
+  `thumbnailUrl`, `uploadDate`, `contentUrl` (both built files) and an ISO 8601 duration,
+  `og:video` naming a built file with its type and size, a well-formed `sitemap.xml` that lists every page but
   404 and only built ones, a `Sitemap:` line in `robots.txt`, and `llms.txt` links that resolve.
 
 ## How it is built
@@ -77,6 +81,26 @@ npm run shots -- ../vimma          # retake the home page's screenshots from tha
   (`npm run e2e` there, under Xvfb), which presses the keys and captures the window. It needs
   that checkout's build and `vimma-ctl`, Xvfb, ImageMagick and avifenc; the images are committed,
   so building the site needs none of them. Retake them when Vimma's look changes.
+- **The promo video** (`assets/video/`): a 65-second 16:9 cut and a 31-second vertical one, no
+  sound, H.264 with the `moov` atom first (`+faststart`), each with a WebP poster. The home page
+  has a `<video>` for each; CSS shows the vertical one on narrow portrait screens
+  (`max-width: 640px` and `orientation: portrait`) and hides the other with `display: none`.
+  With `preload="none"` only the one played downloads (both posters do, 60 KB together). No
+  autoplay. A caption under it lists what it shows, since the video has captions in the picture
+  but no audio description. `og:video` and a `VideoObject` in the JSON-LD (`PROMO_VIDEO` in
+  `scripts/seo.ts`) name the 16:9 cut. About 12 MB of binaries in git; Workers static assets
+  take files up to 25 MiB.
+
+  To replace the cuts (same names, same sizes), run `scripts/video.sh` on the new files. It
+  copies them in with `+faststart` (a remux, no re-encode) and remakes the posters from fixed
+  frames (`WIDE_AT=28.4 TALL_AT=13`, in seconds, to override); it needs ffmpeg with libwebp:
+
+  ```sh
+  scripts/video.sh ~/Videos/vimma/v2/vimma-promo-1080p.mp4 ~/Videos/vimma/v2/vimma-promo-vertical.mp4
+  ```
+
+  If the length changes, update `duration` in `PROMO_VIDEO`, the durations in the page's
+  fallback links and caption; update `uploadDate` with a new cut.
 - `data/bindings.json` is generated from Vimma's `docs/bindings.md` by `scripts/gen-keys.ts` and
   committed, so the site builds without Vimma's repository. It records the source commit.
 
@@ -126,7 +150,7 @@ project is put down.
   DejaVu Sans Mono, …). No font is downloaded.
 - Search engines and link previews: see [below](#search-engines-and-link-previews).
 - Privacy: no cookies, no analytics, no third-party requests. A CSP meta (`default-src 'none'`,
-  `'self'` for scripts, styles and images) backs that up in the browser. The keys toggle is the
+  `'self'` for scripts, styles, images and media) backs that up in the browser. The keys toggle is the
   only stored state, in `localStorage`.
 
 ## Search engines and link previews
@@ -141,7 +165,7 @@ project is put down.
   site's colours, made by `scripts/og-image.sh` (ImageMagick 7 and JetBrains Mono) from the main
   repository's `docs/assets/vimma-logo-square.png` and committed. Rerun it if the logo changes.
 - **JSON-LD** on the home page: a `SoftwareApplication` (free, Linux, MPL-2.0, the GitHub
-  repository) and a `WebSite`. It is a data `<script>`, never run, so the CSP is unchanged; the
+  repository, its promo video as a `VideoObject`) and a `WebSite`. It is a data `<script>`, never run, so the CSP is unchanged; the
   check allows inline scripts of type `application/ld+json` only. There is no `SearchAction`: the
   docs search takes no query from the URL.
 - **`sitemap.xml`**: every page but 404, with `lastmod` from the last commit that touched the
@@ -162,6 +186,7 @@ in the header. The site's single-key shortcuts never fire while typing in a fiel
 held, and can be turned off in the `?` overlay (WCAG 2.1.4); `?` keeps working so they can be
 turned back on. The blinking cursor and the hero animation stop under `prefers-reduced-motion`.
 Each hero screenshot has alternative text, and its numbered list of keys says the same thing.
+The promo video never plays by itself, has no sound, and has a text summary under it.
 
 ## Deploying
 
