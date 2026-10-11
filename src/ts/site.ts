@@ -4,10 +4,11 @@
 
 // The site's one script, loaded as a module. Everything here is an enhancement: every page reads
 // and works without it. It adds Vim-style keys (j k d u gg G / ? [ ] g h g d g k g i g a), the ?
-// help overlay, the keys filter, the docs search and the hero. There is no status bar of its own:
+// help overlay, the keys filter and the docs search. There is no status bar of its own:
 // viewed in Vimma, a second one at the foot of the window would be confusing.
 
-import { STATIC_STEP, STEPS, escapeHtml } from "./hero.js";
+// It imports nothing; this keeps it a module, so its top-level names stay out of the global scope.
+export {};
 
 const root = document.documentElement;
 const ROOT = root.dataset["root"] ?? "./";
@@ -226,101 +227,6 @@ if (filter) {
   });
   apply();
   if (window.location.hash === "#filter") focusFilter();
-}
-
-// --- home page: the hero session --------------------------------------------------------------
-
-const screenEl = $("#hero-screen");
-const keysEl = $("#hero-keys");
-const toggleBtn = $<HTMLButtonElement>("#hero-toggle");
-const stepItems = [...document.querySelectorAll<HTMLElement>("#hero-steps li")];
-
-if (screenEl && keysEl && toggleBtn) {
-  let playing = false;
-  let generation = 0;
-  let visible = true;
-
-  const sleep = (ms: number): Promise<void> =>
-    new Promise((resolve) => window.setTimeout(resolve, ms));
-
-  // The build rendered one screenshot; swap its files and text for each step's.
-  const img = screenEl.querySelector("img");
-  const source = screenEl.querySelector("source");
-  const fileOf = (shot: string, ext: string): string =>
-    (img?.getAttribute("src") ?? "").replace(/[^/]+\.webp$/, `${shot}.${ext}`);
-  let preloaded = false;
-  const preload = (): void => {
-    // fetch every step's screenshot up front, in the format the browser chose, so steps don't flash
-    if (preloaded || !img) return;
-    preloaded = true;
-    const ext = img.currentSrc.endsWith(".avif") ? "avif" : "webp";
-    for (const s of STEPS) new Image().src = fileOf(s.shot, ext);
-  };
-
-  const show = (i: number, typed: readonly string[]): void => {
-    const step = STEPS[i];
-    if (!step) return;
-    if (img) {
-      source?.setAttribute("srcset", fileOf(step.shot, "avif"));
-      img.src = fileOf(step.shot, "webp");
-      img.alt = step.alt;
-    }
-    keysEl.innerHTML = typed.length
-      ? typed.map((k) => `<kbd>${escapeHtml(k)}</kbd>`).join(" ")
-      : '<span class="dim">waiting for keys…</span>';
-    stepItems.forEach((li, j) => li.classList.toggle("current", j === i));
-  };
-
-  const run = async (gen: number): Promise<void> => {
-    preload();
-    for (let i = 0; ; i = (i + 1) % STEPS.length) {
-      const step = STEPS[i];
-      if (!step) return;
-      const typed: string[] = [];
-      for (const k of step.keys) {
-        typed.push(k);
-        keysEl.innerHTML =
-          typed.map((t) => `<kbd>${escapeHtml(t)}</kbd>`).join(" ") + '<span class="caret"></span>';
-        await sleep(520);
-        if (gen !== generation) return;
-      }
-      show(i, typed);
-      await sleep(i === STEPS.length - 1 ? 4000 : 3000);
-      if (gen !== generation) return;
-    }
-  };
-
-  const setPlaying = (on: boolean): void => {
-    playing = on;
-    generation++;
-    toggleBtn.textContent = on ? "pause" : "play";
-    if (on && visible) void run(generation);
-  };
-
-  toggleBtn.addEventListener("click", () => {
-    if (!playing) show(0, []);
-    setPlaying(!playing);
-  });
-
-  // Hidden or scrolled away: stop; back in view, carry on from the top.
-  const observer = new IntersectionObserver((entries) => {
-    const now = entries.some((en) => en.isIntersecting);
-    if (now === visible) return;
-    visible = now;
-    if (playing) {
-      generation++;
-      if (visible) void run(generation);
-    }
-  });
-  observer.observe(screenEl);
-
-  show(STATIC_STEP, STEPS[STATIC_STEP]?.keys ?? []);
-  if (!reducedMotion.matches) {
-    show(0, []);
-    setPlaying(true);
-  } else {
-    setPlaying(false);
-  }
 }
 
 // --- docs: the sidebar and the search ----------------------------------------------------------

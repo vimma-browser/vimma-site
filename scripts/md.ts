@@ -6,7 +6,7 @@
 // limits.md use (ATX headings, paragraphs, nested lists, pipe tables, fenced code, `code`,
 // **bold**, _em_, [links](…)). Zero dependencies. Unknown syntax comes out as text, escaped.
 
-import { escapeHtml } from "../src/ts/hero.js";
+import { escapeHtml } from "../src/ts/html.js";
 
 /** A heading and everything under it, down to the next heading of its level or higher. */
 export interface MdSection {

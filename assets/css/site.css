@@ -484,7 +484,7 @@ main:focus {
   }
 }
 
-/* the terminal session */
+/* the terminal box around the promo video */
 .term {
   margin-top: 2.5rem;
   padding: 1.25rem 1.5ch 1rem;
@@ -498,18 +498,6 @@ main:focus {
   gap: 2ch;
   margin-bottom: 0.75rem;
   color: var(--fg-muted);
-}
-
-.term-bar button {
-  padding: 0 1ch;
-  border: 1px solid var(--border);
-  background: var(--bg-light);
-  color: var(--fg-bright);
-  cursor: pointer;
-}
-
-.term-bar button:hover {
-  border-color: var(--accent);
 }
 
 /* the promo video: the 16:9 cut, or the vertical cut on a narrow portrait screen. The other
@@ -549,72 +537,6 @@ main:focus {
 
   .demo .demo-tall {
     display: block;
-  }
-}
-
-.shot img {
-  display: block;
-  width: 100%;
-  height: auto;
-  border: 1px solid var(--border);
-}
-
-.term-keys {
-  min-height: 1.6em;
-  margin-top: 0.75rem;
-  color: var(--fg-muted);
-}
-
-.term-keys .caret {
-  display: inline-block;
-  width: 1ch;
-  height: 1.1em;
-  margin-left: 0.5ch;
-  vertical-align: -0.2em;
-  background: var(--mint);
-}
-
-.steps {
-  margin: 1rem 0 0;
-  padding: 0;
-  list-style: none;
-  counter-reset: step;
-  color: var(--fg-muted);
-}
-
-.steps li {
-  counter-increment: step;
-  display: grid;
-  grid-template-columns: 3ch 1fr;
-}
-
-.steps li {
-  margin-bottom: 0.45rem;
-}
-
-.steps li::before {
-  content: counter(step) "." / "";
-  color: var(--fg-muted);
-}
-
-.steps li.current {
-  color: var(--fg-bright);
-}
-
-.steps li.current::before {
-  content: "▸" / "";
-  color: var(--accent);
-}
-
-@media (min-width: 760px) {
-  /* the steps in two columns under the screenshot */
-  .term-body .steps {
-    columns: 2;
-    column-gap: 3ch;
-  }
-
-  .term-body .steps li {
-    break-inside: avoid;
   }
 }
 
@@ -1437,8 +1359,7 @@ dialog button {
 /* --- motion ----------------------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
-  .cursor,
-  .term-keys .caret {
+  .cursor {
     animation: none;
   }
 
@@ -1449,8 +1370,7 @@ dialog button {
 
 @media print {
   .topbar nav,
-  .skip,
-  .term-bar button {
+  .skip {
     display: none;
   }
 }

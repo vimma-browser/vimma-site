@@ -13,7 +13,7 @@ login until Vimma is published. A push to `main` goes live in a minute or two. S
 
 | Path       | Source                   | What                                                               |
 | ---------- | ------------------------ | ------------------------------------------------------------------ |
-| `/`        | `src/pages/index.html`   | Logo, pitch, the promo video, the session (real screenshots), features, name, status |
+| `/`        | `src/pages/index.html`   | Logo, pitch, the promo video, features, name, status              |
 | `/docs/`   | `src/docs/`, `data/docs/`| Start here, Why Vimma, Vimma compared, then pages from the guide   |
 | `/keys/`   | `src/pages/keys.html`    | Every default binding, filterable, from `data/bindings.json`       |
 | `/install/`| `src/pages/install.html` | Build from source; Linux x86_64 only; no binaries yet              |
@@ -35,7 +35,6 @@ npm run serve       # dist/ at http://127.0.0.1:8080/ (PORT=… to change)
 npm run check       # tsc --noEmit (both projects), then the dist/ checks below
 npm run docs:sync -- ../vimma      # copy guide/bindings/limits.md from its origin/main, regen keys
 npm run keys:sync                  # regenerate data/bindings.json from data/docs/bindings.md only
-npm run shots -- ../vimma          # retake the home page's screenshots from that checkout's build
 ```
 
 `npm run check` runs on the built `dist/`:
@@ -69,18 +68,8 @@ npm run shots -- ../vimma          # retake the home page's screenshots from tha
   `src/pages/*.html` are page bodies with a one-line JSON meta comment on top.
   `build.ts` fills `{{placeholders}}`; an unknown one fails the build.
 - `src/ts/site.ts` is the one browser script (an ES module): the keys (`j k d u gg G / ? [ ]
-  g h g d g k g i g a`), the overlay, the keys filter,
-  the docs search and the hero animation. Every page works without it.
-- `src/ts/hero.ts` lists the hero's steps: the keys, what they do, and a screenshot of a real
-  Vimma window after them (`assets/img/shots/`, AVIF and WebP). The build renders the split
-  step into the HTML as the no-JS and reduced-motion fallback; the script steps through the
-  rest, with a pause button, and stops when the hero is off screen.
-- `npm run shots` (`scripts/shots.ts`) retakes those screenshots: it serves the fictional demo
-  sites in `shots/pages/` (news.example, mail.example) as an HTTP proxy on 127.0.0.1:8139 and
-  runs `shots/scenarios/m5-site-hero.json` with the browser repository's own end-to-end harness
-  (`npm run e2e` there, under Xvfb), which presses the keys and captures the window. It needs
-  that checkout's build and `vimma-ctl`, Xvfb, ImageMagick and avifenc; the images are committed,
-  so building the site needs none of them. Retake them when Vimma's look changes.
+  g h g d g k g i g a`), the overlay, the keys filter
+  and the docs search. Every page works without it.
 - **The promo video** (`assets/video/`): a 65-second 16:9 cut and a 31-second vertical one, no
   sound, H.264 with the `moov` atom first (`+faststart`), each with a WebP poster. The home page
   has a `<video>` for each; CSS shows the vertical one on narrow portrait screens
@@ -184,8 +173,7 @@ layout that works down to 320 px. Nothing is fixed to the foot of the viewport: 
 a second status bar under Vimma's own was confusing, so the page position and the `?` hint sit
 in the header. The site's single-key shortcuts never fire while typing in a field or with a modifier
 held, and can be turned off in the `?` overlay (WCAG 2.1.4); `?` keeps working so they can be
-turned back on. The blinking cursor and the hero animation stop under `prefers-reduced-motion`.
-Each hero screenshot has alternative text, and its numbered list of keys says the same thing.
+turned back on. The blinking cursor stops under `prefers-reduced-motion`.
 The promo video never plays by itself, has no sound, and has a text summary under it.
 
 ## Deploying
