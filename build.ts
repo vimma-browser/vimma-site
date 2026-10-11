@@ -3,8 +3,8 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 // Builds the site into dist/: wraps each page in src/pages/ and each docs page (scripts/docs.ts)
-// in src/layout.html, renders the keys tables from data/bindings.json, the hero's static screenshot
-// and the docs search index, and copies the assets and the compiled scripts. Run through `npm run build` (tsc first, then this, as .build/build.js).
+// in src/layout.html, renders the keys tables from data/bindings.json and the docs search index,
+// and copies the assets and the compiled scripts. Run through `npm run build` (tsc first, then this, as .build/build.js).
 
 import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
@@ -24,7 +24,7 @@ import {
   robotsTxt,
   sitemapXml,
 } from "./scripts/seo.js";
-import { STATIC_STEP, STEPS, escapeHtml, shotHtml } from "./src/ts/hero.js";
+import { escapeHtml } from "./src/ts/html.js";
 
 const ROOT = resolve(import.meta.dirname, "..");
 const DIST = join(ROOT, "dist");
@@ -69,16 +69,6 @@ function fill(template: string, vars: Record<string, string>, where: string): st
   });
 }
 
-// --- hero -------------------------------------------------------------------------------------
-
-function heroSteps(): string {
-  return STEPS.map((s, i) => {
-    const keys = s.keys.length ? s.keys.map((k) => `<kbd>${escapeHtml(k)}</kbd>`).join(" ") + " " : "";
-    const cls = i === STATIC_STEP ? ' class="current"' : "";
-    return `    <li${cls}><span>${keys}${escapeHtml(s.label)}</span></li>`;
-  }).join("\n");
-}
-
 // --- pages ------------------------------------------------------------------------------------
 
 function nav(pages: Page[], current: Page, root: string): string {
@@ -114,11 +104,6 @@ function main(): void {
   for (const f of [PROMO_VIDEO.path, PROMO_VIDEO.poster]) {
     if (!existsSync(at(f))) throw new Error(`${f} missing (scripts/video.sh)`);
   }
-  const missingShots = STEPS.flatMap((s) =>
-    ["avif", "webp"].map((ext) => `assets/img/shots/${s.shot}.${ext}`).filter((f) => !existsSync(at(f))),
-  );
-  if (missingShots.length) throw new Error(`hero screenshots missing (npm run shots): ${missingShots.join(", ")}`);
-
   rmSync(DIST, { recursive: true, force: true });
   mkdirSync(DIST, { recursive: true });
 
@@ -145,8 +130,6 @@ function main(): void {
   const navPages = pages.filter((p) => p.meta.nav !== false);
   const keys = JSON.parse(readFileSync(at("data/bindings.json"), "utf8")) as BindingsFile;
   const total = keys.sections.reduce((n, s) => n + s.rows.length, 0);
-  const staticStep = STEPS[STATIC_STEP];
-  if (!staticStep) throw new Error("no static hero step");
 
   const notFoundPage = (p: Page): boolean => p.meta.out === "404.html";
   for (const page of pages) {
@@ -165,9 +148,6 @@ function main(): void {
     const n = navPages.findIndex((p) => p === page || p.meta.out === page.meta.section);
     const vars: Record<string, string> = {
       root,
-      hero_shot: shotHtml(staticStep, root),
-      hero_keys: staticStep.keys.map((k) => `<kbd>${escapeHtml(k)}</kbd>`).join(" "),
-      hero_steps: heroSteps(),
       keys_tables: keysTables(keys.sections),
       keys_total: String(total),
       keys_commit: escapeHtml(keys.commit),

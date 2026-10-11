@@ -11,7 +11,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { escapeHtml } from "../src/ts/hero.js";
+import { escapeHtml } from "../src/ts/html.js";
 import { VIMMA_REPO } from "./bindings-types.js";
 
 /** The production origin, with no trailing slash. Every canonical and sitemap URL starts with it. */
