@@ -12,8 +12,9 @@
 //   contrast   every text colour pair in both palettes passes WCAG AA (4.5:1)
 //   weight     each page's HTML, CSS and JS stays under the budget (images excluded)
 //   seo        one canonical URL per page (none and noindex on 404), Open Graph and Twitter tags,
-//              unique titles and descriptions, JSON-LD that parses, and sitemap.xml, robots.txt
-//              and llms.txt naming only pages that exist
+//              unique titles and descriptions, JSON-LD that parses (a VideoObject with its
+//              fields and built files), og:video naming a built file, and sitemap.xml,
+//              robots.txt and llms.txt naming only pages that exist
 //
 // No local HTML validator (vnu, tidy) is assumed: the html checks are a structural subset.
 
@@ -165,8 +166,18 @@ for (const file of htmlFiles) {
       if (isRemote(url)) fail(where, `line ${t.line}: <${t.name} ${attr}="${url}"> loads from another origin`);
       else linkRefs.push({ from: file, url: decode(url), line: t.line });
     }
-    if (["iframe", "frame", "object", "embed", "video", "audio"].includes(t.name)) {
+    if (["iframe", "frame", "object", "embed", "audio"].includes(t.name)) {
       fail(where, `line ${t.line}: <${t.name}> element`);
+    }
+    // the promo video: local files (checked above), the user's to start, and no layout shift
+    if (t.name === "video") {
+      for (const a of ["controls", "muted", "playsinline", "poster", "width", "height"]) {
+        if (!t.attrs.has(a)) fail(where, `line ${t.line}: <video> without ${a}`);
+      }
+      if (t.attrs.has("autoplay")) fail(where, `line ${t.line}: <video autoplay>`);
+      if (!["none", "metadata"].includes(t.attrs.get("preload") ?? "")) {
+        fail(where, `line ${t.line}: <video> without preload="none" or "metadata"`);
+      }
     }
     if (t.name === "a" && href !== undefined && !isRemote(href) && !/^(mailto|tel):/.test(href)) {
       linkRefs.push({ from: file, url: decode(href), line: t.line });
@@ -355,6 +366,33 @@ const urlOf = (f: string): string => SITE + rel(f).replace(/(^|\/)index\.html$/,
 const OG = ["og:type", "og:site_name", "og:title", "og:description", "og:image", "og:image:width", "og:image:height", "og:image:alt"];
 const seen = { title: new Map<string, string>(), description: new Map<string, string>() };
 let jsonLd = 0;
+let videoTags = 0;
+let videos = 0;
+
+/** Every VideoObject in a JSON-LD value, at any depth (the home page's sits under `video`). */
+function videoObjects(x: unknown): Record<string, unknown>[] {
+  if (Array.isArray(x)) return x.flatMap(videoObjects);
+  if (!x || typeof x !== "object") return [];
+  const o = x as Record<string, unknown>;
+  return [...(o["@type"] === "VideoObject" ? [o] : []), ...Object.values(o).flatMap(videoObjects)];
+}
+
+/** What Google needs of a VideoObject (name, description, thumbnailUrl, uploadDate), plus
+ * a contentUrl and thumbnail that are built files and an ISO 8601 duration. */
+function checkVideoObject(where: string, v: Record<string, unknown>): void {
+  videos++;
+  const str = (k: string): string => (typeof v[k] === "string" ? (v[k] as string) : "");
+  for (const k of ["name", "description", "thumbnailUrl", "uploadDate", "contentUrl", "duration"]) {
+    if (!str(k)) fail(where, `JSON-LD VideoObject: no ${k}`);
+  }
+  for (const k of ["thumbnailUrl", "contentUrl"]) {
+    if (str(k) && !builtFile(str(k))) fail(where, `JSON-LD VideoObject: ${k} ${str(k)} is not a built file`);
+  }
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(str("uploadDate"))) fail(where, `JSON-LD VideoObject: uploadDate "${str("uploadDate")}"`);
+  if (!/^PT(?:\d+H)?(?:\d+M)?(?:\d+S)?$/.test(str("duration")) || str("duration") === "PT") {
+    fail(where, `JSON-LD VideoObject: duration "${str("duration")}" is not ISO 8601 (PT1M5S)`);
+  }
+}
 for (const file of htmlFiles) {
   const where = rel(file);
   const html = readFileSync(file, "utf8");
@@ -374,6 +412,13 @@ for (const file of htmlFiles) {
   for (const k of [...OG, "twitter:card"]) if (metaOf(k).length !== 1) fail(where, `${metaOf(k).length} ${k} tags`);
   const image = metaOf("og:image")[0] ?? "";
   if (!image.startsWith(SITE) || !existsSync(join(DIST, image.slice(SITE.length)))) fail(where, `og:image ${image} is not a built file`);
+  for (const v of metaOf("og:video")) {
+    videoTags++;
+    if (!builtFile(v)) fail(where, `og:video ${v} is not a built file`);
+    for (const k of ["og:video:type", "og:video:width", "og:video:height"]) {
+      if (metaOf(k).length !== 1) fail(where, `og:video without one ${k}`);
+    }
+  }
   if (!notFound) {
     const title = /<title>([^<]*)<\/title>/.exec(html)?.[1] ?? "";
     const description = metaOf("description")[0] ?? "";
@@ -389,6 +434,7 @@ for (const file of htmlFiles) {
     try {
       const d = JSON.parse(m[1] ?? "") as { "@context"?: string }[];
       if (!Array.isArray(d) || d.some((x) => x["@context"] !== "https://schema.org")) throw new Error("not a list of schema.org items");
+      for (const v of videoObjects(d)) checkVideoObject(where, v);
     } catch (e) {
       fail(where, `JSON-LD: ${(e as Error).message}`);
     }
@@ -459,7 +505,7 @@ if (errors.length) {
 console.log(`✓ html: ${htmlFiles.length} pages, structure, ids, alt text, CSP`);
 console.log(`✓ links: ${linkRefs.length} internal references resolve`);
 console.log(`✓ external: nothing loads from another origin`);
-console.log(`✓ seo: ${locs.length} sitemap URLs, canonical and preview tags on each page, ${jsonLd} JSON-LD block(s), ${llmsLinks} llms.txt links`);
+console.log(`✓ seo: ${locs.length} sitemap URLs, canonical and preview tags on each page, ${jsonLd} JSON-LD block(s) with ${videos} VideoObject(s), ${videoTags} og:video, ${llmsLinks} llms.txt links`);
 console.log(`✓ contrast: ${PAIRS.length * 2} pairs, lowest ${worst.toFixed(2)}:1`);
 const heaviest = weights.reduce((a, b) => (b[1] > a[1] ? b : a));
 console.log(`✓ weight: heaviest page ${heaviest[0]} ${(heaviest[1] / 1024).toFixed(1)} KB without images (budget ${BUDGET / 1024} KB)`);
