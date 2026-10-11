@@ -62,13 +62,45 @@ npm run video -- ../vimma --reuse-footage    # render again from the last record
 driven by `vimma-ctl`, recorded with ffmpeg x11grab; fictional pages, no network), then
 composites the clips with ffmpeg and libass as `video/story.ts` lays them out: terminal-style
 titles, the dusty mouse, captions, key chips from the recorder's key track, zooms and the outro.
-It writes `video/out/vimma-promo-1080p.mp4` (16:9, about 66 s) and
-`video/out/vimma-promo-vertical.mp4` (9:16, about 32 s; recorded in portrait, not cropped) and
+It writes `video/out/vimma-promo-1080p.mp4` (16:9, about 65 s) and
+`video/out/vimma-promo-vertical.mp4` (9:16, about 31 s; recorded in portrait, not cropped) and
 copies them to `~/Videos/vimma/` (`--copy-to DIR`; `--copy-to ""` for none). `--pace MS` slows
 or speeds the keys. Needs the checkout's build and `vimma-ctl`, Xvfb, ffmpeg (x11grab, libx264,
 libass), fontconfig with a monospace font and ImageMagick. No npm dependencies: Motion Canvas
 renders only by driving its editor UI in a headless browser, so plain ffmpeg was the steadier
 choice. The videos and `video/work/` are gitignored.
+
+Colours are vimma.dev's own (`video/ass.ts` `PALETTE`, from `assets/css/site.css`). The footage
+shows Vimma's built-in palette: the recorder sets `[theme] source = "file"` (and `name = "vimma"`
+where the build knows it), so the recording machine's Omarchy theme never leaks in.
+
+### Storyboard
+
+**16:9, 65 s** (`vimma-promo-1080p.mp4`)
+
+| At   | Length | Scene        | On screen                                                                                       |
+| ---- | ------ | ------------ | ----------------------------------------------------------------------------------------------- |
+| 0:00 | 4.5 s  | title        | `~/ $ your hands live on the keyboard`, then nvim / tmux / hyprland ticked                      |
+| 0:05 | 4.5 s  | mouse        | "…until the browser wants the mouse." The dusty mouse, "last moved: 1,204 days ago"             |
+| 0:09 | 10 s   | hints, find  | `j k` scroll, `f` and a two-letter label (zoomed in), `/pane` with a match count, `n`           |
+| 0:19 | 4.5 s  | about:addons | `f` then `h` follows Themes. _Extensions can't run here. Vimma can._                            |
+| 0:24 | 11 s   | tiling       | `ctrl+b enter` three times builds the dwindle spiral; `ctrl+b space` ×5 ends on `layout: tiled` |
+| 0:35 | 7 s    | marks        | `ctrl+b b`, `space j space space` marks three tabs, `enter` shows them together as panes        |
+| 0:42 | 5 s    | flip         | `ctrl+^` flips work and personal workspaces, each signed in differently                         |
+| 0:47 | 5.5 s  | theme        | the mint built-in, `omarchy-theme-set rose-pine` recolours live, then back to mint              |
+| 0:52 | 5 s    | help         | `ctrl+b ?`, filtered with `/pane` (zoomed in)                                                   |
+| 0:57 | 3.5 s  | config card  | "every key is yours": `keys.prefix`, `modal.leader` in config.toml                              |
+| 1:01 | 4.5 s  | outro        | the logo, vimma.dev                                                                             |
+
+**9:16, 31 s** (`vimma-promo-vertical.mp4`, recorded in portrait)
+
+| At   | Length | Scene  | On screen                                             |
+| ---- | ------ | ------ | ----------------------------------------------------- |
+| 0:00 | 4 s    | hints  | `f` and a label (zoomed in)                           |
+| 0:04 | 11 s   | tiling | the dwindle spiral, `ctrl+b space` to `layout: tiled` |
+| 0:15 | 7 s    | marks  | `ctrl+b b`, three marks, `enter`: three panes         |
+| 0:22 | 5 s    | theme  | mint, `omarchy-theme-set rose-pine`, back to mint     |
+| 0:27 | 4 s    | outro  | the logo, vimma.dev                                   |
 
 ## How it is built
 

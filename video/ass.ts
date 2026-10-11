@@ -4,25 +4,23 @@
 
 // A tiny writer for ASS subtitle scripts, which ffmpeg's `ass` filter (libass) draws onto the
 // video: every title, caption, key chip and the mouse drawing in the promo is one of these
-// events. Colours are Tokyo Night, as on the site.
+// events. Colours are vimma.dev's, sampled from the logo (assets/css/site.css, dark).
 
-export const TOKYO = {
-  bg: "#1a1b26",
-  bgDark: "#16161e",
-  bgDarker: "#13141c",
-  panel: "#24283b",
-  border: "#3b4261",
-  comment: "#565f89",
-  fg: "#c0caf5",
-  fgDim: "#a9b1d6",
-  blue: "#7aa2f7",
-  cyan: "#7dcfff",
-  green: "#9ece6a",
-  vimma: "#2ee87d",
-  yellow: "#e0af68",
-  orange: "#ff9e64",
-  red: "#f7768e",
-  magenta: "#bb9af7",
+export const PALETTE = {
+  bg: "#0a0f12",
+  bgDark: "#070b0d",
+  bgDarker: "#040708",
+  bgLight: "#111a1b",
+  selection: "#163327",
+  border: "#2a3d36",
+  fg: "#c4cec8",
+  fgMuted: "#849690",
+  fgBright: "#fcfbf7",
+  mint: "#1bf587",
+  mintShade: "#2ba564",
+  green: "#8eeeb8",
+  yellow: "#f2c94c",
+  red: "#ff6b6b",
 } as const;
 
 /** `#rrggbb` → ASS `&HBBGGRR&` (ASS colours are blue-green-red). */
@@ -107,7 +105,7 @@ export class Script {
       `\\an${o.an ?? 7}`,
       `\\pos(${Math.round(x)},${Math.round(y)})`,
       `\\fs${o.size ?? 40}`,
-      `\\c${colour(o.colour ?? TOKYO.fg)}`,
+      `\\c${colour(o.colour ?? PALETTE.fg)}`,
       o.bold ? "\\b1" : "",
       o.tags ?? "",
     ].join("");
@@ -126,9 +124,9 @@ export class Script {
     const tags = [
       "\\an7",
       `\\pos(${Math.round(x)},${Math.round(y)})`,
-      `\\1c${colour(o.fill ?? TOKYO.panel)}`,
+      `\\1c${colour(o.fill ?? PALETTE.bgLight)}`,
       `\\1a&H${alpha(o.fillAlpha ?? 0)}&`,
-      `\\3c${colour(o.line ?? TOKYO.border)}`,
+      `\\3c${colour(o.line ?? PALETTE.border)}`,
       `\\bord${o.lineWidth ?? 0}`,
       "\\shad0",
       o.tags ?? "",
@@ -149,7 +147,7 @@ export class Script {
       "",
       "[V4+ Styles]",
       "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding",
-      `Style: Mono,${this.font},40,&H00F5CAC0,&H000000FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,0,0,7,0,0,0,1`,
+      `Style: Mono,${this.font},40,&H00C8CEC4,&H000000FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,0,0,7,0,0,0,1`,
       "",
       "[Events]",
       "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text",

@@ -6,7 +6,7 @@
 // titles, the dusty mouse, the captions and the key chips). render.ts turns each segment into
 // video with ffmpeg; the footage comes from Vimma's tools/promo/record.mjs.
 
-import { Script, TOKYO, alpha, circle, colour, escapeText, roundedRect } from "./ass.js";
+import { PALETTE, Script, alpha, circle, colour, escapeText, roundedRect } from "./ass.js";
 
 /** One recorded shot, as tools/promo/record.mjs writes it in manifest.json. */
 export interface Shot {
@@ -129,23 +129,23 @@ function mark(s: Shot, name: string): number {
 function terminal(sc: Script, start: number, end: number, box: Box, title: string, o: StoryOptions): void {
   const bar = Math.round(box.h > 500 ? 52 : 44);
   sc.shape(start, end, box.x, box.y, roundedRect(box.w, box.h, 16), {
-    fill: TOKYO.bgDark,
-    line: TOKYO.border,
+    fill: PALETTE.bgDark,
+    line: PALETTE.border,
     lineWidth: 2,
     layer: 0,
     tags: `\\fad(${FADE * 1000},${FADE * 1000})`,
   });
   sc.shape(start, end, box.x + 2, box.y + bar, `m 0 0 l ${box.w - 4} 0 l ${box.w - 4} 2 l 0 2`, {
-    fill: TOKYO.border,
+    fill: PALETTE.border,
     layer: 1,
   });
-  [TOKYO.red, TOKYO.yellow, TOKYO.green].forEach((c, i) =>
+  [PALETTE.red, PALETTE.yellow, PALETTE.mint].forEach((c, i) =>
     sc.shape(start, end, box.x + 24 + i * 30, box.y + bar / 2 - 8, circle(8), { fill: c, layer: 1 }),
   );
   const size = 24;
   sc.text(start, end, box.x + box.w / 2, box.y + bar / 2, escapeText(title), {
     size,
-    colour: TOKYO.comment,
+    colour: PALETTE.fgMuted,
     an: 5,
   });
   void o;
@@ -169,7 +169,7 @@ function typed(
   const cps = opt.cps ?? 18;
   const chars = [...text];
   const pre = prefix.map((p) => `{\\c${colour(p.colour)}}${escapeText(p.text)}`).join("");
-  const cursor = `{\\c${colour(TOKYO.fg)}}█`;
+  const cursor = `{\\c${colour(PALETTE.fg)}}█`;
   const line = (n: number, withCursor: boolean) =>
     `${pre}{\\c${colour(opt.colour)}}${escapeText(chars.slice(0, n).join(""))}${withCursor ? cursor : ""}`;
   const done = start + chars.length / cps;
@@ -196,19 +196,19 @@ function caption(sc: Script, L: Layout, start: number, end: number, keys: string
   const x = L.width === 1920 ? L.footage.x : L.width / 2;
   const an = L.width === 1920 ? 4 : 5;
   const parts =
-    `{\\c${colour(TOKYO.green)}}~/ ${"$"} {\\c${colour(TOKYO.fg)}}${escapeText(keys)}` +
-    (comment ? `{\\c${colour(TOKYO.comment)}}  # ${escapeText(comment)}` : "");
+    `{\\c${colour(PALETTE.mint)}}~/ ${"$"} {\\c${colour(PALETTE.fg)}}${escapeText(keys)}` +
+    (comment ? `{\\c${colour(PALETTE.fgMuted)}}  # ${escapeText(comment)}` : "");
   if (L.width === 1920) {
     sc.text(start, end, x, L.captionY, parts, { size: L.captionSize, an, tags: "\\fad(250,200)" });
   } else {
     // portrait: the keys on one line, the comment under it
-    sc.text(start, end, x, L.captionY - 26, `{\\c${colour(TOKYO.green)}}~/ $ {\\c${colour(TOKYO.fg)}}${escapeText(keys)}`, {
+    sc.text(start, end, x, L.captionY - 26, `{\\c${colour(PALETTE.mint)}}~/ $ {\\c${colour(PALETTE.fg)}}${escapeText(keys)}`, {
       size: L.captionSize + 4,
       an,
       tags: "\\fad(250,200)",
     });
     if (comment) {
-      sc.text(start, end, x, L.captionY + 30, `{\\c${colour(TOKYO.comment)}}# ${escapeText(comment)}`, {
+      sc.text(start, end, x, L.captionY + 30, `{\\c${colour(PALETTE.fgMuted)}}# ${escapeText(comment)}`, {
         size: L.captionSize - 4,
         an,
         tags: "\\fad(250,200)",
@@ -267,17 +267,17 @@ function keyChips(
       const y = Math.round(L.keysY - h / 2);
       const fade = `\\fad(80,${rowEnd >= end ? 0 : 200})`;
       // the newest key is lit, then settles
-      sc.shape(k.t, rowEnd, x, y + 4, roundedRect(w, h, 10), { fill: TOKYO.bgDarker, layer: 3, tags: fade });
+      sc.shape(k.t, rowEnd, x, y + 4, roundedRect(w, h, 10), { fill: PALETTE.bgDarker, layer: 3, tags: fade });
       sc.shape(k.t, rowEnd, x, y, roundedRect(w, h, 10), {
-        fill: TOKYO.panel,
-        line: TOKYO.blue,
+        fill: PALETTE.bgLight,
+        line: PALETTE.mintShade,
         lineWidth: 2,
         layer: 4,
-        tags: `${fade}\\3c${colour(TOKYO.orange)}\\t(0,450,\\3c${colour(TOKYO.blue)})`,
+        tags: `${fade}\\3c${colour(PALETTE.mint)}\\t(0,450,\\3c${colour(PALETTE.mintShade)})`,
       });
       sc.text(k.t, rowEnd, x + w / 2, y + h / 2, escapeText(keyLabel(k.keys)), {
         size,
-        colour: TOKYO.fg,
+        colour: PALETTE.fg,
         an: 5,
         layer: 5,
         tags: fade,
@@ -303,9 +303,9 @@ function footageSegment(
   const f = L.footage;
   // a frame around the footage
   sc.shape(0, duration, f.x - 3, f.y - 3, roundedRect(f.w + 6, f.h + 6, 6), {
-    fill: TOKYO.border,
+    fill: PALETTE.border,
     fillAlpha: 1,
-    line: TOKYO.border,
+    line: PALETTE.border,
     lineWidth: 2,
     layer: 0,
   });
@@ -321,7 +321,7 @@ function footageSegment(
   return {
     name: s.name,
     duration,
-    bg: TOKYO.bg,
+    bg: PALETTE.bg,
     footage: {
       file: `${o.footageDir}/${s.file}`,
       start: from,
@@ -365,8 +365,7 @@ function span(s: Shot, lead = 0.9): [number, number] {
   return [Math.max(0, first - lead), s.duration];
 }
 
-function title1(o: StoryOptions, L: Layout): Segment {
-  const d = 5;
+function title1(o: StoryOptions, L: Layout, d: number): Segment {
   const sc = new Script(L.width, L.height, o.font);
   const box = { x: 260, y: 250, w: 1400, h: 580 };
   terminal(sc, 0, d, box, "zsh — ~", o);
@@ -379,9 +378,9 @@ function title1(o: StoryOptions, L: Layout): Segment {
     box.y + 140,
     0.5,
     d,
-    [{ text: "~/ $ ", colour: TOKYO.green }],
+    [{ text: "~/ $ ", colour: PALETTE.mint }],
     "your hands live on the keyboard",
-    { size, colour: TOKYO.fg, cps: 17 },
+    { size, colour: PALETTE.fg, cps: 17 },
   );
   const rows: [string, string][] = [
     ["nvim", "modal editing"],
@@ -390,13 +389,13 @@ function title1(o: StoryOptions, L: Layout): Segment {
   ];
   rows.forEach(([tool, what], i) => {
     const t = done + 0.3 + i * 0.35;
-    sc.text(t, d, x + 20, box.y + 250 + i * 72, `{\\c${colour(TOKYO.green)}}✓ {\\c${colour(TOKYO.blue)}}${tool.padEnd(10)}{\\c${colour(TOKYO.comment)}}${escapeText(what)}`, {
+    sc.text(t, d, x + 20, box.y + 250 + i * 72, `{\\c${colour(PALETTE.mint)}}✓ {\\c${colour(PALETTE.fgBright)}}${tool.padEnd(10)}{\\c${colour(PALETTE.fgMuted)}}${escapeText(what)}`, {
       size: 40,
       an: 4,
       tags: "\\fad(150,0)",
     });
   });
-  return { name: "title", duration: d, bg: TOKYO.bg, script: sc };
+  return { name: "title", duration: d, bg: PALETTE.bg, script: sc };
 }
 
 type Pt = [number, number];
@@ -436,7 +435,7 @@ function mouse(sc: Script, start: number, end: number, cx: number, cy: number, s
   const x = cx - w / 2;
   const y = cy - h / 2;
   const top = -170; // the body's top, relative to the centre
-  const dust = TOKYO.comment;
+  const dust = PALETTE.fgMuted;
   const fade = "\\fad(300,0)";
   const Q = (dx: number, dy: number): Pt => [cx + dx * scale, cy + dy * scale];
   // the cable: up from the top centre, a lazy curve out of the picture
@@ -445,11 +444,11 @@ function mouse(sc: Script, start: number, end: number, cx: number, cy: number, s
     { c: [Q(-60, top - 170), Q(-20, top - 190)], to: Q(-20, top - 230) },
   ]);
   stroke(sc, start, end, cable, dust, S(5), fade);
-  sc.shape(start, end, x, y, roundedRect(w, h, S(110)), { fill: TOKYO.panel, line: dust, lineWidth: S(5), layer: 2, tags: fade });
+  sc.shape(start, end, x, y, roundedRect(w, h, S(110)), { fill: PALETTE.bgLight, line: dust, lineWidth: S(5), layer: 2, tags: fade });
   // the buttons' seams and the wheel
   sc.shape(start, end, cx - S(2), y, `m 0 0 l ${S(4)} 0 l ${S(4)} ${S(120)} l 0 ${S(120)}`, { fill: dust, layer: 3, tags: fade });
   sc.shape(start, end, x, y + S(118), `m 0 0 l ${w} 0 l ${w} ${S(4)} l 0 ${S(4)}`, { fill: dust, layer: 3, tags: fade });
-  sc.shape(start, end, cx - S(14), y + S(36), roundedRect(S(28), S(56), S(14)), { fill: TOKYO.bgDark, line: dust, lineWidth: S(4), layer: 4, tags: fade });
+  sc.shape(start, end, cx - S(14), y + S(36), roundedRect(S(28), S(56), S(14)), { fill: PALETTE.bgDark, line: dust, lineWidth: S(4), layer: 4, tags: fade });
   // a cobweb in the corner between the cable and the left shoulder: threads from a hub to
   // the cable, the body's top and its side, and sagging rings across them
   const hub = [-105, top - 35];
@@ -466,7 +465,7 @@ function mouse(sc: Script, start: number, end: number, cx: number, cy: number, s
       rings.push(openPath(Q(p0[0]!, p0[1]!), [{ c: [sag, sag], to: Q(p1[0]!, p1[1]!) }]));
     }
   }
-  stroke(sc, start + 0.5, end, [...threads, ...rings].join(" "), TOKYO.fgDim, S(1.6), `\\fad(700,0)\\3a&H${alpha(0.45)}&`, 5);
+  stroke(sc, start + 0.5, end, [...threads, ...rings].join(" "), PALETTE.fg, S(1.6), `\\fad(700,0)\\3a&H${alpha(0.45)}&`, 5);
   // dust specks on the body
   const specks: [number, number, number][] = [
     [0.3, 0.25, 4], [0.62, 0.3, 3], [0.45, 0.55, 5], [0.7, 0.62, 3], [0.25, 0.7, 4],
@@ -474,7 +473,7 @@ function mouse(sc: Script, start: number, end: number, cx: number, cy: number, s
   ];
   for (const [fx, fy, r] of specks) {
     sc.shape(start + 0.3, end, x + fx * w, y + fy * h, circle(S(r)), {
-      fill: TOKYO.fgDim,
+      fill: PALETTE.fg,
       layer: 4,
       tags: `\\fad(400,0)\\1a&H${alpha(0.45)}&`,
     });
@@ -490,35 +489,33 @@ function mouse(sc: Script, start: number, end: number, cx: number, cy: number, s
       start: t0,
       end: t1,
       layer: 6,
-      text: `{\\an7\\move(${Math.round(px)},${Math.round(py)},${Math.round(px + dx)},${Math.round(py - S(160))})\\1c${colour(TOKYO.fgDim)}\\bord0\\shad0\\fad(300,700)\\1a&H${alpha(0.35)}&\\p1}${circle(S(3 + (i % 3)))}{\\p0}`,
+      text: `{\\an7\\move(${Math.round(px)},${Math.round(py)},${Math.round(px + dx)},${Math.round(py - S(160))})\\1c${colour(PALETTE.fg)}\\bord0\\shad0\\fad(300,700)\\1a&H${alpha(0.35)}&\\p1}${circle(S(3 + (i % 3)))}{\\p0}`,
     });
   }
 }
 
-function title2(o: StoryOptions, L: Layout): Segment {
-  const d = 5;
+function title2(o: StoryOptions, L: Layout, d: number): Segment {
   const sc = new Script(L.width, L.height, o.font);
   const size = L.titleSize;
   const text = "…until the browser wants the mouse.";
   const x = L.width / 2 - textWidth(o, text, size) / 2;
-  typed(sc, o, x, 170, 0.3, d, [], text, { size, colour: TOKYO.fg, cps: 20, cursor: false });
+  typed(sc, o, x, 170, 0.3, d, [], text, { size, colour: PALETTE.fg, cps: 20, cursor: false });
   mouse(sc, 1.2, d, L.width / 2, 650, 1.1);
   sc.text(2.4, d, L.width / 2, 900, escapeText("last moved: 1,204 days ago"), {
     size: 30,
-    colour: TOKYO.comment,
+    colour: PALETTE.fgMuted,
     an: 5,
     tags: "\\fad(400,0)",
   });
-  return { name: "mouse", duration: d, bg: TOKYO.bg, script: sc };
+  return { name: "mouse", duration: d, bg: PALETTE.bg, script: sc };
 }
 
-function configCard(o: StoryOptions, L: Layout): Segment {
-  const d = 4;
+function configCard(o: StoryOptions, L: Layout, d: number): Segment {
   const sc = new Script(L.width, L.height, o.font);
   const box = { x: 260, y: 290, w: 1400, h: 520 };
   sc.text(0.2, d, L.width / 2, 170, escapeText("every key is yours"), {
     size: 64,
-    colour: TOKYO.fg,
+    colour: PALETTE.fg,
     an: 5,
     tags: "\\fad(300,0)",
     bold: true,
@@ -532,25 +529,25 @@ function configCard(o: StoryOptions, L: Layout): Segment {
   lines.forEach(([k, v, comment], i) => {
     const t = 0.6 + i * 0.55;
     const y = box.y + 130 + i * 90;
-    sc.text(t, d, box.x + 60, y, `{\\c${colour(TOKYO.blue)}}${escapeText(k)} {\\c${colour(TOKYO.fg)}}= {\\c${colour(TOKYO.green)}}${escapeText(v)}`, {
+    sc.text(t, d, box.x + 60, y, `{\\c${colour(PALETTE.green)}}${escapeText(k)} {\\c${colour(PALETTE.fg)}}= {\\c${colour(PALETTE.yellow)}}${escapeText(v)}`, {
       size: 40,
       an: 4,
       tags: "\\fad(150,0)",
     });
     if (comment) {
-      sc.text(t + 0.2, d, box.x + 60, y + 40, `{\\c${colour(TOKYO.comment)}}# ${escapeText(comment)}`, {
+      sc.text(t + 0.2, d, box.x + 60, y + 40, `{\\c${colour(PALETTE.fgMuted)}}# ${escapeText(comment)}`, {
         size: 28,
         an: 4,
         tags: "\\fad(150,0)",
       });
     }
   });
-  sc.text(2.4, d, box.x + 60, box.y + box.h - 60, `{\\c${colour(TOKYO.comment)}}# save: it applies within 2 seconds, no restart`, {
+  sc.text(2.4, d, box.x + 60, box.y + box.h - 60, `{\\c${colour(PALETTE.fgMuted)}}# save: it applies within 2 seconds, no restart`, {
     size: 30,
     an: 4,
     tags: "\\fad(200,0)",
   });
-  return { name: "config", duration: d, bg: TOKYO.bg, script: sc };
+  return { name: "config", duration: d, bg: PALETTE.bg, script: sc };
 }
 
 function outro(o: StoryOptions, L: Layout, d: number): Segment {
@@ -559,7 +556,7 @@ function outro(o: StoryOptions, L: Layout, d: number): Segment {
   const h = Math.round((w * 576) / 1776);
   const box = { x: Math.round((L.width - w) / 2), y: Math.round(L.height * 0.42 - h / 2), w, h };
   const below = box.y + h + (L.width === 1920 ? 90 : 110);
-  sc.text(1.0, d, L.width / 2, below, `{\\c${colour(TOKYO.vimma)}}vimma.dev`, {
+  sc.text(1.0, d, L.width / 2, below, `{\\c${colour(PALETTE.mint)}}vimma.dev`, {
     size: L.width === 1920 ? 72 : 76,
     an: 5,
     bold: true,
@@ -567,7 +564,7 @@ function outro(o: StoryOptions, L: Layout, d: number): Segment {
   });
   sc.text(1.5, d, L.width / 2, below + (L.width === 1920 ? 80 : 90), escapeText("a keyboard-first browser, built on Firefox"), {
     size: L.width === 1920 ? 34 : 34,
-    colour: TOKYO.comment,
+    colour: PALETTE.fgMuted,
     an: 5,
     tags: "\\fad(400,0)",
   });
@@ -580,39 +577,80 @@ function outro(o: StoryOptions, L: Layout, d: number): Segment {
   };
 }
 
-/** The 16:9 video, about 70 s: the eight storyboard beats. */
+type Caption = { t: number; keys: string; comment: string };
+
+/** about:addons: link hints where no extension may run. */
+function addonsCaptions(s: Shot, start: number): Caption[] {
+  return [
+    { t: start, keys: "about:addons", comment: "a page no extension may touch" },
+    { t: mark(s, "hints") - 0.2, keys: "f", comment: "Extensions can't run here. Vimma can." },
+  ];
+}
+
+/** Tiling: three splits make the spiral, then the presets. */
+function tilingCaptions(s: Shot, start: number): Caption[] {
+  return [
+    { t: start, keys: "ctrl+b enter", comment: "split the longer side: a dwindle spiral" },
+    { t: mark(s, "layouts") - 0.2, keys: "ctrl+b space", comment: "cycle the layouts, as tmux does" },
+  ];
+}
+
+/** The side panel's marks. */
+function marksCaptions(s: Shot, start: number): Caption[] {
+  return [
+    { t: start, keys: "ctrl+b b", comment: "your tabs, in a side panel" },
+    { t: mark(s, "mark") - 0.2, keys: "space", comment: "mark the ones you want" },
+    { t: mark(s, "together") - 0.2, keys: "enter", comment: "and see them together, as panes" },
+  ];
+}
+
+/** The theme: the built-in palette, an Omarchy theme, and back. */
+function themeCaptions(s: Shot, start: number): Caption[] {
+  const out: Caption[] = [{ t: start, keys: "vimma", comment: "its own mint palette" }];
+  for (const x of s.marks.filter((m) => m.name.startsWith("theme:"))) {
+    const name = x.name.slice("theme:".length);
+    out.push(
+      name === "builtin"
+        ? { t: x.t, keys: "vimma", comment: "and back to its own mint" }
+        : { t: x.t, keys: `omarchy-theme-set ${name}`, comment: "your Omarchy theme, live" },
+    );
+  }
+  return out;
+}
+
+/** The 16:9 video, about 66 s: titles, eight footage beats, the config card and the outro. */
 export function landscape(o: StoryOptions): Segment[] {
   const L = LANDSCAPE;
   const m = o.manifest;
   const keys = shot(m, "keys");
-  const panes = shot(m, "panes");
-  const ws = shot(m, "workspaces");
+  const addons = shot(m, "addons");
+  const tiling = shot(m, "tiling");
+  const marks = shot(m, "marks");
+  const flip = shot(m, "flip");
   const theme = shot(m, "theme");
   const help = shot(m, "help");
   const [k0, k1] = span(keys);
-  const [p0, p1] = span(panes);
-  const [w0, w1] = span(ws, 1.2);
-  const [t0, t1] = span(theme, 1.2);
+  const [a0, a1] = span(addons, 1.0);
+  const [t0, t1] = span(tiling);
+  const [m0, m1] = span(marks);
+  const [f0, f1] = span(flip, 1.0);
+  const [th0, th1] = span(theme, 1.2);
   const [h0, h1] = span(help);
-  const themeCaptions = theme.marks
-    .filter((x) => x.name.startsWith("theme:"))
-    .map((x) => ({ t: x.t, keys: `omarchy-theme-set ${x.name.slice(6)}`, comment: "Vimma recolours live" }));
   return [
-    title1(o, L),
-    title2(o, L),
+    title1(o, L, 4.5),
+    title2(o, L, 4.5),
     footageSegment(o, L, keys, k0, k1, [
       { t: k0, keys: "j  k", comment: "scroll, like a pager" },
       { t: mark(keys, "hints") - 0.2, keys: "f", comment: "a label on every link: type it to follow" },
       { t: mark(keys, "find") - 0.2, keys: "/", comment: "search as you type, with a match count" },
     ], hintZoom(keys, 1.9)),
-    footageSegment(o, L, panes, p0, p1, paneCaptions(panes, p0)),
-    footageSegment(o, L, ws, w0, w1, [
-      { t: w0, keys: "ctrl+b )  ctrl+b (", comment: "workspaces: separate cookies, separate logins" },
+    footageSegment(o, L, addons, a0, a1, addonsCaptions(addons, a0)),
+    footageSegment(o, L, tiling, t0, t1, tilingCaptions(tiling, t0)),
+    footageSegment(o, L, marks, m0, m1, marksCaptions(marks, m0)),
+    footageSegment(o, L, flip, f0, f1, [
+      { t: f0, keys: "ctrl+^", comment: "flip workspaces like Vim buffers, each with its own logins" },
     ]),
-    footageSegment(o, L, theme, t0, t1, [
-      { t: t0, keys: "vimma", comment: "colours from your Omarchy theme" },
-      ...themeCaptions,
-    ]),
+    footageSegment(o, L, theme, th0, th1, themeCaptions(theme, th0)),
     footageSegment(
       o,
       L,
@@ -622,8 +660,8 @@ export function landscape(o: StoryOptions): Segment[] {
       [{ t: h0, keys: "ctrl+b ?", comment: "every binding, one key away (filter with /)" }],
       helpZoom(help, o.manifest.geometry),
     ),
-    configCard(o, L),
-    outro(o, L, 5),
+    configCard(o, L, 3.5),
+    outro(o, L, 4.5),
   ];
 }
 
@@ -634,40 +672,25 @@ function helpZoom(s: Shot, g: { width: number; height: number }): Zoom[] {
   return punchIn(slash - 0.1, s.duration + 1, 1.55, g.width * 0.47, g.height * 0.36);
 }
 
-function paneCaptions(s: Shot, start: number): { t: number; keys: string; comment: string }[] {
-  // captions change with the prefix keys: v, h, z
-  const after = (k: string) => s.keys.find((x, i) => x.keys === k && s.keys[i - 1]?.keys === "ctrl+b")?.t;
-  const v = after("v") ?? start;
-  const h = after("h");
-  const z = after("z");
-  const out = [{ t: start, keys: "ctrl+b v", comment: "split the window, as in tmux" }];
-  if (h !== undefined) out.push({ t: h - 0.6, keys: "ctrl+b h  ctrl+b l", comment: "move between panes" });
-  if (z !== undefined) out.push({ t: z - 0.6, keys: "ctrl+b z", comment: "zoom a pane, and back" });
-  void v;
-  return out;
-}
-
-/** The 9:16 cut, about 30 s: link hints and find, panes, the live theme, the outro. */
+/** The 9:16 cut, about 32 s: link hints, tiling, the side panel's marks, the theme, the outro. */
 export function portrait(o: StoryOptions): Segment[] {
   const L = PORTRAIT;
   const m = o.manifest;
   const keys = shot(m, "keys");
-  const panes = shot(m, "panes");
+  const tiling = shot(m, "tiling");
+  const marks = shot(m, "marks");
   const theme = shot(m, "theme");
+  // the hints only: from just before f until the followed page shows, before the find
   const k0 = Math.max(0, mark(keys, "hints") - 1.0);
-  const [, k1] = span(keys);
-  const [p0, p1] = span(panes);
-  const [t0, t1] = span(theme, 1.0);
-  const themeCaptions = theme.marks
-    .filter((x) => x.name.startsWith("theme:"))
-    .map((x) => ({ t: x.t, keys: `omarchy-theme-set ${x.name.slice(6)}`, comment: "Vimma recolours live" }));
+  const k1 = mark(keys, "find");
+  const [t0, t1] = span(tiling);
+  const [m0, m1] = span(marks);
+  const [th0, th1] = span(theme, 1.0);
   return [
-    footageSegment(o, L, keys, k0, k1, [
-      { t: k0, keys: "f", comment: "a label on every link" },
-      { t: mark(keys, "find") - 0.2, keys: "/", comment: "search, with a match count" },
-    ], hintZoom(keys, 1.7)),
-    footageSegment(o, L, panes, p0, p1, paneCaptions(panes, p0)),
-    footageSegment(o, L, theme, t0, t1, themeCaptions.length ? [{ t: t0, keys: "vimma", comment: "your Omarchy colours" }, ...themeCaptions] : []),
+    footageSegment(o, L, keys, k0, k1, [{ t: k0, keys: "f", comment: "a label on every link" }], hintZoom(keys, 1.7)),
+    footageSegment(o, L, tiling, t0, t1, tilingCaptions(tiling, t0)),
+    footageSegment(o, L, marks, m0, m1, marksCaptions(marks, m0)),
+    footageSegment(o, L, theme, th0, th1, themeCaptions(theme, th0)),
     outro(o, L, 4),
   ];
 }

@@ -247,7 +247,7 @@ async function main(): Promise<void> {
     const manifest =
       values["reuse-footage"] && existsSync(join(footageDir, "manifest.json"))
         ? (JSON.parse(readFileSync(join(footageDir, "manifest.json"), "utf8")) as Manifest)
-        : await record(vimma, footageDir, landscapeCut ? "1920x1080" : "1080x1920", landscapeCut ? null : "keys,panes,theme");
+        : await record(vimma, footageDir, landscapeCut ? "1920x1080" : "1080x1920", landscapeCut ? null : "keys,tiling,marks,theme");
     const story = { font, advance, vimma, footageDir, manifest };
     const segments = landscapeCut ? landscape(story) : portrait(story);
     const size = landscapeCut ? { width: 1920, height: 1080 } : { width: 1080, height: 1920 };
