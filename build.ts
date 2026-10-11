@@ -12,6 +12,17 @@ import { dirname, join, resolve } from "node:path";
 import { type BindingsFile, VIMMA_REPO } from "./scripts/bindings-types.js";
 import { buildDocs } from "./scripts/docs.js";
 import { keysTables } from "./scripts/keys-html.js";
+import {
+  type LlmsLink,
+  OG_IMAGE,
+  TAGLINE,
+  headTags,
+  homeJsonLd,
+  lastChanged,
+  llmsTxt,
+  robotsTxt,
+  sitemapXml,
+} from "./scripts/seo.js";
 import { STATIC_STEP, STEPS, escapeHtml, shotHtml } from "./src/ts/hero.js";
 
 const ROOT = resolve(import.meta.dirname, "..");
@@ -36,13 +47,16 @@ interface PageMeta {
 interface Page {
   meta: PageMeta;
   body: string;
+  /** The files the page is made from, for its date in the sitemap. */
+  sources: string[];
 }
 
 function readPage(file: string): Page {
   const src = readFileSync(at("src/pages", file), "utf8");
   const m = /^<!--(\{.*?\})-->\n/s.exec(src);
   if (!m?.[1]) throw new Error(`${file}: missing the <!--{…}--> meta line`);
-  return { meta: JSON.parse(m[1]) as PageMeta, body: src.slice(m[0].length) };
+  const sources = [`src/pages/${file}`, ...(file === "keys.html" ? ["data/bindings.json"] : [])];
+  return { meta: JSON.parse(m[1]) as PageMeta, body: src.slice(m[0].length), sources };
 }
 
 /** Replaces {{name}} with vars[name]; an unknown name is an error, not an empty string. */
@@ -95,6 +109,7 @@ function sizeOf(path: string): number {
 }
 
 function main(): void {
+  if (!existsSync(at(OG_IMAGE.path))) throw new Error(`${OG_IMAGE.path} missing (scripts/og-image.sh)`);
   const missingShots = STEPS.flatMap((s) =>
     ["avif", "webp"].map((ext) => `assets/img/shots/${s.shot}.${ext}`).filter((f) => !existsSync(at(f))),
   );
@@ -107,7 +122,7 @@ function main(): void {
   const docs = buildDocs(ROOT);
   const docPages: Page[] = docs.pages.map((d) => ({
     meta: {
-      title: `${d.title} · Vimma docs`,
+      title: `${d.headTitle} · Vimma docs`,
       short: d.slug ? `docs/${d.slug}` : "docs",
       out: d.out,
       cmd: `less docs/${d.slug || "start-here"}.md`,
@@ -117,6 +132,7 @@ function main(): void {
       wide: true,
     },
     body: d.body,
+    sources: d.sources,
   }));
   const [home, keysPage, install, about, notFound] = ["index.html", "keys.html", "install.html", "about.html", "404.html"].map(readPage);
   const start = docPages[0];
@@ -128,8 +144,19 @@ function main(): void {
   const staticStep = STEPS[STATIC_STEP];
   if (!staticStep) throw new Error("no static hero step");
 
+  const notFoundPage = (p: Page): boolean => p.meta.out === "404.html";
   for (const page of pages) {
     const root = rootFor(page.meta.out);
+    const seo = [
+      headTags({
+        title: page.meta.title,
+        description: page.meta.description,
+        out: page.meta.out,
+        indexable: !notFoundPage(page),
+        type: page === home || notFoundPage(page) ? "website" : "article",
+      }),
+      ...(page === home ? [homeJsonLd(page.meta.description)] : []),
+    ].join("\n    ");
     const n = navPages.findIndex((p) => p === page || p.meta.out === page.meta.section);
     const vars: Record<string, string> = {
       root,
@@ -148,6 +175,7 @@ function main(): void {
         root,
         title: escapeHtml(page.meta.title),
         description: escapeHtml(page.meta.description),
+        seo,
         cmd: escapeHtml(page.meta.cmd),
         short: escapeHtml(page.meta.short),
         pos: n >= 0 ? `page ${n + 1}/${navPages.length}` : "page -/-",
@@ -169,6 +197,47 @@ function main(): void {
     if (f.endsWith(".js")) cpSync(at(".build/site", f), join(DIST, "assets/js", f));
   }
   cpSync(at("LICENSE"), join(DIST, "LICENSE.txt"));
+  // static/: files served at the site's root as they are (search-engine verification files,
+  // a _headers file); dotfiles such as .gitkeep stay behind
+  for (const f of readdirSync(at("static"))) {
+    if (f.startsWith(".")) continue;
+    if (existsSync(join(DIST, f))) throw new Error(`static/${f} would overwrite a built file`);
+    cpSync(at("static", f), join(DIST, f), { recursive: true });
+  }
+
+  // For search engines and AI tools: the page list with dates, the crawl rules, and llms.txt.
+  const buildDate = new Date().toISOString().slice(0, 10);
+  const indexed = pages.filter((p) => !notFoundPage(p));
+  writeFileSync(
+    join(DIST, "sitemap.xml"),
+    sitemapXml(
+      indexed.map((p) => ({ out: p.meta.out, lastmod: lastChanged(ROOT, p.sources, buildDate) })),
+    ),
+  );
+  writeFileSync(join(DIST, "robots.txt"), robotsTxt());
+  const link = (p: Page, title = p.meta.title.replace(/ · Vimma( docs)?$/, "")): LlmsLink => ({
+    title,
+    out: p.meta.out,
+    description: p.meta.description,
+  });
+  const docsOf = (group: string): LlmsLink[] =>
+    docs.pages.flatMap((d) => {
+      const p = docPages.find((x) => x.meta.out === d.out);
+      return p && d.group === group ? [link(p, d.title)] : [];
+    });
+  writeFileSync(
+    join(DIST, "llms.txt"),
+    llmsTxt(
+      `${TAGLINE}. Vimma is a Firefox fork for Linux: Vim modes on every page, a tmux-style ctrl+b prefix for tabs, split panes and workspaces, and one config.toml for every key.`,
+      `Vimma is pre-alpha and open source (MPL-2.0): there are no binaries yet, so it is built from source on Linux x86_64. Source: ${VIMMA_REPO}. The whole user guide as one Markdown file: https://vimma.dev/llms-full.txt`,
+      [
+        ["Start", [link(home, "Vimma"), ...docsOf("Start"), link(install, "Install Vimma"), link(keysPage, "Key bindings")]],
+        ["Docs", ["Get going", "Tabs, panes, workspaces", "Make it yours"].flatMap(docsOf)],
+        ["Optional", [...docsOf("Reference"), link(about, "About Vimma")]],
+      ],
+    ),
+  );
+  writeFileSync(join(DIST, "llms-full.txt"), docs.markdown);
   // The docs search index: an ES module the docs pages import when the search is first used.
   writeFileSync(
     join(DIST, "assets/js/docs-index.js"),

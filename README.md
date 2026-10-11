@@ -14,11 +14,15 @@ login until Vimma is published. A push to `main` goes live in a minute or two. S
 | Path       | Source                   | What                                                               |
 | ---------- | ------------------------ | ------------------------------------------------------------------ |
 | `/`        | `src/pages/index.html`   | Logo, pitch, the session (real screenshots), features, name, status |
-| `/docs/`   | `src/docs/`, `data/docs/`| Start here, Why Vimma, then pages built from Vimma's guide (below) |
+| `/docs/`   | `src/docs/`, `data/docs/`| Start here, Why Vimma, Vimma compared, then pages from the guide   |
 | `/keys/`   | `src/pages/keys.html`    | Every default binding, filterable, from `data/bindings.json`       |
 | `/install/`| `src/pages/install.html` | Build from source; Linux x86_64 only; no binaries yet              |
 | `/about/`  | `src/pages/about.html`   | Why another browser, privacy defaults, Firefox base, licence, FAQ  |
 | `404.html` | `src/pages/404.html`     | Not found (links are root-absolute: it assumes the site is at `/`) |
+
+The build also writes, for search engines and AI tools, `sitemap.xml`, `robots.txt`, `llms.txt`
+and `llms-full.txt` at the root (see [Search engines and link previews](#search-engines-and-link-previews)),
+and copies whatever is in `static/` there as it is.
 
 ## Commands
 
@@ -46,9 +50,14 @@ npm run shots -- ../vimma          # retake the home page's screenshots from tha
 - **contrast**: each text/background token pair, in both palettes, is at least 4.5:1 (WCAG AA).
 - **weight**: what each page loads (HTML, stylesheet, scripts and their imports, and the docs
   search index on docs pages) stays under 150 KB. The heaviest is the known-limits page, just
-  under the budget, about half of it the 69 KB search index loaded on first search. The index
-  leaves out common words (a stop list) and words already in a section's page title or heading;
+  under the budget, under half of it the search index loaded on first search. The index
+  leaves out common words (a stop list), words already in a section's page title, heading or
+  snippet, and words inside a longer word of the same section (the search matches substrings);
   if a sync pushes a page over, slim the index or the page, not the budget.
+- **seo**: one `<link rel="canonical">` per page with its `https://vimma.dev/` address (none, and
+  `noindex`, on the 404 page), the Open Graph and `twitter:card` tags, titles and descriptions
+  unique across pages, JSON-LD that parses, a well-formed `sitemap.xml` that lists every page but
+  404 and only built ones, a `Sitemap:` line in `robots.txt`, and `llms.txt` links that resolve.
 
 ## How it is built
 
@@ -89,6 +98,13 @@ box, previous/next links (`[` and `]`). Each page has two tiers:
 browser and not an extension, the long version of the home page's block. Its claims are checked
 by hand against Vimma's guide and source, like the other hand-written text.
 
+"Vimma compared" (`src/docs/compared.html`, `handWritten` too) sets Vimma beside Vimium,
+Tridactyl, qutebrowser and Zen Browser (and Nyxt and Vieb briefly): one table row per dimension,
+then what each does well and where Vimma differs. Every claim about another project comes from
+its own site, docs or repository, listed at the foot of the page with the date they were
+checked; recheck them and update that date when you edit the page. Keep the tone fair: no
+project is put down.
+
 - `scripts/docs-pages.ts` lists the pages and what each is made of: guide sections by heading,
   rows of the guide's keys table by their first cell, paragraphs by their opening words,
   bindings sections, and links to the known-limits sections. If upstream renames or drops any
@@ -108,9 +124,34 @@ by hand against Vimma's guide and source, like the other hand-written text.
   `docs/assets/vimma-logo-square.png` and `vimma-mark.png`, and committed.
 - Fonts: the system's monospace stack (`ui-monospace`, JetBrains Mono, Cascadia, SF Mono, Menlo,
   DejaVu Sans Mono, …). No font is downloaded.
+- Search engines and link previews: see [below](#search-engines-and-link-previews).
 - Privacy: no cookies, no analytics, no third-party requests. A CSP meta (`default-src 'none'`,
   `'self'` for scripts, styles and images) backs that up in the browser. The keys toggle is the
   only stored state, in `localStorage`.
+
+## Search engines and link previews
+
+`scripts/seo.ts` holds what crawlers and link previews read; `build.ts` uses it for every page:
+
+- **Head tags.** A canonical URL on `https://vimma.dev`, the `<title>` and meta description from
+  the page's meta line (docs pages: `headTitle`, else `title`, and `description` in
+  `docs-pages.ts`), Open Graph tags and `twitter:card` `summary_large_image`. The 404 page gets
+  `noindex` and no canonical, since it is served at any missing address.
+- **The preview image**, `assets/img/og-image.png` (1200×630): the logo, the tagline and the
+  site's colours, made by `scripts/og-image.sh` (ImageMagick 7 and JetBrains Mono) from the main
+  repository's `docs/assets/vimma-logo-square.png` and committed. Rerun it if the logo changes.
+- **JSON-LD** on the home page: a `SoftwareApplication` (free, Linux, MPL-2.0, the GitHub
+  repository) and a `WebSite`. It is a data `<script>`, never run, so the CSP is unchanged; the
+  check allows inline scripts of type `application/ld+json` only. There is no `SearchAction`: the
+  docs search takes no query from the URL.
+- **`sitemap.xml`**: every page but 404, with `lastmod` from the last commit that touched the
+  page's source (`src/pages/…`, `src/docs/…`, and the synced guide or limits for the docs pages
+  built from them); in a shallow clone, or without git, the build date.
+- **`robots.txt`**: everything allowed, the sitemap, and Cloudflare's content signals
+  `search=yes, ai-input=yes, ai-train=yes`: the owner allows search, AI answers and training.
+- **`llms.txt`** ([llmstxt.org](https://llmstxt.org) format): the summary and a link with a line
+  for each page; **`llms-full.txt`**: the synced `guide.md` and `limits.md` as one Markdown file,
+  with the same rewrites as the docs and every link made absolute, so it follows each docs sync.
 
 ## Accessibility
 
@@ -137,6 +178,24 @@ Cloudflare's Workers Builds (the `vimma-site` Worker) builds the repository and 
 - **CI** (`.github/workflows/ci.yml`) builds and runs `npm run check` on every push and pull
   request. It does not deploy, and Cloudflare does not wait for it, so a red CI run can still go
   live: check it before merging.
+
+**Search engines.** While Cloudflare Access is in front of the site, nothing can index it. With
+the site open:
+
+- **Google Search Console / Bing Webmaster Tools.** Add `https://vimma.dev` as a property. For
+  the HTML tag method, put the token they give you in `VERIFICATION_META` in `scripts/seo.ts`
+  (`{ name: "google-site-verification", content: "…" }`, `{ name: "msvalidate.01", content: "…" }`);
+  every page then carries it. For the file method, put the file (`google….html`,
+  `BingSiteAuth.xml`) in `static/`: the build copies it to the root of `dist/` as it is, and the
+  checks skip it. Deploy, verify, then submit `https://vimma.dev/sitemap.xml` in both. A DNS TXT
+  record works too and needs no change here. Keep the token or file afterwards: they check again.
+- **robots.txt.** The built `robots.txt` is a file in `dist/`, so the Worker serves it. Cloudflare's
+  managed `robots.txt` (Security → Settings, bot traffic: "Manage your robots.txt" / AI Crawl
+  Control) does not replace it but prepends its own block to it: today only the comments that
+  explain content signals; with its AI-crawler option on, `Disallow` rules for AI crawlers too,
+  which would contradict the content signals. Either turn the managed file off, so ours is served as it
+  is, or keep it with only the comments. Keep "Block AI bots" off either way. Check the result with
+  `curl https://vimma.dev/robots.txt`.
 
 Keep the site's guarantees on Cloudflare: Web Analytics and other injected scripts stay off, no
 CDN fonts, and the CSP should become a real response header (`frame-ancestors 'none'` too, which a

@@ -30,7 +30,13 @@ export interface BuiltDoc {
   /** Output path under dist/. */
   out: string;
   title: string;
+  /** The sidebar group ("Start", "Get going", …). */
+  group: string;
+  /** The <title> text: the heading, or more when the heading alone says too little. */
+  headTitle: string;
   description: string;
+  /** The files the page is made from, for its date in the sitemap. */
+  sources: string[];
   /** The page's main column: heading, intro, sections, pager. */
   body: string;
 }
@@ -44,7 +50,8 @@ export interface SearchEntry {
   u: string;
   /** a short snippet */
   s: string;
-  /** the section's distinct words, lower case, space-separated, minus those in p, h and s */
+  /** the section's distinct words, lower case, space-separated, minus those in p, h and s and
+   * those inside a longer word of the list */
   w: string;
 }
 
@@ -276,19 +283,22 @@ function indexPage(title: string, slugName: string, body: string): SearchEntry[]
     // matches them there (site.ts), so the word list leaves out the words they hold
     const s = text.length > 80 ? `${text.slice(0, 77).replace(/\s\S*$/, "")}…` : text;
     const head = new Set(`${title} ${heading} ${s.replace(/…$/, "")}`.toLowerCase().split(WORD_SPLIT));
-    const words = [...new Set(text.toLowerCase().split(WORD_SPLIT))]
-      .filter((w) => w.length > 1 && !STOP.has(w) && !head.has(w))
-      .join(" ");
+    const distinct = [...new Set(text.toLowerCase().split(WORD_SPLIT))].filter((w) => w.length > 1 && !STOP.has(w) && !head.has(w));
+    // the search matches substrings (site.ts), so a word inside a longer one ("tab" in "tabs")
+    // is found there anyway; only the small bonus for a whole-word match is lost
+    const words = distinct.filter((w) => !distinct.some((o) => o !== w && o.includes(w))).join(" ");
     return [{ p: title, h: heading, u: `${pageUrl(slugName).slice("docs/".length)}${m ? `#${m[1]}` : ""}`, s, w: words }];
   });
 }
 
 // --- build ------------------------------------------------------------------------------------
 
-export function buildDocs(rootDir: string): { pages: BuiltDoc[]; index: SearchEntry[]; source: Source } {
+export function buildDocs(rootDir: string): { pages: BuiltDoc[]; index: SearchEntry[]; source: Source; markdown: string } {
   const read = (p: string): string => readFileSync(join(rootDir, p), "utf8");
-  const guide = parseSections(rewriteGuide(read("data/docs/guide.md")));
-  const limits = parseSections(read("data/docs/limits.md"));
+  const guideMd = rewriteGuide(read("data/docs/guide.md"));
+  const limitsMd = read("data/docs/limits.md");
+  const guide = parseSections(guideMd);
+  const limits = parseSections(limitsMd);
   const keys = JSON.parse(read("data/bindings.json")) as BindingsFile;
   const source = JSON.parse(read("data/docs/source.json")) as Source;
 
@@ -372,17 +382,37 @@ ${src}
 ${pager(nav, i, root)}
 </article>
 </div>`;
+    const fromGuide = page && !page.handWritten ? [page.slug === "limits" ? "data/docs/limits.md" : "data/docs/guide.md"] : [];
     pages.push({
       slug: entry.slug,
       out: pageUrl(entry.slug),
       title,
+      group: entry.group,
+      headTitle: page ? (page.headTitle ?? title) : "Start here: a tour of Vimma",
       description: page?.description ?? "Start here: a walk through Vimma's features, in the order you will meet them.",
+      sources: [introFile, ...fromGuide],
       body,
     });
     index.push(...indexPage(title, entry.slug, page ? content : sections.replace(/^[\s\S]*?(?=<h1)/, "")));
   });
 
-  return { pages, index, source };
+  return { pages, index, source, markdown: fullMarkdown(guideMd, limitsMd, ids, source) };
+}
+
+/**
+ * Vimma's guide and known limits as one Markdown file (llms-full.txt), with the same rewrites as
+ * the docs pages and every link made absolute: to the docs page that renders the heading, or to
+ * the file on GitHub.
+ */
+function fullMarkdown(guideMd: string, limitsMd: string, ids: IdMap, source: Source): string {
+  const link = linker(ids, "\0", "https://vimma.dev/");
+  const fix = (md: string, file: string): string =>
+    md.replace(/\]\(([^)\s]+)\)/g, (all, href: string) => {
+      const to = link(href.startsWith("#") && file === "limits.md" ? `limits.md${href}` : href);
+      return to === null ? all : `](${to})`;
+    });
+  const note = `<!-- Vimma's user guide and known limits, from ${VIMMA_REPO} at ${source.commit} (${source.date}). The site's docs at https://vimma.dev/docs/ are built from the same text. -->`;
+  return `${note}\n\n${fix(guideMd, "guide.md").trim()}\n\n${fix(limitsMd, "limits.md").trim()}\n`;
 }
 
 function docsList(pages: DocPage[], root: string): string {
