@@ -127,13 +127,15 @@ Each hero screenshot has alternative text, and its numbered list of keys says th
 Cloudflare's Workers Builds (the `vimma-site` Worker) builds the repository and serves `dist/` at
 **vimma.dev**:
 
-- **Production** is `main`. Each push to it builds and deploys; the new version is live a minute
-  or so later. A failed build leaves the previous version live. The build and deploy commands are
-  set in the Cloudflare dashboard (Workers → `vimma-site` → Settings → Build); the repository has
-  no `wrangler` config.
-- **Other branches** also get a Workers Builds run, which shows as a check on pull requests.
-- **Access:** vimma.dev sits behind Cloudflare Access, so only signed-in people can see it
-  while Vimma is unpublished. Remove the Access application to open the site.
+- **Production** is `main`. Each push to it builds and runs `wrangler deploy`; the new version is
+  live a minute or so later. A failed build leaves the previous version live.
+- **Other branches** run `wrangler versions upload`, a preview that never goes live; it shows as
+  the "Workers Builds" check on pull requests.
+- **`wrangler.jsonc`** holds the Worker's settings (name, `dist/`, the vimma.dev custom domain,
+  logs). Change them there, not in the dashboard; the build and deploy commands stay in the
+  dashboard (Workers → `vimma-site` → Settings → Build).
+- **Access:** vimma.dev is public. The `workers.dev` address and preview URLs stay behind
+  Cloudflare Access. `www.vimma.dev` is a separate Worker that redirects to vimma.dev.
 - **CI** (`.github/workflows/ci.yml`) builds and runs `npm run check` on every push and pull
   request. It does not deploy, and Cloudflare does not wait for it, so a red CI run can still go
   live: check it before merging.
