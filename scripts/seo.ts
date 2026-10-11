@@ -29,8 +29,7 @@ export const OG_IMAGE = {
 
 /**
  * The promo video on the home page (src/pages/index.html), put in assets/video/ by
- * scripts/video.sh. Link previews and the JSON-LD name the 16:9 cut; the vertical cut is for
- * narrow screens only. Update `duration` (ISO 8601) and `uploadDate` with a new cut.
+ * scripts/video.sh. The page, link previews and the JSON-LD all use the one 16:9 cut. Update `duration` (ISO 8601) and `uploadDate` with a new cut.
  */
 export const PROMO_VIDEO = {
   path: "assets/video/vimma-promo-1080p.mp4",

@@ -500,44 +500,23 @@ main:focus {
   color: var(--fg-muted);
 }
 
-/* the promo video: the 16:9 cut, or the vertical cut on a narrow portrait screen. The other
-   one is display: none, and with preload="none" it downloads nothing until it is played. */
+/* the promo video: the one 16:9 cut on every screen, so phones see the same video */
 .demo {
   margin: 0;
 }
 
 .demo video {
   display: block;
+  width: 100%;
   max-width: 100%;
   height: auto;
   border: 1px solid var(--border);
   background: var(--bg-dark);
 }
 
-.demo .demo-wide {
-  width: 100%;
-}
-
-.demo .demo-tall {
-  display: none;
-  /* a phone screen's height at most, so the controls stay in view */
-  width: min(100%, calc(85svh * 9 / 16));
-  margin: 0 auto;
-}
-
 .demo figcaption {
   margin-top: 0.75rem;
   color: var(--fg-muted);
-}
-
-@media (max-width: 640px) and (orientation: portrait) {
-  .demo .demo-wide {
-    display: none;
-  }
-
-  .demo .demo-tall {
-    display: block;
-  }
 }
 
 /* feature grid */
