@@ -11,6 +11,9 @@
 //              no remote url()/@import in CSS, no network calls in JS
 //   contrast   every text colour pair in both palettes passes WCAG AA (4.5:1)
 //   weight     each page's HTML, CSS and JS stays under the budget (images excluded)
+//   seo        one canonical URL per page (none and noindex on 404), Open Graph and Twitter tags,
+//              unique titles and descriptions, JSON-LD that parses, and sitemap.xml, robots.txt
+//              and llms.txt naming only pages that exist
 //
 // No local HTML validator (vnu, tidy) is assumed: the html checks are a structural subset.
 
@@ -39,7 +42,10 @@ function walk(dir: string): string[] {
 }
 
 const files = walk(DIST);
-const htmlFiles = files.filter((f) => f.endsWith(".html"));
+// static/ is copied to dist/ as it is (verification files); its HTML is not the site's
+const STATIC = existsSync(join(ROOT, "static")) ? readdirSync(join(ROOT, "static")).map((f) => join(DIST, f)) : [];
+const isStatic = (f: string): boolean => STATIC.some((s) => f === s || f.startsWith(`${s}/`));
+const htmlFiles = files.filter((f) => f.endsWith(".html") && !isStatic(f));
 const cssFiles = files.filter((f) => f.endsWith(".css"));
 const jsFiles = files.filter((f) => f.endsWith(".js"));
 const rel = (f: string): string => relative(DIST, f);
@@ -133,7 +139,8 @@ for (const file of htmlFiles) {
     for (const name of t.attrs.keys()) {
       if (name.startsWith("on")) fail(where, `line ${t.line}: inline handler ${name}`);
     }
-    if (t.name === "script" && !t.attrs.get("src")) fail(where, `line ${t.line}: inline <script>`);
+    const data = t.name === "script" && t.attrs.get("type") === "application/ld+json";
+    if (t.name === "script" && !t.attrs.get("src") && !data) fail(where, `line ${t.line}: inline <script>`);
     if (t.name === "style") fail(where, `line ${t.line}: <style> element (blocked by the CSP)`);
     if (t.name === "a" && t.attrs.get("target") === "_blank" && !t.attrs.get("rel")?.includes("noopener")) {
       fail(where, `line ${t.line}: target=_blank without rel=noopener`);
@@ -148,7 +155,8 @@ for (const file of htmlFiles) {
       if (u) loads.push(["srcset", u]);
     }
     const href = t.attrs.get("href");
-    if (t.name === "link" && href !== undefined) loads.push(["href", href]);
+    // a canonical link names this page's address; nothing loads it
+    if (t.name === "link" && href !== undefined && t.attrs.get("rel") !== "canonical") loads.push(["href", href]);
     for (const a of ["data", "poster", "action", "formaction", "background"]) {
       const v = t.attrs.get(a);
       if (v !== undefined) loads.push([a, v]);
@@ -339,6 +347,108 @@ for (const [page, w] of weights) {
   if (w > BUDGET) fail(page, `${(w / 1024).toFixed(1)} KB of HTML, CSS and JS, over ${BUDGET / 1024} KB`);
 }
 
+// --- seo --------------------------------------------------------------------------------------
+
+const SITE = "https://vimma.dev/";
+/** The address a built file is served at. */
+const urlOf = (f: string): string => SITE + rel(f).replace(/(^|\/)index\.html$/, "$1");
+const OG = ["og:type", "og:site_name", "og:title", "og:description", "og:image", "og:image:width", "og:image:height", "og:image:alt"];
+const seen = { title: new Map<string, string>(), description: new Map<string, string>() };
+let jsonLd = 0;
+for (const file of htmlFiles) {
+  const where = rel(file);
+  const html = readFileSync(file, "utf8");
+  const ts = tags(html);
+  const metaOf = (key: string): string[] =>
+    ts.filter((t) => t.name === "meta" && (t.attrs.get("property") ?? t.attrs.get("name")) === key).map((t) => decode(t.attrs.get("content") ?? ""));
+  const canon = ts.filter((t) => t.name === "link" && t.attrs.get("rel") === "canonical").map((t) => t.attrs.get("href"));
+  const notFound = where === "404.html";
+  if (notFound) {
+    if (canon.length) fail(where, "the 404 page has a canonical URL");
+    if (!metaOf("robots").includes("noindex")) fail(where, "the 404 page is not noindex");
+  } else {
+    if (canon.length !== 1) fail(where, `${canon.length} canonical links`);
+    else if (canon[0] !== urlOf(file)) fail(where, `canonical ${canon[0]} is not ${urlOf(file)}`);
+    if (metaOf("og:url")[0] !== urlOf(file)) fail(where, "og:url is not the page's address");
+  }
+  for (const k of [...OG, "twitter:card"]) if (metaOf(k).length !== 1) fail(where, `${metaOf(k).length} ${k} tags`);
+  const image = metaOf("og:image")[0] ?? "";
+  if (!image.startsWith(SITE) || !existsSync(join(DIST, image.slice(SITE.length)))) fail(where, `og:image ${image} is not a built file`);
+  if (!notFound) {
+    const title = /<title>([^<]*)<\/title>/.exec(html)?.[1] ?? "";
+    const description = metaOf("description")[0] ?? "";
+    for (const [kind, value] of [["title", title], ["description", description]] as const) {
+      const other = seen[kind].get(value);
+      if (other) fail(where, `same ${kind} as ${other}: "${value}"`);
+      seen[kind].set(value, where);
+    }
+    if (description.length < 50) fail(where, `description under 50 characters: "${description}"`);
+  }
+  for (const m of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
+    jsonLd++;
+    try {
+      const d = JSON.parse(m[1] ?? "") as { "@context"?: string }[];
+      if (!Array.isArray(d) || d.some((x) => x["@context"] !== "https://schema.org")) throw new Error("not a list of schema.org items");
+    } catch (e) {
+      fail(where, `JSON-LD: ${(e as Error).message}`);
+    }
+  }
+}
+
+/** A URL on this site, as the file that serves it, or null. */
+function builtFile(url: string): string | null {
+  if (!url.startsWith(SITE)) return null;
+  const path = join(DIST, url.slice(SITE.length).split("#")[0] ?? "");
+  const file = url.endsWith("/") ? join(path, "index.html") : path;
+  return existsSync(file) && statSync(file).isFile() ? file : null;
+}
+
+const sitemapFile = join(DIST, "sitemap.xml");
+const locs: string[] = [];
+if (!existsSync(sitemapFile)) fail("sitemap.xml", "missing");
+else {
+  const xml = readFileSync(sitemapFile, "utf8");
+  if (!xml.startsWith('<?xml version="1.0" encoding="UTF-8"?>\n')) fail("sitemap.xml", "no XML declaration");
+  // well-formed: balanced tags, nothing but <urlset> at the top, only the sitemap's elements
+  const stack: Tag[] = [];
+  for (const t of tags(xml.replace(/^<\?xml[^>]*\?>/, ""))) {
+    if (!["urlset", "url", "loc", "lastmod"].includes(t.name)) fail("sitemap.xml", `line ${t.line}: <${t.name}>`);
+    if (!t.close) stack.push(t);
+    else if (stack.pop()?.name !== t.name) fail("sitemap.xml", `line ${t.line}: </${t.name}> is unbalanced`);
+  }
+  if (stack.length) fail("sitemap.xml", "unclosed elements");
+  if (/&(?!amp;|lt;|gt;|quot;|apos;)/.test(xml)) fail("sitemap.xml", "an unescaped &");
+  for (const m of xml.matchAll(/<url>\s*<loc>([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>\s*<\/url>/g)) {
+    const [loc = "", lastmod = ""] = [m[1], m[2]];
+    locs.push(loc);
+    if (!builtFile(loc)) fail("sitemap.xml", `${loc} is not a built page`);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(lastmod)) fail("sitemap.xml", `${loc}: lastmod "${lastmod}"`);
+  }
+  if (locs.length !== (xml.match(/<url>/g) ?? []).length) fail("sitemap.xml", "a <url> without exactly <loc> then <lastmod>");
+  const missing = htmlFiles.filter((f) => rel(f) !== "404.html" && !locs.includes(urlOf(f)));
+  if (missing.length) fail("sitemap.xml", `leaves out ${missing.map(rel).join(", ")}`);
+  if (locs.includes(`${SITE}404.html`)) fail("sitemap.xml", "lists the 404 page");
+}
+
+const robots = existsSync(join(DIST, "robots.txt")) ? readFileSync(join(DIST, "robots.txt"), "utf8") : "";
+if (!robots.includes(`\nSitemap: ${SITE}sitemap.xml\n`)) fail("robots.txt", "no Sitemap line");
+if (/^Disallow:\s*\/\s*$/m.test(robots)) fail("robots.txt", "disallows the whole site");
+
+let llmsLinks = 0;
+for (const f of ["llms.txt", "llms-full.txt"]) {
+  if (!existsSync(join(DIST, f))) fail(f, "missing");
+}
+const llms = existsSync(join(DIST, "llms.txt")) ? readFileSync(join(DIST, "llms.txt"), "utf8") : "";
+if (!/^# .+\n\n> .+\n/.test(llms)) fail("llms.txt", "does not start with an H1 and a blockquote summary");
+for (const m of llms.matchAll(/\]\((https:\/\/vimma\.dev\/[^)]*)\)|(https:\/\/vimma\.dev\/\S+)/g)) {
+  llmsLinks++;
+  if (!builtFile(m[1] ?? m[2] ?? "")) fail("llms.txt", `${m[1] ?? m[2]} is not a built file`);
+}
+const full = existsSync(join(DIST, "llms-full.txt")) ? readFileSync(join(DIST, "llms-full.txt"), "utf8") : "";
+for (const m of full.matchAll(/\]\((https:\/\/vimma\.dev\/[^)#]*)/g)) {
+  if (!builtFile(m[1] ?? "")) fail("llms-full.txt", `${m[1]} is not a built file`);
+}
+
 // --- report -----------------------------------------------------------------------------------
 
 if (errors.length) {
@@ -349,6 +459,7 @@ if (errors.length) {
 console.log(`✓ html: ${htmlFiles.length} pages, structure, ids, alt text, CSP`);
 console.log(`✓ links: ${linkRefs.length} internal references resolve`);
 console.log(`✓ external: nothing loads from another origin`);
+console.log(`✓ seo: ${locs.length} sitemap URLs, canonical and preview tags on each page, ${jsonLd} JSON-LD block(s), ${llmsLinks} llms.txt links`);
 console.log(`✓ contrast: ${PAIRS.length * 2} pairs, lowest ${worst.toFixed(2)}:1`);
 const heaviest = weights.reduce((a, b) => (b[1] > a[1] ? b : a));
 console.log(`✓ weight: heaviest page ${heaviest[0]} ${(heaviest[1] / 1024).toFixed(1)} KB without images (budget ${BUDGET / 1024} KB)`);
