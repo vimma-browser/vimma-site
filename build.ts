@@ -235,7 +235,7 @@ function main(): void {
   const kb = (n: number): string => `${(n / 1024).toFixed(1)} KB`;
   console.log(`built ${pages.length} pages (${docPages.length} docs) into dist/: ${kb(all)} in all,`);
   console.log(`  ${kb(all - img - video)} without images (logo variants and icons: ${kb(img)})`);
-  console.log(`  and the promo video, two cuts and their posters: ${kb(video)}`);
+  console.log(`  and the promo video and its poster: ${kb(video)}`);
 }
 
 main();

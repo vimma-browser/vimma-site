@@ -70,26 +70,24 @@ npm run keys:sync                  # regenerate data/bindings.json from data/doc
 - `src/ts/site.ts` is the one browser script (an ES module): the keys (`j k d u gg G / ? [ ]
   g h g d g k g i g a`), the overlay, the keys filter
   and the docs search. Every page works without it.
-- **The promo video** (`assets/video/`): a 65-second 16:9 cut and a 31-second vertical one, no
-  sound, H.264 with the `moov` atom first (`+faststart`), each with a WebP poster. The home page
-  has a `<video>` for each; CSS shows the vertical one on narrow portrait screens
-  (`max-width: 640px` and `orientation: portrait`) and hides the other with `display: none`.
-  With `preload="none"` only the one played downloads (both posters do, 60 KB together). No
-  autoplay. A caption under it lists what it shows, since the video has captions in the picture
+- **The promo video** (`assets/video/`): one 65-second 16:9 cut, no sound, H.264 with the
+  `moov` atom first (`+faststart`), with a WebP poster. Every screen, phones included, gets the
+  same `<video>`, scaled to the column's width. With `preload="none"` it downloads nothing until
+  it is played (the poster does, 45 KB). No autoplay. A caption under it lists what it shows, since the video has captions in the picture
   but no audio description. `og:video` and a `VideoObject` in the JSON-LD (`PROMO_VIDEO` in
-  `scripts/seo.ts`) name the 16:9 cut. About 12 MB of binaries in git; Workers static assets
+  `scripts/seo.ts`) name the 16:9 cut. About 8 MB of binaries in git; Workers static assets
   take files up to 25 MiB.
 
-  To replace the cuts (same names, same sizes), run `scripts/video.sh` on the new files. It
-  copies them in with `+faststart` (a remux, no re-encode) and remakes the posters from fixed
-  frames (`WIDE_AT=28.4 TALL_AT=13`, in seconds, to override); it needs ffmpeg with libwebp:
+  To replace the cut (same name, same size), run `scripts/video.sh` on the new file. It copies
+  it in with `+faststart` (a remux, no re-encode) and remakes the poster from a fixed frame
+  (`WIDE_AT=28.4`, in seconds, to override); it needs ffmpeg with libwebp:
 
   ```sh
-  scripts/video.sh ~/Videos/vimma/v2/vimma-promo-1080p.mp4 ~/Videos/vimma/v2/vimma-promo-vertical.mp4
+  scripts/video.sh ~/Videos/vimma/v2/vimma-promo-1080p.mp4
   ```
 
-  If the length changes, update `duration` in `PROMO_VIDEO`, the durations in the page's
-  fallback links and caption; update `uploadDate` with a new cut.
+  If the length changes, update `duration` in `PROMO_VIDEO` and the duration in the page's
+  fallback link; update `uploadDate` with a new cut.
 - `data/bindings.json` is generated from Vimma's `docs/bindings.md` by `scripts/gen-keys.ts` and
   committed, so the site builds without Vimma's repository. It records the source commit.
 
