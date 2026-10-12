@@ -33,8 +33,9 @@ npm ci
 npm run build       # tsc, then .build/build.js: dist/
 npm run serve       # dist/ at http://127.0.0.1:8080/ (PORT=… to change)
 npm run check       # tsc --noEmit (both projects), then the dist/ checks below
-npm run docs:sync -- ../vimma      # copy guide/bindings/limits.md from its origin/main, regen keys
-npm run keys:sync                  # regenerate data/bindings.json from data/docs/bindings.md only
+npm run docs:sync -- ../vimma      # copy guide.md and limits.md from its origin/main
+npm run keys:sync                  # fetch Vimma's docs/bindings.json from its main (network)
+npm run keys:sync -- <commit>      # … at a given commit
 ```
 
 `npm run check` runs on the built `dist/`:
@@ -54,7 +55,9 @@ npm run keys:sync                  # regenerate data/bindings.json from data/doc
   under the budget, under half of it the search index loaded on first search. The index
   leaves out common words (a stop list), words already in a section's page title, heading or
   snippet, and words inside a longer word of the same section (the search matches substrings);
-  if a sync pushes a page over, slim the index or the page, not the budget.
+  if a sync pushes a page over, slim the index or the page, not the budget. The `?` overlay's list
+  of Vimma keys (`assets/js/vimma-keys.js`) loads only when the overlay first opens, on any
+  page, so it has its own budget, 32 KB (about 16 KB today).
 - **seo**: one `<link rel="canonical">` per page with its `https://vimma.dev/` address (none, and
   `noindex`, on the 404 page), the Open Graph and `twitter:card` tags, titles and descriptions
   unique across pages, JSON-LD that parses, each `VideoObject` in it with a name, description,
@@ -88,8 +91,25 @@ npm run keys:sync                  # regenerate data/bindings.json from data/doc
 
   If the length changes, update `duration` in `PROMO_VIDEO` and the duration in the page's
   fallback link; update `uploadDate` with a new cut.
-- `data/bindings.json` is generated from Vimma's `docs/bindings.md` by `scripts/gen-keys.ts` and
-  committed, so the site builds without Vimma's repository. It records the source commit.
+- **The keys** come from Vimma's `docs/bindings.json`, which Vimma's `npm run gen-docs` writes from
+  the same keymap as its default `config.toml` and its own `ctrl+b ?` overlay. `npm run keys:sync`
+  (`scripts/gen-keys.ts`) fetches it unchanged from `raw.githubusercontent.com` at one commit of
+  the public repository into `data/bindings.json`, and records the commit in
+  `data/bindings-source.json`. Both are committed, so the build works offline and without
+  Vimma's repository. The keys page, the docs pages' key tables and the `?` overlay are all
+  built from it, and the build fails if its shape is not the one `gen-keys.ts` expects.
+- **The `?` overlay** has two parts: "This site" (the site's keys and the shortcuts toggle), then
+  "In Vimma", every default binding grouped as Vimma's `ctrl+b ?` groups them, with a `/`
+  filter. The build writes the Vimma part as the data module `assets/js/vimma-keys.js`, which
+  the overlay imports when it first opens. In the overlay, `q`, `?` and `Esc` close it, `/`
+  filters, and `j k d u gg G` scroll it; in the filter, `Esc` clears it, then closes the overlay.
+- **Keeping the keys current:** when `docs/bindings.json` changes on Vimma's `main`, Vimma's
+  `site-dispatch.yml` sends a `repository_dispatch` (`vimma-bindings`) here, and
+  `.github/workflows/sync-keys.yml` runs `keys:sync` at that commit and opens a pull request. It
+  also runs by hand (Actions → sync-keys → Run workflow, with an optional commit). A pull request
+  opened with the workflow's own token starts no `pull_request` workflows, so the workflow starts
+  `ci.yml` on the new branch itself (`workflow_dispatch`). It needs "Allow GitHub Actions to create
+  and approve pull requests" on (Settings → Actions → General).
 
 ## The docs
 
@@ -99,9 +119,9 @@ box, previous/next links (`[` and `]`). Each page has two tiers:
 1. **A hand-written guide** (`src/docs/<slug>.html`, and "Start here" in `src/docs/start-here.html`):
    task first ("to do X, press Y"), plain words, the common keys only. Keep its keys and facts in
    line with the synced guide below; nothing checks that automatically.
-2. **The reference**, cut at build time: the page's keys table from `bindings.md`, then the
+2. **The reference**, cut at build time: the page's keys table from `bindings.json`, then the
    matching `guide.md` sections under one "Details" heading, then links to the known limits.
-   They come from copies of Vimma's `docs/guide.md`, `docs/limits.md` and `docs/bindings.md` in
+   They come from copies of Vimma's `docs/guide.md` and `docs/limits.md` in
    `data/docs/`, taken from the main repository's `origin/main` by `npm run docs:sync` (which runs
    only `git fetch` and `git show` there) and committed with the commit they came from.
 
