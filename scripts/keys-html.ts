@@ -2,7 +2,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-// Key tables from data/bindings.json, for the keys page (filterable) and the docs pages.
+// Key tables from data/bindings.json, for the keys page (filterable) and the docs pages. The ?
+// overlay draws the same rows in the browser (src/ts/site.ts, renderVimmaKeys); keep them alike.
 
 import { escapeHtml } from "../src/ts/html.js";
 import type { Binding, Section } from "./bindings-types.js";
@@ -40,7 +41,7 @@ export function keysTables(sections: readonly Section[], opts: KeysOptions = {})
             r.action,
             r.name,
             r.name.replace(/_/g, " "),
-            ...r.bindings.map((b) => `${b.raw} ${b.chords.join(" ")} ${b.mode ?? ""}`),
+            ...r.bindings.map((b) => `${b.keys} ${b.mode ?? ""}`),
           ]
             .join(" ")
             .toLowerCase();

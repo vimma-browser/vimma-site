@@ -1268,39 +1268,70 @@ html.js .nojs-keys {
 
 /* --- the ? overlay ---------------------------------------------------------------------- */
 
+/* A title bar that stays put and a body that scrolls: the Vimma part is long, and on a phone the
+   whole box has to fit the screen. */
 dialog {
-  width: min(52ch, calc(100vw - 2rem));
+  width: min(88ch, calc(100vw - 2rem));
   max-height: calc(100vh - 4rem);
-  padding: 1.5rem 2ch 1.25rem;
+  max-height: calc(100dvh - 4rem);
+  padding: 0;
   border: 1px solid var(--accent-2);
   background: var(--bg-dark);
   color: var(--fg);
+}
+
+dialog[open] {
+  display: flex;
+  flex-direction: column;
 }
 
 dialog::backdrop {
   background: rgb(0 0 0 / 0.55);
 }
 
+.keyhelp-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2ch;
+  padding: 0.75rem 2ch;
+  border-bottom: 1px solid var(--border);
+}
+
+.keyhelp-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0.25rem 2ch 1.25rem;
+}
+
 dialog h2 {
-  margin: 0 0 1rem;
+  margin: 0;
   color: var(--accent);
   font-size: 1rem;
 }
 
-dialog table {
-  width: 100%;
+dialog h3 {
+  margin: 1rem 0 0.5rem;
+  color: var(--accent-2);
+  font-size: 1rem;
+}
+
+.keyhelp-site {
   border-collapse: collapse;
   margin-bottom: 1rem;
 }
 
-dialog th {
+.keyhelp-site th {
   text-align: left;
   font-weight: 400;
   padding: 0.2rem 2ch 0.2rem 0;
   white-space: nowrap;
+  vertical-align: top;
 }
 
-dialog td {
+.keyhelp-site td {
   padding: 0.2rem 0;
 }
 
@@ -1311,20 +1342,14 @@ dialog label {
   margin-bottom: 0.75rem;
 }
 
+dialog .filter label {
+  margin: 0;
+}
+
 dialog input[type="checkbox"] {
   accent-color: var(--accent);
   width: 1rem;
   height: 1rem;
-}
-
-dialog .foot {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 2ch;
-  flex-wrap: wrap;
-  margin: 0;
-  color: var(--fg-muted);
 }
 
 dialog button {
@@ -1333,6 +1358,55 @@ dialog button {
   background: var(--bg-light);
   color: var(--fg-bright);
   cursor: pointer;
+}
+
+dialog button kbd {
+  padding: 0 0.4ch;
+  line-height: 1.2;
+}
+
+.keyhelp-vimma {
+  border-top: 1px dashed var(--selection);
+}
+
+.keyhelp-vimma .filter {
+  margin-top: 0.75rem;
+  background: var(--bg-dark);
+}
+
+/* a group scrolled to stays clear of the sticky filter */
+.keyhelp-vimma .keys-section {
+  scroll-margin-top: 3.5rem;
+}
+
+.keyhelp-vimma h4 {
+  margin: 1.25rem 0 0.25rem;
+  color: var(--fg-bright);
+  font-size: 1rem;
+}
+
+.keyhelp-vimma h4 .n {
+  color: var(--fg-muted);
+  font-weight: 400;
+  font-size: 0.85em;
+}
+
+.keyhelp-vimma .keys-table tr:hover td {
+  background: var(--bg);
+}
+
+@media (max-width: 640px) {
+  dialog {
+    width: calc(100vw - 1rem);
+    max-height: calc(100vh - 1rem);
+    max-height: calc(100dvh - 1rem);
+  }
+
+  .keyhelp-bar,
+  .keyhelp-body {
+    padding-left: 1.5ch;
+    padding-right: 1.5ch;
+  }
 }
 
 /* --- motion ----------------------------------------------------------------------------- */
