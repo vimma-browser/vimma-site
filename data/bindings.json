@@ -1,35 +1,48 @@
 {
-  "source": "docs/bindings.md",
-  "commit": "1050bcc",
-  "sections": [
+  "version": 1,
+  "generated": "Generated from packages/vimma-core/src/actions.mjs and defaults.mjs by npm run gen-docs; do not edit.",
+  "prefix": "ctrl+b",
+  "legend": "prefix = ctrl+b",
+  "modes": [
+    "normal",
+    "insert",
+    "visual",
+    "command",
+    "hint",
+    "help",
+    "panel",
+    "resize"
+  ],
+  "groups": [
     {
-      "title": "Help",
-      "rows": [
+      "name": "Help",
+      "actions": [
         {
-          "action": "Show all bindings (filter with /)",
           "name": "show_keybinds",
-          "bindings": [
+          "description": "Show all bindings (filter with /)",
+          "keys": [
             {
-              "raw": "ctrl+b ?",
+              "keys": "ctrl+b ?",
               "chords": [
-                "ctrl+b ?"
+                "ctrl+b",
+                "?"
               ]
             }
           ]
         },
         {
-          "action": "Close the bindings overlay",
           "name": "help_close",
-          "bindings": [
+          "description": "Close the bindings overlay",
+          "keys": [
             {
-              "raw": "esc [help]",
+              "keys": "esc",
               "chords": [
                 "esc"
               ],
               "mode": "help"
             },
             {
-              "raw": "q [help]",
+              "keys": "q",
               "chords": [
                 "q"
               ],
@@ -38,11 +51,11 @@
           ]
         },
         {
-          "action": "Filter the bindings overlay",
           "name": "help_filter",
-          "bindings": [
+          "description": "Filter the bindings overlay",
+          "keys": [
             {
-              "raw": "/ [help]",
+              "keys": "/",
               "chords": [
                 "/"
               ],
@@ -53,20 +66,21 @@
       ]
     },
     {
-      "title": "Tabs",
-      "rows": [
+      "name": "Tabs",
+      "actions": [
         {
-          "action": "New tab",
           "name": "new_tab",
-          "bindings": [
+          "description": "New tab",
+          "keys": [
             {
-              "raw": "ctrl+b c",
+              "keys": "ctrl+b c",
               "chords": [
-                "ctrl+b c"
+                "ctrl+b",
+                "c"
               ]
             },
             {
-              "raw": "t",
+              "keys": "t",
               "chords": [
                 "t"
               ]
@@ -74,17 +88,18 @@
           ]
         },
         {
-          "action": "Next tab (with a count: go to tab N)",
           "name": "next_tab",
-          "bindings": [
+          "description": "Next tab (with a count: go to tab N)",
+          "keys": [
             {
-              "raw": "ctrl+b n",
+              "keys": "ctrl+b n",
               "chords": [
-                "ctrl+b n"
+                "ctrl+b",
+                "n"
               ]
             },
             {
-              "raw": "gt",
+              "keys": "gt",
               "chords": [
                 "gt"
               ]
@@ -92,17 +107,18 @@
           ]
         },
         {
-          "action": "Previous tab",
           "name": "previous_tab",
-          "bindings": [
+          "description": "Previous tab",
+          "keys": [
             {
-              "raw": "ctrl+b p",
+              "keys": "ctrl+b p",
               "chords": [
-                "ctrl+b p"
+                "ctrl+b",
+                "p"
               ]
             },
             {
-              "raw": "gT",
+              "keys": "gT",
               "chords": [
                 "gT"
               ]
@@ -110,137 +126,148 @@
           ]
         },
         {
-          "action": "Jump to tab 1 in this workspace",
           "name": "select_tab_1",
-          "bindings": [
+          "description": "Jump to tab 1 in this workspace",
+          "keys": [
             {
-              "raw": "ctrl+b 1",
+              "keys": "ctrl+b 1",
               "chords": [
-                "ctrl+b 1"
+                "ctrl+b",
+                "1"
               ]
             }
           ]
         },
         {
-          "action": "Jump to tab 2 in this workspace",
           "name": "select_tab_2",
-          "bindings": [
+          "description": "Jump to tab 2 in this workspace",
+          "keys": [
             {
-              "raw": "ctrl+b 2",
+              "keys": "ctrl+b 2",
               "chords": [
-                "ctrl+b 2"
+                "ctrl+b",
+                "2"
               ]
             }
           ]
         },
         {
-          "action": "Jump to tab 3 in this workspace",
           "name": "select_tab_3",
-          "bindings": [
+          "description": "Jump to tab 3 in this workspace",
+          "keys": [
             {
-              "raw": "ctrl+b 3",
+              "keys": "ctrl+b 3",
               "chords": [
-                "ctrl+b 3"
+                "ctrl+b",
+                "3"
               ]
             }
           ]
         },
         {
-          "action": "Jump to tab 4 in this workspace",
           "name": "select_tab_4",
-          "bindings": [
+          "description": "Jump to tab 4 in this workspace",
+          "keys": [
             {
-              "raw": "ctrl+b 4",
+              "keys": "ctrl+b 4",
               "chords": [
-                "ctrl+b 4"
+                "ctrl+b",
+                "4"
               ]
             }
           ]
         },
         {
-          "action": "Jump to tab 5 in this workspace",
           "name": "select_tab_5",
-          "bindings": [
+          "description": "Jump to tab 5 in this workspace",
+          "keys": [
             {
-              "raw": "ctrl+b 5",
+              "keys": "ctrl+b 5",
               "chords": [
-                "ctrl+b 5"
+                "ctrl+b",
+                "5"
               ]
             }
           ]
         },
         {
-          "action": "Jump to tab 6 in this workspace",
           "name": "select_tab_6",
-          "bindings": [
+          "description": "Jump to tab 6 in this workspace",
+          "keys": [
             {
-              "raw": "ctrl+b 6",
+              "keys": "ctrl+b 6",
               "chords": [
-                "ctrl+b 6"
+                "ctrl+b",
+                "6"
               ]
             }
           ]
         },
         {
-          "action": "Jump to tab 7 in this workspace",
           "name": "select_tab_7",
-          "bindings": [
+          "description": "Jump to tab 7 in this workspace",
+          "keys": [
             {
-              "raw": "ctrl+b 7",
+              "keys": "ctrl+b 7",
               "chords": [
-                "ctrl+b 7"
+                "ctrl+b",
+                "7"
               ]
             }
           ]
         },
         {
-          "action": "Jump to tab 8 in this workspace",
           "name": "select_tab_8",
-          "bindings": [
+          "description": "Jump to tab 8 in this workspace",
+          "keys": [
             {
-              "raw": "ctrl+b 8",
+              "keys": "ctrl+b 8",
               "chords": [
-                "ctrl+b 8"
+                "ctrl+b",
+                "8"
               ]
             }
           ]
         },
         {
-          "action": "Jump to tab 9 in this workspace",
           "name": "select_tab_9",
-          "bindings": [
+          "description": "Jump to tab 9 in this workspace",
+          "keys": [
             {
-              "raw": "ctrl+b 9",
+              "keys": "ctrl+b 9",
               "chords": [
-                "ctrl+b 9"
+                "ctrl+b",
+                "9"
               ]
             }
           ]
         },
         {
-          "action": "Rename tab",
           "name": "rename_tab",
-          "bindings": [
+          "description": "Rename tab",
+          "keys": [
             {
-              "raw": "ctrl+b shift+t",
+              "keys": "ctrl+b shift+t",
               "chords": [
-                "ctrl+b shift+t"
+                "ctrl+b",
+                "shift+t"
               ]
             }
           ]
         },
         {
-          "action": "Close tab",
           "name": "close_tab",
-          "bindings": [
+          "description": "Close tab",
+          "keys": [
             {
-              "raw": "ctrl+b shift+x",
+              "keys": "ctrl+b shift+x",
               "chords": [
-                "ctrl+b shift+x"
+                "ctrl+b",
+                "shift+x"
               ]
             },
             {
-              "raw": "x",
+              "keys": "x",
               "chords": [
                 "x"
               ]
@@ -250,238 +277,260 @@
       ]
     },
     {
-      "title": "Panes",
-      "rows": [
+      "name": "Panes",
+      "actions": [
         {
-          "action": "Split right",
           "name": "split_vertical",
-          "bindings": [
+          "description": "Split right",
+          "keys": [
             {
-              "raw": "ctrl+b v",
+              "keys": "ctrl+b v",
               "chords": [
-                "ctrl+b v"
+                "ctrl+b",
+                "v"
               ]
             }
           ]
         },
         {
-          "action": "Split down",
           "name": "split_horizontal",
-          "bindings": [
+          "description": "Split down",
+          "keys": [
             {
-              "raw": "ctrl+b -",
+              "keys": "ctrl+b -",
               "chords": [
-                "ctrl+b -"
+                "ctrl+b",
+                "-"
               ]
             }
           ]
         },
         {
-          "action": "Focus pane to the left",
           "name": "focus_pane_left",
-          "bindings": [
+          "description": "Focus pane to the left",
+          "keys": [
             {
-              "raw": "ctrl+b h",
+              "keys": "ctrl+b h",
               "chords": [
-                "ctrl+b h"
+                "ctrl+b",
+                "h"
               ]
             },
             {
-              "raw": "ctrl+w h",
+              "keys": "ctrl+w h",
               "chords": [
-                "ctrl+w h"
+                "ctrl+w",
+                "h"
               ]
             }
           ]
         },
         {
-          "action": "Focus pane below",
           "name": "focus_pane_down",
-          "bindings": [
+          "description": "Focus pane below",
+          "keys": [
             {
-              "raw": "ctrl+b j",
+              "keys": "ctrl+b j",
               "chords": [
-                "ctrl+b j"
+                "ctrl+b",
+                "j"
               ]
             },
             {
-              "raw": "ctrl+w j",
+              "keys": "ctrl+w j",
               "chords": [
-                "ctrl+w j"
+                "ctrl+w",
+                "j"
               ]
             }
           ]
         },
         {
-          "action": "Focus pane above",
           "name": "focus_pane_up",
-          "bindings": [
+          "description": "Focus pane above",
+          "keys": [
             {
-              "raw": "ctrl+b k",
+              "keys": "ctrl+b k",
               "chords": [
-                "ctrl+b k"
+                "ctrl+b",
+                "k"
               ]
             },
             {
-              "raw": "ctrl+w k",
+              "keys": "ctrl+w k",
               "chords": [
-                "ctrl+w k"
+                "ctrl+w",
+                "k"
               ]
             }
           ]
         },
         {
-          "action": "Focus pane to the right",
           "name": "focus_pane_right",
-          "bindings": [
+          "description": "Focus pane to the right",
+          "keys": [
             {
-              "raw": "ctrl+b l",
+              "keys": "ctrl+b l",
               "chords": [
-                "ctrl+b l"
+                "ctrl+b",
+                "l"
               ]
             },
             {
-              "raw": "ctrl+w l",
+              "keys": "ctrl+w l",
               "chords": [
-                "ctrl+w l"
+                "ctrl+w",
+                "l"
               ]
             }
           ]
         },
         {
-          "action": "Swap with pane to the left",
           "name": "swap_pane_left",
-          "bindings": [
+          "description": "Swap with pane to the left",
+          "keys": [
             {
-              "raw": "ctrl+b shift+h",
+              "keys": "ctrl+b shift+h",
               "chords": [
-                "ctrl+b shift+h"
+                "ctrl+b",
+                "shift+h"
               ]
             },
             {
-              "raw": "ctrl+w H",
+              "keys": "ctrl+w H",
               "chords": [
-                "ctrl+w H"
+                "ctrl+w",
+                "H"
               ]
             }
           ]
         },
         {
-          "action": "Swap with pane below",
           "name": "swap_pane_down",
-          "bindings": [
+          "description": "Swap with pane below",
+          "keys": [
             {
-              "raw": "ctrl+b shift+j",
+              "keys": "ctrl+b shift+j",
               "chords": [
-                "ctrl+b shift+j"
+                "ctrl+b",
+                "shift+j"
               ]
             },
             {
-              "raw": "ctrl+w J",
+              "keys": "ctrl+w J",
               "chords": [
-                "ctrl+w J"
+                "ctrl+w",
+                "J"
               ]
             }
           ]
         },
         {
-          "action": "Swap with pane above",
           "name": "swap_pane_up",
-          "bindings": [
+          "description": "Swap with pane above",
+          "keys": [
             {
-              "raw": "ctrl+b shift+k",
+              "keys": "ctrl+b shift+k",
               "chords": [
-                "ctrl+b shift+k"
+                "ctrl+b",
+                "shift+k"
               ]
             },
             {
-              "raw": "ctrl+w K",
+              "keys": "ctrl+w K",
               "chords": [
-                "ctrl+w K"
+                "ctrl+w",
+                "K"
               ]
             }
           ]
         },
         {
-          "action": "Swap with pane to the right",
           "name": "swap_pane_right",
-          "bindings": [
+          "description": "Swap with pane to the right",
+          "keys": [
             {
-              "raw": "ctrl+b shift+l",
+              "keys": "ctrl+b shift+l",
               "chords": [
-                "ctrl+b shift+l"
+                "ctrl+b",
+                "shift+l"
               ]
             },
             {
-              "raw": "ctrl+w L",
+              "keys": "ctrl+w L",
               "chords": [
-                "ctrl+w L"
+                "ctrl+w",
+                "L"
               ]
             }
           ]
         },
         {
-          "action": "Zoom pane",
           "name": "zoom",
-          "bindings": [
+          "description": "Zoom pane",
+          "keys": [
             {
-              "raw": "ctrl+b z",
+              "keys": "ctrl+b z",
               "chords": [
-                "ctrl+b z"
+                "ctrl+b",
+                "z"
               ]
             },
             {
-              "raw": "ctrl+w o",
+              "keys": "ctrl+w o",
               "chords": [
-                "ctrl+w o"
+                "ctrl+w",
+                "o"
               ]
             }
           ]
         },
         {
-          "action": "Close pane; the last pane closes the tab",
           "name": "close_pane",
-          "bindings": [
+          "description": "Close pane; the last pane closes the tab",
+          "keys": [
             {
-              "raw": "ctrl+b x",
+              "keys": "ctrl+b x",
               "chords": [
-                "ctrl+b x"
+                "ctrl+b",
+                "x"
               ]
             }
           ]
         },
         {
-          "action": "Resize mode",
           "name": "resize_mode",
-          "bindings": [
+          "description": "Resize mode",
+          "keys": [
             {
-              "raw": "ctrl+b r",
+              "keys": "ctrl+b r",
               "chords": [
-                "ctrl+b r"
+                "ctrl+b",
+                "r"
               ]
             }
           ]
         },
         {
-          "action": "Leave resize mode",
           "name": "resize_exit",
-          "bindings": [
+          "description": "Leave resize mode",
+          "keys": [
             {
-              "raw": "esc [resize]",
+              "keys": "esc",
               "chords": [
                 "esc"
               ],
               "mode": "resize"
             },
             {
-              "raw": "enter [resize]",
+              "keys": "enter",
               "chords": [
                 "enter"
               ],
               "mode": "resize"
             },
             {
-              "raw": "q [resize]",
+              "keys": "q",
               "chords": [
                 "q"
               ],
@@ -490,31 +539,32 @@
           ]
         },
         {
-          "action": "Make pane narrower",
           "name": "resize_narrower",
-          "bindings": [
+          "description": "Make pane narrower",
+          "keys": [
             {
-              "raw": "ctrl+w <",
+              "keys": "ctrl+w <",
               "chords": [
-                "ctrl+w <"
+                "ctrl+w",
+                "<"
               ]
             },
             {
-              "raw": "h [resize]",
+              "keys": "h",
               "chords": [
                 "h"
               ],
               "mode": "resize"
             },
             {
-              "raw": "left [resize]",
+              "keys": "left",
               "chords": [
                 "left"
               ],
               "mode": "resize"
             },
             {
-              "raw": "< [resize]",
+              "keys": "<",
               "chords": [
                 "<"
               ],
@@ -523,31 +573,32 @@
           ]
         },
         {
-          "action": "Make pane wider",
           "name": "resize_wider",
-          "bindings": [
+          "description": "Make pane wider",
+          "keys": [
             {
-              "raw": "ctrl+w >",
+              "keys": "ctrl+w >",
               "chords": [
-                "ctrl+w >"
+                "ctrl+w",
+                ">"
               ]
             },
             {
-              "raw": "l [resize]",
+              "keys": "l",
               "chords": [
                 "l"
               ],
               "mode": "resize"
             },
             {
-              "raw": "right [resize]",
+              "keys": "right",
               "chords": [
                 "right"
               ],
               "mode": "resize"
             },
             {
-              "raw": "> [resize]",
+              "keys": ">",
               "chords": [
                 ">"
               ],
@@ -556,31 +607,32 @@
           ]
         },
         {
-          "action": "Make pane taller",
           "name": "resize_taller",
-          "bindings": [
+          "description": "Make pane taller",
+          "keys": [
             {
-              "raw": "ctrl+w +",
+              "keys": "ctrl+w +",
               "chords": [
-                "ctrl+w +"
+                "ctrl+w",
+                "+"
               ]
             },
             {
-              "raw": "j [resize]",
+              "keys": "j",
               "chords": [
                 "j"
               ],
               "mode": "resize"
             },
             {
-              "raw": "down [resize]",
+              "keys": "down",
               "chords": [
                 "down"
               ],
               "mode": "resize"
             },
             {
-              "raw": "+ [resize]",
+              "keys": "+",
               "chords": [
                 "+"
               ],
@@ -589,31 +641,32 @@
           ]
         },
         {
-          "action": "Make pane shorter",
           "name": "resize_shorter",
-          "bindings": [
+          "description": "Make pane shorter",
+          "keys": [
             {
-              "raw": "ctrl+w -",
+              "keys": "ctrl+w -",
               "chords": [
-                "ctrl+w -"
+                "ctrl+w",
+                "-"
               ]
             },
             {
-              "raw": "k [resize]",
+              "keys": "k",
               "chords": [
                 "k"
               ],
               "mode": "resize"
             },
             {
-              "raw": "up [resize]",
+              "keys": "up",
               "chords": [
                 "up"
               ],
               "mode": "resize"
             },
             {
-              "raw": "- [resize]",
+              "keys": "-",
               "chords": [
                 "-"
               ],
@@ -622,81 +675,84 @@
           ]
         },
         {
-          "action": "New pane, along the longer side",
           "name": "new_pane",
-          "bindings": [
+          "description": "New pane, along the longer side",
+          "keys": [
             {
-              "raw": "ctrl+b enter",
+              "keys": "ctrl+b enter",
               "chords": [
-                "ctrl+b enter"
+                "ctrl+b",
+                "enter"
               ]
             }
           ]
         },
         {
-          "action": "Next layout",
           "name": "next_layout",
-          "bindings": [
+          "description": "Next layout",
+          "keys": [
             {
-              "raw": "ctrl+b space",
+              "keys": "ctrl+b space",
               "chords": [
-                "ctrl+b space"
+                "ctrl+b",
+                "space"
               ]
             }
           ]
         },
         {
-          "action": "Apply a layout preset by name (:layout name)",
           "name": "select_layout",
-          "bindings": []
+          "description": "Apply a layout preset by name (:layout name)",
+          "keys": []
         },
         {
-          "action": "Layout: all side by side",
           "name": "layout_even_horizontal",
-          "bindings": []
+          "description": "Layout: all side by side",
+          "keys": []
         },
         {
-          "action": "Layout: all stacked",
           "name": "layout_even_vertical",
-          "bindings": []
+          "description": "Layout: all stacked",
+          "keys": []
         },
         {
-          "action": "Layout: main pane left, rest stacked",
           "name": "layout_main_vertical",
-          "bindings": []
+          "description": "Layout: main pane left, rest stacked",
+          "keys": []
         },
         {
-          "action": "Layout: main pane on top, rest below",
           "name": "layout_main_horizontal",
-          "bindings": []
+          "description": "Layout: main pane on top, rest below",
+          "keys": []
         },
         {
-          "action": "Layout: a grid",
           "name": "layout_tiled",
-          "bindings": []
+          "description": "Layout: a grid",
+          "keys": []
         },
         {
-          "action": "Layout: a spiral (dwindle)",
           "name": "layout_dwindle",
-          "bindings": []
+          "description": "Layout: a spiral (dwindle)",
+          "keys": []
         }
       ]
     },
     {
-      "title": "Workspaces",
-      "rows": [
+      "name": "Workspaces",
+      "actions": [
         {
-          "action": "Next workspace",
           "name": "next_workspace",
-          "bindings": [
+          "description": "Next workspace",
+          "keys": [
             {
-              "raw": "ctrl+b )",
+              "keys": "ctrl+b )",
               "chords": [
-                "ctrl+b )"
+                "ctrl+b",
+                ")"
               ]
             },
             {
-              "raw": "]w",
+              "keys": "]w",
               "chords": [
                 "]w"
               ]
@@ -704,17 +760,18 @@
           ]
         },
         {
-          "action": "Previous workspace",
           "name": "previous_workspace",
-          "bindings": [
+          "description": "Previous workspace",
+          "keys": [
             {
-              "raw": "ctrl+b (",
+              "keys": "ctrl+b (",
               "chords": [
-                "ctrl+b ("
+                "ctrl+b",
+                "("
               ]
             },
             {
-              "raw": "[w",
+              "keys": "[w",
               "chords": [
                 "[w"
               ]
@@ -722,29 +779,31 @@
           ]
         },
         {
-          "action": "Previous workspace you were in; again toggles back (Vim's ctrl+^)",
           "name": "last_workspace",
-          "bindings": [
+          "description": "Previous workspace you were in; again toggles back (Vim's ctrl+^)",
+          "keys": [
             {
-              "raw": "ctrl+b ^",
+              "keys": "ctrl+b ^",
               "chords": [
-                "ctrl+b ^"
+                "ctrl+b",
+                "^"
               ]
             },
             {
-              "raw": "ctrl+b ctrl+6",
+              "keys": "ctrl+b ctrl+6",
               "chords": [
-                "ctrl+b ctrl+6"
+                "ctrl+b",
+                "ctrl+6"
               ]
             },
             {
-              "raw": "ctrl+^",
+              "keys": "ctrl+^",
               "chords": [
                 "ctrl+^"
               ]
             },
             {
-              "raw": "ctrl+6",
+              "keys": "ctrl+6",
               "chords": [
                 "ctrl+6"
               ]
@@ -752,85 +811,109 @@
           ]
         },
         {
-          "action": "Switch to a workspace by name or number",
           "name": "switch_workspace",
-          "bindings": []
+          "description": "Switch to a workspace by name or number",
+          "keys": []
         },
         {
-          "action": "Workspace picker",
           "name": "workspace_picker",
-          "bindings": [
+          "description": "Workspace picker",
+          "keys": [
             {
-              "raw": "ctrl+b w",
+              "keys": "ctrl+b w",
               "chords": [
-                "ctrl+b w"
+                "ctrl+b",
+                "w"
               ]
             }
           ]
         },
         {
-          "action": "New workspace",
           "name": "new_workspace",
-          "bindings": [
+          "description": "New workspace",
+          "keys": [
             {
-              "raw": "ctrl+b shift+n",
+              "keys": "ctrl+b shift+n",
               "chords": [
-                "ctrl+b shift+n"
+                "ctrl+b",
+                "shift+n"
               ]
             }
           ]
         },
         {
-          "action": "Rename workspace",
           "name": "rename_workspace",
-          "bindings": [
+          "description": "Rename workspace",
+          "keys": [
             {
-              "raw": "ctrl+b shift+w",
+              "keys": "ctrl+b shift+w",
               "chords": [
-                "ctrl+b shift+w"
+                "ctrl+b",
+                "shift+w"
               ]
             }
           ]
         },
         {
-          "action": "Close workspace",
           "name": "close_workspace",
-          "bindings": [
+          "description": "Close workspace",
+          "keys": [
             {
-              "raw": "ctrl+b shift+d",
+              "keys": "ctrl+b shift+d",
               "chords": [
-                "ctrl+b shift+d"
+                "ctrl+b",
+                "shift+d"
               ]
             }
           ]
         },
         {
-          "action": "Move the tab to another workspace (reopens it there)",
           "name": "move_to_workspace",
-          "bindings": []
+          "description": "Move the tab to another workspace (reopens it there)",
+          "keys": []
         },
         {
-          "action": "Routing rules: list them; :route add [workspace], :route move",
           "name": "route_rules",
-          "bindings": []
+          "description": "Routing rules: list them; :route add [workspace], :route move",
+          "keys": []
+        },
+        {
+          "name": "private_workspace",
+          "description": "Private workspace (a private window); again goes back",
+          "keys": [
+            {
+              "keys": "ctrl+b shift+p",
+              "chords": [
+                "ctrl+b",
+                "shift+p"
+              ]
+            },
+            {
+              "keys": "ctrl+shift+p",
+              "chords": [
+                "ctrl+shift+p"
+              ]
+            }
+          ]
         }
       ]
     },
     {
-      "title": "Navigation",
-      "rows": [
+      "name": "Navigation",
+      "actions": [
         {
-          "action": "Goto picker: every tab in every workspace",
           "name": "goto_picker",
-          "bindings": [
+          "description": "Goto picker: every tab in every workspace",
+          "keys": [
             {
-              "raw": "ctrl+b g",
+              "keys": "ctrl+b g",
               "chords": [
-                "ctrl+b g"
+                "ctrl+b",
+                "g"
               ]
             },
             {
-              "raw": "b",
+              "keys": "b",
               "chords": [
                 "b"
               ]
@@ -838,29 +921,30 @@
           ]
         },
         {
-          "action": "Open / close the side panel",
           "name": "toggle_sidebar",
-          "bindings": [
+          "description": "Open / close the side panel",
+          "keys": [
             {
-              "raw": "ctrl+b b",
+              "keys": "ctrl+b b",
               "chords": [
-                "ctrl+b b"
+                "ctrl+b",
+                "b"
               ]
             }
           ]
         },
         {
-          "action": "Scroll down",
           "name": "scroll_down",
-          "bindings": [
+          "description": "Scroll down",
+          "keys": [
             {
-              "raw": "j",
+              "keys": "j",
               "chords": [
                 "j"
               ]
             },
             {
-              "raw": "ctrl+e",
+              "keys": "ctrl+e",
               "chords": [
                 "ctrl+e"
               ]
@@ -868,17 +952,17 @@
           ]
         },
         {
-          "action": "Scroll up",
           "name": "scroll_up",
-          "bindings": [
+          "description": "Scroll up",
+          "keys": [
             {
-              "raw": "k",
+              "keys": "k",
               "chords": [
                 "k"
               ]
             },
             {
-              "raw": "ctrl+y",
+              "keys": "ctrl+y",
               "chords": [
                 "ctrl+y"
               ]
@@ -886,11 +970,11 @@
           ]
         },
         {
-          "action": "Scroll left",
           "name": "scroll_left",
-          "bindings": [
+          "description": "Scroll left",
+          "keys": [
             {
-              "raw": "h",
+              "keys": "h",
               "chords": [
                 "h"
               ]
@@ -898,11 +982,11 @@
           ]
         },
         {
-          "action": "Scroll right",
           "name": "scroll_right",
-          "bindings": [
+          "description": "Scroll right",
+          "keys": [
             {
-              "raw": "l",
+              "keys": "l",
               "chords": [
                 "l"
               ]
@@ -910,17 +994,17 @@
           ]
         },
         {
-          "action": "Scroll half a page down",
           "name": "scroll_half_down",
-          "bindings": [
+          "description": "Scroll half a page down",
+          "keys": [
             {
-              "raw": "d",
+              "keys": "d",
               "chords": [
                 "d"
               ]
             },
             {
-              "raw": "ctrl+d",
+              "keys": "ctrl+d",
               "chords": [
                 "ctrl+d"
               ]
@@ -928,17 +1012,17 @@
           ]
         },
         {
-          "action": "Scroll half a page up",
           "name": "scroll_half_up",
-          "bindings": [
+          "description": "Scroll half a page up",
+          "keys": [
             {
-              "raw": "u",
+              "keys": "u",
               "chords": [
                 "u"
               ]
             },
             {
-              "raw": "ctrl+u",
+              "keys": "ctrl+u",
               "chords": [
                 "ctrl+u"
               ]
@@ -946,11 +1030,11 @@
           ]
         },
         {
-          "action": "Scroll to top",
           "name": "scroll_top",
-          "bindings": [
+          "description": "Scroll to top",
+          "keys": [
             {
-              "raw": "gg",
+              "keys": "gg",
               "chords": [
                 "gg"
               ]
@@ -958,11 +1042,11 @@
           ]
         },
         {
-          "action": "Scroll to bottom",
           "name": "scroll_bottom",
-          "bindings": [
+          "description": "Scroll to bottom",
+          "keys": [
             {
-              "raw": "G",
+              "keys": "G",
               "chords": [
                 "G"
               ]
@@ -970,17 +1054,17 @@
           ]
         },
         {
-          "action": "Go back",
           "name": "history_back",
-          "bindings": [
+          "description": "Go back",
+          "keys": [
             {
-              "raw": "H",
+              "keys": "H",
               "chords": [
                 "H"
               ]
             },
             {
-              "raw": "ctrl+o",
+              "keys": "ctrl+o",
               "chords": [
                 "ctrl+o"
               ]
@@ -988,17 +1072,17 @@
           ]
         },
         {
-          "action": "Go forward",
           "name": "history_forward",
-          "bindings": [
+          "description": "Go forward",
+          "keys": [
             {
-              "raw": "L",
+              "keys": "L",
               "chords": [
                 "L"
               ]
             },
             {
-              "raw": "ctrl+i",
+              "keys": "ctrl+i",
               "chords": [
                 "ctrl+i"
               ]
@@ -1006,11 +1090,11 @@
           ]
         },
         {
-          "action": "Reload page",
           "name": "reload",
-          "bindings": [
+          "description": "Reload page",
+          "keys": [
             {
-              "raw": "r",
+              "keys": "r",
               "chords": [
                 "r"
               ]
@@ -1018,16 +1102,16 @@
           ]
         },
         {
-          "action": "Open a URL or search in this tab",
           "name": "open_url",
-          "bindings": []
+          "description": "Open a URL or search in this tab",
+          "keys": []
         },
         {
-          "action": "Go up a level in the URL path",
           "name": "url_up",
-          "bindings": [
+          "description": "Go up a level in the URL path",
+          "keys": [
             {
-              "raw": "gu",
+              "keys": "gu",
               "chords": [
                 "gu"
               ]
@@ -1035,11 +1119,11 @@
           ]
         },
         {
-          "action": "Go to the site's root",
           "name": "url_root",
-          "bindings": [
+          "description": "Go to the site's root",
+          "keys": [
             {
-              "raw": "gU",
+              "keys": "gU",
               "chords": [
                 "gU"
               ]
@@ -1047,24 +1131,24 @@
           ]
         },
         {
-          "action": "Focus the address bar (as ctrl+l)",
           "name": "focus_urlbar",
-          "bindings": [
+          "description": "Focus the address bar (as ctrl+l)",
+          "keys": [
             {
-              "raw": "I",
+              "keys": "I",
               "chords": [
                 "I"
               ]
             },
             {
-              "raw": "I [visual]",
+              "keys": "I",
               "chords": [
                 "I"
               ],
               "mode": "visual"
             },
             {
-              "raw": "I [panel]",
+              "keys": "I",
               "chords": [
                 "I"
               ],
@@ -1075,14 +1159,14 @@
       ]
     },
     {
-      "title": "Page",
-      "rows": [
+      "name": "Page",
+      "actions": [
         {
-          "action": "Copy the page's URL",
           "name": "yank_url",
-          "bindings": [
+          "description": "Copy the page's URL",
+          "keys": [
             {
-              "raw": "yy",
+              "keys": "yy",
               "chords": [
                 "yy"
               ]
@@ -1090,11 +1174,11 @@
           ]
         },
         {
-          "action": "Open the clipboard's URL or search in this tab",
           "name": "open_clipboard",
-          "bindings": [
+          "description": "Open the clipboard's URL or search in this tab",
+          "keys": [
             {
-              "raw": "p",
+              "keys": "p",
               "chords": [
                 "p"
               ]
@@ -1102,11 +1186,11 @@
           ]
         },
         {
-          "action": "Open the clipboard's URL or search in a new tab",
           "name": "open_clipboard_tab",
-          "bindings": [
+          "description": "Open the clipboard's URL or search in a new tab",
+          "keys": [
             {
-              "raw": "P",
+              "keys": "P",
               "chords": [
                 "P"
               ]
@@ -1114,11 +1198,11 @@
           ]
         },
         {
-          "action": "Focus the first text field (with a count: the Nth)",
           "name": "focus_input",
-          "bindings": [
+          "description": "Focus the first text field (with a count: the Nth)",
+          "keys": [
             {
-              "raw": "gi",
+              "keys": "gi",
               "chords": [
                 "gi"
               ]
@@ -1126,11 +1210,11 @@
           ]
         },
         {
-          "action": "View the page's source in a new tab",
           "name": "view_source",
-          "bindings": [
+          "description": "View the page's source in a new tab",
+          "keys": [
             {
-              "raw": "gf",
+              "keys": "gf",
               "chords": [
                 "gf"
               ]
@@ -1140,14 +1224,14 @@
       ]
     },
     {
-      "title": "Hints",
-      "rows": [
+      "name": "Hints",
+      "actions": [
         {
-          "action": "Follow link",
           "name": "follow_link",
-          "bindings": [
+          "description": "Follow link",
+          "keys": [
             {
-              "raw": "f",
+              "keys": "f",
               "chords": [
                 "f"
               ]
@@ -1155,11 +1239,11 @@
           ]
         },
         {
-          "action": "Follow link in new tab",
           "name": "follow_link_new_tab",
-          "bindings": [
+          "description": "Follow link in new tab",
+          "keys": [
             {
-              "raw": "F",
+              "keys": "F",
               "chords": [
                 "F"
               ]
@@ -1167,11 +1251,11 @@
           ]
         },
         {
-          "action": "Leave hint mode",
           "name": "hint_cancel",
-          "bindings": [
+          "description": "Leave hint mode",
+          "keys": [
             {
-              "raw": "esc [hint]",
+              "keys": "esc",
               "chords": [
                 "esc"
               ],
@@ -1182,14 +1266,14 @@
       ]
     },
     {
-      "title": "Find",
-      "rows": [
+      "name": "Find",
+      "actions": [
         {
-          "action": "Search in page",
           "name": "find_forward",
-          "bindings": [
+          "description": "Search in page",
+          "keys": [
             {
-              "raw": "/",
+              "keys": "/",
               "chords": [
                 "/"
               ]
@@ -1197,11 +1281,11 @@
           ]
         },
         {
-          "action": "Search backwards in page",
           "name": "find_backward",
-          "bindings": [
+          "description": "Search backwards in page",
+          "keys": [
             {
-              "raw": "?",
+              "keys": "?",
               "chords": [
                 "?"
               ]
@@ -1209,11 +1293,11 @@
           ]
         },
         {
-          "action": "Next match",
           "name": "find_next",
-          "bindings": [
+          "description": "Next match",
+          "keys": [
             {
-              "raw": "n",
+              "keys": "n",
               "chords": [
                 "n"
               ]
@@ -1221,11 +1305,11 @@
           ]
         },
         {
-          "action": "Previous match",
           "name": "find_previous",
-          "bindings": [
+          "description": "Previous match",
+          "keys": [
             {
-              "raw": "N",
+              "keys": "N",
               "chords": [
                 "N"
               ]
@@ -1235,21 +1319,21 @@
       ]
     },
     {
-      "title": "Modes",
-      "rows": [
+      "name": "Modes",
+      "actions": [
         {
-          "action": "Back to normal mode",
           "name": "normal_mode",
-          "bindings": [
+          "description": "Back to normal mode",
+          "keys": [
             {
-              "raw": "esc [insert]",
+              "keys": "esc",
               "chords": [
                 "esc"
               ],
               "mode": "insert"
             },
             {
-              "raw": "esc [visual]",
+              "keys": "esc",
               "chords": [
                 "esc"
               ],
@@ -1258,11 +1342,11 @@
           ]
         },
         {
-          "action": "Insert mode: focus the first input",
           "name": "insert_mode",
-          "bindings": [
+          "description": "Insert mode: focus the first input",
+          "keys": [
             {
-              "raw": "i",
+              "keys": "i",
               "chords": [
                 "i"
               ]
@@ -1270,17 +1354,18 @@
           ]
         },
         {
-          "action": "Copy mode (caret browsing + selection)",
           "name": "copy_mode",
-          "bindings": [
+          "description": "Copy mode (caret browsing + selection)",
+          "keys": [
             {
-              "raw": "ctrl+b [",
+              "keys": "ctrl+b [",
               "chords": [
-                "ctrl+b ["
+                "ctrl+b",
+                "["
               ]
             },
             {
-              "raw": "v",
+              "keys": "v",
               "chords": [
                 "v"
               ]
@@ -1288,11 +1373,11 @@
           ]
         },
         {
-          "action": "Command line",
           "name": "command_line",
-          "bindings": [
+          "description": "Command line",
+          "keys": [
             {
-              "raw": ":",
+              "keys": ":",
               "chords": [
                 ":"
               ]
@@ -1300,11 +1385,11 @@
           ]
         },
         {
-          "action": "Close the command line",
           "name": "command_cancel",
-          "bindings": [
+          "description": "Close the command line",
+          "keys": [
             {
-              "raw": "esc [command]",
+              "keys": "esc",
               "chords": [
                 "esc"
               ],
@@ -1315,14 +1400,14 @@
       ]
     },
     {
-      "title": "Copy mode",
-      "rows": [
+      "name": "Copy mode",
+      "actions": [
         {
-          "action": "Move caret left",
           "name": "caret_left",
-          "bindings": [
+          "description": "Move caret left",
+          "keys": [
             {
-              "raw": "h [visual]",
+              "keys": "h",
               "chords": [
                 "h"
               ],
@@ -1331,11 +1416,11 @@
           ]
         },
         {
-          "action": "Move caret down",
           "name": "caret_down",
-          "bindings": [
+          "description": "Move caret down",
+          "keys": [
             {
-              "raw": "j [visual]",
+              "keys": "j",
               "chords": [
                 "j"
               ],
@@ -1344,11 +1429,11 @@
           ]
         },
         {
-          "action": "Move caret up",
           "name": "caret_up",
-          "bindings": [
+          "description": "Move caret up",
+          "keys": [
             {
-              "raw": "k [visual]",
+              "keys": "k",
               "chords": [
                 "k"
               ],
@@ -1357,11 +1442,11 @@
           ]
         },
         {
-          "action": "Move caret right",
           "name": "caret_right",
-          "bindings": [
+          "description": "Move caret right",
+          "keys": [
             {
-              "raw": "l [visual]",
+              "keys": "l",
               "chords": [
                 "l"
               ],
@@ -1370,11 +1455,11 @@
           ]
         },
         {
-          "action": "Move caret a word forward",
           "name": "caret_word_forward",
-          "bindings": [
+          "description": "Move caret a word forward",
+          "keys": [
             {
-              "raw": "w [visual]",
+              "keys": "w",
               "chords": [
                 "w"
               ],
@@ -1383,11 +1468,11 @@
           ]
         },
         {
-          "action": "Move caret a word back",
           "name": "caret_word_backward",
-          "bindings": [
+          "description": "Move caret a word back",
+          "keys": [
             {
-              "raw": "b [visual]",
+              "keys": "b",
               "chords": [
                 "b"
               ],
@@ -1396,11 +1481,11 @@
           ]
         },
         {
-          "action": "Move caret to the start of the line",
           "name": "caret_line_start",
-          "bindings": [
+          "description": "Move caret to the start of the line",
+          "keys": [
             {
-              "raw": "0 [visual]",
+              "keys": "0",
               "chords": [
                 "0"
               ],
@@ -1409,11 +1494,11 @@
           ]
         },
         {
-          "action": "Move caret to the end of the line",
           "name": "caret_line_end",
-          "bindings": [
+          "description": "Move caret to the end of the line",
+          "keys": [
             {
-              "raw": "$ [visual]",
+              "keys": "$",
               "chords": [
                 "$"
               ],
@@ -1422,11 +1507,11 @@
           ]
         },
         {
-          "action": "Move caret to the top of the page",
           "name": "caret_top",
-          "bindings": [
+          "description": "Move caret to the top of the page",
+          "keys": [
             {
-              "raw": "gg [visual]",
+              "keys": "gg",
               "chords": [
                 "gg"
               ],
@@ -1435,11 +1520,11 @@
           ]
         },
         {
-          "action": "Move caret to the bottom of the page",
           "name": "caret_bottom",
-          "bindings": [
+          "description": "Move caret to the bottom of the page",
+          "keys": [
             {
-              "raw": "G [visual]",
+              "keys": "G",
               "chords": [
                 "G"
               ],
@@ -1448,11 +1533,11 @@
           ]
         },
         {
-          "action": "Move caret to the end of the word",
           "name": "caret_word_end",
-          "bindings": [
+          "description": "Move caret to the end of the word",
+          "keys": [
             {
-              "raw": "e [visual]",
+              "keys": "e",
               "chords": [
                 "e"
               ],
@@ -1461,11 +1546,11 @@
           ]
         },
         {
-          "action": "Move caret to the previous word's end",
           "name": "caret_prev_word_end",
-          "bindings": [
+          "description": "Move caret to the previous word's end",
+          "keys": [
             {
-              "raw": "ge [visual]",
+              "keys": "ge",
               "chords": [
                 "ge"
               ],
@@ -1474,11 +1559,11 @@
           ]
         },
         {
-          "action": "Move caret to the next WORD (by spaces)",
           "name": "caret_bigword_next",
-          "bindings": [
+          "description": "Move caret to the next WORD (by spaces)",
+          "keys": [
             {
-              "raw": "W [visual]",
+              "keys": "W",
               "chords": [
                 "W"
               ],
@@ -1487,11 +1572,11 @@
           ]
         },
         {
-          "action": "Move caret to the WORD's start",
           "name": "caret_bigword_back",
-          "bindings": [
+          "description": "Move caret to the WORD's start",
+          "keys": [
             {
-              "raw": "B [visual]",
+              "keys": "B",
               "chords": [
                 "B"
               ],
@@ -1500,11 +1585,11 @@
           ]
         },
         {
-          "action": "Move caret to the end of the WORD",
           "name": "caret_bigword_end",
-          "bindings": [
+          "description": "Move caret to the end of the WORD",
+          "keys": [
             {
-              "raw": "E [visual]",
+              "keys": "E",
               "chords": [
                 "E"
               ],
@@ -1513,11 +1598,11 @@
           ]
         },
         {
-          "action": "Move caret to the line's first non-blank",
           "name": "caret_first_char",
-          "bindings": [
+          "description": "Move caret to the line's first non-blank",
+          "keys": [
             {
-              "raw": "^ [visual]",
+              "keys": "^",
               "chords": [
                 "^"
               ],
@@ -1526,11 +1611,11 @@
           ]
         },
         {
-          "action": "Move caret to the paragraph's start",
           "name": "caret_para_back",
-          "bindings": [
+          "description": "Move caret to the paragraph's start",
+          "keys": [
             {
-              "raw": "{ [visual]",
+              "keys": "{",
               "chords": [
                 "{"
               ],
@@ -1539,11 +1624,11 @@
           ]
         },
         {
-          "action": "Move caret to the paragraph's end",
           "name": "caret_para_next",
-          "bindings": [
+          "description": "Move caret to the paragraph's end",
+          "keys": [
             {
-              "raw": "} [visual]",
+              "keys": "}",
               "chords": [
                 "}"
               ],
@@ -1552,11 +1637,11 @@
           ]
         },
         {
-          "action": "Find a character forward on the line",
           "name": "caret_find_forward",
-          "bindings": [
+          "description": "Find a character forward on the line",
+          "keys": [
             {
-              "raw": "f [visual]",
+              "keys": "f",
               "chords": [
                 "f"
               ],
@@ -1565,11 +1650,11 @@
           ]
         },
         {
-          "action": "Find a character backward on the line",
           "name": "caret_find_backward",
-          "bindings": [
+          "description": "Find a character backward on the line",
+          "keys": [
             {
-              "raw": "F [visual]",
+              "keys": "F",
               "chords": [
                 "F"
               ],
@@ -1578,11 +1663,11 @@
           ]
         },
         {
-          "action": "Till a character forward on the line",
           "name": "caret_till_forward",
-          "bindings": [
+          "description": "Till a character forward on the line",
+          "keys": [
             {
-              "raw": "t [visual]",
+              "keys": "t",
               "chords": [
                 "t"
               ],
@@ -1591,11 +1676,11 @@
           ]
         },
         {
-          "action": "Till a character backward on the line",
           "name": "caret_till_backward",
-          "bindings": [
+          "description": "Till a character backward on the line",
+          "keys": [
             {
-              "raw": "T [visual]",
+              "keys": "T",
               "chords": [
                 "T"
               ],
@@ -1604,11 +1689,11 @@
           ]
         },
         {
-          "action": "Repeat the last f, F, t or T",
           "name": "caret_find_repeat",
-          "bindings": [
+          "description": "Repeat the last f, F, t or T",
+          "keys": [
             {
-              "raw": "; [visual]",
+              "keys": ";",
               "chords": [
                 ";"
               ],
@@ -1617,11 +1702,11 @@
           ]
         },
         {
-          "action": "Repeat the last find, reversed",
           "name": "caret_find_reverse",
-          "bindings": [
+          "description": "Repeat the last find, reversed",
+          "keys": [
             {
-              "raw": ", [visual]",
+              "keys": ",",
               "chords": [
                 ","
               ],
@@ -1630,11 +1715,11 @@
           ]
         },
         {
-          "action": "Start or drop a selection at the caret",
           "name": "toggle_selection",
-          "bindings": [
+          "description": "Start or drop a selection at the caret",
+          "keys": [
             {
-              "raw": "v [visual]",
+              "keys": "v",
               "chords": [
                 "v"
               ],
@@ -1643,11 +1728,11 @@
           ]
         },
         {
-          "action": "Start or drop a line-wise selection",
           "name": "line_selection",
-          "bindings": [
+          "description": "Start or drop a line-wise selection",
+          "keys": [
             {
-              "raw": "V [visual]",
+              "keys": "V",
               "chords": [
                 "V"
               ],
@@ -1656,11 +1741,11 @@
           ]
         },
         {
-          "action": "Swap the selection's ends",
           "name": "swap_selection_ends",
-          "bindings": [
+          "description": "Swap the selection's ends",
+          "keys": [
             {
-              "raw": "o [visual]",
+              "keys": "o",
               "chords": [
                 "o"
               ],
@@ -1669,11 +1754,11 @@
           ]
         },
         {
-          "action": "Select the word at the caret",
           "name": "select_inner_word",
-          "bindings": [
+          "description": "Select the word at the caret",
+          "keys": [
             {
-              "raw": "iw [visual]",
+              "keys": "iw",
               "chords": [
                 "iw"
               ],
@@ -1682,11 +1767,11 @@
           ]
         },
         {
-          "action": "Select the word at the caret and its spaces",
           "name": "select_a_word",
-          "bindings": [
+          "description": "Select the word at the caret and its spaces",
+          "keys": [
             {
-              "raw": "aw [visual]",
+              "keys": "aw",
               "chords": [
                 "aw"
               ],
@@ -1695,11 +1780,11 @@
           ]
         },
         {
-          "action": "Copy selection and leave copy mode",
           "name": "yank_selection",
-          "bindings": [
+          "description": "Copy selection and leave copy mode",
+          "keys": [
             {
-              "raw": "y [visual]",
+              "keys": "y",
               "chords": [
                 "y"
               ],
@@ -1708,11 +1793,11 @@
           ]
         },
         {
-          "action": "Copy the selection's whole lines and leave",
           "name": "yank_lines",
-          "bindings": [
+          "description": "Copy the selection's whole lines and leave",
+          "keys": [
             {
-              "raw": "Y [visual]",
+              "keys": "Y",
               "chords": [
                 "Y"
               ],
@@ -1723,14 +1808,14 @@
       ]
     },
     {
-      "title": "Side panel",
-      "rows": [
+      "name": "Side panel",
+      "actions": [
         {
-          "action": "Select row 1",
           "name": "panel_select_1",
-          "bindings": [
+          "description": "Select row 1",
+          "keys": [
             {
-              "raw": "1 [panel]",
+              "keys": "1",
               "chords": [
                 "1"
               ],
@@ -1739,11 +1824,11 @@
           ]
         },
         {
-          "action": "Select row 2",
           "name": "panel_select_2",
-          "bindings": [
+          "description": "Select row 2",
+          "keys": [
             {
-              "raw": "2 [panel]",
+              "keys": "2",
               "chords": [
                 "2"
               ],
@@ -1752,11 +1837,11 @@
           ]
         },
         {
-          "action": "Select row 3",
           "name": "panel_select_3",
-          "bindings": [
+          "description": "Select row 3",
+          "keys": [
             {
-              "raw": "3 [panel]",
+              "keys": "3",
               "chords": [
                 "3"
               ],
@@ -1765,11 +1850,11 @@
           ]
         },
         {
-          "action": "Select row 4",
           "name": "panel_select_4",
-          "bindings": [
+          "description": "Select row 4",
+          "keys": [
             {
-              "raw": "4 [panel]",
+              "keys": "4",
               "chords": [
                 "4"
               ],
@@ -1778,11 +1863,11 @@
           ]
         },
         {
-          "action": "Select row 5",
           "name": "panel_select_5",
-          "bindings": [
+          "description": "Select row 5",
+          "keys": [
             {
-              "raw": "5 [panel]",
+              "keys": "5",
               "chords": [
                 "5"
               ],
@@ -1791,11 +1876,11 @@
           ]
         },
         {
-          "action": "Select row 6",
           "name": "panel_select_6",
-          "bindings": [
+          "description": "Select row 6",
+          "keys": [
             {
-              "raw": "6 [panel]",
+              "keys": "6",
               "chords": [
                 "6"
               ],
@@ -1804,11 +1889,11 @@
           ]
         },
         {
-          "action": "Select row 7",
           "name": "panel_select_7",
-          "bindings": [
+          "description": "Select row 7",
+          "keys": [
             {
-              "raw": "7 [panel]",
+              "keys": "7",
               "chords": [
                 "7"
               ],
@@ -1817,11 +1902,11 @@
           ]
         },
         {
-          "action": "Select row 8",
           "name": "panel_select_8",
-          "bindings": [
+          "description": "Select row 8",
+          "keys": [
             {
-              "raw": "8 [panel]",
+              "keys": "8",
               "chords": [
                 "8"
               ],
@@ -1830,11 +1915,11 @@
           ]
         },
         {
-          "action": "Select row 9",
           "name": "panel_select_9",
-          "bindings": [
+          "description": "Select row 9",
+          "keys": [
             {
-              "raw": "9 [panel]",
+              "keys": "9",
               "chords": [
                 "9"
               ],
@@ -1843,11 +1928,11 @@
           ]
         },
         {
-          "action": "Next row",
           "name": "panel_down",
-          "bindings": [
+          "description": "Next row",
+          "keys": [
             {
-              "raw": "j [panel]",
+              "keys": "j",
               "chords": [
                 "j"
               ],
@@ -1856,11 +1941,11 @@
           ]
         },
         {
-          "action": "Previous row",
           "name": "panel_up",
-          "bindings": [
+          "description": "Previous row",
+          "keys": [
             {
-              "raw": "k [panel]",
+              "keys": "k",
               "chords": [
                 "k"
               ],
@@ -1869,11 +1954,11 @@
           ]
         },
         {
-          "action": "Open the selected row",
           "name": "panel_open",
-          "bindings": [
+          "description": "Open the selected row, or show the marked tabs as panes",
+          "keys": [
             {
-              "raw": "enter [panel]",
+              "keys": "enter",
               "chords": [
                 "enter"
               ],
@@ -1882,11 +1967,11 @@
           ]
         },
         {
-          "action": "Close the side panel",
           "name": "panel_close",
-          "bindings": [
+          "description": "End the range, clear the marks, or close the side panel",
+          "keys": [
             {
-              "raw": "esc [panel]",
+              "keys": "esc",
               "chords": [
                 "esc"
               ],
@@ -1895,11 +1980,11 @@
           ]
         },
         {
-          "action": "Close the selected tab; the panel stays open",
           "name": "panel_close_tab",
-          "bindings": [
+          "description": "Close the selected tab; the panel stays open",
+          "keys": [
             {
-              "raw": "x [panel]",
+              "keys": "x",
               "chords": [
                 "x"
               ],
@@ -1908,11 +1993,37 @@
           ]
         },
         {
-          "action": "Reopen the last closed tab (Firefox's ctrl+shift+t)",
-          "name": "restore_tab",
-          "bindings": [
+          "name": "panel_mark",
+          "description": "Mark or unmark the selected tab and move down",
+          "keys": [
             {
-              "raw": "ctrl+shift+t [panel]",
+              "keys": "space",
+              "chords": [
+                "space"
+              ],
+              "mode": "panel"
+            }
+          ]
+        },
+        {
+          "name": "panel_visual",
+          "description": "Start a range of rows to mark, or mark it",
+          "keys": [
+            {
+              "keys": "V",
+              "chords": [
+                "V"
+              ],
+              "mode": "panel"
+            }
+          ]
+        },
+        {
+          "name": "restore_tab",
+          "description": "Reopen the last closed tab (Firefox's ctrl+shift+t)",
+          "keys": [
+            {
+              "keys": "ctrl+shift+t",
               "chords": [
                 "ctrl+shift+t"
               ],
@@ -1923,38 +2034,40 @@
       ]
     },
     {
-      "title": "Bookmarks",
-      "rows": [
+      "name": "Bookmarks",
+      "actions": [
         {
-          "action": "Open / close the bookmarks panel",
           "name": "toggle_bookmarks",
-          "bindings": [
+          "description": "Open / close the bookmarks panel",
+          "keys": [
             {
-              "raw": "ctrl+b shift+b",
+              "keys": "ctrl+b shift+b",
               "chords": [
-                "ctrl+b shift+b"
+                "ctrl+b",
+                "shift+b"
               ]
             }
           ]
         },
         {
-          "action": "Bookmark this page (folders/title files it in folders)",
           "name": "add_bookmark",
-          "bindings": [
+          "description": "Bookmark this page (folders/title files it in folders)",
+          "keys": [
             {
-              "raw": "ctrl+b a",
+              "keys": "ctrl+b a",
               "chords": [
-                "ctrl+b a"
+                "ctrl+b",
+                "a"
               ]
             }
           ]
         },
         {
-          "action": "Bookmarks: close the folder, or go to its parent",
           "name": "bookmarks_collapse",
-          "bindings": [
+          "description": "Bookmarks: close the folder, or go to its parent",
+          "keys": [
             {
-              "raw": "h [panel]",
+              "keys": "h",
               "chords": [
                 "h"
               ],
@@ -1963,11 +2076,11 @@
           ]
         },
         {
-          "action": "Bookmarks: open the folder or the bookmark",
           "name": "bookmarks_expand",
-          "bindings": [
+          "description": "Bookmarks: open the folder or the bookmark",
+          "keys": [
             {
-              "raw": "l [panel]",
+              "keys": "l",
               "chords": [
                 "l"
               ],
@@ -1976,11 +2089,11 @@
           ]
         },
         {
-          "action": "Bookmarks: open in a new background tab",
           "name": "bookmarks_open_tab",
-          "bindings": [
+          "description": "Bookmarks: open in a new background tab",
+          "keys": [
             {
-              "raw": "t [panel]",
+              "keys": "t",
               "chords": [
                 "t"
               ],
@@ -1989,11 +2102,11 @@
           ]
         },
         {
-          "action": "Bookmarks: open in a split right",
           "name": "bookmarks_vsplit",
-          "bindings": [
+          "description": "Bookmarks: open in a split right",
+          "keys": [
             {
-              "raw": "s [panel]",
+              "keys": "s",
               "chords": [
                 "s"
               ],
@@ -2002,11 +2115,11 @@
           ]
         },
         {
-          "action": "Bookmarks: open in a split below",
           "name": "bookmarks_hsplit",
-          "bindings": [
+          "description": "Bookmarks: open in a split below",
+          "keys": [
             {
-              "raw": "S [panel]",
+              "keys": "S",
               "chords": [
                 "S"
               ],
@@ -2015,11 +2128,11 @@
           ]
         },
         {
-          "action": "Bookmarks: add this page here (a/b/ makes folders)",
           "name": "bookmarks_add",
-          "bindings": [
+          "description": "Bookmarks: add this page here (a/b/ makes folders)",
+          "keys": [
             {
-              "raw": "a [panel]",
+              "keys": "a",
               "chords": [
                 "a"
               ],
@@ -2028,11 +2141,11 @@
           ]
         },
         {
-          "action": "Bookmarks: add a folder here",
           "name": "bookmarks_folder",
-          "bindings": [
+          "description": "Bookmarks: add a folder here",
+          "keys": [
             {
-              "raw": "A [panel]",
+              "keys": "A",
               "chords": [
                 "A"
               ],
@@ -2041,11 +2154,11 @@
           ]
         },
         {
-          "action": "Bookmarks: rename",
           "name": "bookmarks_rename",
-          "bindings": [
+          "description": "Bookmarks: rename",
+          "keys": [
             {
-              "raw": "r [panel]",
+              "keys": "r",
               "chords": [
                 "r"
               ],
@@ -2054,11 +2167,11 @@
           ]
         },
         {
-          "action": "Bookmarks: move to a folder",
           "name": "bookmarks_move",
-          "bindings": [
+          "description": "Bookmarks: move to a folder",
+          "keys": [
             {
-              "raw": "m [panel]",
+              "keys": "m",
               "chords": [
                 "m"
               ],
@@ -2067,11 +2180,11 @@
           ]
         },
         {
-          "action": "Bookmarks: delete (asks y/N)",
           "name": "bookmarks_delete",
-          "bindings": [
+          "description": "Bookmarks: delete (asks y/N)",
+          "keys": [
             {
-              "raw": "d [panel]",
+              "keys": "d",
               "chords": [
                 "d"
               ],
@@ -2080,11 +2193,11 @@
           ]
         },
         {
-          "action": "Bookmarks: copy the URL",
           "name": "bookmarks_yank",
-          "bindings": [
+          "description": "Bookmarks: copy the URL",
+          "keys": [
             {
-              "raw": "y [panel]",
+              "keys": "y",
               "chords": [
                 "y"
               ],
@@ -2093,11 +2206,11 @@
           ]
         },
         {
-          "action": "Bookmarks: filter",
           "name": "bookmarks_filter",
-          "bindings": [
+          "description": "Bookmarks: filter",
+          "keys": [
             {
-              "raw": "/ [panel]",
+              "keys": "/",
               "chords": [
                 "/"
               ],
@@ -2108,39 +2221,40 @@
       ]
     },
     {
-      "title": "Config",
-      "rows": [
+      "name": "Config",
+      "actions": [
         {
-          "action": "Reload config",
           "name": "reload_config",
-          "bindings": []
+          "description": "Reload config",
+          "keys": []
         },
         {
-          "action": "Open config.toml in a tab",
           "name": "edit_config",
-          "bindings": []
+          "description": "Open config.toml in a tab",
+          "keys": []
         }
       ]
     },
     {
-      "title": "Add-ons",
-      "rows": [
+      "name": "Add-ons",
+      "actions": [
         {
-          "action": "Add-on picker: popup, options, on/off, remove, update",
           "name": "addon_picker",
-          "bindings": [
+          "description": "Add-on picker: popup, options, on/off, remove, update",
+          "keys": [
             {
-              "raw": "ctrl+b e",
+              "keys": "ctrl+b e",
               "chords": [
-                "ctrl+b e"
+                "ctrl+b",
+                "e"
               ]
             }
           ]
         },
         {
-          "action": "Open an add-on's popup by name (:addon name)",
           "name": "addon_popup",
-          "bindings": []
+          "description": "Open an add-on's popup by name (:addon name)",
+          "keys": []
         }
       ]
     }

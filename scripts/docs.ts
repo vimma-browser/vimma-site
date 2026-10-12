@@ -10,7 +10,8 @@ import { readFileSync } from "node:fs";
 import { join, posix } from "node:path";
 
 import { escapeHtml } from "../src/ts/html.js";
-import { type BindingsFile, VIMMA_REPO } from "./bindings-types.js";
+import { VIMMA_REPO } from "./bindings-types.js";
+import { readBindings } from "./gen-keys.js";
 import { type Block, DOC_PAGES, type DocPage, GUIDE_REWRITES, LIMIT_SECTIONS, STALE_LIMITS, STALE_PREFIXES } from "./docs-pages.js";
 import { keysTables, slug } from "./keys-html.js";
 import {
@@ -299,7 +300,7 @@ export function buildDocs(rootDir: string): { pages: BuiltDoc[]; index: SearchEn
   const limitsMd = read("data/docs/limits.md");
   const guide = parseSections(guideMd);
   const limits = parseSections(limitsMd);
-  const keys = JSON.parse(read("data/bindings.json")) as BindingsFile;
+  const keys = readBindings(rootDir);
   const source = JSON.parse(read("data/docs/source.json")) as Source;
 
   const nav: NavEntry[] = [START, ...DOC_PAGES.map((p) => ({ ...p, nav: p.nav ?? p.title }))];
@@ -356,7 +357,7 @@ ${html}`;
             return html;
           }
           if ("keys" in b) {
-            const secs = b.keys.map((t) => keys.sections.find((s) => s.title === t) ?? fail(`bindings.md has no section "${t}"`));
+            const secs = b.keys.map((t) => keys.sections.find((s) => s.title === t) ?? fail(`bindings.json has no group "${t}"`));
             return `<h2 id="default-keys">All the keys for this page</h2>
 <p>The default bindings, as Vimma's own <kbd>ctrl+b</kbd> <kbd>?</kbd> overlay lists them. <em>Name</em> is the action's name, which you use to <a href="${root}docs/config/">remap it</a> or to run it as a <code>:</code> command. Every key is on the <a href="${root}keys/">keys page</a>.</p>
 ${keysTables(secs, { level: 3, idPrefix: "keys-", filterable: false })}`;
@@ -369,8 +370,9 @@ ${keysTables(secs, { level: 3, idPrefix: "keys-", filterable: false })}`;
     const title = page?.title ?? START.title;
     const head = page ? `<h1>${escapeHtml(title)}</h1>\n${intro}` : "";
     const content = page ? `${head}\n${sections}` : sections;
+    const hasKeys = !!page?.blocks.some((b) => "keys" in b);
     const src = page && !page.handWritten
-      ? `<p class="source">The guide at the top is written for this site; the details are built from Vimma's <code>docs/${page.slug === "limits" ? "limits" : "guide"}.md</code> and <code>bindings.md</code> at <a href="${VIMMA_REPO}/commit/${escapeHtml(source.commit)}"><code>${escapeHtml(source.commit)}</code></a> (${escapeHtml(source.date)}).</p>`
+      ? `<p class="source">The guide at the top is written for this site; the details are built from Vimma's <code>docs/${page.slug === "limits" ? "limits" : "guide"}.md</code> at <a href="${VIMMA_REPO}/commit/${escapeHtml(source.commit)}"><code>${escapeHtml(source.commit)}</code></a> (${escapeHtml(source.date)})${hasKeys ? `, and the keys from <code>docs/bindings.json</code> at <a href="${VIMMA_REPO}/commit/${escapeHtml(keys.commitFull)}"><code>${escapeHtml(keys.commit)}</code></a> (${escapeHtml(keys.date)})` : ""}.</p>`
       : "";
     const body = `<div class="docs">
 ${sidebar(nav, entry.slug, root)}
@@ -390,7 +392,7 @@ ${pager(nav, i, root)}
       group: entry.group,
       headTitle: page ? (page.headTitle ?? title) : "Start here: a tour of Vimma",
       description: page?.description ?? "Start here: a walk through Vimma's features, in the order you will meet them.",
-      sources: [introFile, ...fromGuide],
+      sources: [introFile, ...fromGuide, ...(hasKeys ? ["data/bindings.json"] : [])],
       body,
     });
     index.push(...indexPage(title, entry.slug, page ? content : sections.replace(/^[\s\S]*?(?=<h1)/, "")));
