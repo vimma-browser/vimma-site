@@ -10,7 +10,8 @@
 //   external   nothing loads from another origin: no remote src/href on resource elements,
 //              no remote url()/@import in CSS, no network calls in JS
 //   contrast   every text colour pair in both palettes passes WCAG AA (4.5:1)
-//   weight     each page's HTML, CSS and JS stays under the budget (images excluded)
+//   weight     each page's HTML, CSS and JS stays under the budget (images excluded), and the
+//              ? overlay's list of Vimma keys (loaded when it first opens) under its own
 //   seo        one canonical URL per page (none and noindex on 404), Open Graph and Twitter tags,
 //              unique titles and descriptions, JSON-LD that parses (a VideoObject with its
 //              fields and built files), og:video naming a built file, and sitemap.xml,
@@ -24,6 +25,9 @@ import { dirname, join, relative, resolve } from "node:path";
 const ROOT = resolve(import.meta.dirname, "../..");
 const DIST = join(ROOT, "dist");
 const BUDGET = 150 * 1024;
+/** assets/js/vimma-keys.js: every page imports it when the ? overlay first opens. */
+const OVERLAY_KEYS = "assets/js/vimma-keys.js";
+const OVERLAY_BUDGET = 32 * 1024;
 
 const errors: string[] = [];
 const fail = (where: string, msg: string): void => {
@@ -233,7 +237,7 @@ for (const file of cssFiles) {
 
 const NETWORK = /\b(fetch|XMLHttpRequest|WebSocket|EventSource|sendBeacon|importScripts)\b|https?:\/\//;
 for (const file of jsFiles) {
-  if (file.endsWith("docs-index.js")) {
+  if (file.endsWith("docs-index.js") || file.endsWith("vimma-keys.js")) {
     // data, not code: it must be `export default <JSON>` and hold no scheme-qualified URL
     const body = readFileSync(file, "utf8").replace(/^\/\/.*\n/gm, "");
     const m = /^export default ([\s\S]*);\s*$/.exec(body);
@@ -354,6 +358,12 @@ function pageWeight(file: string): number {
 }
 
 const weights = htmlFiles.map((f) => [rel(f), pageWeight(f)] as const);
+const overlayKeys = join(DIST, OVERLAY_KEYS);
+const overlayWeight = existsSync(overlayKeys) ? size(overlayKeys) : 0;
+if (!overlayWeight) fail(OVERLAY_KEYS, "missing (build.ts writes it)");
+if (overlayWeight > OVERLAY_BUDGET) {
+  fail(OVERLAY_KEYS, `${(overlayWeight / 1024).toFixed(1)} KB, over ${OVERLAY_BUDGET / 1024} KB`);
+}
 for (const [page, w] of weights) {
   if (w > BUDGET) fail(page, `${(w / 1024).toFixed(1)} KB of HTML, CSS and JS, over ${BUDGET / 1024} KB`);
 }
@@ -509,3 +519,4 @@ console.log(`✓ seo: ${locs.length} sitemap URLs, canonical and preview tags on
 console.log(`✓ contrast: ${PAIRS.length * 2} pairs, lowest ${worst.toFixed(2)}:1`);
 const heaviest = weights.reduce((a, b) => (b[1] > a[1] ? b : a));
 console.log(`✓ weight: heaviest page ${heaviest[0]} ${(heaviest[1] / 1024).toFixed(1)} KB without images (budget ${BUDGET / 1024} KB)`);
+console.log(`✓ weight: the ? overlay's Vimma keys ${(overlayWeight / 1024).toFixed(1)} KB, loaded on first open (budget ${OVERLAY_BUDGET / 1024} KB)`);
