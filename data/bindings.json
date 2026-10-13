@@ -2874,6 +2874,34 @@
       ]
     },
     {
+      "name": "Agents",
+      "actions": [
+        {
+          "name": "mcp_command",
+          "description": "Agents (MCP): :mcp on, off or forget",
+          "keys": []
+        },
+        {
+          "name": "agent_prompt",
+          "description": "Answer the waiting agent request (none: revoke grants)",
+          "keys": [
+            {
+              "keys": "ctrl+b shift+a",
+              "chords": [
+                "ctrl+b",
+                "shift+a"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "control_command",
+          "description": "Full control for a while: :control on <minutes>, off",
+          "keys": []
+        }
+      ]
+    },
+    {
       "name": "Add-ons",
       "actions": [
         {
