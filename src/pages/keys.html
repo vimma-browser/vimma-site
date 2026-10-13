@@ -4,13 +4,13 @@
 <ul>
   <li><kbd>ctrl+b</kbd> is the prefix, tmux's default: press it, let go, then press the next key. <kbd>ctrl+b</kbd> <kbd>v</kbd> splits right.</li>
   <li>Bare keys such as <kbd>j</kbd> or <kbd>f</kbd> work in normal mode; in a text field you are in insert, and they type.</li>
-  <li>A tag such as <span class="binding"><kbd>q</kbd><span class="mode">help</span></span> means the key works only in that mode. <kbd>space</kbd> is the leader key, free for bindings of your own.</li>
+  <li>A tag such as <span class="binding"><kbd>q</kbd><span class="mode">help</span></span> means the key works only in that mode.</li>
   <li>Every action has a name: remap it in <code>config.toml</code> (below), or run it from the <kbd>:</kbd> line.</li>
   <li>New to all this? The <a href="{{root}}docs/">docs</a> walk through the keys in order.</li>
 </ul>
 <section class="box" aria-labelledby="remap">
   <h2 class="box-title" id="remap">every key is yours</h2>
-  <p>Every binding below can be remapped, and so can the <kbd>ctrl+b</kbd> prefix and the <kbd>space</kbd> leader (<code>leader</code> under <code>[modal]</code>). Put the action's name and your keys in <code>~/.config/vimma/config.toml</code>; Vimma picks the file up within two seconds of a save.</p>
+  <p>Every binding below can be remapped, and so can the <kbd>ctrl+b</kbd> prefix. Put the action's name and your keys in <code>~/.config/vimma/config.toml</code>; Vimma picks the file up within two seconds of a save.</p>
 <pre class="code"><span class="c"># ~/.config/vimma/config.toml</span>
 [keys]
 prefix = "ctrl+a"         <span class="c"># the prefix, as tmux users often remap it</span>
