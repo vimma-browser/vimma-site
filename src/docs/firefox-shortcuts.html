@@ -15,6 +15,10 @@
 
 <p>Everything else works as in Firefox: <kbd>ctrl+t</kbd>, <kbd>ctrl+shift+t</kbd>, <kbd>ctrl+l</kbd>, <kbd>ctrl+f</kbd>, <kbd>ctrl+tab</kbd>, <kbd>alt+1</kbd>…<kbd>alt+9</kbd>, <kbd>ctrl+q</kbd> and the rest.</p>
 
+<h2 id="firefox-keys-are-bindings">Firefox's keys are Vimma bindings</h2>
+
+<p>Most of Firefox's keys, such as <kbd>ctrl+t</kbd>, <kbd>alt+left</kbd>, <kbd>F5</kbd>, <kbd>ctrl+plus</kbd> and <kbd>F12</kbd>, are Vimma's own bindings with Firefox's meaning. <kbd>ctrl+b</kbd> <kbd>?</kbd> lists them under their actions, and <code>[keys]</code> in config.toml rebinds them by name, as any other key: <code>new_tab = ["prefix+c"]</code> takes <kbd>ctrl+t</kbd> away from "New tab". A page that uses one of them itself, such as an editor that saves on <kbd>ctrl+s</kbd>, still gets it first, as in Firefox.</p>
+
 <h2 id="vim-keys-in-fields">Vim's keys in text fields</h2>
 
 <p>While you type, in a page's field, the URL bar, the <kbd>:</kbd> line or a filter, <kbd>ctrl+w</kbd> deletes the word before the caret, <kbd>ctrl+u</kbd> the rest of the line before it, and <kbd>ctrl+h</kbd> one character. <kbd>ctrl+z</kbd> undoes them. A page with its own use for the key, such as a web terminal, keeps it. Turn them off with <code>insert_editing = false</code> under <code>[modal]</code>.</p>

@@ -78,9 +78,9 @@ jobs:
           git switch -c "$branch"
           git add data/bindings.json data/bindings-source.json
           git commit -m "chore(keys): sync vimma's bindings at $short" \
-            -m "Vimma's docs/bindings.json changed (JRanne/vimma@$commit); this copies it for the keys page and the ? overlay."
+            -m "Vimma's docs/bindings.json changed (vimma-browser/vimma@$commit); this copies it for the keys page and the ? overlay."
           git push "https://x-access-token:$GH_TOKEN@github.com/$REPO" "$branch"
           gh pr create --repo "$REPO" --base main --head "$branch" \
             --title "chore(keys): sync vimma's bindings at $short" \
-            --body "Vimma's default bindings changed in JRanne/vimma@$commit. This copies its \`docs/bindings.json\` into \`data/bindings.json\` (opened by \`sync-keys.yml\`). CI was started on the branch with \`workflow_dispatch\`."
+            --body "Vimma's default bindings changed in vimma-browser/vimma@$commit. This copies its \`docs/bindings.json\` into \`data/bindings.json\` (opened by \`sync-keys.yml\`). CI was started on the branch with \`workflow_dispatch\`."
           gh workflow run ci.yml --repo "$REPO" --ref "$branch"

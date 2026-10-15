@@ -5,9 +5,8 @@ tmux-style `ctrl+b` prefix. It looks like a terminal in Vimma's own colours, the
 light variant for light systems, monospace throughout, a prompt header with the page position, and Vim
 keys on the site itself (press `?`).
 
-**Deployed** on Cloudflare Workers at [vimma.dev](https://vimma.dev), behind a Cloudflare Access
-login until Vimma is published. A push to `main` goes live in a minute or two. See
-[Deploying](#deploying).
+**Deployed** on Cloudflare Workers at [vimma.dev](https://vimma.dev). A push to `main` goes live
+in a minute or two. See [Deploying](#deploying).
 
 ## Pages
 
@@ -33,6 +32,8 @@ npm ci
 npm run build       # tsc, then .build/build.js: dist/
 npm run serve       # dist/ at http://127.0.0.1:8080/ (PORT=… to change)
 npm run check       # tsc --noEmit (both projects), then the dist/ checks below
+npm test            # unit tests of the build scripts (node:test)
+npm run wording     # no process wording in the Markdown, the pages or code comments (below)
 npm run docs:sync -- ../vimma      # copy guide.md and limits.md from its origin/main
 npm run keys:sync                  # fetch Vimma's docs/bindings.json from its main (network)
 npm run keys:sync -- <commit>      # … at a given commit
@@ -51,13 +52,15 @@ npm run keys:sync -- <commit>      # … at a given commit
   network calls or URLs in the shipped JS). Plain `<a>` links to other sites are allowed.
 - **contrast**: each text/background token pair, in both palettes, is at least 4.5:1 (WCAG AA).
 - **weight**: what each page loads (HTML, stylesheet, scripts and their imports, and the docs
-  search index on docs pages) stays under 150 KB. The heaviest is the known-limits page, just
-  under the budget, under half of it the search index loaded on first search. The index
-  leaves out common words (a stop list), words already in a section's page title, heading or
-  snippet, and words inside a longer word of the same section (the search matches substrings);
-  if a sync pushes a page over, slim the index or the page, not the budget. The `?` overlay's list
-  of Vimma keys (`assets/js/vimma-keys.js`) loads only when the overlay first opens, on any
-  page, so it has its own budget, 32 KB (about 16 KB today).
+  search index on docs pages) stays under 150 KB. The heaviest is the known-limits page, about
+  145 KB, close to half of it the search index loaded on first search. The build ships the
+  stylesheet without comments or the whitespace around braces (`scripts/css.ts`). The index
+  leaves out common words (a stop list) and verb forms nearly every section has, words already
+  in a section's page title, heading or snippet, and words inside a longer word of the same
+  section (the search matches substrings), and names each page's title and path once; if a sync
+  pushes a page over, slim the index or the page, not the budget. The `?` overlay's list of
+  Vimma keys (`assets/js/vimma-keys.js`) loads only when the overlay first opens, on any page,
+  so it has its own budget, 32 KB (about 20 KB today).
 - **seo**: one `<link rel="canonical">` per page with its `https://vimma.dev/` address (none, and
   `noindex`, on the 404 page), the Open Graph and `twitter:card` tags, titles and descriptions
   unique across pages, JSON-LD that parses, each `VideoObject` in it with a name, description,
@@ -194,6 +197,16 @@ held, and can be turned off in the `?` overlay (WCAG 2.1.4); `?` keeps working s
 turned back on. The blinking cursor stops under `prefers-reduced-motion`.
 The promo video never plays by itself, has no sound, and has a text summary under it.
 
+## Writing
+
+The pages, the Markdown and the code comments are written for readers outside the project: they
+say what something is and why, never who asked for it, when, quoted chat or notes from the work.
+`npm run wording` (`scripts/wording.ts`, run in CI) fails on wording that only makes sense as such
+a record. It is a port of Vimma's `tools/md-wording` checks, with the same patterns, and leaves
+out the copies of Vimma's docs in `data/docs/`, which Vimma checks. A paragraph that has to name
+one of the phrases carries `<!-- process-wording: <reason> -->`; a comment block,
+`process-wording: <reason>`.
+
 ## Deploying
 
 Cloudflare's Workers Builds (the `vimma-site` Worker) builds the repository and serves `dist/` at
@@ -204,14 +217,13 @@ Cloudflare's Workers Builds (the `vimma-site` Worker) builds the repository and 
   set in the Cloudflare dashboard (Workers → `vimma-site` → Settings → Build); the repository has
   no `wrangler` config.
 - **Other branches** also get a Workers Builds run, which shows as a check on pull requests.
-- **Access:** vimma.dev sits behind Cloudflare Access, so only signed-in people can see it
-  while Vimma is unpublished. Remove the Access application to open the site.
-- **CI** (`.github/workflows/ci.yml`) builds and runs `npm run check` on every push and pull
-  request. It does not deploy, and Cloudflare does not wait for it, so a red CI run can still go
+- **Access:** vimma.dev is public: no Cloudflare Access application or other login is in front
+  of it.
+- **CI** (`.github/workflows/ci.yml`) runs `npm test` and `npm run wording`, builds, and runs
+  `npm run check` on every push and pull request. It does not deploy, and Cloudflare does not wait for it, so a red CI run can still go
   live: check it before merging.
 
-**Search engines.** While Cloudflare Access is in front of the site, nothing can index it. With
-the site open:
+**Search engines.** Search engines can index the site, which is public:
 
 - **Google Search Console / Bing Webmaster Tools.** Add `https://vimma.dev` as a property. For
   the HTML tag method, put the token they give you in `VERIFICATION_META` in `scripts/seo.ts`

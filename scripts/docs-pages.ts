@@ -120,7 +120,7 @@ export const DOC_PAGES: DocPage[] = [
     blocks: [
       { guide: "The two layers", only: true },
       { guide: "Normal and insert mode" },
-      { guide: "Status bar", exclude: ["Colours: your Omarchy theme"] },
+      { guide: "Status bar", exclude: ["Colours and themes"] },
       { guide: "The command line" },
       { keys: ["Modes"] },
       { limits: ["Features"] },
@@ -149,7 +149,7 @@ export const DOC_PAGES: DocPage[] = [
     group: "Tabs, panes, workspaces",
     description: "ctrl+b, the tab keys, the bindings overlay, the goto picker and tab names.",
     blocks: [
-      { guideParas: { section: "Keys", startsWith: ["While the overlay is open"] }, title: "The bindings overlay", id: "the-overlay" },
+      { guideParas: { section: "Picking a tab during a split", startsWith: ["While the overlay is open"] }, title: "The bindings overlay", id: "the-overlay" },
       { guide: "Goto picker and tab rename" },
       { keys: ["Help", "Tabs"] },
       { limits: ["Tabs and window"] },
@@ -162,10 +162,14 @@ export const DOC_PAGES: DocPage[] = [
     group: "Tabs, panes, workspaces",
     description: "Split, move between, zoom, swap and resize panes, as in tmux.",
     blocks: [
+      { guideParas: { section: "Keys", startsWith: ["Clicking into a pane"] }, title: "Panes and tabs", id: "panes-and-tabs" },
       {
-        guideParas: { section: "Keys", startsWith: ["Clicking into a pane", "A split made outside Vimma"] },
-        title: "Panes and tabs",
-        id: "panes-and-tabs",
+        guideParas: {
+          section: "Picking a tab during a split",
+          startsWith: ["Going to a tab that is not in the split", "A new tab you open while", "A split made outside Vimma"],
+        },
+        title: "Picking a tab during a split",
+        id: "picking-a-tab-during-a-split",
       },
       { guide: "Resize mode" },
       { guide: "Layouts" },
@@ -180,10 +184,31 @@ export const DOC_PAGES: DocPage[] = [
     group: "Tabs, panes, workspaces",
     description: "Each workspace is a Firefox container: switch, pick, create, rename, delete, move tabs.",
     blocks: [
-      { guide: "Workspaces", exclude: ["Side panel", "Routing: which workspace a link opens in"] },
+      {
+        guide: "Workspaces",
+        exclude: ["Side panel", "Routing: which workspace a link opens in", "Agent workspace", "Private workspace"],
+      },
       { keys: ["Workspaces"] },
       { limits: ["Workspaces (M3, by design)"] },
     ],
+  },
+  {
+    slug: "private-workspace",
+    title: "The private workspace",
+    nav: "Private workspace",
+    headTitle: "The private workspace: Firefox's private browsing, one key away",
+    group: "Tabs, panes, workspaces",
+    description: "Firefox's private window as one more workspace: ctrl+b shift+p in and out, and nothing kept on disk.",
+    blocks: [{ guide: "Private workspace" }, { limits: ["Workspaces (M3, by design)"] }],
+  },
+  {
+    slug: "agent-workspace",
+    title: "The agent workspace",
+    nav: "Agent workspace",
+    headTitle: "The agent workspace: local AI agents through MCP, with your consent",
+    group: "Tabs, panes, workspaces",
+    description: "Let a local AI agent use one workspace of its own through vimma-ctl mcp; every request asks you first.",
+    blocks: [{ guide: "Agent workspace" }, { keys: ["Agents"] }],
   },
   {
     slug: "routing",
@@ -250,8 +275,8 @@ export const DOC_PAGES: DocPage[] = [
     title: "Theming",
     headTitle: "Theming and Omarchy colours",
     group: "Make it yours",
-    description: "Tokyo Night by default, your own colours in config.toml, or your Omarchy theme, live.",
-    blocks: [{ guide: "Colours: your Omarchy theme" }, { limits: ["Features"] }],
+    description: "Vimma's own palette, dark or light, by default; your own colours in config.toml, or your Omarchy theme, live.",
+    blocks: [{ guide: "Colours and themes" }, { limits: ["Features"] }],
   },
   {
     slug: "add-ons",

@@ -23,7 +23,7 @@ import { pathToFileURL } from "node:url";
 import type { BindingsFile, BindingsSource, Section, VimmaBindings } from "./bindings-types.js";
 
 const ROOT = resolve(import.meta.dirname, "../..");
-const OWNER_REPO = "JRanne/vimma";
+const OWNER_REPO = "vimma-browser/vimma";
 const PATH = "docs/bindings.json";
 const DATA = "data/bindings.json";
 const SOURCE = "data/bindings-source.json";

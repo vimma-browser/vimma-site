@@ -56,6 +56,30 @@ export interface SearchEntry {
   w: string;
 }
 
+/**
+ * The index as the docs pages load it: each page's title and path once, and each entry as an
+ * array with only its fragment, so the module repeats no keys, titles or paths. site.ts unpacks
+ * it into SearchEntry objects.
+ */
+export interface PackedIndex {
+  /** [title, path from the docs root] */
+  pages: [string, string][];
+  /** [index into pages, h, the fragment of u ("" or "#id"), s, w] */
+  entries: [number, string, string, string, string][];
+}
+
+export function packIndex(index: SearchEntry[]): PackedIndex {
+  const pages: [string, string][] = [];
+  const entries = index.map((e): [number, string, string, string, string] => {
+    const hash = e.u.indexOf("#");
+    const path = hash < 0 ? e.u : e.u.slice(0, hash);
+    let i = pages.findIndex(([p, u]) => p === e.p && u === path);
+    if (i < 0) i = pages.push([e.p, path]) - 1;
+    return [i, e.h, hash < 0 ? "" : e.u.slice(hash), e.s, e.w];
+  });
+  return { pages, entries };
+}
+
 interface Source {
   commit: string;
   date: string;
@@ -261,9 +285,21 @@ const textOf = (html: string): string =>
 
 /** Words too common to search by; dropped from the index to keep it small. */
 const STOP = new Set(
-  "the and for are but not you your with that this from have has its it's into one can when then than them they their there what which who will would also only each any all was were been being more most other some such out off over too very just about after before again here how why our yet own same both few nor on in it to or is as so of by at an up if be".split(
-    " ",
-  ),
+  (
+    "the and for are but not you your with that this from have has its it's into one can when then than them they their there what which who will would also only each any all was were been being more most other some such out off over too very just about after before again here how why our yet own same both few nor on in it to or is as so of by at an up if be " +
+    // words that turn up in many sections and say nothing about any of them
+    "every does never first without nothing where still while next see another until through two three already under goes instead once like cannot within itself always even either anything way made gets below whole alone last stay go must need needs should could may might can't doesn't don't isn't because since though however rather much many well now something everything thing things"
+  ).split(" "),
+);
+
+/**
+ * Verb forms that describe what something does in almost every section ("opens", "shows"). They
+ * are dropped after the substring rule below, so they do not bring back the shorter form they
+ * contain ("open" stays covered by "opens" in another word, the heading or the snippet, or is
+ * dropped with it): a search for them finds the sections whose heading or snippet has them.
+ */
+const WEAK = new Set(
+  "shows opens keeps closes stays lists takes says leaves changes runs moves asks gets puts adds uses starts follows sees goes makes comes gives brings sets works needs turns".split(" "),
 );
 
 /** How the index splits text into words; site.ts splits the snippet the same way. */
@@ -285,9 +321,14 @@ function indexPage(title: string, slugName: string, body: string): SearchEntry[]
     const s = text.length > 80 ? `${text.slice(0, 77).replace(/\s\S*$/, "")}…` : text;
     const head = new Set(`${title} ${heading} ${s.replace(/…$/, "")}`.toLowerCase().split(WORD_SPLIT));
     const distinct = [...new Set(text.toLowerCase().split(WORD_SPLIT))].filter((w) => w.length > 1 && !STOP.has(w) && !head.has(w));
-    // the search matches substrings (site.ts), so a word inside a longer one ("tab" in "tabs")
-    // is found there anyway; only the small bonus for a whole-word match is lost
-    const words = distinct.filter((w) => !distinct.some((o) => o !== w && o.includes(w))).join(" ");
+    // the search matches substrings (site.ts), so a word inside a longer one ("tab" in "tabs"),
+    // in the list or in p, h and s, is found there anyway; only the small bonus for a whole-word
+    // match is lost
+    const longer = [...distinct, ...head];
+    const words = distinct
+      .filter((w) => !longer.some((o) => o !== w && o.includes(w)))
+      .filter((w) => !WEAK.has(w))
+      .join(" ");
     return [{ p: title, h: heading, u: `${pageUrl(slugName).slice("docs/".length)}${m ? `#${m[1]}` : ""}`, s, w: words }];
   });
 }
