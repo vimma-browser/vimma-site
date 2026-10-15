@@ -512,7 +512,7 @@ function title2(o: StoryOptions, L: Layout, d: number): Segment {
 
 function configCard(o: StoryOptions, L: Layout, d: number): Segment {
   const sc = new Script(L.width, L.height, o.font);
-  const box = { x: 260, y: 290, w: 1400, h: 520 };
+  const box = { x: 260, y: 300, w: 1400, h: 430 };
   sc.text(0.2, d, L.width / 2, 170, escapeText("every key is yours"), {
     size: 64,
     colour: PALETTE.fg,
@@ -523,8 +523,7 @@ function configCard(o: StoryOptions, L: Layout, d: number): Segment {
   terminal(sc, 0, d, box, "~/.config/vimma/config.toml", o);
   const lines: [string, string, string][] = [
     ["keys.prefix", '"ctrl+a"', "the prefix, ctrl+b by default"],
-    ["modal.leader", '","', "the leader, space by default"],
-    ["keys.toggle_sidebar", '["prefix+b", "<leader>n"]', ""],
+    ["keys.new_tab", '["prefix+t"]', "any action, any keys"],
   ];
   lines.forEach(([k, v, comment], i) => {
     const t = 0.6 + i * 0.55;

@@ -107,7 +107,7 @@ where the build knows it), so the recording machine's Omarchy theme never leaks 
 | 0:42 | 5 s    | flip         | `ctrl+^` flips work and personal workspaces, each signed in differently                         |
 | 0:47 | 5.5 s  | theme        | the mint built-in, `omarchy-theme-set rose-pine` recolours live, then back to mint              |
 | 0:52 | 5 s    | help         | `ctrl+b ?`, filtered with `/pane` (zoomed in)                                                   |
-| 0:57 | 3.5 s  | config card  | "every key is yours": `keys.prefix`, `modal.leader` in config.toml                              |
+| 0:57 | 3.5 s  | config card  | "every key is yours": `keys.prefix`, `keys.new_tab` in config.toml                              |
 | 1:01 | 4.5 s  | outro        | the logo, vimma.dev                                                                             |
 
 **9:16, 31 s** (`vimma-promo-vertical.mp4`, recorded in portrait)
