@@ -24,22 +24,27 @@
 
   <dt id="firefox">What is underneath?</dt>
   <dd>
-    <p>Firefox 157, on the release channel, so you get Mozilla's engine and its add-on ecosystem. Vimma is built with <a href="https://github.com/zen-browser/surfer">Surfer</a>, the toolchain behind Zen Browser. Vimma's code lives in its own files, with small patches to Firefox. Sites see Firefox's user agent byte for byte, and add-ons see Firefox's version number, so the web treats Vimma as Firefox.</p>
+    <p>Firefox 158, on the release channel, so you get Mozilla's engine and its add-on ecosystem. Vimma is built with <a href="https://github.com/zen-browser/surfer">Surfer</a>, the toolchain behind Zen Browser. Vimma's code lives in its own files, with small patches to Firefox. Sites see Firefox's user agent byte for byte, and add-ons see Firefox's version number, so the web treats Vimma as Firefox.</p>
   </dd>
 
   <dt id="workspaces">How private are workspaces?</dt>
   <dd>
-    <p>Each workspace is a Firefox container: cookies, logins and site storage are separate. History, bookmarks, form history and site permissions are shared by all workspaces, as they are between Firefox containers.</p>
+    <p>Each workspace is a Firefox container: cookies, logins, site storage and site permissions are separate. History and form history are shared by all workspaces, as they are between Firefox containers, and so are bookmarks, with a folder for each workspace. For browsing that leaves nothing on disk, use the <a href="{{root}}docs/private-workspace/">private workspace</a>, Firefox's private browsing one key away.</p>
+  </dd>
+
+  <dt id="agents">Can AI agents use Vimma?</dt>
+  <dd>
+    <p>Only if you let them. Turn agents on with <code>:mcp on</code>, and a local agent such as Claude Code or Codex can open, read and close tabs through <code>vimma-ctl mcp</code>, in the agent workspace only, with its own logins. Every request asks you first. See <a href="{{root}}docs/agent-workspace/">The agent workspace</a>.</p>
   </dd>
 
   <dt id="omarchy">Do I need Omarchy?</dt>
   <dd>
-    <p>No. On <a href="https://omarchy.org/">Omarchy</a>, Vimma follows your theme and recolours when you change it. Elsewhere it uses Tokyo Night, its built-in theme, and you can set your own colours in <code>config.toml</code>.</p>
+    <p>No. On <a href="https://omarchy.org/">Omarchy</a>, Vimma follows your theme and recolours when you change it. Elsewhere it uses its built-in palette, the mint and near-black of this site, dark or light as your system is, and you can set your own colours in <code>config.toml</code>.</p>
   </dd>
 
   <dt id="platforms">Which platforms?</dt>
   <dd>
-    <p>Linux x86_64 is the only platform built and tested. See <a href="{{root}}install/">install</a>.</p>
+    <p>Linux x86_64 is the only platform built and tested today; macOS is next. See <a href="{{root}}install/">install</a>.</p>
   </dd>
 
   <dt id="licence">What is the licence?</dt>
@@ -49,7 +54,7 @@
 
   <dt id="source">Where is the source?</dt>
   <dd>
-    <p>On GitHub, at <a href="https://github.com/JRanne/vimma">github.com/JRanne/vimma</a>, public since 10 October 2026. Vimma is still pre-alpha: you build it from source, and issues and the specs behind each feature are there too.</p>
+    <p>On GitHub, at <a href="https://github.com/vimma-browser/vimma">github.com/vimma-browser/vimma</a>, public since 10 October 2026. Vimma is still pre-alpha: you build it from source, and issues and the specs behind each feature are there too.</p>
   </dd>
 
   <dt id="site">Does this site track me?</dt>

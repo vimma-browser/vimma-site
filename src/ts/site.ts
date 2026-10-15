@@ -401,6 +401,12 @@ interface SearchEntry {
   w: string;
 }
 
+/** docs-index.js as docs.ts packs it: each page's title and path once, each entry an array. */
+interface PackedIndex {
+  pages: [string, string][];
+  entries: [number, string, string, string, string][];
+}
+
 const search = $<HTMLInputElement>("#docsearch");
 const results = $<HTMLOListElement>("#docsearch-results");
 const status = $("#docsearch-status");
@@ -410,8 +416,12 @@ if (search && results && status) {
   let loading: Promise<void> | null = null;
 
   const load = (): Promise<void> =>
-    (loading ??= import(`${ROOT}assets/js/docs-index.js`).then((m: { default: SearchEntry[] }) => {
-      index = m.default;
+    (loading ??= import(`${ROOT}assets/js/docs-index.js`).then((m: { default: PackedIndex }) => {
+      const { pages, entries } = m.default;
+      index = entries.map(([i, h, hash, s, w]) => {
+        const [p, path] = pages[i] ?? ["", ""];
+        return { p, h, u: path + hash, s, w };
+      });
     }));
 
   const score = (e: SearchEntry, terms: string[]): number => {

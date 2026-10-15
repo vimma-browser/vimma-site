@@ -26,3 +26,7 @@ vimma-ctl open https://example.com<span class="c"> # in a new tab</span></pre>
 <pre class="code">bind = SUPER, slash, exec, vimma-ctl send-keys &quot;ctrl+b ?&quot;</pre>
 
 <p>Keys go to the most recently focused Vimma window, exactly as if you typed them.</p>
+
+<h2 id="agents">vimma-ctl and AI agents</h2>
+
+<p>The same program is the MCP server that local AI agents start, <code>vimma-ctl mcp</code>. That side never has full control: it reaches only the <a href="{{root}}docs/agent-workspace/">agent workspace</a>, and every request asks you first. While agents are on, each new full-control <code>vimma-ctl</code> connection asks too, since an agent with a shell could run one. <code>:control on 15</code> turns full control on for 15 minutes, then off again.</p>

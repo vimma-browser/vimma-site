@@ -29,5 +29,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: npm test
+      - name: No process wording in the Markdown, the pages or code comments
+        run: npm run wording
       - run: npm run build
       - run: npm run check

@@ -9,10 +9,22 @@
 <tr><td>Go to the highlighted tab</td><td><kbd>Enter</kbd></td></tr>
 <tr><td>Go to the tab in row 1 to 9</td><td><kbd>1</kbd> … <kbd>9</kbd></td></tr>
 <tr><td>Close the highlighted tab (the panel stays open: <kbd>x</kbd> <kbd>x</kbd> <kbd>x</kbd> closes three)</td><td><kbd>x</kbd></td></tr>
+<tr><td>Mark or unmark the highlighted tab</td><td><kbd>space</kbd></td></tr>
+<tr><td>Mark a range of rows</td><td><kbd>V</kbd>, then <kbd>j</kbd> / <kbd>k</kbd>, then <kbd>V</kbd></td></tr>
 <tr><td>Reopen the last closed tab</td><td><kbd>ctrl+shift+t</kbd></td></tr>
 <tr><td>Look at the next / previous workspace</td><td><kbd>ctrl+b</kbd> <kbd>)</kbd> / <kbd>ctrl+b</kbd> <kbd>(</kbd> (the panel stays open)</td></tr>
 <tr><td>Close it and go to the address bar</td><td><kbd>I</kbd></td></tr>
-<tr><td>Close it</td><td><kbd>Esc</kbd></td></tr>
+<tr><td>Close it (with marks, the first <kbd>Esc</kbd> clears them)</td><td><kbd>Esc</kbd></td></tr>
 </tbody></table></div>
 
 <p>While the panel is open, plain keys are the panel's; <kbd>ctrl+b</kbd> keys and <kbd>:</kbd> commands still work. A tab playing sound shows ♪.</p>
+
+<h2 id="show-tabs-together">Show tabs together</h2>
+
+<ol class="steps-list">
+  <li>Open the panel with <kbd>ctrl+b</kbd> <kbd>b</kbd>.</li>
+  <li>Press <kbd>space</kbd> on each tab you want to see side by side, say your editor, the docs and a preview. Marked rows show <code>●</code>.</li>
+  <li>Press <kbd>Enter</kbd>. The marked tabs become the workspace's panes, in its layout, and no page reloads.</li>
+</ol>
+
+<p>With a split already open, the panel opens with its tabs marked: unmark one and press <kbd>Enter</kbd> to take it out of the split, or mark another to add it.</p>

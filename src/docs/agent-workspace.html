@@ -1,0 +1,40 @@
+<!-- Hand-written guide for the agent-workspace page; the build adds the keys table and the details from guide.md. -->
+<p class="lead">Local AI agents, such as Claude Code, Codex, opencode or GitHub Copilot, can use Vimma through <code>vimma-ctl mcp</code>, an MCP server. They reach one workspace only, <code>agent</code>, with its own cookies and logins, and every request asks you first.</p>
+
+<section class="box note" aria-labelledby="off-by-default">
+<h2 class="box-title" id="off-by-default">off until you turn it on</h2>
+<p>Agents cannot reach Vimma until you type <code>:mcp on</code> and answer <kbd>y</kbd>. They never see your other workspaces, the private workspace or your logins there, and <code>:mcp off</code> disconnects them at once.</p>
+</section>
+
+<h2 id="connect-an-agent">Connect an agent</h2>
+
+<ol class="steps-list">
+  <li>Build <code>vimma-ctl</code> and put it on your <code>PATH</code> (<a href="{{root}}docs/vimma-ctl/">vimma-ctl</a>, step 2).</li>
+  <li>In Vimma, type <code>:mcp on</code> and press <kbd>y</kbd>.</li>
+  <li>Add the server to your agent's tool. For Claude Code: <code>claude mcp add --transport stdio --scope user vimma -- vimma-ctl mcp</code>; for Codex: <code>codex mcp add vimma -- vimma-ctl mcp</code>. Other tools take the same command, <code>vimma-ctl mcp</code>, in their MCP settings.</li>
+  <li>Ask the agent to open a page in Vimma's agent workspace. Its request appears at the foot of the window, and nothing happens until you answer.</li>
+</ol>
+
+<h2 id="answer-a-request">Answer a request</h2>
+
+<p>Each request names the agent, the tool and what it touches: the tab's title and address, or the address it wants to open.</p>
+
+<div class="table-wrap"><table class="plain"><thead><tr><th scope="col">To</th><th scope="col">Press</th></tr></thead><tbody>
+<tr><td>Allow it once</td><td><kbd>y</kbd></td></tr>
+<tr><td>Allow this tool for this agent for 15 minutes (a bare <kbd>a</kbd>: 10)</td><td><kbd>15a</kbd></td></tr>
+<tr><td>Deny it</td><td><kbd>n</kbd>, <kbd>Esc</kbd> or <kbd>Enter</kbd></td></tr>
+<tr><td>Deny it and ignore this agent until it reconnects</td><td><kbd>x</kbd></td></tr>
+<tr><td>Answer a request that is waiting</td><td><kbd>ctrl+b</kbd> <kbd>shift+a</kbd></td></tr>
+</tbody></table></div>
+
+<p>The question never interrupts your typing: while you type, or with focus in a text field, it waits, and the status bar says <code>◇ agent 1?</code>. An unanswered request is denied after 50 seconds.</p>
+
+<h2 id="what-agents-can-do">What an agent can do</h2>
+
+<ul>
+  <li>List the agent workspace's tabs, read a tab's text (marked as untrusted web content), open an <code>http</code> or <code>https</code> address there, and close one of its tabs.</li>
+  <li>Download files, each after a question; they go to <code>~/Downloads/vimma-agent/</code> only, and Vimma never opens them.</li>
+  <li>Nothing else: pages there get no permission prompts and no pop-ups, and links to other apps open nothing.</li>
+</ul>
+
+<p>To share a page of yours with an agent, move its tab to the agent workspace (<kbd>m</kbd> in the <kbd>ctrl+b</kbd> <kbd>w</kbd> picker). It is reopened with the agent workspace's cookies, never yours. <code>:mcp revoke</code> ends every grant, and <code>:mcp forget</code> clears the agent workspace's logins.</p>
