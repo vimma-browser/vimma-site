@@ -1,5 +1,5 @@
 {
-  // Browser side: the site's one script (and the hero frames it shares with the build).
+  // Browser side: the site's one script.
   "compilerOptions": {
     "target": "es2020",
     "lib": ["es2022", "dom", "dom.iterable"],
@@ -12,5 +12,5 @@
     "rootDir": ".",
     "outDir": "../../.build/site"
   },
-  "include": ["*.ts"]
+  "include": ["site.ts"]
 }

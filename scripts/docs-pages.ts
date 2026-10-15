@@ -3,10 +3,10 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 // The docs section: which pages exist, in what order, and what each is made of. Only the intros
-// (src/docs/<slug>.html), "Start here" and "Why Vimma" are written by hand; everything else is cut from the
-// synced copies of Vimma's guide.md, limits.md and bindings.json at build time. Every heading,
-// table row and paragraph named here must exist upstream, or the build fails: that is the
-// drift alarm. Run `npm run docs:sync`, then fix this file.
+// (src/docs/<slug>.html), "Start here", "Why Vimma" and "Vimma compared" are written by hand;
+// everything else is cut from the synced copies of Vimma's guide.md, limits.md and bindings.json
+// at build time. Every heading, table row and paragraph named here must exist upstream, or the
+// build fails: that is the drift alarm. Run `npm run docs:sync`, then fix this file.
 
 export type Block =
   /** A guide.md section by its heading, with its subsections unless `only` or `exclude`. */
@@ -23,6 +23,8 @@ export interface DocPage {
   title: string;
   /** Shorter title for the sidebar, if different. */
   nav?: string;
+  /** The <title> and link-preview title, when the heading alone says too little in a search result. */
+  headTitle?: string;
   group: string;
   description: string;
   /**
@@ -80,8 +82,18 @@ export const DOC_PAGES: DocPage[] = [
   {
     slug: "why",
     title: "Why Vimma",
+    headTitle: "Why Vimma: a browser, not an extension",
     group: "Start",
     description: "A browser, not an extension: what that changes for your keys, and what stays Firefox.",
+    blocks: [],
+    handWritten: true,
+  },
+  {
+    slug: "compared",
+    title: "Vimma compared",
+    headTitle: "Vimma compared with Vimium, Tridactyl, qutebrowser and Zen Browser",
+    group: "Start",
+    description: "Vimium, Tridactyl, qutebrowser and Zen Browser side by side with Vimma: what each does well, and where Vimma differs.",
     blocks: [],
     handWritten: true,
   },
@@ -102,12 +114,13 @@ export const DOC_PAGES: DocPage[] = [
   {
     slug: "modes",
     title: "Modes",
+    headTitle: "Modes: normal, insert, visual, hint and command",
     group: "Get going",
     description: "Normal, insert, visual, hint and command: how Vimma decides who gets a key.",
     blocks: [
       { guide: "The two layers", only: true },
       { guide: "Normal and insert mode" },
-      { guide: "Status bar", exclude: ["Colours: your Omarchy theme"] },
+      { guide: "Status bar", exclude: ["Colours and themes"] },
       { guide: "The command line" },
       { keys: ["Modes"] },
       { limits: ["Features"] },
@@ -116,6 +129,7 @@ export const DOC_PAGES: DocPage[] = [
   {
     slug: "moving",
     title: "Moving around pages",
+    headTitle: "Moving around pages: scrolling, link hints and find",
     nav: "Moving around",
     group: "Get going",
     description: "Scroll, follow links with hints, find text, and go back, forward and reload.",
@@ -130,11 +144,12 @@ export const DOC_PAGES: DocPage[] = [
   {
     slug: "tabs",
     title: "The prefix and tabs",
+    headTitle: "The ctrl+b prefix and tabs",
     nav: "Prefix and tabs",
     group: "Tabs, panes, workspaces",
     description: "ctrl+b, the tab keys, the bindings overlay, the goto picker and tab names.",
     blocks: [
-      { guideParas: { section: "Keys", startsWith: ["While the overlay is open"] }, title: "The bindings overlay", id: "the-overlay" },
+      { guideParas: { section: "Picking a tab during a split", startsWith: ["While the overlay is open"] }, title: "The bindings overlay", id: "the-overlay" },
       { guide: "Goto picker and tab rename" },
       { keys: ["Help", "Tabs"] },
       { limits: ["Tabs and window"] },
@@ -143,13 +158,18 @@ export const DOC_PAGES: DocPage[] = [
   {
     slug: "panes",
     title: "Split panes",
+    headTitle: "Split panes and tmux layouts",
     group: "Tabs, panes, workspaces",
     description: "Split, move between, zoom, swap and resize panes, as in tmux.",
     blocks: [
+      { guideParas: { section: "Keys", startsWith: ["Clicking into a pane"] }, title: "Panes and tabs", id: "panes-and-tabs" },
       {
-        guideParas: { section: "Keys", startsWith: ["Clicking into a pane", "A split made outside Vimma"] },
-        title: "Panes and tabs",
-        id: "panes-and-tabs",
+        guideParas: {
+          section: "Picking a tab during a split",
+          startsWith: ["Going to a tab that is not in the split", "A new tab you open while", "A split made outside Vimma"],
+        },
+        title: "Picking a tab during a split",
+        id: "picking-a-tab-during-a-split",
       },
       { guide: "Resize mode" },
       { guide: "Layouts" },
@@ -164,10 +184,31 @@ export const DOC_PAGES: DocPage[] = [
     group: "Tabs, panes, workspaces",
     description: "Each workspace is a Firefox container: switch, pick, create, rename, delete, move tabs.",
     blocks: [
-      { guide: "Workspaces", exclude: ["Side panel", "Routing: which workspace a link opens in"] },
+      {
+        guide: "Workspaces",
+        exclude: ["Side panel", "Routing: which workspace a link opens in", "Agent workspace", "Private workspace"],
+      },
       { keys: ["Workspaces"] },
       { limits: ["Workspaces (M3, by design)"] },
     ],
+  },
+  {
+    slug: "private-workspace",
+    title: "The private workspace",
+    nav: "Private workspace",
+    headTitle: "The private workspace: Firefox's private browsing, one key away",
+    group: "Tabs, panes, workspaces",
+    description: "Firefox's private window as one more workspace: ctrl+b shift+p in and out, and nothing kept on disk.",
+    blocks: [{ guide: "Private workspace" }, { limits: ["Workspaces (M3, by design)"] }],
+  },
+  {
+    slug: "agent-workspace",
+    title: "The agent workspace",
+    nav: "Agent workspace",
+    headTitle: "The agent workspace: local AI agents through MCP, with your consent",
+    group: "Tabs, panes, workspaces",
+    description: "Let a local AI agent use one workspace of its own through vimma-ctl mcp; every request asks you first.",
+    blocks: [{ guide: "Agent workspace" }, { keys: ["Agents"] }],
   },
   {
     slug: "routing",
@@ -188,6 +229,7 @@ export const DOC_PAGES: DocPage[] = [
   {
     slug: "bookmarks",
     title: "Bookmarks",
+    headTitle: "Bookmarks from the keyboard",
     group: "Tabs, panes, workspaces",
     description: "Bookmark a page with ctrl+b a and find it again in a filterable panel.",
     blocks: [
@@ -199,6 +241,7 @@ export const DOC_PAGES: DocPage[] = [
   {
     slug: "copy-mode",
     title: "Copy mode",
+    headTitle: "Copy mode: select and copy text with Vim motions",
     group: "Tabs, panes, workspaces",
     description: "A caret on the page, Vim motions, a selection and y to copy it.",
     blocks: [{ guide: "Copy mode" }, { keys: ["Copy mode"] }, { limits: ["Copy mode"] }],
@@ -206,6 +249,7 @@ export const DOC_PAGES: DocPage[] = [
   {
     slug: "config",
     title: "config.toml",
+    headTitle: "config.toml: options, key bindings and workspaces",
     group: "Make it yours",
     description: "Options, key bindings and workspaces in one TOML file, reloaded as you save.",
     blocks: [
@@ -220,6 +264,7 @@ export const DOC_PAGES: DocPage[] = [
   {
     slug: "firefox-shortcuts",
     title: "Firefox's shortcuts",
+    headTitle: "Firefox's shortcuts in Vimma",
     nav: "Firefox shortcuts",
     group: "Make it yours",
     description: "Which Firefox shortcuts Vimma switches off so no key means two things, and how to get them back.",
@@ -228,13 +273,15 @@ export const DOC_PAGES: DocPage[] = [
   {
     slug: "theming",
     title: "Theming",
+    headTitle: "Theming and Omarchy colours",
     group: "Make it yours",
-    description: "Tokyo Night by default, your own colours in config.toml, or your Omarchy theme, live.",
-    blocks: [{ guide: "Colours: your Omarchy theme" }, { limits: ["Features"] }],
+    description: "Vimma's own palette, dark or light, by default; your own colours in config.toml, or your Omarchy theme, live.",
+    blocks: [{ guide: "Colours and themes" }, { limits: ["Features"] }],
   },
   {
     slug: "add-ons",
     title: "Add-ons",
+    headTitle: "Firefox add-ons from the keyboard",
     group: "Make it yours",
     description: "Firefox's add-ons, driven from the keyboard: popups, options, enable, remove, updates.",
     blocks: [{ guide: "Add-ons" }, { keys: ["Add-ons"] }, { limits: ["Add-ons"] }],
@@ -242,6 +289,7 @@ export const DOC_PAGES: DocPage[] = [
   {
     slug: "privacy",
     title: "Privacy defaults",
+    headTitle: "Privacy defaults: what Vimma turns off",
     group: "Make it yours",
     description: "What Vimma turns off compared with Firefox, what it keeps, and how to change it.",
     blocks: [
@@ -253,6 +301,7 @@ export const DOC_PAGES: DocPage[] = [
   {
     slug: "accessibility",
     title: "Accessibility",
+    headTitle: "Accessibility of Vimma's own UI",
     group: "Make it yours",
     description: "Screen readers, focus, announcements, contrast and motion in Vimma's own UI.",
     blocks: [{ guide: "Accessibility" }],
@@ -270,15 +319,16 @@ export const DOC_PAGES: DocPage[] = [
     title: "FAQ and troubleshooting",
     nav: "Troubleshooting",
     group: "Reference",
-    description: "Answers to the questions people run into first.",
+    description: "Answers to the questions people run into first: profiles, updates, the tab strip, window controls, ctrl+b and crash reports.",
     blocks: [{ guide: "FAQ and troubleshooting" }],
     noDetails: true,
   },
   {
     slug: "limits",
     title: "Known limits",
+    headTitle: "Known limits of pre-alpha Vimma",
     group: "Reference",
-    description: "Every known gap in Vimma today, one line each.",
+    description: "Every known gap in Vimma today, one line each: features, panes, add-ons, privacy, compatibility and platforms.",
     blocks: [],
   },
 ];

@@ -3,16 +3,30 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 // Builds the site into dist/: wraps each page in src/pages/ and each docs page (scripts/docs.ts)
-// in src/layout.html, renders the keys tables from data/bindings.json, the hero's static screenshot
-// and the docs search index, and copies the assets and the compiled scripts. Run through `npm run build` (tsc first, then this, as .build/build.js).
+// in src/layout.html, renders the keys tables from data/bindings.json and the docs search index,
+// and copies the assets and the compiled scripts. Run through `npm run build` (tsc first, then this, as .build/build.js).
 
 import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 
-import { type BindingsFile, VIMMA_REPO } from "./scripts/bindings-types.js";
-import { buildDocs } from "./scripts/docs.js";
+import { VIMMA_REPO } from "./scripts/bindings-types.js";
+import { minifyCss } from "./scripts/css.js";
+import { buildDocs, packIndex } from "./scripts/docs.js";
+import { readBindings } from "./scripts/gen-keys.js";
 import { keysTables } from "./scripts/keys-html.js";
-import { STATIC_STEP, STEPS, escapeHtml, shotHtml } from "./src/ts/hero.js";
+import {
+  type LlmsLink,
+  OG_IMAGE,
+  PROMO_VIDEO,
+  TAGLINE,
+  headTags,
+  homeJsonLd,
+  lastChanged,
+  llmsTxt,
+  robotsTxt,
+  sitemapXml,
+} from "./scripts/seo.js";
+import { escapeHtml } from "./src/ts/html.js";
 
 const ROOT = resolve(import.meta.dirname, "..");
 const DIST = join(ROOT, "dist");
@@ -36,13 +50,16 @@ interface PageMeta {
 interface Page {
   meta: PageMeta;
   body: string;
+  /** The files the page is made from, for its date in the sitemap. */
+  sources: string[];
 }
 
 function readPage(file: string): Page {
   const src = readFileSync(at("src/pages", file), "utf8");
   const m = /^<!--(\{.*?\})-->\n/s.exec(src);
   if (!m?.[1]) throw new Error(`${file}: missing the <!--{…}--> meta line`);
-  return { meta: JSON.parse(m[1]) as PageMeta, body: src.slice(m[0].length) };
+  const sources = [`src/pages/${file}`, ...(file === "keys.html" ? ["data/bindings.json", "data/bindings-source.json"] : [])];
+  return { meta: JSON.parse(m[1]) as PageMeta, body: src.slice(m[0].length), sources };
 }
 
 /** Replaces {{name}} with vars[name]; an unknown name is an error, not an empty string. */
@@ -52,16 +69,6 @@ function fill(template: string, vars: Record<string, string>, where: string): st
     if (v === undefined) throw new Error(`${where}: no value for {{${name}}}`);
     return v;
   });
-}
-
-// --- hero -------------------------------------------------------------------------------------
-
-function heroSteps(): string {
-  return STEPS.map((s, i) => {
-    const keys = s.keys.length ? s.keys.map((k) => `<kbd>${escapeHtml(k)}</kbd>`).join(" ") + " " : "";
-    const cls = i === STATIC_STEP ? ' class="current"' : "";
-    return `    <li${cls}><span>${keys}${escapeHtml(s.label)}</span></li>`;
-  }).join("\n");
 }
 
 // --- pages ------------------------------------------------------------------------------------
@@ -95,11 +102,10 @@ function sizeOf(path: string): number {
 }
 
 function main(): void {
-  const missingShots = STEPS.flatMap((s) =>
-    ["avif", "webp"].map((ext) => `assets/img/shots/${s.shot}.${ext}`).filter((f) => !existsSync(at(f))),
-  );
-  if (missingShots.length) throw new Error(`hero screenshots missing (npm run shots): ${missingShots.join(", ")}`);
-
+  if (!existsSync(at(OG_IMAGE.path))) throw new Error(`${OG_IMAGE.path} missing (scripts/og-image.sh)`);
+  for (const f of [PROMO_VIDEO.path, PROMO_VIDEO.poster]) {
+    if (!existsSync(at(f))) throw new Error(`${f} missing (scripts/video.sh)`);
+  }
   rmSync(DIST, { recursive: true, force: true });
   mkdirSync(DIST, { recursive: true });
 
@@ -107,7 +113,7 @@ function main(): void {
   const docs = buildDocs(ROOT);
   const docPages: Page[] = docs.pages.map((d) => ({
     meta: {
-      title: `${d.title} · Vimma docs`,
+      title: `${d.headTitle} · Vimma docs`,
       short: d.slug ? `docs/${d.slug}` : "docs",
       out: d.out,
       cmd: `less docs/${d.slug || "start-here"}.md`,
@@ -117,29 +123,37 @@ function main(): void {
       wide: true,
     },
     body: d.body,
+    sources: d.sources,
   }));
   const [home, keysPage, install, about, notFound] = ["index.html", "keys.html", "install.html", "about.html", "404.html"].map(readPage);
   const start = docPages[0];
   if (!home || !keysPage || !install || !about || !notFound || !start) throw new Error("missing page");
   const pages = [home, start, keysPage, install, about, notFound, ...docPages.slice(1)];
   const navPages = pages.filter((p) => p.meta.nav !== false);
-  const keys = JSON.parse(readFileSync(at("data/bindings.json"), "utf8")) as BindingsFile;
+  const keys = readBindings(ROOT);
   const total = keys.sections.reduce((n, s) => n + s.rows.length, 0);
-  const staticStep = STEPS[STATIC_STEP];
-  if (!staticStep) throw new Error("no static hero step");
 
+  const notFoundPage = (p: Page): boolean => p.meta.out === "404.html";
   for (const page of pages) {
     const root = rootFor(page.meta.out);
+    const seo = [
+      headTags({
+        title: page.meta.title,
+        description: page.meta.description,
+        out: page.meta.out,
+        indexable: !notFoundPage(page),
+        type: page === home || notFoundPage(page) ? "website" : "article",
+        video: page === home,
+      }),
+      ...(page === home ? [homeJsonLd(page.meta.description)] : []),
+    ].join("\n    ");
     const n = navPages.findIndex((p) => p === page || p.meta.out === page.meta.section);
     const vars: Record<string, string> = {
       root,
-      hero_shot: shotHtml(staticStep, root),
-      hero_keys: staticStep.keys.map((k) => `<kbd>${escapeHtml(k)}</kbd>`).join(" "),
-      hero_steps: heroSteps(),
       keys_tables: keysTables(keys.sections),
       keys_total: String(total),
       keys_commit: escapeHtml(keys.commit),
-      keys_commit_url: `${VIMMA_REPO}/commit/${escapeHtml(keys.commit)}`,
+      keys_commit_url: `${VIMMA_REPO}/commit/${escapeHtml(keys.commitFull)}`,
     };
     const content = fill(page.body, vars, page.meta.out || "index");
     const html = fill(
@@ -148,6 +162,7 @@ function main(): void {
         root,
         title: escapeHtml(page.meta.title),
         description: escapeHtml(page.meta.description),
+        seo,
         cmd: escapeHtml(page.meta.cmd),
         short: escapeHtml(page.meta.short),
         pos: n >= 0 ? `page ${n + 1}/${navPages.length}` : "page -/-",
@@ -164,22 +179,84 @@ function main(): void {
   }
 
   cpSync(at("assets"), join(DIST, "assets"), { recursive: true });
+  const css = join(DIST, "assets/css/site.css");
+  writeFileSync(css, minifyCss(readFileSync(css, "utf8")));
   mkdirSync(join(DIST, "assets/js"), { recursive: true });
   for (const f of readdirSync(at(".build/site"))) {
     if (f.endsWith(".js")) cpSync(at(".build/site", f), join(DIST, "assets/js", f));
   }
   cpSync(at("LICENSE"), join(DIST, "LICENSE.txt"));
+  // static/: files served at the site's root as they are (search-engine verification files,
+  // a _headers file); dotfiles such as .gitkeep stay behind
+  for (const f of readdirSync(at("static"))) {
+    if (f.startsWith(".")) continue;
+    if (existsSync(join(DIST, f))) throw new Error(`static/${f} would overwrite a built file`);
+    cpSync(at("static", f), join(DIST, f), { recursive: true });
+  }
+
+  // For search engines and AI tools: the page list with dates, the crawl rules, and llms.txt.
+  const buildDate = new Date().toISOString().slice(0, 10);
+  const indexed = pages.filter((p) => !notFoundPage(p));
+  writeFileSync(
+    join(DIST, "sitemap.xml"),
+    sitemapXml(
+      indexed.map((p) => ({ out: p.meta.out, lastmod: lastChanged(ROOT, p.sources, buildDate) })),
+    ),
+  );
+  writeFileSync(join(DIST, "robots.txt"), robotsTxt());
+  const link = (p: Page, title = p.meta.title.replace(/ · Vimma( docs)?$/, "")): LlmsLink => ({
+    title,
+    out: p.meta.out,
+    description: p.meta.description,
+  });
+  const docsOf = (group: string): LlmsLink[] =>
+    docs.pages.flatMap((d) => {
+      const p = docPages.find((x) => x.meta.out === d.out);
+      return p && d.group === group ? [link(p, d.title)] : [];
+    });
+  writeFileSync(
+    join(DIST, "llms.txt"),
+    llmsTxt(
+      `${TAGLINE}. Vimma is a Firefox fork for Linux: Vim modes on every page, a tmux-style ctrl+b prefix for tabs, split panes and workspaces, and one config.toml for every key.`,
+      `Vimma is pre-alpha and open source (MPL-2.0): there are no binaries yet, so it is built from source on Linux x86_64. Source: ${VIMMA_REPO}. The whole user guide as one Markdown file: https://vimma.dev/llms-full.txt`,
+      [
+        ["Start", [link(home, "Vimma"), ...docsOf("Start"), link(install, "Install Vimma"), link(keysPage, "Key bindings")]],
+        ["Docs", ["Get going", "Tabs, panes, workspaces", "Make it yours"].flatMap(docsOf)],
+        ["Optional", [...docsOf("Reference"), link(about, "About Vimma")]],
+      ],
+    ),
+  );
+  writeFileSync(join(DIST, "llms-full.txt"), docs.markdown);
   // The docs search index: an ES module the docs pages import when the search is first used.
   writeFileSync(
     join(DIST, "assets/js/docs-index.js"),
-    `// Generated by build.ts from the docs pages (Vimma ${docs.source.commit}).\nexport default ${JSON.stringify(docs.index)};\n`,
+    `// Generated by build.ts from the docs pages (Vimma ${docs.source.commit}).\nexport default ${JSON.stringify(packIndex(docs.index))};\n`,
+  );
+  // The ? overlay's "In Vimma" part: the keys page's rows, as a data module every page imports
+  // when the overlay first opens (site.ts). `k` is the chords, `m` the mode.
+  const overlayKeys = {
+    commit: keys.commit,
+    sections: keys.sections.map((s) => ({
+      title: s.title,
+      rows: s.rows.map((r) => ({
+        action: r.action,
+        name: r.name,
+        keys: r.bindings.map((b) => (b.mode ? { k: b.chords, m: b.mode } : { k: b.chords })),
+      })),
+    })),
+  };
+  writeFileSync(
+    join(DIST, "assets/js/vimma-keys.js"),
+    `// Generated by build.ts from data/bindings.json (Vimma ${keys.commit}).\nexport default ${JSON.stringify(overlayKeys)};\n`,
   );
 
   const img = sizeOf(join(DIST, "assets/img"));
+  const video = sizeOf(join(DIST, "assets/video"));
   const all = sizeOf(DIST);
   const kb = (n: number): string => `${(n / 1024).toFixed(1)} KB`;
   console.log(`built ${pages.length} pages (${docPages.length} docs) into dist/: ${kb(all)} in all,`);
-  console.log(`  ${kb(all - img)} without images (logo variants and icons: ${kb(img)})`);
+  console.log(`  ${kb(all - img - video)} without images (logo variants and icons: ${kb(img)})`);
+  console.log(`  and the promo video and its poster: ${kb(video)}`);
 }
 
 main();

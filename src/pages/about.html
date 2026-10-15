@@ -1,6 +1,6 @@
-<!--{"title": "About · Vimma", "short": "about", "out": "about/", "cmd": "cat FAQ.md", "description": "Why Vimma exists, its privacy defaults, the Firefox underneath, its licence and where the source will be."}-->
+<!--{"title": "About Vimma: why, privacy, Firefox and licence", "short": "about", "out": "about/", "cmd": "cat FAQ.md", "description": "Why Vimma exists, its privacy defaults, the Firefox underneath, its licence and where the source is."}-->
 <h1>About</h1>
-<p>Vimma is a keyboard-first browser for people who live in Vim and tmux, made so the web keeps the flow of the rest of your work. <strong>Vim</strong> brings the modal layer: <kbd>j</kbd>/<kbd>k</kbd> to scroll, <kbd>f</kbd> for link hints, <kbd>/</kbd> to find, <kbd>:</kbd> for commands. <strong>tmux</strong> brings the prefix layer, on <kbd>ctrl+b</kbd> like tmux's default prefix: <kbd>ctrl+b</kbd> <kbd>c</kbd> for a new tab, <kbd>ctrl+b</kbd> <kbd>v</kbd> to split, <kbd>ctrl+b</kbd> <kbd>w</kbd> to switch workspace. Every one of those keys can be remapped in <code>config.toml</code>, and so can the prefix and the leader.</p>
+<p>Vimma is a keyboard-first browser for people who live in Vim and tmux, made so the web keeps the flow of the rest of your work. <strong>Vim</strong> brings the modal layer: <kbd>j</kbd>/<kbd>k</kbd> to scroll, <kbd>f</kbd> for link hints, <kbd>/</kbd> to find, <kbd>:</kbd> for commands. <strong>tmux</strong> brings the prefix layer, on <kbd>ctrl+b</kbd> like tmux's default prefix: <kbd>ctrl+b</kbd> <kbd>c</kbd> for a new tab, <kbd>ctrl+b</kbd> <kbd>v</kbd> to split, <kbd>ctrl+b</kbd> <kbd>w</kbd> to switch workspace. Every one of those keys can be remapped in <code>config.toml</code>, and so can the prefix.</p>
 
 <dl class="faq">
   <dt id="why">Why another browser, and not an extension?</dt>
@@ -24,22 +24,27 @@
 
   <dt id="firefox">What is underneath?</dt>
   <dd>
-    <p>Firefox 157, on the release channel, so you get Mozilla's engine and its add-on ecosystem. Vimma is built with <a href="https://github.com/zen-browser/surfer">Surfer</a>, the toolchain behind Zen Browser. Vimma's code lives in its own files, with small patches to Firefox. Sites see Firefox's user agent byte for byte, and add-ons see Firefox's version number, so the web treats Vimma as Firefox.</p>
+    <p>Firefox 158, on the release channel, so you get Mozilla's engine and its add-on ecosystem. Vimma is built with <a href="https://github.com/zen-browser/surfer">Surfer</a>, the toolchain behind Zen Browser. Vimma's code lives in its own files, with small patches to Firefox. Sites see Firefox's user agent byte for byte, and add-ons see Firefox's version number, so the web treats Vimma as Firefox.</p>
   </dd>
 
   <dt id="workspaces">How private are workspaces?</dt>
   <dd>
-    <p>Each workspace is a Firefox container: cookies, logins and site storage are separate. History, bookmarks, form history and site permissions are shared by all workspaces, as they are between Firefox containers.</p>
+    <p>Each workspace is a Firefox container: cookies, logins, site storage and site permissions are separate. History and form history are shared by all workspaces, as they are between Firefox containers, and so are bookmarks, with a folder for each workspace. For browsing that leaves nothing on disk, use the <a href="{{root}}docs/private-workspace/">private workspace</a>, Firefox's private browsing one key away.</p>
+  </dd>
+
+  <dt id="agents">Can AI agents use Vimma?</dt>
+  <dd>
+    <p>Only if you let them. Turn agents on with <code>:mcp on</code>, and a local agent such as Claude Code or Codex can open, read and close tabs through <code>vimma-ctl mcp</code>, in the agent workspace only, with its own logins. Every request asks you first. See <a href="{{root}}docs/agent-workspace/">The agent workspace</a>.</p>
   </dd>
 
   <dt id="omarchy">Do I need Omarchy?</dt>
   <dd>
-    <p>No. On <a href="https://omarchy.org/">Omarchy</a>, Vimma follows your theme and recolours when you change it. Elsewhere it uses Tokyo Night, its built-in theme, and you can set your own colours in <code>config.toml</code>.</p>
+    <p>No. On <a href="https://omarchy.org/">Omarchy</a>, Vimma follows your theme and recolours when you change it. Elsewhere it uses its built-in palette, the mint and near-black of this site, dark or light as your system is, and you can set your own colours in <code>config.toml</code>.</p>
   </dd>
 
   <dt id="platforms">Which platforms?</dt>
   <dd>
-    <p>Linux x86_64 is the only platform built and tested. See <a href="{{root}}install/">install</a>.</p>
+    <p>Linux x86_64 is the only platform built and tested today; macOS is next. See <a href="{{root}}install/">install</a>.</p>
   </dd>
 
   <dt id="licence">What is the licence?</dt>
@@ -49,7 +54,7 @@
 
   <dt id="source">Where is the source?</dt>
   <dd>
-    <p>On GitHub, at <a href="https://github.com/JRanne/vimma">github.com/JRanne/vimma</a>, public since 10 October 2026. Vimma is still pre-alpha: you build it from source, and issues and the specs behind each feature are there too.</p>
+    <p>On GitHub, at <a href="https://github.com/vimma-browser/vimma">github.com/vimma-browser/vimma</a>, public since 10 October 2026. Vimma is still pre-alpha: you build it from source, and issues and the specs behind each feature are there too.</p>
   </dd>
 
   <dt id="site">Does this site track me?</dt>
@@ -60,9 +65,10 @@
 
 <h2 id="thanks">Thanks</h2>
 <ul>
+  <li><a href="https://www.vim.org/">Vim</a> and <a href="https://github.com/tmux/tmux">tmux</a>, the two programs Vimma is modelled on: Vim for the modes, tmux for the <kbd>ctrl+b</kbd> prefix, panes, layouts and sessions.</li>
   <li><a href="https://www.mozilla.org/firefox/">Firefox</a> and Mozilla, for the browser underneath.</li>
   <li><a href="https://github.com/zen-browser/surfer">Surfer</a> and <a href="https://zen-browser.app/">Zen Browser</a>, for the toolchain and for showing how to run a Firefox fork.</li>
-  <li><a href="https://herdr.dev/">Herdr</a>, whose keymap the prefix layer started from.</li>
+  <li><a href="https://herdr.dev/">Herdr</a>, whose <code>[keys]</code> syntax and action names <code>config.toml</code> follows.</li>
   <li><a href="https://omarchy.org/">Omarchy</a>, whose themes Vimma follows.</li>
   <li><a href="https://github.com/tridactyl/tridactyl">Tridactyl</a>, the reference for link hints.</li>
 </ul>

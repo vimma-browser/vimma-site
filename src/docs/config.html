@@ -17,27 +17,25 @@
 
 [keys]
 prefix = &quot;ctrl+a&quot;<span class="c">             # the prefix itself, as tmux users often remap it</span>
-new_tab = [&quot;prefix+t&quot;]<span class="c">        # ctrl+a t opens a tab, instead of the default</span>
-
-[modal]
-leader = &quot;,&quot;<span class="c">                  # the leader key; space by default</span>
-
-[modal.normal]
-&quot;&lt;leader&gt;ff&quot; = &quot;goto.picker&quot;<span class="c">  # , f f lists every tab</span></pre>
+new_tab = [&quot;prefix+t&quot;]<span class="c">        # ctrl+a t opens a tab, instead of the default</span></pre>
 
 <h2 id="other-settings">Other things you can set</h2>
 
 <div class="table-wrap"><table class="plain"><thead><tr><th scope="col">Section</th><th scope="col">What it changes</th></tr></thead><tbody>
-<tr><td><code>[panes]</code></td><td><code>max</code>: how many panes a split can have (1 to 16, default 4).</td></tr>
+<tr><td><code>[panes]</code></td><td><code>max</code>: how many panes a split can have (1 to 16, default 4); <code>layout</code>: what <kbd>ctrl+b</kbd> <kbd>enter</kbd> does; <code>main_size</code>: the main pane's share in the <code>main-*</code> layouts.</td></tr>
 <tr><td><code>[sites."example.com"]</code></td><td><code>insert</code>: <code>auto</code>, <code>never</code> or <code>always</code>, whether text fields on that site put you in insert mode.</td></tr>
-<tr><td><code>[theme]</code></td><td><code>source = "file"</code> for Tokyo Night instead of your Omarchy theme; <code>[theme.colors]</code> to change single colours (<a href="{{root}}docs/theming/">theming</a>).</td></tr>
+<tr><td><code>[theme]</code></td><td><code>name</code>: the built-in palette, <code>"vimma"</code> or <code>"tokyo-night"</code>; <code>appearance</code>: dark, light or the system's; <code>source = "file"</code> for the built-in palette instead of your Omarchy theme; <code>[theme.colors]</code> to change single colours (<a href="{{root}}docs/theming/">theming</a>).</td></tr>
 <tr><td><code>[workspaces]</code></td><td>Workspaces that always exist (<a href="{{root}}docs/workspaces/">workspaces</a>).</td></tr>
 <tr><td><code>[[routes]]</code></td><td>Send a site, or every link an app opens, to a workspace (<a href="{{root}}docs/routing/">routing</a>).</td></tr>
+<tr><td><code>[search]</code></td><td><code>default</code>: the default search engine; <code>[search.aliases]</code>: short <code>@aliases</code> such as <code>@gh</code>, for an installed engine or any search URL.</td></tr>
+<tr><td><code>[bookmarks]</code></td><td><code>root</code>: what the bookmarks panel lists, the workspace's folder, the toolbar or everything (<a href="{{root}}docs/bookmarks/">bookmarks</a>).</td></tr>
+<tr><td><code>[private]</code></td><td><code>placement</code>: on Hyprland, whether the private workspace takes your window's place or opens beside it (<a href="{{root}}docs/private-workspace/">private workspace</a>).</td></tr>
+<tr><td><code>[mcp]</code></td><td>Local AI agents: whether they may ask, their workspace's name, how long a question waits (<a href="{{root}}docs/agent-workspace/">agent workspace</a>).</td></tr>
 <tr><td><code>[firefox]</code></td><td><code>disable</code> and <code>enable</code>: which of Firefox's own shortcuts are off (<a href="{{root}}docs/firefox-shortcuts/">Firefox's shortcuts</a>).</td></tr>
 <tr><td><code>[modal]</code></td><td><code>insert_editing = false</code> turns off <kbd>ctrl+w</kbd>, <kbd>ctrl+u</kbd> and <kbd>ctrl+h</kbd> in text fields.</td></tr>
 </tbody></table></div>
 
-<p>Keep <code>schema = 2</code> as the first line: it enables <code>[panes]</code>, <code>[sites]</code>, <code>[firefox]</code>, <code>insert_editing</code> and hint characters.</p>
+<p>Keep <code>schema = 2</code> as the first line: it enables <code>[panes]</code>, <code>[sites]</code>, <code>[[routes]]</code>, <code>[firefox]</code>, <code>[bookmarks]</code>, <code>[private]</code>, <code>[mcp]</code>, <code>[search]</code>, <code>insert_editing</code>, hint characters and the theme's <code>name</code> and <code>appearance</code>.</p>
 
 <h2 id="mistakes">If you make a mistake</h2>
 

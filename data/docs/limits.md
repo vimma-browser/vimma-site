@@ -68,8 +68,8 @@ the same PR.
   the moment between Vimma's start and its first window opens a window
   ([m5-omarchy-theme](specs/m5-omarchy-theme.md), Limits and "Instant reload by default").
 - If the Omarchy theme directory disappears after a theme was shown (as during
-  `omarchy-theme-set`'s swap), the colours stay until a theme is back; Tokyo Night only when no
-  theme was found since startup or the last `vimma.theme.*` change
+  `omarchy-theme-set`'s swap), the colours stay until a theme is back; the built-in palette only
+  when no theme was found since startup or the last `vimma.theme.*` change
   ([m5-omarchy-theme](specs/m5-omarchy-theme.md)).
 - `about:vimma` is read when it opens: `r` or Refresh updates it, it does not follow changes
   live. It is registered when the first window opens, so a session that restores an
@@ -180,7 +180,13 @@ These are the trade-offs the workspaces' design accepts on purpose
 - Firefox Sync no longer syncs `browser.startup.page` or `privacy.userContext.enabled` to Vimma.
 - After 3 minutes without input, the session is saved hourly, so a crash can lose an hour of
   changes made by pages (tabs they opened), as in Firefox.
-- Private windows and pop-ups have no workspaces.
+- Pop-ups have no workspaces. Private windows have no normal workspaces: together they are the
+  one [private workspace](guide.md#private-workspace), a second window-manager window (Firefox
+  keeps privacy per window), not a part of the Vimma window. On Hyprland, Vimma hides the one you
+  are not using in `special:vimma`, but Hyprland's event stream and other tools (`hyprctl
+clients`) still see both windows; elsewhere both are visible windows. There is one private
+  workspace, not several; all private windows share one cookie jar. Links from other apps never
+  open in it.
 - Firefox's sidebar keys (`ctrl+alt+x`, `ctrl+alt+u`, `ctrl+alt+z`; `ctrl+h` is off) still open its own
   sidebar beside Vimma's side panel; Firefox's four default containers stay in Settings.
 - Extensions that hide or show tabs (`tabs.hide`) conflict with workspace visibility.
@@ -288,15 +294,16 @@ These are the trade-offs the workspaces' design accepts on purpose
 - Safe Browsing's `goog-harmful-proto` list is requested but did not arrive in the smoke run
   with our key (phishing, malware and unwanted did); treat it as unavailable. See
   [m0-safebrowsing-key](specs/m0-safebrowsing-key.md).
-- No update mechanism of our own and no update manifest until M6
+- No update mechanism of our own and no update manifest until M6a
   ([m0-app-version](specs/m0-app-version.md), Out of scope).
 - No crash reporting: builds have no crash reporter, so crashes leave only a local core dump.
   Opt-in reporting to our own server is M6 ([m0-mozilla-services](specs/m0-mozilla-services.md)).
 - Once Vimma writes its `false` for sponsored address-bar suggestions, that value looks like the
   user's own, and an `about:config` reset is undone at the next window
   ([m0-mozilla-services](specs/m0-mozilla-services.md), Settled).
-- The ASRouter `cfr` provider pref is a copy of upstream's value and must be refreshed on every
-  Firefox bump ([runbook](runbook.md), Upstream bumps).
+- The ASRouter `cfr` provider pref is a copy of upstream's value. The bump PR's suites fail when
+  it is stale, but the refreshed line is pasted by hand ([runbook](runbook.md), Upstream bumps;
+  [#259](https://github.com/vimma-browser/vimma/issues/259)).
 
 ## Compatibility and versions
 
@@ -313,8 +320,9 @@ These are the trade-offs the workspaces' design accepts on purpose
   a separate `--profile` or `--allow-downgrade` ([runbook](runbook.md), Smoke check).
 - Profiles from the old `unofficial`-brand builds are not picked up
   ([m0-branding](specs/m0-branding.md), Settled).
-- `vimma --version` prints `Vimma Vimma 0.1.0` (vendor and name are both Vimma)
-  ([m0-branding](specs/m0-branding.md), Settled).
+- `vimma --full-version` keeps Firefox's `<vendor> <name> <version>` format, `Vimma Vimma 0.1.0`
+  and the build IDs; only `--version` prints `Vimma 0.1.0 · Firefox 158.0`
+  ([firefox-versions](specs/firefox-versions.md), decision 1).
 
 ## Files and profiles
 
@@ -334,11 +342,10 @@ These are the trade-offs the workspaces' design accepts on purpose
 
 ## Platforms and packaging
 
-- Only Linux x86_64 is built and tested. aarch64, macOS and Windows ("when cheap") come later
-  ([plan.md](../plan.md) §6).
+- Only Linux x86_64 is built and tested. aarch64 and macOS come later
+  ([plan.md](../plan.md) §6, [macos-build](specs/macos-build.md)); Windows is not planned.
 - No binaries, packages or releases: build from source. Tarball, AppImage, `.deb` and AUR are M6
   ([plan.md](../plan.md) §6).
-- The smol-toml BSD-3-Clause notice is not in `about:license` yet (M6, issue #16).
 - `vimma-ctl` checks the discovery file's permissions on Unix only; on Windows `check_mode`
   does nothing (ACLs, not mode bits)
   ([m0-control-protocol-and-vimma-ctl](specs/m0-control-protocol-and-vimma-ctl.md)).
@@ -348,25 +355,26 @@ These are the trade-offs the workspaces' design accepts on purpose
 - PR CI runs the mochitests on an artifact build, which cannot see compiled-in config: the C++
   `--version` string, `MOZ_APP_NAME` and the crash-reporter flag
   ([ADR-010](adr/010-pr-artifact-builds.md), Known gaps).
-- The nightly full build is not live (no runner is registered and `NIGHTLY_ENABLED` is unset), so
-  `skip-if = ["artifact"]` tests run only on local full builds. PRs that touch patches, `configs/`,
+- The nightly full build is not live: `nightly.yml` and `release.yml` still name a self-hosted
+  runner label that no runner serves, and stay switched off until they move to GitHub-hosted
+  runners ([#224](https://github.com/vimma-browser/vimma/issues/224); [runbook](runbook.md), "Full
+  builds"). Until then `skip-if = ["artifact"]` tests run only on local full builds. PRs that touch patches, `configs/`,
   `moz.configure` or branding must report a full-build run
   ([ADR-010](adr/010-pr-artifact-builds.md), [runbook](runbook.md)).
 - Artifact builds depend on Mozilla's Taskcluster index for the pinned release, which expires
   after a year ([ADR-010](adr/010-pr-artifact-builds.md)).
-- `e2e.yml` is path-filtered, so it cannot be a required check without handling skipped runs
-  ([m0-build-strategy](specs/m0-build-strategy.md)).
 - PRs opened by `GITHUB_TOKEN` (upstream bumps, Claude, release-please) do not trigger CI by
   themselves ([runbook](runbook.md)).
-- Firefox bumps are manual after the bot's PR. Plan §4's Claude conflict resolution (≤3 pushes),
-  auto-merge of clean bumps and the auto-approved `security` path are not built. The bump PR
-  carries a dry run of every patch against the new release ([rebase playbook](rebase.md),
-  [m0-rebase-playbook](specs/m0-rebase-playbook.md)).
+- Firefox bumps are meant to need no manual step (plan §6, M7): the upstream autopilot detects a
+  release, dry-runs every patch, runs the suites and opens the bump PR
+  ([rebase playbook](rebase.md), [m7-upstream-autopilot](specs/m7-upstream-autopilot.md)). Gaps
+  that still need a person: merging a green bump PR, pasting a refreshed pref copy that
+  `upstream-prefs.mjs` reports, and re-exporting a patch that no longer applies
+  ([#259](https://github.com/vimma-browser/vimma/issues/259)); releasing the merged bump
+  ([#220](https://github.com/vimma-browser/vimma/issues/220), [#224](https://github.com/vimma-browser/vimma/issues/224)).
 - `surfer import` stops at the first patch that fails, and `git apply` has no fuzz: a hunk whose
   context drifted fails like one whose code is gone. `tools/upstream/patch-check.py` reports
   every patch and hunk, and tells the two apart ([m0-rebase-playbook](specs/m0-rebase-playbook.md)).
-- No branch protection on `main` (free private plan); write-token jobs could push to it
-  ([m0-pipeline](specs/m0-pipeline.md), [runbook](runbook.md)).
 - A change to build config needs a full rebuild of 15–30 min on 16 threads: 927 s
   ([m0-app-version](specs/m0-app-version.md)), 977 s ([m0-branding](specs/m0-branding.md)),
   1763 s ([m0-mozilla-services](specs/m0-mozilla-services.md)) and 1805 s (`m0-updater`, PR #15),

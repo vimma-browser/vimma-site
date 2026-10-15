@@ -6,13 +6,14 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; media-src 'self'; base-uri 'none'; form-action 'none'">
     <meta name="referrer" content="no-referrer">
     <meta name="color-scheme" content="dark light">
     <meta name="theme-color" content="#070b0d" media="(prefers-color-scheme: dark)">
     <meta name="theme-color" content="#eae9e2" media="(prefers-color-scheme: light)">
     <title>{{title}}</title>
     <meta name="description" content="{{description}}">
+    {{seo}}
     <link rel="icon" href="{{root}}assets/img/favicon-16.png" type="image/png" sizes="16x16">
     <link rel="icon" href="{{root}}assets/img/favicon-32.png" type="image/png" sizes="32x32">
     <link rel="icon" href="{{root}}assets/img/favicon-48.png" type="image/png" sizes="48x48">
@@ -28,7 +29,7 @@
         <nav class="tabs" aria-label="Site">
           <ul>
 {{nav}}
-            <li><a href="https://github.com/JRanne/vimma"><span class="n">src:</span>github</a></li>
+            <li><a href="https://github.com/vimma-browser/vimma"><span class="n">src:</span>github</a></li>
           </ul>
         </nav>
         <p class="whereami"><span class="pos">{{pos}} · {{short}}</span> <button type="button" class="keyhint keyhint-on" data-open-help data-js-only hidden>press <kbd>?</kbd> for keys</button><button type="button" class="keyhint keyhint-off" data-open-help data-js-only hidden>site keys off · <kbd>?</kbd></button></p>
@@ -39,31 +40,49 @@
     </main>
     <footer class="site-foot">
       <div class="wrap">
-        <p>Vimma · pre-alpha · <a href="{{root}}about/#licence">MPL-2.0</a> · source: <a href="https://github.com/JRanne/vimma">GitHub</a></p>
+        <p>Vimma · pre-alpha · <a href="{{root}}about/#licence">MPL-2.0</a> · source: <a href="https://github.com/vimma-browser/vimma">GitHub</a></p>
         <p>This site sets no cookies, runs no analytics and loads nothing from other servers.</p>
         <p>Keys here: <button type="button" class="keyhint" data-open-help data-js-only hidden>press <kbd>?</kbd></button><span class="nojs-keys"> <kbd>?</kbd> with JavaScript on</span>. In Vimma itself: <kbd>ctrl+b</kbd> <kbd>?</kbd>.</p>
       </div>
     </footer>
     <dialog id="keyhelp" aria-labelledby="keyhelp-title">
-      <h2 id="keyhelp-title">Keys on this site</h2>
-      <table>
-        <caption class="sr-only">Keyboard shortcuts for this website</caption>
-        <tbody>
-          <tr><th scope="row"><kbd>j</kbd> <kbd>k</kbd></th><td>scroll down, up</td></tr>
-          <tr><th scope="row"><kbd>d</kbd> <kbd>u</kbd></th><td>half a page down, up</td></tr>
-          <tr><th scope="row"><kbd>gg</kbd> <kbd>G</kbd></th><td>top, bottom</td></tr>
-          <tr><th scope="row"><kbd>/</kbd></th><td>search the docs, or filter the keys</td></tr>
-          <tr><th scope="row"><kbd>]</kbd> <kbd>[</kbd></th><td>next, previous docs page</td></tr>
-          <tr><th scope="row"><kbd>g</kbd> <kbd>h</kbd></th><td>go home</td></tr>
-          <tr><th scope="row"><kbd>g</kbd> <kbd>d</kbd></th><td>go to the docs</td></tr>
-          <tr><th scope="row"><kbd>g</kbd> <kbd>k</kbd></th><td>go to keys</td></tr>
-          <tr><th scope="row"><kbd>g</kbd> <kbd>i</kbd></th><td>go to install</td></tr>
-          <tr><th scope="row"><kbd>g</kbd> <kbd>a</kbd></th><td>go to about</td></tr>
-          <tr><th scope="row"><kbd>?</kbd></th><td>this help; <kbd>Esc</kbd> closes it</td></tr>
-        </tbody>
-      </table>
-      <label><input type="checkbox" id="keys-toggle" checked> Single-key shortcuts on</label>
-      <p class="foot"><span>In Vimma, <kbd>ctrl+b ?</kbd> lists every binding.</span> <button type="button" data-close-help>close</button></p>
+      <div class="keyhelp-bar">
+        <h2 id="keyhelp-title">Keys</h2>
+        <button type="button" data-close-help>close <kbd>q</kbd></button>
+      </div>
+      <div class="keyhelp-body">
+        <section aria-labelledby="keyhelp-site">
+          <h3 id="keyhelp-site">This site</h3>
+          <table class="keyhelp-site">
+            <caption class="sr-only">Keyboard shortcuts for this website</caption>
+            <tbody>
+              <tr><th scope="row"><kbd>j</kbd> <kbd>k</kbd></th><td>scroll down, up</td></tr>
+              <tr><th scope="row"><kbd>d</kbd> <kbd>u</kbd></th><td>half a page down, up</td></tr>
+              <tr><th scope="row"><kbd>gg</kbd> <kbd>G</kbd></th><td>top, bottom</td></tr>
+              <tr><th scope="row"><kbd>/</kbd></th><td>search the docs, or filter the keys</td></tr>
+              <tr><th scope="row"><kbd>]</kbd> <kbd>[</kbd></th><td>next, previous docs page</td></tr>
+              <tr><th scope="row"><kbd>g</kbd> <kbd>h</kbd></th><td>go home</td></tr>
+              <tr><th scope="row"><kbd>g</kbd> <kbd>d</kbd></th><td>go to the docs</td></tr>
+              <tr><th scope="row"><kbd>g</kbd> <kbd>k</kbd></th><td>go to keys</td></tr>
+              <tr><th scope="row"><kbd>g</kbd> <kbd>i</kbd></th><td>go to install</td></tr>
+              <tr><th scope="row"><kbd>g</kbd> <kbd>a</kbd></th><td>go to about</td></tr>
+              <tr><th scope="row"><kbd>?</kbd></th><td>this help; <kbd>Esc</kbd> or <kbd>q</kbd> closes it, and in here <kbd>/</kbd> filters Vimma's keys</td></tr>
+            </tbody>
+          </table>
+          <label><input type="checkbox" id="keys-toggle" checked> Single-key shortcuts on</label>
+        </section>
+        <section aria-labelledby="keyhelp-vimma" class="keyhelp-vimma">
+          <h3 id="keyhelp-vimma">In Vimma</h3>
+          <p class="muted">Every default binding, grouped as Vimma's own <kbd>ctrl+b</kbd> <kbd>?</kbd> groups them. The same list is on the <a href="{{root}}keys/">keys page</a>.</p>
+          <div class="filter">
+            <label for="keyhelp-filter"><span aria-hidden="true">/</span><span class="sr-only">Filter Vimma's keys</span></label>
+            <input id="keyhelp-filter" type="search" placeholder="filter: split, ctrl+b, workspace…" autocomplete="off" spellcheck="false" aria-describedby="keyhelp-count">
+            <span class="count" id="keyhelp-count" aria-live="polite"></span>
+          </div>
+          <p id="keyhelp-empty" class="muted" hidden>No binding matches. <kbd>Esc</kbd> clears the filter.</p>
+          <div id="keyhelp-list"><p class="muted">Loading…</p></div>
+        </section>
+      </div>
     </dialog>
   </body>
 </html>

@@ -9,8 +9,9 @@
 import { readFileSync } from "node:fs";
 import { join, posix } from "node:path";
 
-import { escapeHtml } from "../src/ts/hero.js";
-import { type BindingsFile, VIMMA_REPO } from "./bindings-types.js";
+import { escapeHtml } from "../src/ts/html.js";
+import { VIMMA_REPO } from "./bindings-types.js";
+import { readBindings } from "./gen-keys.js";
 import { type Block, DOC_PAGES, type DocPage, GUIDE_REWRITES, LIMIT_SECTIONS, STALE_LIMITS, STALE_PREFIXES } from "./docs-pages.js";
 import { keysTables, slug } from "./keys-html.js";
 import {
@@ -30,7 +31,13 @@ export interface BuiltDoc {
   /** Output path under dist/. */
   out: string;
   title: string;
+  /** The sidebar group ("Start", "Get going", …). */
+  group: string;
+  /** The <title> text: the heading, or more when the heading alone says too little. */
+  headTitle: string;
   description: string;
+  /** The files the page is made from, for its date in the sitemap. */
+  sources: string[];
   /** The page's main column: heading, intro, sections, pager. */
   body: string;
 }
@@ -44,8 +51,33 @@ export interface SearchEntry {
   u: string;
   /** a short snippet */
   s: string;
-  /** the section's distinct words, lower case, space-separated, minus those in p, h and s */
+  /** the section's distinct words, lower case, space-separated, minus those in p, h and s and
+   * those inside a longer word of the list */
   w: string;
+}
+
+/**
+ * The index as the docs pages load it: each page's title and path once, and each entry as an
+ * array with only its fragment, so the module repeats no keys, titles or paths. site.ts unpacks
+ * it into SearchEntry objects.
+ */
+export interface PackedIndex {
+  /** [title, path from the docs root] */
+  pages: [string, string][];
+  /** [index into pages, h, the fragment of u ("" or "#id"), s, w] */
+  entries: [number, string, string, string, string][];
+}
+
+export function packIndex(index: SearchEntry[]): PackedIndex {
+  const pages: [string, string][] = [];
+  const entries = index.map((e): [number, string, string, string, string] => {
+    const hash = e.u.indexOf("#");
+    const path = hash < 0 ? e.u : e.u.slice(0, hash);
+    let i = pages.findIndex(([p, u]) => p === e.p && u === path);
+    if (i < 0) i = pages.push([e.p, path]) - 1;
+    return [i, e.h, hash < 0 ? "" : e.u.slice(hash), e.s, e.w];
+  });
+  return { pages, entries };
 }
 
 interface Source {
@@ -253,9 +285,21 @@ const textOf = (html: string): string =>
 
 /** Words too common to search by; dropped from the index to keep it small. */
 const STOP = new Set(
-  "the and for are but not you your with that this from have has its it's into one can when then than them they their there what which who will would also only each any all was were been being more most other some such out off over too very just about after before again here how why our yet own same both few nor on in it to or is as so of by at an up if be".split(
-    " ",
-  ),
+  (
+    "the and for are but not you your with that this from have has its it's into one can when then than them they their there what which who will would also only each any all was were been being more most other some such out off over too very just about after before again here how why our yet own same both few nor on in it to or is as so of by at an up if be " +
+    // words that turn up in many sections and say nothing about any of them
+    "every does never first without nothing where still while next see another until through two three already under goes instead once like cannot within itself always even either anything way made gets below whole alone last stay go must need needs should could may might can't doesn't don't isn't because since though however rather much many well now something everything thing things"
+  ).split(" "),
+);
+
+/**
+ * Verb forms that describe what something does in almost every section ("opens", "shows"). They
+ * are dropped after the substring rule below, so they do not bring back the shorter form they
+ * contain ("open" stays covered by "opens" in another word, the heading or the snippet, or is
+ * dropped with it): a search for them finds the sections whose heading or snippet has them.
+ */
+const WEAK = new Set(
+  "shows opens keeps closes stays lists takes says leaves changes runs moves asks gets puts adds uses starts follows sees goes makes comes gives brings sets works needs turns".split(" "),
 );
 
 /** How the index splits text into words; site.ts splits the snippet the same way. */
@@ -276,8 +320,14 @@ function indexPage(title: string, slugName: string, body: string): SearchEntry[]
     // matches them there (site.ts), so the word list leaves out the words they hold
     const s = text.length > 80 ? `${text.slice(0, 77).replace(/\s\S*$/, "")}…` : text;
     const head = new Set(`${title} ${heading} ${s.replace(/…$/, "")}`.toLowerCase().split(WORD_SPLIT));
-    const words = [...new Set(text.toLowerCase().split(WORD_SPLIT))]
-      .filter((w) => w.length > 1 && !STOP.has(w) && !head.has(w))
+    const distinct = [...new Set(text.toLowerCase().split(WORD_SPLIT))].filter((w) => w.length > 1 && !STOP.has(w) && !head.has(w));
+    // the search matches substrings (site.ts), so a word inside a longer one ("tab" in "tabs"),
+    // in the list or in p, h and s, is found there anyway; only the small bonus for a whole-word
+    // match is lost
+    const longer = [...distinct, ...head];
+    const words = distinct
+      .filter((w) => !longer.some((o) => o !== w && o.includes(w)))
+      .filter((w) => !WEAK.has(w))
       .join(" ");
     return [{ p: title, h: heading, u: `${pageUrl(slugName).slice("docs/".length)}${m ? `#${m[1]}` : ""}`, s, w: words }];
   });
@@ -285,11 +335,13 @@ function indexPage(title: string, slugName: string, body: string): SearchEntry[]
 
 // --- build ------------------------------------------------------------------------------------
 
-export function buildDocs(rootDir: string): { pages: BuiltDoc[]; index: SearchEntry[]; source: Source } {
+export function buildDocs(rootDir: string): { pages: BuiltDoc[]; index: SearchEntry[]; source: Source; markdown: string } {
   const read = (p: string): string => readFileSync(join(rootDir, p), "utf8");
-  const guide = parseSections(rewriteGuide(read("data/docs/guide.md")));
-  const limits = parseSections(read("data/docs/limits.md"));
-  const keys = JSON.parse(read("data/bindings.json")) as BindingsFile;
+  const guideMd = rewriteGuide(read("data/docs/guide.md"));
+  const limitsMd = read("data/docs/limits.md");
+  const guide = parseSections(guideMd);
+  const limits = parseSections(limitsMd);
+  const keys = readBindings(rootDir);
   const source = JSON.parse(read("data/docs/source.json")) as Source;
 
   const nav: NavEntry[] = [START, ...DOC_PAGES.map((p) => ({ ...p, nav: p.nav ?? p.title }))];
@@ -346,7 +398,7 @@ ${html}`;
             return html;
           }
           if ("keys" in b) {
-            const secs = b.keys.map((t) => keys.sections.find((s) => s.title === t) ?? fail(`bindings.md has no section "${t}"`));
+            const secs = b.keys.map((t) => keys.sections.find((s) => s.title === t) ?? fail(`bindings.json has no group "${t}"`));
             return `<h2 id="default-keys">All the keys for this page</h2>
 <p>The default bindings, as Vimma's own <kbd>ctrl+b</kbd> <kbd>?</kbd> overlay lists them. <em>Name</em> is the action's name, which you use to <a href="${root}docs/config/">remap it</a> or to run it as a <code>:</code> command. Every key is on the <a href="${root}keys/">keys page</a>.</p>
 ${keysTables(secs, { level: 3, idPrefix: "keys-", filterable: false })}`;
@@ -359,8 +411,9 @@ ${keysTables(secs, { level: 3, idPrefix: "keys-", filterable: false })}`;
     const title = page?.title ?? START.title;
     const head = page ? `<h1>${escapeHtml(title)}</h1>\n${intro}` : "";
     const content = page ? `${head}\n${sections}` : sections;
+    const hasKeys = !!page?.blocks.some((b) => "keys" in b);
     const src = page && !page.handWritten
-      ? `<p class="source">The guide at the top is written for this site; the details are built from Vimma's <code>docs/${page.slug === "limits" ? "limits" : "guide"}.md</code> and <code>bindings.md</code> at <a href="${VIMMA_REPO}/commit/${escapeHtml(source.commit)}"><code>${escapeHtml(source.commit)}</code></a> (${escapeHtml(source.date)}).</p>`
+      ? `<p class="source">The guide at the top is written for this site; the details are built from Vimma's <code>docs/${page.slug === "limits" ? "limits" : "guide"}.md</code> at <a href="${VIMMA_REPO}/commit/${escapeHtml(source.commit)}"><code>${escapeHtml(source.commit)}</code></a> (${escapeHtml(source.date)})${hasKeys ? `, and the keys from <code>docs/bindings.json</code> at <a href="${VIMMA_REPO}/commit/${escapeHtml(keys.commitFull)}"><code>${escapeHtml(keys.commit)}</code></a> (${escapeHtml(keys.date)})` : ""}.</p>`
       : "";
     const body = `<div class="docs">
 ${sidebar(nav, entry.slug, root)}
@@ -372,17 +425,37 @@ ${src}
 ${pager(nav, i, root)}
 </article>
 </div>`;
+    const fromGuide = page && !page.handWritten ? [page.slug === "limits" ? "data/docs/limits.md" : "data/docs/guide.md"] : [];
     pages.push({
       slug: entry.slug,
       out: pageUrl(entry.slug),
       title,
+      group: entry.group,
+      headTitle: page ? (page.headTitle ?? title) : "Start here: a tour of Vimma",
       description: page?.description ?? "Start here: a walk through Vimma's features, in the order you will meet them.",
+      sources: [introFile, ...fromGuide, ...(hasKeys ? ["data/bindings.json"] : [])],
       body,
     });
     index.push(...indexPage(title, entry.slug, page ? content : sections.replace(/^[\s\S]*?(?=<h1)/, "")));
   });
 
-  return { pages, index, source };
+  return { pages, index, source, markdown: fullMarkdown(guideMd, limitsMd, ids, source) };
+}
+
+/**
+ * Vimma's guide and known limits as one Markdown file (llms-full.txt), with the same rewrites as
+ * the docs pages and every link made absolute: to the docs page that renders the heading, or to
+ * the file on GitHub.
+ */
+function fullMarkdown(guideMd: string, limitsMd: string, ids: IdMap, source: Source): string {
+  const link = linker(ids, "\0", "https://vimma.dev/");
+  const fix = (md: string, file: string): string =>
+    md.replace(/\]\(([^)\s]+)\)/g, (all, href: string) => {
+      const to = link(href.startsWith("#") && file === "limits.md" ? `limits.md${href}` : href);
+      return to === null ? all : `](${to})`;
+    });
+  const note = `<!-- Vimma's user guide and known limits, from ${VIMMA_REPO} at ${source.commit} (${source.date}). The site's docs at https://vimma.dev/docs/ are built from the same text. -->`;
+  return `${note}\n\n${fix(guideMd, "guide.md").trim()}\n\n${fix(limitsMd, "limits.md").trim()}\n`;
 }
 
 function docsList(pages: DocPage[], root: string): string {

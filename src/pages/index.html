@@ -19,21 +19,18 @@
   </div>
 </section>
 
-<section class="box term" aria-labelledby="session-title">
-  <h2 class="box-title" id="session-title">session</h2>
+<section class="box term" aria-labelledby="demo-title">
+  <h2 class="box-title" id="demo-title">a minute in vimma</h2>
   <div class="term-bar">
-    <span>A real Vimma window, one screenshot per key.</span>
-    <button type="button" id="hero-toggle" data-js-only hidden>pause</button>
+    <span>The promo video: no sound, captions in the picture.</span>
   </div>
-  <div class="term-body">
-    <div class="shot" id="hero-screen">
-{{hero_shot}}
-    </div>
-    <p class="term-keys" id="hero-keys" aria-hidden="true">{{hero_keys}}</p>
-    <ol class="steps" id="hero-steps">
-{{hero_steps}}
-    </ol>
-  </div>
+  <figure class="demo">
+    <video controls muted playsinline preload="none" width="1920" height="1080" poster="{{root}}assets/video/vimma-promo-1080p.webp" aria-describedby="demo-summary">
+      <source src="{{root}}assets/video/vimma-promo-1080p.mp4" type="video/mp4">
+      <a href="{{root}}assets/video/vimma-promo-1080p.mp4">Download the video (MP4, 65 seconds)</a>
+    </video>
+    <figcaption id="demo-summary">What it shows, in a real Vimma window: <kbd>j</kbd> and <kbd>k</kbd> scroll, <kbd>f</kbd> puts a label on every link and <kbd>/</kbd> searches as you type; the same keys work on <code>about:addons</code>, where extensions can't run; <kbd>ctrl+b enter</kbd> splits panes into a spiral and <kbd>ctrl+b space</kbd> cycles tmux's layouts; <kbd>space</kbd> marks tabs in the side panel and <kbd>enter</kbd> opens them together as panes; <kbd>ctrl+^</kbd> flips between workspaces, each with its own logins; and a desktop theme change recolours the browser live.</figcaption>
+  </figure>
 </section>
 
 <section aria-labelledby="why">
@@ -71,12 +68,17 @@
     <li class="card">
       <h3>Status bar</h3>
       <p class="k"><kbd>ctrl+b ?</kbd></p>
-      <p>One line that always tells you where you are: mode, pending keys, workspace, <code>tab 2/5</code>, title, URL and find matches. The session above draws one.</p>
+      <p>One line that always tells you where you are: mode, pending keys, workspace, <code>tab 2/5</code>, title, URL and find matches. The video above shows it at work.</p>
+    </li>
+    <li class="card">
+      <h3>Private workspace</h3>
+      <p class="k"><kbd>ctrl+b shift+p</kbd></p>
+      <p>Firefox's private browsing as one more workspace, one key in and out. Nothing you do there stays on disk, and cycling through workspaces never lands in it by accident.</p>
     </li>
     <li class="card">
       <h3>Side panel</h3>
       <p class="k"><kbd>ctrl+b b</kbd></p>
-      <p>The workspace's tabs down the left of the window, there only when you ask. <kbd>j</kbd>/<kbd>k</kbd> and <kbd>Enter</kbd> to go, <kbd>x</kbd> to close, <kbd>1</kbd>…<kbd>9</kbd> to jump.</p>
+      <p>The workspace's tabs down the left of the window, there only when you ask. <kbd>j</kbd>/<kbd>k</kbd> and <kbd>Enter</kbd> to go, <kbd>x</kbd> to close, <kbd>space</kbd> to mark tabs and show them together as panes.</p>
     </li>
     <li class="card">
       <h3>Bookmarks</h3>
@@ -91,12 +93,17 @@
     <li class="card">
       <h3>Every key is yours</h3>
       <p class="k"><code>config.toml</code></p>
-      <p>The defaults are a starting point. Remap any binding, the <kbd>ctrl+b</kbd> prefix and the <kbd>space</kbd> leader in <code>~/.config/vimma/config.toml</code>; changes apply as you save. <a href="{{root}}keys/#remap">How</a>.</p>
+      <p>The defaults are a starting point. Remap any binding and the <kbd>ctrl+b</kbd> prefix in <code>~/.config/vimma/config.toml</code>; changes apply as you save. <a href="{{root}}keys/#remap">How</a>.</p>
     </li>
     <li class="card">
       <h3>Themes</h3>
       <p class="k"><code>[theme]</code></p>
-      <p>Tokyo Night by default, with any colour yours to change. It can also follow your desktop's theme. <a href="{{root}}docs/theming/">How</a>.</p>
+      <p>Vimma's own mint and near-black by default, dark or light as your system is, with any colour yours to change. On Omarchy it follows your desktop's theme. <a href="{{root}}docs/theming/">How</a>.</p>
+    </li>
+    <li class="card">
+      <h3>Local AI agents</h3>
+      <p class="k"><code>vimma-ctl mcp</code> <code>:mcp on</code></p>
+      <p>Claude Code, Codex and other agents can browse through MCP, confined to an agent workspace with its own logins. Every request asks you first, on one line, without taking focus. <a href="{{root}}docs/agent-workspace/">How</a>.</p>
     </li>
     <li class="card">
       <h3>Privacy defaults</h3>
@@ -105,7 +112,7 @@
     </li>
     <li class="card">
       <h3>Firefox-compatible</h3>
-      <p class="k"><code>Firefox 157</code></p>
+      <p class="k"><code>Firefox 158</code></p>
       <p>Built on Firefox's release channel, so the web works as you expect: sites see Firefox's user agent byte for byte, and add-ons treat Vimma as Firefox.</p>
     </li>
   </ul>
@@ -120,14 +127,16 @@
 
 <section class="box note" aria-labelledby="status">
   <h2 class="box-title" id="status">status: pre-alpha</h2>
-  <p>Everything ticked below works today, and its author uses Vimma every day ahead of a first release. No binaries yet: you <a href="{{root}}install/">build from source</a>, on Linux x86_64. Version <code>0.1.0</code>, on Firefox 157.0.1.</p>
+  <p>Everything ticked below works today on <code>main</code>, ahead of a first release. No binaries yet: you <a href="{{root}}install/">build from source</a>, on Linux x86_64. Version <code>0.1.0</code>, on Firefox 158.0.</p>
   <ul class="checklist">
-    <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> M0 fork, build pipeline, control socket, end-to-end tests</li>
-    <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> M1 modal page layer: scrolling, hints, find, copy mode, back, forward and reload</li>
-    <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> M2 tab keys, status bar, goto picker</li>
-    <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> M3 workspaces</li>
-    <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> M4 split panes</li>
-    <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> M5 <code>config.toml</code> and theming</li>
-    <li><span class="mark todo" aria-hidden="true">[ ]</span><span class="sr-only">To do:</span> M6 packages and updates (the tooling exists; releases wait)</li>
+    <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> The fork, its build pipeline, the control socket and end-to-end tests</li>
+    <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> The modal page layer: scrolling, hints, find, copy mode, back, forward and reload</li>
+    <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> Tab keys, the status bar and the goto picker</li>
+    <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> Workspaces, the side panel and the private workspace</li>
+    <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> Split panes and tiling layouts</li>
+    <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> <code>config.toml</code>, theming and search engines</li>
+    <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> Local AI agents through MCP, confined to the agent workspace</li>
+    <li><span class="mark todo" aria-hidden="true">[ ]</span><span class="sr-only">To do:</span> Packages and updates (the tooling exists; releases wait)</li>
+    <li><span class="mark todo" aria-hidden="true">[ ]</span><span class="sr-only">To do:</span> macOS</li>
   </ul>
 </section>

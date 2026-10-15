@@ -5,6 +5,9 @@ name: ci
 on:
   push:
   pull_request:
+  # sync-keys.yml starts it on the branches it opens pull requests from: pushes made with
+  # GITHUB_TOKEN start no push or pull_request runs
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -26,5 +29,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: npm test
+      - name: No process wording in the Markdown, the pages or code comments
+        run: npm run wording
       - run: npm run build
       - run: npm run check

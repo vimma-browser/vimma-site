@@ -2,8 +2,9 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-// Copies Vimma's user docs (guide, bindings, limits) from the main repository's origin/main into
-// data/docs/, records the commit, and regenerates data/bindings.json. The docs pages are built
+// Copies Vimma's user docs (guide, limits) from the main repository's origin/main into
+// data/docs/ and records the commit. The bindings come separately, from the public repository's
+// docs/bindings.json (`npm run keys:sync`, scripts/gen-keys.ts). The docs pages are built
 // from these copies, so the site builds without the main repository and never drifts silently:
 // a heading or table row the docs config names that disappears upstream fails the build.
 //
@@ -15,12 +16,18 @@ import { execFileSync } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 
-import { type DocsSource, writeBindingsJson } from "./gen-keys.js";
 
 const ROOT = resolve(import.meta.dirname, "../..");
 const repo = resolve(process.argv[2] ?? "../vimma");
 const ref = process.env["VIMMA_REF"] ?? "origin/main";
-const FILES = ["guide.md", "bindings.md", "limits.md"];
+const FILES = ["guide.md", "limits.md"];
+
+interface DocsSource {
+  repo: string;
+  ref: string;
+  commit: string;
+  date: string;
+}
 
 const git = (...args: string[]): string =>
   execFileSync("git", ["-C", repo, ...args], { encoding: "utf8", maxBuffer: 16 << 20 });
@@ -32,7 +39,6 @@ const date = git("log", "-1", "--format=%cs", ref).trim();
 const dir = resolve(ROOT, "data/docs");
 mkdirSync(dir, { recursive: true });
 for (const f of FILES) writeFileSync(resolve(dir, f), git("show", `${ref}:docs/${f}`));
-const source: DocsSource = { repo: "https://github.com/JRanne/vimma", ref, commit, date };
+const source: DocsSource = { repo: "https://github.com/vimma-browser/vimma", ref, commit, date };
 writeFileSync(resolve(dir, "source.json"), JSON.stringify(source, null, 2) + "\n");
-console.log(`synced ${FILES.join(", ")} from ${ref} at ${commit} (${date})`);
-writeBindingsJson();
+console.log(`synced ${FILES.join(", ")} from ${ref} at ${commit} (${date}); run npm run keys:sync for the bindings`);

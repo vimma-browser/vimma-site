@@ -4,10 +4,12 @@
 
 // The site's one script, loaded as a module. Everything here is an enhancement: every page reads
 // and works without it. It adds Vim-style keys (j k d u gg G / ? [ ] g h g d g k g i g a), the ?
-// help overlay, the keys filter, the docs search and the hero. There is no status bar of its own:
+// help overlay (the site's keys, then every Vimma binding, loaded on first open), the keys filter
+// and the docs search. There is no status bar of its own:
 // viewed in Vimma, a second one at the foot of the window would be confusing.
 
-import { STATIC_STEP, STEPS, escapeHtml } from "./hero.js";
+// It imports nothing; this keeps it a module, so its top-level names stay out of the global scope.
+export {};
 
 const root = document.documentElement;
 const ROOT = root.dataset["root"] ?? "./";
@@ -58,11 +60,202 @@ function isEditable(el: Element | null): boolean {
   return false;
 }
 
+// --- the keys filter: the keys page and the overlay's Vimma part --------------------------------
+
+interface Filter {
+  apply(): void;
+}
+
+/** Filters the [data-search] rows under `scope` by every word typed in `input`. Esc clears it;
+ * when it is already empty, Esc leaves the field (keys page) or closes the overlay (dialog). */
+function keysFilter(
+  input: HTMLInputElement,
+  scope: HTMLElement,
+  count: HTMLElement | null,
+  empty: HTMLElement | null,
+  inDialog: boolean,
+): Filter {
+  const apply = (): void => {
+    const rows = [...scope.querySelectorAll<HTMLElement>("[data-search]")];
+    const terms = input.value.toLowerCase().split(/\s+/).filter(Boolean);
+    let shown = 0;
+    for (const row of rows) {
+      const hit = terms.every((t) => (row.dataset["search"] ?? "").includes(t));
+      row.hidden = !hit;
+      if (hit) shown++;
+    }
+    for (const sec of scope.querySelectorAll<HTMLElement>("[data-keys-section]")) {
+      sec.hidden = !sec.querySelector("[data-search]:not([hidden])");
+    }
+    if (count) count.textContent = terms.length ? `${shown} of ${rows.length} actions` : `${rows.length} actions`;
+    if (empty) empty.hidden = shown > 0 || rows.length === 0;
+  };
+  input.addEventListener("input", apply);
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      if (input.value) {
+        e.preventDefault(); // in the dialog, this also keeps it open
+        input.value = "";
+        apply();
+      } else if (!inDialog) {
+        e.preventDefault();
+        input.blur();
+      }
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      input.blur();
+    }
+  });
+  return { apply };
+}
+
 // --- the ? overlay ----------------------------------------------------------------------------
+
+/** assets/js/vimma-keys.js, written by build.ts from data/bindings.json: the keys page's rows.
+ * `k` is the keys pressed one after the other, `m` the mode a binding is limited to. */
+interface OverlayKeys {
+  commit: string;
+  sections: { title: string; rows: { action: string; name: string; keys: { k: string[]; m?: string }[] }[] }[];
+}
+
+const helpBody = help?.querySelector<HTMLElement>(".keyhelp-body") ?? null;
+const helpFilterBox = $<HTMLInputElement>("#keyhelp-filter");
+const helpList = $("#keyhelp-list");
+const helpFilter =
+  helpFilterBox && helpList
+    ? keysFilter(helpFilterBox, helpList, $("#keyhelp-count"), $("#keyhelp-empty"), true)
+    : null;
+let vimmaKeys: Promise<void> | null = null;
+
+function el<K extends keyof HTMLElementTagNameMap>(tag: K, cls?: string, text?: string): HTMLElementTagNameMap[K] {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text !== undefined) e.textContent = text;
+  return e;
+}
+
+const slug = (s: string): string =>
+  s
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
+/** The same rows as the keys page's tables (scripts/keys-html.ts); keep the two alike. */
+function renderVimmaKeys(data: OverlayKeys, into: HTMLElement): void {
+  const out: HTMLElement[] = [];
+  for (const s of data.sections) {
+    const id = `keyhelp-k-${slug(s.title)}`;
+    const section = el("section", "keys-section");
+    section.dataset["keysSection"] = "";
+    section.setAttribute("aria-labelledby", id);
+    const h = el("h4", undefined, `${s.title} `);
+    h.id = id;
+    h.append(el("span", "n", `(${s.rows.length})`));
+    const head = el("tr");
+    for (const t of ["Action", "Keys", "Name"]) {
+      const th = el("th", undefined, t);
+      th.scope = "col";
+      head.append(th);
+    }
+    const thead = el("thead");
+    thead.append(head);
+    const body = el("tbody");
+    for (const r of s.rows) {
+      const tr = el("tr");
+      tr.dataset["search"] = [
+        s.title,
+        r.action,
+        r.name,
+        r.name.replace(/_/g, " "),
+        ...r.keys.map((b) => `${b.k.join(" ")} ${b.m ?? ""}`),
+      ]
+        .join(" ")
+        .toLowerCase();
+      const keys = el("span", "bindings");
+      for (const b of r.keys) {
+        const binding = el("span", "binding");
+        b.k.forEach((c, i) => {
+          if (i) binding.append(" ");
+          binding.append(el("kbd", undefined, c));
+        });
+        if (b.m) binding.append(el("span", "mode", b.m));
+        keys.append(binding);
+      }
+      if (!r.keys.length) keys.append(el("span", "nokey", "no default key"));
+      const keysCell = el("td");
+      keysCell.append(keys);
+      const nameCell = el("td");
+      nameCell.append(el("code", "name", r.name));
+      tr.append(el("td", undefined, r.action), keysCell, nameCell);
+      body.append(tr);
+    }
+    const table = el("table", "keys-table");
+    table.append(thead, body);
+    section.append(h, table);
+    out.push(section);
+  }
+  into.replaceChildren(...out);
+}
+
+function loadVimmaKeys(): Promise<void> {
+  // relative to this module (assets/js/), not to the page
+  const url = "./vimma-keys.js";
+  return (vimmaKeys ??= import(url)
+    .then((m: { default: OverlayKeys }) => {
+      if (helpList) renderVimmaKeys(m.default, helpList);
+      helpFilter?.apply();
+    })
+    .catch(() => {
+      vimmaKeys = null; // try again on the next open
+      helpList?.replaceChildren(el("p", "muted", "Could not load the list; the keys page has it."));
+    }));
+}
 
 function openHelp(): void {
   if (!help || help.open) return;
   help.showModal();
+  if (helpBody) helpBody.scrollTop = 0;
+  void loadVimmaKeys();
+}
+
+/** A key while the overlay is open: q and ? close it, / filters, j k d u gg G scroll it. The
+ * filter field types as usual. Returns whether the key was used. */
+function helpKey(e: KeyboardEvent): boolean {
+  if (!help || !helpBody || isEditable(e.target as Element | null)) return false;
+  const key = e.key;
+  if (pending === "g") {
+    clearPending();
+    if (key !== "g") return false;
+    helpBody.scrollTo({ top: 0 });
+    return true;
+  }
+  switch (key) {
+    case "?":
+    case "q":
+      help.close();
+      return true;
+    case "/":
+      helpFilterBox?.focus();
+      helpFilterBox?.select();
+      return true;
+    case "j":
+    case "k":
+      helpBody.scrollBy({ top: key === "j" ? 64 : -64 });
+      return true;
+    case "d":
+    case "u":
+      helpBody.scrollBy({ top: ((key === "d" ? 1 : -1) * helpBody.clientHeight) / 2 });
+      return true;
+    case "G":
+      helpBody.scrollTo({ top: helpBody.scrollHeight });
+      return true;
+    case "g":
+      pending = "g";
+      pendingTimer = window.setTimeout(clearPending, 1500);
+      return true;
+    default:
+      return false;
+  }
 }
 
 if (help) {
@@ -114,10 +307,7 @@ function focusFilter(): boolean {
 document.addEventListener("keydown", (e) => {
   if (e.defaultPrevented || e.isComposing || e.ctrlKey || e.metaKey || e.altKey) return;
   if (help?.open) {
-    if (e.key === "?" || e.key === "q") {
-      e.preventDefault();
-      help.close();
-    }
+    if (helpKey(e)) e.preventDefault();
     return;
   }
   if (isEditable(e.target as Element | null)) return;
@@ -186,141 +376,11 @@ document.addEventListener("keydown", (e) => {
 
 // --- keys page: the filter --------------------------------------------------------------------
 
-if (filter) {
-  const rows = [...document.querySelectorAll<HTMLElement>("[data-search]")];
-  const sections = [...document.querySelectorAll<HTMLElement>("[data-keys-section]")];
-  const count = $("#filter-count");
-  const empty = $("#filter-empty");
-  const total = rows.length;
-
-  const apply = (): void => {
-    const terms = filter.value.toLowerCase().split(/\s+/).filter(Boolean);
-    let shown = 0;
-    for (const row of rows) {
-      const text = row.dataset["search"] ?? "";
-      const hit = terms.every((t) => text.includes(t));
-      row.hidden = !hit;
-      if (hit) shown++;
-    }
-    for (const s of sections) {
-      s.hidden = !s.querySelector("[data-search]:not([hidden])");
-    }
-    if (count) {
-      count.textContent = terms.length ? `${shown} of ${total} actions` : `${total} actions`;
-    }
-    if (empty) empty.hidden = shown > 0;
-  };
-
-  filter.addEventListener("input", apply);
-  filter.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      e.preventDefault();
-      if (filter.value) {
-        filter.value = "";
-        apply();
-      } else filter.blur();
-    } else if (e.key === "Enter") {
-      e.preventDefault();
-      filter.blur();
-    }
-  });
-  apply();
+const mainEl = $("main");
+if (filter && mainEl) {
+  // the overlay's rows sit outside <main>, so the two filters never see each other's
+  keysFilter(filter, mainEl, $("#filter-count"), $("#filter-empty"), false).apply();
   if (window.location.hash === "#filter") focusFilter();
-}
-
-// --- home page: the hero session --------------------------------------------------------------
-
-const screenEl = $("#hero-screen");
-const keysEl = $("#hero-keys");
-const toggleBtn = $<HTMLButtonElement>("#hero-toggle");
-const stepItems = [...document.querySelectorAll<HTMLElement>("#hero-steps li")];
-
-if (screenEl && keysEl && toggleBtn) {
-  let playing = false;
-  let generation = 0;
-  let visible = true;
-
-  const sleep = (ms: number): Promise<void> =>
-    new Promise((resolve) => window.setTimeout(resolve, ms));
-
-  // The build rendered one screenshot; swap its files and text for each step's.
-  const img = screenEl.querySelector("img");
-  const source = screenEl.querySelector("source");
-  const fileOf = (shot: string, ext: string): string =>
-    (img?.getAttribute("src") ?? "").replace(/[^/]+\.webp$/, `${shot}.${ext}`);
-  let preloaded = false;
-  const preload = (): void => {
-    // fetch every step's screenshot up front, in the format the browser chose, so steps don't flash
-    if (preloaded || !img) return;
-    preloaded = true;
-    const ext = img.currentSrc.endsWith(".avif") ? "avif" : "webp";
-    for (const s of STEPS) new Image().src = fileOf(s.shot, ext);
-  };
-
-  const show = (i: number, typed: readonly string[]): void => {
-    const step = STEPS[i];
-    if (!step) return;
-    if (img) {
-      source?.setAttribute("srcset", fileOf(step.shot, "avif"));
-      img.src = fileOf(step.shot, "webp");
-      img.alt = step.alt;
-    }
-    keysEl.innerHTML = typed.length
-      ? typed.map((k) => `<kbd>${escapeHtml(k)}</kbd>`).join(" ")
-      : '<span class="dim">waiting for keys…</span>';
-    stepItems.forEach((li, j) => li.classList.toggle("current", j === i));
-  };
-
-  const run = async (gen: number): Promise<void> => {
-    preload();
-    for (let i = 0; ; i = (i + 1) % STEPS.length) {
-      const step = STEPS[i];
-      if (!step) return;
-      const typed: string[] = [];
-      for (const k of step.keys) {
-        typed.push(k);
-        keysEl.innerHTML =
-          typed.map((t) => `<kbd>${escapeHtml(t)}</kbd>`).join(" ") + '<span class="caret"></span>';
-        await sleep(520);
-        if (gen !== generation) return;
-      }
-      show(i, typed);
-      await sleep(i === STEPS.length - 1 ? 4000 : 3000);
-      if (gen !== generation) return;
-    }
-  };
-
-  const setPlaying = (on: boolean): void => {
-    playing = on;
-    generation++;
-    toggleBtn.textContent = on ? "pause" : "play";
-    if (on && visible) void run(generation);
-  };
-
-  toggleBtn.addEventListener("click", () => {
-    if (!playing) show(0, []);
-    setPlaying(!playing);
-  });
-
-  // Hidden or scrolled away: stop; back in view, carry on from the top.
-  const observer = new IntersectionObserver((entries) => {
-    const now = entries.some((en) => en.isIntersecting);
-    if (now === visible) return;
-    visible = now;
-    if (playing) {
-      generation++;
-      if (visible) void run(generation);
-    }
-  });
-  observer.observe(screenEl);
-
-  show(STATIC_STEP, STEPS[STATIC_STEP]?.keys ?? []);
-  if (!reducedMotion.matches) {
-    show(0, []);
-    setPlaying(true);
-  } else {
-    setPlaying(false);
-  }
 }
 
 // --- docs: the sidebar and the search ----------------------------------------------------------
@@ -341,6 +401,12 @@ interface SearchEntry {
   w: string;
 }
 
+/** docs-index.js as docs.ts packs it: each page's title and path once, each entry an array. */
+interface PackedIndex {
+  pages: [string, string][];
+  entries: [number, string, string, string, string][];
+}
+
 const search = $<HTMLInputElement>("#docsearch");
 const results = $<HTMLOListElement>("#docsearch-results");
 const status = $("#docsearch-status");
@@ -350,8 +416,12 @@ if (search && results && status) {
   let loading: Promise<void> | null = null;
 
   const load = (): Promise<void> =>
-    (loading ??= import(`${ROOT}assets/js/docs-index.js`).then((m: { default: SearchEntry[] }) => {
-      index = m.default;
+    (loading ??= import(`${ROOT}assets/js/docs-index.js`).then((m: { default: PackedIndex }) => {
+      const { pages, entries } = m.default;
+      index = entries.map(([i, h, hash, s, w]) => {
+        const [p, path] = pages[i] ?? ["", ""];
+        return { p, h, u: path + hash, s, w };
+      });
     }));
 
   const score = (e: SearchEntry, terms: string[]): number => {
