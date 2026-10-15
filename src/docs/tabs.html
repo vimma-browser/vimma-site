@@ -1,5 +1,5 @@
 <!-- Hand-written guide for the tabs page; the build adds the keys table and the details from guide.md. -->
-<p class="lead">Tabs, panes and workspaces are driven by <kbd>ctrl+b</kbd>, tmux's prefix: press <kbd>ctrl+b</kbd>, let go, then press one more key. Firefox's tab strip is hidden; the status bar shows where you are (<code>tab 2/5</code>), and <kbd>ctrl+b</kbd> <kbd>g</kbd> lists every tab when you need to see them.</p>
+<p class="lead">Tabs, panes and workspaces are driven by <kbd>ctrl+b</kbd>, tmux's prefix: press <kbd>ctrl+b</kbd>, let go, then press one more key. Firefox's tab strip is hidden; the status bar shows where you are (<code>tab 2/5</code>), and <kbd>ctrl+b</kbd> <kbd>g</kbd> searches every tab when you need to find one.</p>
 
 <h2 id="the-prefix">How the prefix works</h2>
 
@@ -18,18 +18,18 @@
 <tr><td>Go to tab 1 to 9</td><td><kbd>ctrl+b</kbd> <kbd>1</kbd> … <kbd>ctrl+b</kbd> <kbd>9</kbd>, or <kbd>3gt</kbd> for tab 3</td></tr>
 <tr><td>Close the tab</td><td><kbd>ctrl+b</kbd> <kbd>shift+x</kbd> or <kbd>x</kbd></td></tr>
 <tr><td>Rename the tab</td><td><kbd>ctrl+b</kbd> <kbd>shift+t</kbd></td></tr>
-<tr><td>List every tab</td><td><kbd>ctrl+b</kbd> <kbd>g</kbd> or <kbd>b</kbd></td></tr>
+<tr><td>Search every tab</td><td><kbd>ctrl+b</kbd> <kbd>g</kbd> or <kbd>b</kbd></td></tr>
 </tbody></table></div>
 
 <p><kbd>t</kbd>, <kbd>gt</kbd>, <kbd>x</kbd> and <kbd>b</kbd> are the normal-mode shortcuts; the <kbd>ctrl+b</kbd> forms work everywhere. Tab numbers and next / previous stay within the current workspace.</p>
 
 <h2 id="find-a-tab">Find a tab</h2>
 
-<p><kbd>ctrl+b</kbd> <kbd>g</kbd> (or <kbd>b</kbd>) lists the tabs of every workspace in the window. Move with <kbd>j</kbd> and <kbd>k</kbd> and press <kbd>Enter</kbd>, or press <kbd>/</kbd> and type a few letters of the title or address to narrow the list. <kbd>Esc</kbd> or <kbd>q</kbd> closes it. Picking a tab in another workspace takes you there.</p>
+<p><kbd>ctrl+b</kbd> <kbd>g</kbd> (or <kbd>b</kbd>, or <code>:ls</code>) opens tab search, ready to type. It finds any tab: every workspace of this window, your other windows, and the tabs and windows you closed recently. Type a few letters of the title, address or tab name; every letter types, <kbd>j</kbd>, <kbd>k</kbd> and <kbd>q</kbd> too. <kbd>ctrl+n</kbd> and <kbd>ctrl+p</kbd> (or <kbd>Down</kbd> and <kbd>Up</kbd>) move, <kbd>Enter</kbd> goes to the tab, its window and its workspace, or reopens a closed one, and <kbd>Esc</kbd> closes the search. <code>:tabsearch text</code> opens it with the text already typed.</p>
 
 <h2 id="rename-a-tab">Rename a tab</h2>
 
-<p><kbd>ctrl+b</kbd> <kbd>shift+t</kbd> asks for a name at the bottom of the window. The name replaces the page title in the status bar and the tab list, and survives a restart. An empty name brings the title back.</p>
+<p><kbd>ctrl+b</kbd> <kbd>shift+t</kbd> asks for a name at the bottom of the window. The name replaces the page title in the status bar and tab search, and survives a restart. An empty name brings the title back.</p>
 
 <h2 id="see-every-key">See every key</h2>
 

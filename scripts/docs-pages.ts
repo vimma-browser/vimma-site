@@ -76,6 +76,7 @@ export const GUIDE_REWRITES: [RegExp, string][] = [
   [/every key,\s+its type and default are in \[[^\]]+\]\([^)]+\)\s+and \[[^\]]+\]\([^)]+\), and\s+/g, ""],
   [/(\s)planned for M6\./g, "$1planned."],
   [/\*\*Planned for M6; no release has these files yet\.\*\*/g, "**Planned; no release has these files yet.**"],
+  [/\s+\(\[spec m6a-updater\]\([^)]+\)\)\./g, "."],
 ];
 
 export const DOC_PAGES: DocPage[] = [
@@ -147,10 +148,10 @@ export const DOC_PAGES: DocPage[] = [
     headTitle: "The ctrl+b prefix and tabs",
     nav: "Prefix and tabs",
     group: "Tabs, panes, workspaces",
-    description: "ctrl+b, the tab keys, the bindings overlay, the goto picker and tab names.",
+    description: "ctrl+b, the tab keys, the bindings overlay, tab search and tab names.",
     blocks: [
       { guideParas: { section: "Picking a tab during a split", startsWith: ["While the overlay is open"] }, title: "The bindings overlay", id: "the-overlay" },
-      { guide: "Goto picker and tab rename" },
+      { guide: "Tab search and tab rename" },
       { keys: ["Help", "Tabs"] },
       { limits: ["Tabs and window"] },
     ],
