@@ -294,8 +294,14 @@ clients`) still see both windows; elsewhere both are visible windows. There is o
 - Safe Browsing's `goog-harmful-proto` list is requested but did not arrive in the smoke run
   with our key (phishing, malware and unwanted did); treat it as unavailable. See
   [m0-safebrowsing-key](specs/m0-safebrowsing-key.md).
-- No update mechanism of our own and no update manifest until M6a
-  ([m0-app-version](specs/m0-app-version.md), Out of scope).
+- Vimma's update check only shows how to update; it installs nothing itself yet:
+  Firefox's updater, staged updates and the AppImage replacing its own file are M6a's later
+  sub-PRs ([m6a-updater](specs/m6a-updater.md), Delivery). The update check is not active yet:
+  there is no update host and no pinned signing key, so a check finds nothing and users update by
+  installing the newer release themselves.
+- The "no news for N days" warning counts from the last manifest Vimma accepted: an install
+  that has never accepted one (its host always failed, or withheld the feed from the start)
+  shows nothing, because a host that does not answer is kept quiet (m6a-updater, decision 27).
 - No crash reporting: builds have no crash reporter, so crashes leave only a local core dump.
   Opt-in reporting to our own server is M6 ([m0-mozilla-services](specs/m0-mozilla-services.md)).
 - Once Vimma writes its `false` for sponsored address-bar suggestions, that value looks like the
@@ -344,8 +350,8 @@ clients`) still see both windows; elsewhere both are visible windows. There is o
 
 - Only Linux x86_64 is built and tested. aarch64 and macOS come later
   ([plan.md](../plan.md) §6, [macos-build](specs/macos-build.md)); Windows is not planned.
-- No binaries, packages or releases: build from source. Tarball, AppImage, `.deb` and AUR are M6
-  ([plan.md](../plan.md) §6).
+- Releases carry a tarball, an AppImage, a `.deb` and a `PKGBUILD` for Linux x86_64 only. The
+  AUR package `vimma-bin` is not published yet ([m6-packaging](specs/m6-packaging.md)).
 - The Arch Linux package (the release's `PKGBUILD`) writes `/opt/vimma/is-packaged-app`, the
   file Firefox reads as "installed by a package manager". With it, Firefox skips the warning bar
   it otherwise shows in the first window when the kernel does not allow unprivileged user
@@ -363,10 +369,11 @@ clients`) still see both windows; elsewhere both are visible windows. There is o
 - PR CI runs the mochitests on an artifact build, which cannot see compiled-in config: the C++
   `--version` string, `MOZ_APP_NAME` and the crash-reporter flag
   ([ADR-010](adr/010-pr-artifact-builds.md), Known gaps).
-- The nightly full build is not live: `nightly.yml` and `release.yml` build on GitHub-hosted
-  runners (about 2 hours each), but stay switched off until `NIGHTLY_ENABLED` and
-  `RELEASE_ENABLED` are set ([runbook](runbook.md), "Full builds"). Until then
-  `skip-if = ["artifact"]` tests run only on local full builds. PRs that touch patches, `configs/`,
+- The nightly full build is not live: `nightly.yml` builds on GitHub-hosted runners (about 2
+  hours), but stays switched off until `NIGHTLY_ENABLED` is set ([runbook](runbook.md), "Full
+  builds"). Until then `skip-if = ["artifact"]` tests run only on local full builds.
+  `RELEASE_ENABLED` is set, but each release is a draft that runs no build until the maintainer
+  publishes it ([runbook](runbook.md), "Releases"). PRs that touch patches, `configs/`,
   `moz.configure` or branding must report a full-build run
   ([ADR-010](adr/010-pr-artifact-builds.md), [runbook](runbook.md)).
 - Nightly builds are not published as a release before the release gate: each one is a workflow

@@ -75,7 +75,6 @@ export const GUIDE_REWRITES: [RegExp, string][] = [
   [/For workspaces\s+\(\[m3-workspaces\]\([^)]+\)\); each/g, "For workspaces; each"],
   [/every key,\s+its type and default are in \[[^\]]+\]\([^)]+\)\s+and \[[^\]]+\]\([^)]+\), and\s+/g, ""],
   [/(\s)planned for M6\./g, "$1planned."],
-  [/\*\*Planned for M6; no release has these files yet\.\*\*/g, "**Planned; no release has these files yet.**"],
   [/\s+\(\[spec m6a-updater\]\([^)]+\)\)\./g, "."],
 ];
 
@@ -103,12 +102,12 @@ export const DOC_PAGES: DocPage[] = [
     title: "Install and first launch",
     nav: "Install",
     group: "Get going",
-    description: "Build Vimma from source on Linux x86_64 and start it with a profile of its own.",
+    description: "Install Vimma on Linux x86_64 from a release, on Arch Linux with one command, and start it with a profile of its own.",
     blocks: [
       { guide: "Install" },
       { guide: "First launch, with its own profile" },
       { guide: "The start page" },
-      { guide: "Installing (planned, not yet released)" },
+      { guide: "Installing" },
       { limits: ["Platforms and packaging", "Files and profiles"] },
     ],
   },

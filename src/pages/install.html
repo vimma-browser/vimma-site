@@ -1,13 +1,30 @@
-<!--{"title": "Install Vimma · build from source on Linux", "short": "install", "out": "install/", "cmd": "cat INSTALL.md", "description": "How to get Vimma today: build it from source on Linux x86_64. No binaries yet."}-->
+<!--{"title": "Install Vimma · Linux x86_64 releases and Arch Linux", "short": "install", "out": "install/", "cmd": "cat INSTALL.md", "description": "Install Vimma on Linux x86_64: one command on Arch Linux, or a .deb, AppImage or tarball from the latest release. Or build it from source."}-->
 <h1>Install</h1>
-<section class="box note" aria-labelledby="honest">
-  <h2 class="box-title" id="honest">the honest version</h2>
-  <p>There are <strong>no binaries yet</strong>. Vimma is pre-alpha, and today you build it from source. <strong>Linux x86_64</strong> is the only platform it is built and tested on.</p>
-  <p>Clone <a href="https://github.com/vimma-browser/vimma">https://github.com/vimma-browser/vimma</a>, then follow the steps below.</p>
-  <p>A source build has <strong>Safe Browsing off</strong> unless you add your own Google key: see <a href="#safebrowsing">below</a>.</p>
-</section>
+<p>Vimma <code>0.1.1</code>, on Firefox 158.0, is released for <strong>Linux x86_64</strong>, the only platform it is built and tested on.</p>
 
-<h2 id="requirements">Requirements</h2>
+<h2 id="arch">Arch Linux</h2>
+<p>Run as your normal user, in an empty directory (makepkg leaves its build files there):</p>
+<pre class="code wrap"><span class="p">$ </span>curl -fLO https://github.com/vimma-browser/vimma/releases/latest/download/PKGBUILD &amp;&amp; <span class="nw">makepkg -si</span></pre>
+<p>It downloads the release's <code>PKGBUILD</code> for the <code>vimma-bin</code> package, which installs Vimma to <code>/opt/vimma</code> with <code>vimma</code> on your <code>PATH</code>, a desktop entry and icons. <code>makepkg -si</code> asks for your password to install the package and refuses to run as root. To update, run the same command again in the same directory. <code>sudo pacman -R vimma-bin</code> removes Vimma; your profile stays in your home directory.</p>
+
+<h2 id="other">Other distributions</h2>
+<p>The <a href="https://github.com/vimma-browser/vimma/releases/latest">latest release</a> has, for Linux x86_64:</p>
+<ul>
+  <li>a <code>.deb</code> for Debian 12+ and Ubuntu 22.04+: <code>sudo apt install ./vimma_0.1.1_amd64.deb</code></li>
+  <li>an AppImage: make it executable and run it</li>
+  <li>a tarball: unpack it and run <code>vimma/vimma</code></li>
+</ul>
+<p>Next to them are <code>SHA256SUMS</code>, an SBOM and cosign signatures. How to check them is under <a href="https://github.com/vimma-browser/vimma/blob/main/docs/guide.md#installing">Installing</a> in the guide.</p>
+
+<h2 id="updating">Updating</h2>
+<p>The in-app updater is not active yet, so updating means installing again: on Arch Linux, run the command above in the same directory; otherwise, install the newer <code>.deb</code>, AppImage or tarball over the old one.</p>
+
+<p>Next: your <a href="{{root}}docs/install/">first launch</a>, then the rest of the <a href="{{root}}docs/">docs</a>.</p>
+
+<h2 id="source">Build from source</h2>
+<p>To build Vimma yourself, clone <a href="https://github.com/vimma-browser/vimma">https://github.com/vimma-browser/vimma</a> and follow the steps below. A source build has <strong>Safe Browsing off</strong> unless you add your own Google key: see <a href="#safebrowsing">below</a>.</p>
+
+<h3 id="requirements">Requirements</h3>
 <ul>
   <li>Linux x86_64.</li>
   <li>About 35 GB of free disk: the Firefox source and full build take 27 GB, the compiler cache 6.8 GB, Mozilla's toolchains 3.1 GB and the source download 0.8 GB.</li>
@@ -15,7 +32,7 @@
   <li>Time: about 40 minutes for the first full build on a 16-thread machine, plus the Firefox source download.</li>
 </ul>
 
-<h2 id="build">Build</h2>
+<h3 id="build">Build</h3>
 <pre class="code"><span class="p">$ </span>git clone https://github.com/vimma-browser/vimma.git &amp;&amp; cd vimma
 <span class="p">$ </span>npm ci                  <span class="c"># dev tools, including Surfer</span>
 <span class="p">$ </span>npx surfer download     <span class="c"># Firefox source into engine/</span>
@@ -24,15 +41,11 @@
 <span class="p">$ </span>npx surfer build        <span class="c"># full build</span></pre>
 
 <h3 id="safebrowsing">Google Safe Browsing</h3>
-<p>Google Safe Browsing (phishing and malware protection) needs an API key, which is not in the repository. A build without one works but shows the protection as off. To turn it on, get a free key from Google and save it as <code>~/.config/vimma/keys/safebrowsing</code> before building (<a href="https://github.com/vimma-browser/vimma/blob/main/docs/runbook.md#google-safe-browsing-key-spec-m0-safebrowsing-key">the runbook</a> has the steps). Release packages will be built with a key.</p>
+<p>Google Safe Browsing (phishing and malware protection) needs an API key, which is not in the repository. A build without one works but shows the protection as off. To turn it on, get a free key from Google and save it as <code>~/.config/vimma/keys/safebrowsing</code> before building (<a href="https://github.com/vimma-browser/vimma/blob/main/docs/runbook.md#google-safe-browsing-key-spec-m0-safebrowsing-key">the runbook</a> has the steps).</p>
 
-<h2 id="run">Run</h2>
+<h3 id="run">Run</h3>
 <pre class="code"><span class="p">$ </span>npm start               <span class="c"># your build, with its own profile</span>
 <span class="p">$ </span>npm start -- --fresh    <span class="c"># a throwaway profile instead</span></pre>
 <p><code>npm start</code> runs Vimma with a profile of its own (<code>~/.cache/vimma-dev-profile</code>), so your Firefox profile is never touched. Press <kbd>ctrl+b</kbd> <kbd>?</kbd> to see every binding, and you are ready to go.</p>
-<p>Vimma has no updater yet. To update, pull the latest <code>main</code>, then run <code>npm run import</code> and <code>npx surfer build</code> again.</p>
+<p>To update a source build, pull the latest <code>main</code>, then run <code>npm run import</code> and <code>npx surfer build</code> again.</p>
 
-<p>Next: your <a href="{{root}}docs/install/">first launch</a>, then the rest of the <a href="{{root}}docs/">docs</a>.</p>
-
-<h2 id="planned">Planned packages</h2>
-<p>Planned, and not released yet: a tarball, an AppImage, a <code>.deb</code> and an AUR <code>vimma-bin</code> package for Linux x86_64, each with checksums, an SBOM and signatures. Releases wait until Vimma has proved itself as a daily browser.</p>

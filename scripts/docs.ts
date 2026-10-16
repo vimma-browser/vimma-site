@@ -320,7 +320,9 @@ function indexPage(title: string, slugName: string, body: string): SearchEntry[]
     // matches them there (site.ts), so the word list leaves out the words they hold
     const s = text.length > 80 ? `${text.slice(0, 77).replace(/\s\S*$/, "")}…` : text;
     const head = new Set(`${title} ${heading} ${s.replace(/…$/, "")}`.toLowerCase().split(WORD_SPLIT));
-    const distinct = [...new Set(text.toLowerCase().split(WORD_SPLIT))].filter((w) => w.length > 1 && !STOP.has(w) && !head.has(w));
+    // a colon or full stop at a word's end is punctuation ("page:", "x86_64."), not part of the
+    // word: without it the word folds into the same word elsewhere in the section
+    const distinct = [...new Set(text.toLowerCase().split(WORD_SPLIT).map((w) => w.replace(/[:.]+$/, "")))].filter((w) => w.length > 1 && !STOP.has(w) && !head.has(w));
     // the search matches substrings (site.ts), so a word inside a longer one ("tab" in "tabs"),
     // in the list or in p, h and s, is found there anyway; only the small bonus for a whole-word
     // match is lost

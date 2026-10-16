@@ -13,10 +13,18 @@
     <ul class="cta">
       <li><a href="{{root}}docs/">start here</a></li>
       <li><a href="{{root}}keys/">see the keys</a></li>
-      <li><a href="{{root}}install/">build it</a></li>
+      <li><a href="#install">install</a></li>
       <li><a href="{{root}}docs/why/">why another browser</a></li>
     </ul>
   </div>
+</section>
+
+<section class="box" aria-labelledby="install">
+  <h2 class="box-title" id="install">install</h2>
+  <p>Vimma <code>0.1.1</code> is out for Linux x86_64. On <strong>Arch Linux</strong>, run this as your normal user in an empty directory:</p>
+  <pre class="code wrap"><span class="p">$ </span>curl -fLO https://github.com/vimma-browser/vimma/releases/latest/download/PKGBUILD &amp;&amp; <span class="nw">makepkg -si</span></pre>
+  <p>Run it again in the same directory to update. The in-app updater is not active yet, so updating means running the install again.</p>
+  <p>On other distributions, the <a href="https://github.com/vimma-browser/vimma/releases/latest">latest release</a> has a <code>.deb</code>, an AppImage and a tarball. To check a download's checksums and signatures first, see <a href="https://github.com/vimma-browser/vimma/blob/main/docs/guide.md#installing">Installing</a> in the guide. More on the <a href="{{root}}install/">install page</a>.</p>
 </section>
 
 <section class="box term" aria-labelledby="demo-title">
@@ -127,7 +135,7 @@
 
 <section class="box note" aria-labelledby="status">
   <h2 class="box-title" id="status">status: pre-alpha</h2>
-  <p>Everything ticked below works today on <code>main</code>, ahead of a first release. No binaries yet: you <a href="{{root}}install/">build from source</a>, on Linux x86_64. Version <code>0.1.0</code>, on Firefox 158.0.</p>
+  <p>Everything ticked below works today. Version <code>0.1.1</code>, on Firefox 158.0, is released for Linux x86_64: see <a href="#install">install</a>.</p>
   <ul class="checklist">
     <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> The fork, its build pipeline, the control socket and end-to-end tests</li>
     <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> The modal page layer: scrolling, hints, find, copy mode, back, forward and reload</li>
@@ -136,7 +144,7 @@
     <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> Split panes and tiling layouts</li>
     <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> <code>config.toml</code>, theming and search engines</li>
     <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> Local AI agents through MCP, confined to the agent workspace</li>
-    <li><span class="mark todo" aria-hidden="true">[ ]</span><span class="sr-only">To do:</span> Packages and updates (the tooling exists; releases wait)</li>
+    <li><span class="mark todo" aria-hidden="true">[ ]</span><span class="sr-only">To do:</span> The in-app updater (packages for Linux x86_64 are out)</li>
     <li><span class="mark todo" aria-hidden="true">[ ]</span><span class="sr-only">To do:</span> macOS</li>
   </ul>
 </section>

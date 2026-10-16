@@ -1,11 +1,21 @@
 <!-- Hand-written guide for the install page; the build adds the keys table and the details from guide.md. -->
-<p class="lead">There is nothing to download yet. You build Vimma from source on Linux x86_64, then start it with a profile of its own, so your Firefox profile is never touched.</p>
+<p class="lead">Install Vimma from a release on Linux x86_64, or build it from source, then start it with a profile of its own, so your Firefox profile is never touched.</p>
 
-<h2 id="build-it">Build it</h2>
+<h2 id="install-it">Install it</h2>
 
-<p>The commands, requirements and timings are on the <a href="{{root}}install/">install page</a>. In short: Linux x86_64, about 35 GB of free disk, Node.js, Python 3 and git, and about 40 minutes for the first build.</p>
+<p>On Arch Linux, run this as your normal user in an empty directory; run it again in the same directory to update:</p>
 
-<h2 id="start-it">Start it</h2>
+<pre class="code wrap">curl -fLO https://github.com/vimma-browser/vimma/releases/latest/download/PKGBUILD &amp;&amp; <span class="nw">makepkg -si</span></pre>
+
+<p>On other distributions, the <a href="https://github.com/vimma-browser/vimma/releases/latest">latest release</a> has a <code>.deb</code>, an AppImage and a tarball. The in-app updater is not active yet, so updating means installing the newer release the same way. The <a href="{{root}}install/">install page</a> has the details, and <a href="#installing">Installing</a> below how to verify a download.</p>
+
+<p>The Arch package puts <code>vimma</code> on your <code>PATH</code>, and it and the <code>.deb</code> add Vimma to your application menu. Its profiles live in <code>~/.config/vimma/vimma/</code>, apart from Firefox's.</p>
+
+<h2 id="build-it">Or build it</h2>
+
+<p>The commands, requirements and timings are on the <a href="{{root}}install/#source">install page</a>. In short: Linux x86_64, about 35 GB of free disk, Node.js, Python 3 and git, and about 40 minutes for the first build.</p>
+
+<h2 id="start-it">Start a source build</h2>
 
 <p>From the checkout:</p>
 
