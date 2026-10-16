@@ -80,6 +80,14 @@ main.bands {
   }
 }
 
+/* the logo's own tagline, set as text under the lockup */
+.tagline {
+  margin: calc(-1 * var(--s2)) 0 var(--s3);
+  color: var(--accent);
+  font-size: var(--t-lead);
+  letter-spacing: 0.04em;
+}
+
 /* the hero as one centred block; the command keeps its left edge inside the box */
 .hero-center {
   text-align: center;
