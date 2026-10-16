@@ -1,15 +1,15 @@
 <!--{"title": "Key bindings · Vimma", "short": "keys", "out": "keys/", "cmd": "cat keys.md", "description": "Every default key binding in Vimma: Vim-style modal keys and the tmux-style ctrl+b prefix, filterable."}-->
-<p class="eyebrow">the default keymap · every key yours</p>
+<p class="eyebrow">The default keymap · every key yours</p>
 <h1>Keys</h1>
 <p>Vimma's default keymap, {{keys_total}} actions, from the same table as Vimma's own <kbd>ctrl+b</kbd> <kbd>?</kbd> overlay (its <code>docs/bindings.json</code> at <a href="{{keys_commit_url}}"><code>{{keys_commit}}</code></a>) and this site's <kbd>?</kbd> overlay. They are only defaults: <a href="#remap">every key is yours</a>.</p>
 <ul>
   <li><kbd>ctrl+b</kbd> is the prefix, tmux's default: press it, let go, then press the next key.</li>
-  <li>Bare keys such as <kbd>j</kbd> or <kbd>f</kbd> work in normal mode; in a text field you are in insert, and they type.</li>
+  <li>Bare keys such as <kbd>j</kbd> or <kbd>f</kbd> work in normal mode; in a text field you are in insert mode, and they type.</li>
   <li>A tag such as <span class="binding"><kbd>q</kbd><span class="mode">help</span></span> means the key works only in that mode.</li>
   <li>Every action has a name: remap it in <code>config.toml</code>, or run it from the <kbd>:</kbd> line.</li>
 </ul>
 <section class="box" aria-labelledby="remap">
-  <h2 class="box-title" id="remap">every key is yours</h2>
+  <h2 class="box-title" id="remap">Every key is yours</h2>
   <p>Every binding below can be remapped, and so can the <kbd>ctrl+b</kbd> prefix. Put the action's name and your keys in <code>~/.config/vimma/config.toml</code>; Vimma picks the file up within two seconds of a save.</p>
 <pre class="code"><span class="c"># ~/.config/vimma/config.toml</span>
 [keys]

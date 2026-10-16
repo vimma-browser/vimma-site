@@ -147,7 +147,7 @@ export const DOC_PAGES: DocPage[] = [
     headTitle: "The ctrl+b prefix and tabs",
     nav: "Prefix and tabs",
     group: "Tabs, panes, workspaces",
-    description: "ctrl+b, the tab keys, the bindings overlay, tab search and tab names.",
+    description: "The ctrl+b prefix, the tab keys, the bindings overlay, tab search and tab names.",
     blocks: [
       { guideParas: { section: "Picking a tab during a split", startsWith: ["While the overlay is open"] }, title: "The bindings overlay", id: "the-overlay" },
       { guide: "Tab search and tab rename" },
@@ -182,7 +182,7 @@ export const DOC_PAGES: DocPage[] = [
     title: "Workspaces as containers",
     nav: "Workspaces",
     group: "Tabs, panes, workspaces",
-    description: "Each workspace is a Firefox container: switch, pick, create, rename, delete, move tabs.",
+    description: "Each workspace is a Firefox container: switch, pick, create, rename and delete workspaces, and move tabs between them.",
     blocks: [
       {
         guide: "Workspaces",
@@ -198,7 +198,7 @@ export const DOC_PAGES: DocPage[] = [
     nav: "Private workspace",
     headTitle: "The private workspace: Firefox's private browsing, one key away",
     group: "Tabs, panes, workspaces",
-    description: "Firefox's private window as one more workspace: ctrl+b shift+p in and out, and nothing kept on disk.",
+    description: "Firefox's private browsing as one more workspace: one key in and out, and nothing kept on disk.",
     blocks: [{ guide: "Private workspace" }, { limits: ["Workspaces (M3, by design)"] }],
   },
   {
@@ -283,7 +283,7 @@ export const DOC_PAGES: DocPage[] = [
     title: "Add-ons",
     headTitle: "Firefox add-ons from the keyboard",
     group: "Make it yours",
-    description: "Firefox's add-ons, driven from the keyboard: popups, options, enable, remove, updates.",
+    description: "Firefox's add-ons from the keyboard: open popups and options, turn add-ons on and off, update and remove them.",
     blocks: [{ guide: "Add-ons" }, { keys: ["Add-ons"] }, { limits: ["Add-ons"] }],
   },
   {

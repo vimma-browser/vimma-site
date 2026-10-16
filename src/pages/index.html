@@ -2,10 +2,10 @@
 <section class="band hero" aria-labelledby="title">
   <div class="wrap hero-grid">
     <div class="hero-text">
-      <p class="eyebrow">vimma · keyboard-first, built on Firefox</p>
+      <p class="eyebrow">Vimma · keyboard-first, built on Firefox</p>
       <h1 id="title" class="display"><span class="sr-only">Vimma: </span>A browser for people who live in the terminal</h1>
       <p class="subhead">Vim modes on every page, <span class="nw">tmux-style</span> workspaces and splits.</p>
-      <p class="lead">Bare keys drive the page and <kbd>ctrl+b</kbd> drives tabs, panes and workspaces, so your hands never leave the keyboard. Firefox is underneath, so your sites and add-ons come along.</p>
+      <p class="lead">Single keys drive the page, and a prefix key, as in tmux, drives tabs, panes and workspaces, so your hands stay on the keyboard. Firefox is underneath, so your sites and add-ons keep working.</p>
       <div class="cmdbox">
         <pre class="code wrap" id="install-cmd"><span class="p">$ </span>curl -fLO https://github.com/vimma-browser/vimma/releases/latest/download/PKGBUILD &amp;&amp; <span class="nw">makepkg -si</span></pre>
         <button type="button" class="copy" data-copy="install-cmd" aria-live="polite" data-js-only hidden>copy</button>
@@ -32,15 +32,15 @@
 <section class="band" aria-labelledby="demo-title">
   <div class="wrap">
     <div class="band-head">
-      <h2 id="demo-title" class="eyebrow">a minute in vimma</h2>
-      <p class="eyebrow muted">no sound · captions in the picture</p>
+      <h2 id="demo-title" class="eyebrow">A minute in Vimma</h2>
+      <p class="eyebrow muted">No sound · captions in the picture</p>
     </div>
     <figure class="demo">
       <video controls muted playsinline preload="none" width="1920" height="1080" poster="{{root}}assets/video/vimma-promo-1080p.webp" aria-describedby="demo-summary">
         <source src="{{root}}assets/video/vimma-promo-1080p.mp4" type="video/mp4">
         <a href="{{root}}assets/video/vimma-promo-1080p.mp4">Download the video (MP4, 65 seconds)</a>
       </video>
-      <figcaption id="demo-summary">In a real Vimma window: <kbd>j</kbd> and <kbd>k</kbd> scroll, <kbd>f</kbd> puts a label on every link and <kbd>/</kbd> searches as you type; the same keys work on <code>about:addons</code>, where extensions can't run; <kbd>ctrl+b enter</kbd> splits panes into a spiral and <kbd>ctrl+b space</kbd> cycles tmux's layouts; <kbd>space</kbd> marks tabs in the side panel and <kbd>enter</kbd> opens them together as panes; <kbd>ctrl+^</kbd> flips between workspaces, each with its own logins; and a desktop theme change recolours the browser live.</figcaption>
+      <figcaption id="demo-summary">In a real Vimma window: scrolling, link hints and search as you type; the same keys on <code>about:addons</code>, where extensions cannot run; panes split into a spiral and cycled through tmux's layouts; tabs marked in the side panel and opened together as panes; a switch between workspaces, each with its own logins; and a desktop theme change recolouring the browser live.</figcaption>
     </figure>
   </div>
 </section>
@@ -50,37 +50,37 @@
     <h2 id="features" class="title">What it does</h2>
     <ul class="cells">
       <li>
-        <p class="keys"><kbd>j</kbd> <kbd>k</kbd> <kbd>/</kbd> <kbd>:</kbd></p>
+        <p class="tag">reading</p>
         <h3>Modal pages</h3>
-        <p>Read, scroll, find and run commands from the home row. In a field you type as usual; <kbd>Esc</kbd> brings you back.</p>
+        <p>Read, scroll, search and run commands from the home row. In a text field, keys type as usual.</p>
       </li>
       <li>
-        <p class="keys"><kbd>f</kbd> <kbd>F</kbd></p>
+        <p class="tag">navigation</p>
         <h3>Link hints</h3>
-        <p>Every link, button and field on screen gets a short label, in frames from other sites too. Type it to follow the link, or to open it in a background tab.</p>
+        <p>Every link, button and field on screen gets a short label, including in embedded frames. Type the label to follow it.</p>
       </li>
       <li>
-        <p class="keys"><kbd>ctrl+b</kbd> <kbd>w</kbd></p>
+        <p class="tag">isolation</p>
         <h3>Workspaces</h3>
-        <p>Each one a Firefox container with its own logins, tabs, split and bookmarks folder, all back after a restart. <kbd>ctrl+^</kbd> toggles to the last one.</p>
+        <p>Each workspace is a Firefox container with its own logins, tabs, split and bookmarks folder, restored after a restart.</p>
       </li>
       <li>
-        <p class="keys"><kbd>ctrl+b</kbd> <kbd>v</kbd></p>
+        <p class="tag">layout</p>
         <h3>Split panes</h3>
-        <p>Pages side by side: move with <kbd>ctrl+b h/j/k/l</kbd>, zoom, swap and resize, and cycle tmux's layouts, tiled and spiral included.</p>
+        <p>Pages side by side, with tmux's layouts: move between panes, zoom, swap and resize them from the keyboard.</p>
       </li>
       <li>
-        <p class="keys"><code>config.toml</code></p>
+        <p class="tag">configuration</p>
         <h3>Every key is yours</h3>
-        <p>Remap any binding and the <kbd>ctrl+b</kbd> prefix in <code>~/.config/vimma/config.toml</code>; changes apply as you save. <a href="{{root}}keys/#remap">How</a>.</p>
+        <p>Remap any binding, and the prefix itself, in one <code>config.toml</code>. Changes apply when you save. <a href="{{root}}keys/#remap">How</a>.</p>
       </li>
       <li>
-        <p class="keys"><code>:mcp on</code></p>
+        <p class="tag">automation</p>
         <h3>Local AI agents</h3>
-        <p>Claude Code, Codex and other agents can browse through MCP, confined to an agent workspace with its own logins. Every request asks you first. <a href="{{root}}docs/agent-workspace/">How</a>.</p>
+        <p>Agents such as Claude Code and Codex can browse through MCP, confined to a workspace of their own. Every request asks you first. <a href="{{root}}docs/agent-workspace/">How</a>.</p>
       </li>
     </ul>
-    <p class="meta links"><a href="{{root}}keys/">every key</a> <a href="{{root}}docs/">the docs</a></p>
+    <p class="meta links"><a href="{{root}}keys/">Every key</a> <a href="{{root}}docs/">The docs</a></p>
   </div>
 </section>
 

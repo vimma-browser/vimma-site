@@ -201,13 +201,18 @@ main.bands {
   border-top: 1px solid var(--border);
 }
 
-.cells .keys {
-  margin: 0 0 var(--s2);
-  font-size: var(--t-lead);
+/* a small label over each feature, in place of its keys: the keys page lists those */
+.cells .tag {
+  margin: 0 0 var(--s1);
+  color: var(--accent);
+  font-size: var(--t-xs);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
 }
 
 .cells h3 {
   margin: 0 0 var(--s1);
+  font-size: var(--t-lead);
 }
 
 .cells p {
