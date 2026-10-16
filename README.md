@@ -5,7 +5,7 @@ tmux-style `ctrl+b` prefix. It looks like a terminal in Vimma's own colours, the
 light variant for light systems, monospace throughout, a prompt header with tmux-style tabs, and Vim
 keys on the site itself (press `?`). The home page is a run of full-width bands split by hairlines:
 a large headline with the logo, the install command with a copy button, four facts, the video,
-the features by key, and the status; the other pages keep a reading column under the same header.
+six feature cells and a closing band; the other pages keep a reading column under the same header.
 
 **Deployed** on Cloudflare Workers at [vimma.dev](https://vimma.dev). A push to `main` goes live
 in a minute or two. See [Deploying](#deploying).
@@ -14,7 +14,7 @@ in a minute or two. See [Deploying](#deploying).
 
 | Path       | Source                   | What                                                               |
 | ---------- | ------------------------ | ------------------------------------------------------------------ |
-| `/`        | `src/pages/index.html`   | Headline, install, facts, the promo video, features, status, name |
+| `/`        | `src/pages/index.html`   | Headline, install, facts, the promo video, features, closing band |
 | `/docs/`   | `src/docs/`, `data/docs/`| Start here, Why Vimma, Vimma compared, then pages from the guide   |
 | `/keys/`   | `src/pages/keys.html`    | Every default binding, filterable, from `data/bindings.json`       |
 | `/install/`| `src/pages/install.html` | Arch Linux command, release packages, build from source            |

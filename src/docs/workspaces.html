@@ -17,7 +17,7 @@
 <div class="table-wrap"><table class="plain"><thead><tr><th scope="col">To</th><th scope="col">Press</th></tr></thead><tbody>
 <tr><td>Next / previous workspace</td><td><kbd>ctrl+b</kbd> <kbd>)</kbd> / <kbd>ctrl+b</kbd> <kbd>(</kbd></td></tr>
 <tr><td>Pick from a list</td><td><kbd>ctrl+b</kbd> <kbd>w</kbd></td></tr>
-<tr><td>Back to the previous workspace, and again to toggle</td><td><kbd>ctrl+^</kbd> or <kbd>ctrl+6</kbd>, as Vim's alternate buffer</td></tr>
+<tr><td>Back to the previous workspace; press again to toggle</td><td><kbd>ctrl+^</kbd>, like Vim's alternate buffer (<kbd>ctrl+6</kbd> on layouts where <kbd>^</kbd> is a dead key)</td></tr>
 <tr><td>Next / previous, Vim style</td><td><kbd>]w</kbd> / <kbd>[w</kbd>, or <code>:wn</code> / <code>:wp</code></td></tr>
 <tr><td>Go to one by name or number</td><td><code>:ws work</code>, <code>:ws 2</code>, <code>:ws #</code> (the previous one)</td></tr>
 <tr><td>New workspace</td><td><kbd>ctrl+b</kbd> <kbd>shift+n</kbd></td></tr>
@@ -33,7 +33,7 @@
   <li><strong>Moving a tab reopens it</strong> in the other workspace: it keeps its address, but loses its back/forward history and anything typed into forms.</li>
   <li>New tabs open in the workspace you are in. A link you click opens in the page's own workspace, even in a new tab.</li>
   <li>Tab numbers, <kbd>ctrl+b</kbd> <kbd>n</kbd> / <kbd>ctrl+b</kbd> <kbd>p</kbd> and closing tabs stay within the workspace; <kbd>ctrl+b</kbd> <kbd>g</kbd> lists every workspace's tabs.</li>
-  <li>If you think of a workspace as a Vim buffer, the keys follow: <code>:wa</code> adds one, <code>:wd</code> closes one, as <code>:badd</code> and <code>:bd</code> do. On layouts where <kbd>^</kbd> is a dead key, use <kbd>ctrl+6</kbd>.</li>
+  <li>If you think of a workspace as a Vim buffer, the commands follow: <code>:wa</code> adds one and <code>:wd</code> closes one, as <code>:badd</code> and <code>:bd</code> do.</li>
   <li>Site permissions (camera, microphone, location, notifications) are per workspace too, like logins.</li>
   <li>Each workspace has its own <a href="{{root}}docs/bookmarks/">bookmarks folder</a>.</li>
   <li>Two workspaces are special: the <a href="{{root}}docs/private-workspace/">private workspace</a> (<kbd>ctrl+b</kbd> <kbd>shift+p</kbd>), Firefox's private browsing, and the <a href="{{root}}docs/agent-workspace/">agent workspace</a>, the only one local AI agents can reach. <kbd>ctrl+b</kbd> <kbd>(</kbd> and <kbd>)</kbd> skip both; the picker lists them last.</li>

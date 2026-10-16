@@ -3,7 +3,7 @@
 
 <section class="box note" aria-labelledby="before-you-turn-it-on">
 <h2 class="box-title" id="before-you-turn-it-on">Before you turn it on</h2>
-<p>Turning it on gives full control of the browser to any program that runs as you: it can type into your logged-in sites, change any setting and open local files. Leave it off unless you use it.</p>
+<p>Turning it on gives full control of the browser to any program running as your user: such a program can type into your logged-in sites, change any setting and open local files. Leave it off unless you use it.</p>
 </section>
 
 <h2 id="set-it-up">Set it up</h2>
@@ -29,4 +29,4 @@ vimma-ctl open https://example.com<span class="c"> # in a new tab</span></pre>
 
 <h2 id="agents">vimma-ctl and AI agents</h2>
 
-<p>The same program is the MCP server that local AI agents start, <code>vimma-ctl mcp</code>. That side never has full control: it reaches only the <a href="{{root}}docs/agent-workspace/">agent workspace</a>, and every request asks you first. While agents are on, each new full-control <code>vimma-ctl</code> connection asks too, since an agent with a shell could run one. <code>:control on 15</code> turns full control on for 15 minutes, then off again.</p>
+<p>The same program, run as <code>vimma-ctl mcp</code>, is the MCP server that local AI agents start. That side never has full control: it reaches only the <a href="{{root}}docs/agent-workspace/">agent workspace</a>, and Vimma asks you before it carries out each request. While agents are on, each new full-control <code>vimma-ctl</code> connection is confirmed with you as well, since an agent with a shell could start one. <code>:control on 15</code> turns full control on for 15 minutes, then off again.</p>

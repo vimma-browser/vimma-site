@@ -1,5 +1,5 @@
 <!-- Hand-written guide for the private-workspace page; the build adds the details from guide.md. -->
-<p class="lead">The private workspace is Firefox's private browsing, reached like any other workspace. History, cookies, site storage, the cache, form history and downloads made there are forgotten when you close it, because it is a real Firefox private window.</p>
+<p class="lead">The private workspace is Firefox's private browsing, reached like any other workspace. Because it is a real Firefox private window, the history, cookies, site storage, cache, form history and download records it collects are discarded when you close it.</p>
 
 <h2 id="use-it">Use it</h2>
 
@@ -7,16 +7,16 @@
   <li>Press <kbd>ctrl+b</kbd> <kbd>shift+p</kbd> (or <kbd>ctrl+shift+p</kbd>, or <code>:private</code>). The private workspace opens, and the status bar says <code>◆ private</code>.</li>
   <li>Browse as usual: hints, find, splits, copy mode and the side panel work as in any workspace.</li>
   <li>Press <kbd>ctrl+b</kbd> <kbd>shift+p</kbd> again, or <kbd>ctrl+^</kbd>, to go back to where you were. The private workspace stays open, one key away.</li>
-  <li>When you are done, <kbd>ctrl+b</kbd> <kbd>shift+d</kbd> in it (or <code>:private close</code> anywhere) asks <kbd>y</kbd>/<kbd>N</kbd>, then closes it and discards its data.</li>
+  <li>When you are done, <kbd>ctrl+b</kbd> <kbd>shift+d</kbd> in it (or <code>:private close</code> anywhere) asks for confirmation (<kbd>y</kbd>/<kbd>N</kbd>), then closes it and discards its data.</li>
 </ol>
 
 <h2 id="good-to-know">Good to know</h2>
 
 <ul>
-  <li><strong>Its own key only.</strong> <kbd>ctrl+b</kbd> <kbd>(</kbd> / <kbd>)</kbd>, <kbd>]w</kbd> / <kbd>[w</kbd> and <kbd>ctrl+^</kbd> never land in it by accident; from inside it, they take you out.</li>
-  <li><strong>There is only one.</strong> Every private window belongs to it and they share one cookie jar, as Firefox's private windows do.</li>
+  <li><strong>Reached by its own key only.</strong> <kbd>ctrl+b</kbd> <kbd>(</kbd> / <kbd>)</kbd>, <kbd>]w</kbd> / <kbd>[w</kbd> and <kbd>ctrl+^</kbd> never land in it by accident; from inside it, they take you out.</li>
+  <li><strong>There is only one.</strong> Every private window belongs to it, and they all share one cookie jar, as Firefox's private windows do.</li>
   <li><strong>The workspace picker</strong> (<kbd>ctrl+b</kbd> <kbd>w</kbd>) lists it last, with a tab count only, never a title or an address. <kbd>m</kbd> on that row reopens the current tab there; a private tab never moves out.</li>
   <li><strong>On Hyprland</strong> it takes your Vimma window's place, in the same tile and size, and your normal window comes back when you switch. Elsewhere it is a second window.</li>
   <li><strong>Add-ons</strong> run there only if you allowed them in private windows (<kbd>ctrl+b</kbd> <kbd>e</kbd>, then <kbd>P</kbd>).</li>
-  <li><strong>Not hidden:</strong> what you copy to the clipboard. The window's title is only <code>Vimma Private Browsing</code>, never the page's.</li>
+  <li><strong>Not hidden:</strong> the clipboard. What you copy there stays there after the workspace closes. The window's title, on the other hand, is always <code>Vimma Private Browsing</code>, never the page's.</li>
 </ul>

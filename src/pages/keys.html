@@ -1,10 +1,10 @@
 <!--{"title": "Key bindings · Vimma", "short": "keys", "out": "keys/", "cmd": "cat keys.md", "description": "Every default key binding in Vimma: Vim-style modal keys and the tmux-style ctrl+b prefix, filterable."}-->
 <p class="eyebrow">The default keymap · every key yours</p>
 <h1>Keys</h1>
-<p>Vimma's default keymap, {{keys_total}} actions, from the same table as Vimma's own <kbd>ctrl+b</kbd> <kbd>?</kbd> overlay (its <code>docs/bindings.json</code> at <a href="{{keys_commit_url}}"><code>{{keys_commit}}</code></a>) and this site's <kbd>?</kbd> overlay. They are only defaults: <a href="#remap">every key is yours</a>.</p>
+<p>Vimma's default keymap: {{keys_total}} actions, from the same table that Vimma's own <kbd>ctrl+b</kbd> <kbd>?</kbd> overlay and this site's <kbd>?</kbd> overlay use (<code>docs/bindings.json</code> at <a href="{{keys_commit_url}}"><code>{{keys_commit}}</code></a>). These are only defaults: <a href="#remap">every key is yours</a>.</p>
 <ul>
   <li><kbd>ctrl+b</kbd> is the prefix, tmux's default: press it, let go, then press the next key.</li>
-  <li>Bare keys such as <kbd>j</kbd> or <kbd>f</kbd> work in normal mode; in a text field you are in insert mode, and they type.</li>
+  <li>Bare keys such as <kbd>j</kbd> or <kbd>f</kbd> work in normal mode; in a text field you are in insert mode, where they type text.</li>
   <li>A tag such as <span class="binding"><kbd>q</kbd><span class="mode">help</span></span> means the key works only in that mode.</li>
   <li>Every action has a name: remap it in <code>config.toml</code>, or run it from the <kbd>:</kbd> line.</li>
 </ul>

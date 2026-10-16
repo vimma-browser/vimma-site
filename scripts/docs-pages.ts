@@ -116,7 +116,7 @@ export const DOC_PAGES: DocPage[] = [
     title: "Modes",
     headTitle: "Modes: normal, insert, visual, hint and command",
     group: "Get going",
-    description: "Normal, insert, visual, hint and command: how Vimma decides who gets a key.",
+    description: "Normal, insert, visual, hint and command: how Vimma decides whether a key is a command or text.",
     blocks: [
       { guide: "The two layers", only: true },
       { guide: "Normal and insert mode" },
@@ -207,7 +207,7 @@ export const DOC_PAGES: DocPage[] = [
     nav: "Agent workspace",
     headTitle: "The agent workspace: local AI agents through MCP, with your consent",
     group: "Tabs, panes, workspaces",
-    description: "Let a local AI agent use one workspace of its own through vimma-ctl mcp; every request asks you first.",
+    description: "Let a local AI agent use one workspace of its own through vimma-ctl mcp; Vimma asks you before each request.",
     blocks: [{ guide: "Agent workspace" }, { keys: ["Agents"] }],
   },
   {

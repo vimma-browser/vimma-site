@@ -1,16 +1,16 @@
-<!-- Hand-written: the whole page. Why a browser and not an extension; the home page's "Why not just Firefox with an extension?" links here. -->
+<!-- Hand-written: the whole page. Why a browser and not an extension; the home page's closing band links here. -->
 <p class="lead"><strong>Extensions get as far as the page. Vimma starts where they stop.</strong></p>
-<p>Vimium and Tridactyl do this well, and Vimma builds on their ideas. But an extension is a guest: Firefox decides where it may run and what it may touch.</p>
+<p>Vimium and Tridactyl bring Vim keys to the page, and they do it well; Vimma builds on their ideas. But an extension is a guest in the browser: Firefox decides where it may run and what it may touch.</p>
 
 <ul>
-  <li><strong>Your keys work where extensions cannot.</strong> Extensions are switched off on the add-ons store, <code>about:</code> pages and the new tab page, so the keys stop working on exactly the pages you most want to leave. In Vimma, <kbd>j</kbd>, <kbd>f</kbd> and <kbd>ctrl+b</kbd> work there too, because the keymap is part of the browser.</li>
-  <li><strong>Sites cannot take your keys.</strong> Gmail, GitHub and Google Docs grab keys for themselves, and an extension has to compete with them for each one. Vimma sees your key first and decides, so <kbd>f</kbd> gives you link hints even on GitHub. When you type in a text field, insert mode passes everything but <kbd>ctrl+b</kbd> and <kbd>Esc</kbd> through.</li>
-  <li><strong>One keymap for the whole browser.</strong> A tab strip from one extension, containers from another, a Vim layer from a third: three keymaps that do not know about each other, plus Firefox's own shortcuts underneath. Vimma has one: tabs, split panes, workspaces, bookmarks and the URL bar all answer to <kbd>ctrl+b</kbd> and Vim motions, and none of <a href="{{root}}docs/firefox-shortcuts/">Firefox's defaults</a> collide with it.</li>
-  <li><strong>Things no extension can do.</strong> Tiling <a href="{{root}}docs/panes/">panes</a> with tmux layouts and a status bar that always tells you the mode: these change the browser itself, which the extension API does not allow.</li>
-  <li><strong>One file, every key yours.</strong> Your keymap is in a single <code>config.toml</code> that reloads when you save. Rebind any key, and, on Omarchy, follow your desktop's theme live.</li>
+  <li><strong>Your keys work where extensions cannot.</strong> Firefox does not run extensions on its own pages: the add-ons store, <code>about:</code> pages and the new tab page. A Vim extension therefore goes silent on exactly the pages you most want to leave quickly. Vimma's keymap is part of the browser, so <kbd>j</kbd>, <kbd>f</kbd> and <kbd>ctrl+b</kbd> work on those pages too.</li>
+  <li><strong>Sites cannot take your keys.</strong> Gmail, GitHub and Google Docs claim keys for themselves, and an extension has to compete with them for each one. Vimma sees every key before the page does and decides who gets it, so <kbd>f</kbd> shows link hints even on GitHub. When you type in a text field, insert mode passes everything through except <kbd>ctrl+b</kbd> and <kbd>Esc</kbd>.</li>
+  <li><strong>One keymap for the whole browser.</strong> A tab strip from one extension, containers from another and a Vim layer from a third give you three keymaps that know nothing of each other, on top of Firefox's own shortcuts. Vimma has one keymap: tabs, split panes, workspaces, bookmarks and the URL bar all answer to <kbd>ctrl+b</kbd> and Vim motions, and none of <a href="{{root}}docs/firefox-shortcuts/">Firefox's default shortcuts</a> collides with it.</li>
+  <li><strong>Things no extension can do.</strong> Tiling <a href="{{root}}docs/panes/">panes</a> with tmux layouts, and a status bar that always shows the mode, change the browser window itself, which the extension API does not allow.</li>
+  <li><strong>One file for every key.</strong> Your whole keymap lives in a single <code>config.toml</code> that reloads when you save. Rebind any key, including the prefix. On Omarchy, Vimma also follows your desktop theme live.</li>
   <li><strong>Less third-party code with access to every page.</strong> A Vim extension needs permission to read and change every site you visit. In Vimma that code is part of the browser itself: <a href="https://github.com/vimma-browser/vimma">open source</a>, tested, and scanned on every change.</li>
 </ul>
 
 <p>Firefox is still underneath, with the same engine and add-ons, and Vimma is rebased onto each Firefox security release and tested automatically within hours.</p>
 
-<p>For how Vimma sits next to Vimium, Tridactyl, qutebrowser and Zen Browser, each with what it does well, see <a href="{{root}}docs/compared/">Vimma compared</a>.</p>
+<p>To see how Vimma compares with Vimium, Tridactyl, qutebrowser and Zen Browser, and what each of them does well, see <a href="{{root}}docs/compared/">Vimma compared</a>.</p>
