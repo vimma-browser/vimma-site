@@ -37,24 +37,28 @@ main.bands {
 }
 
 .display {
-  margin: 0 0 var(--s3);
-  max-width: 21ch;
+  margin: 0 0 var(--s2);
+  max-width: 24ch;
+  text-wrap: balance;
   font-size: var(--t-display);
   font-weight: 800;
   letter-spacing: -0.035em;
   line-height: 1.05;
 }
 
-.display kbd {
-  padding: 0 0.25ch;
-  border-color: var(--accent);
-  border-width: 2px 2px 5px;
-  border-radius: 0.15em;
-  background: var(--bg-dark);
+.subhead .nw {
+  white-space: nowrap;
+}
+
+.subhead {
+  margin: 0 0 var(--s3);
+  max-width: 36ch;
+  text-wrap: balance;
   color: var(--accent);
-  font-size: 0.85em;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  font-size: var(--t-title);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
 }
 
 .hero .lead {
