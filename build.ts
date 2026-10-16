@@ -45,6 +45,8 @@ interface PageMeta {
   section?: string;
   /** Wide layout (the docs). */
   wide?: boolean;
+  /** Full-width bands, each with its own column (the home page). */
+  bands?: boolean;
 }
 
 interface Page {
@@ -167,8 +169,10 @@ function main(): void {
         short: escapeHtml(page.meta.short),
         pos: n >= 0 ? `page ${n + 1}/${navPages.length}` : "page -/-",
         nav: nav(pages, page, root),
-        main_class: page.meta.wide ? "wrap wide md" : "wrap md",
+        main_class: page.meta.wide ? "wrap wide md" : page.meta.bands ? "bands" : "wrap md",
         head_class: page.meta.wide ? "wrap wide" : "wrap",
+        // the home page's bands have a stylesheet of their own, so the docs pages do not load it
+        page_css: page.meta.bands ? `\n    <link rel="stylesheet" href="${root}assets/css/home.css">` : "",
         skip: page.meta.wide ? "#doc" : "#main",
         content,
       },
@@ -180,8 +184,10 @@ function main(): void {
   }
 
   cpSync(at("assets"), join(DIST, "assets"), { recursive: true });
-  const css = join(DIST, "assets/css/site.css");
-  writeFileSync(css, minifyCss(readFileSync(css, "utf8")));
+  for (const f of readdirSync(join(DIST, "assets/css"))) {
+    const css = join(DIST, "assets/css", f);
+    if (f.endsWith(".css")) writeFileSync(css, minifyCss(readFileSync(css, "utf8")));
+  }
   mkdirSync(join(DIST, "assets/js"), { recursive: true });
   for (const f of readdirSync(at(".build/site"))) {
     if (f.endsWith(".js")) cpSync(at(".build/site", f), join(DIST, "assets/js", f));

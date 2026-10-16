@@ -2,11 +2,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-/* vimma-site: one stylesheet. A terminal in Vimma's own colours, taken from its logo: the mint
-   mark on its near-black tile, with an off-white wordmark. A light variant serves light systems.
-   Every text colour pair is checked for WCAG AA by `npm run check`, which reads the two palette
-   blocks below by their marker comments. (The browser itself ships Tokyo Night; that is the
-   browser's theme, not the site's, see docs/theming.) */
+/* vimma-site: the shared stylesheet (the home page adds home.css). A terminal in Vimma's own
+   colours, taken from its logo: the mint mark on its near-black tile, with an off-white wordmark.
+   A light variant serves light systems. Every text colour pair is checked for WCAG AA by
+   `npm run check`, which reads the two palette blocks below by their
+   marker comments. (The browser itself ships Tokyo Night; that is the browser's theme, not the
+   site's, see docs/theming.) */
 
 /* palette:dark — sampled from the logo (vimma-mark.png, vimma-logo-wide.jpg): the tile #0a0f13,
    the mint #1bf587, the wordmark #fcfbf7. --accent-2 is the logo's shaded mint #2ba564. */
@@ -56,19 +57,24 @@
 }
 /* end palette */
 
-/* Three type sizes (--t-sm, 1rem, --t-lg), one spacing scale, and one accent, kept for links,
-   the current tab and the cursor. Sections are separated by whitespace, not boxes. */
+/* The type runs from a display size for the home page's one headline down to small labels; the
+   body stays at 1rem. Bands separated by full-width hairlines carry the home page; the accent is
+   for links, keys that matter, the current tab and the cursor. */
 :root {
   --font: ui-monospace, "JetBrains Mono", "CaskaydiaMono Nerd Font", "Cascadia Mono",
     "SF Mono", Menlo, "DejaVu Sans Mono", "Liberation Mono", Consolas, monospace;
+  --t-xs: 0.75rem;
   --t-sm: 0.875rem;
-  --t-lg: 1.25rem;
+  --t-lead: 1.125rem;
+  --t-title: clamp(1.5rem, 1.1rem + 1.6vw, 2.1rem);
+  --t-display: clamp(2.3rem, 1rem + 5.2vw, 5.2rem);
   --s1: 0.5rem;
   --s2: 1rem;
   --s3: 2rem;
   --s4: 3.5rem;
-  --measure: 70ch;
-  --column: 92ch;
+  --band: clamp(3rem, 2rem + 4vw, 6rem);
+  --page: 1180px;
+  --measure: 72ch;
   font-family: var(--font);
   font-size: 15px;
   line-height: 1.65;
@@ -104,7 +110,7 @@ body {
 a {
   color: var(--accent);
   text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, var(--mint) 40%, transparent);
+  text-decoration-color: color-mix(in srgb, var(--mint) 45%, transparent);
   text-underline-offset: 0.2em;
 }
 
@@ -138,18 +144,21 @@ button {
   font: inherit;
 }
 
+/* keycaps: a raised bottom edge, as on a keyboard */
 kbd {
   display: inline-block;
-  padding: 0 0.5ch;
+  padding: 0 0.55ch;
   border: 1px solid var(--border);
-  border-radius: 3px;
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: var(--bg-light);
   color: var(--fg-bright);
   line-height: 1.35;
   white-space: nowrap;
 }
 
 code {
-  color: var(--fg-bright);
+  color: var(--green);
 }
 
 pre {
@@ -161,21 +170,25 @@ h1,
 h2,
 h3 {
   color: var(--fg-bright);
-  line-height: 1.35;
+  line-height: 1.25;
   font-weight: 700;
-  font-size: 1rem;
 }
 
 h1 {
-  font-size: var(--t-lg);
-  margin: 0 0 var(--s2);
+  font-size: clamp(1.9rem, 1.4rem + 2vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0 0 var(--s3);
 }
 
 h2 {
+  font-size: 1.35rem;
+  letter-spacing: -0.01em;
   margin: var(--s4) 0 var(--s2);
 }
 
 h3 {
+  font-size: 1.05rem;
   margin: var(--s3) 0 var(--s1);
 }
 
@@ -183,7 +196,7 @@ h3 {
 .md h1::before,
 .md h2::before,
 .md h3::before {
-  color: var(--fg-muted);
+  color: var(--accent);
   font-weight: 400;
 }
 
@@ -205,15 +218,6 @@ ol {
   margin: 0 0 var(--s2);
 }
 
-/* a comfortable measure for prose; tables, code and the video keep the column's width */
-main p,
-main li,
-main dd,
-main figcaption,
-main blockquote {
-  max-width: var(--measure);
-}
-
 ul,
 ol {
   padding-left: 3ch;
@@ -228,7 +232,7 @@ li::marker {
 }
 
 li + li {
-  margin-top: 0.25rem;
+  margin-top: 0.3rem;
 }
 
 .sr-only {
@@ -244,21 +248,30 @@ li + li {
   color: var(--fg-muted);
 }
 
-.small {
-  font-size: var(--t-sm);
-  color: var(--fg-muted);
-}
-
 .wrap {
-  max-width: calc(var(--column) + 3rem);
+  max-width: calc(var(--page) + 4rem);
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 2rem;
 }
 
 @media (max-width: 480px) {
   .wrap {
-    padding: 0 1rem;
+    padding: 0 1.15rem;
   }
+}
+
+/* small capitals over a section: what it is, before what it says */
+.eyebrow {
+  margin: 0 0 var(--s2);
+  color: var(--accent);
+  font-size: var(--t-xs);
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.eyebrow.muted {
+  color: var(--fg-muted);
 }
 
 /* --- skip link -------------------------------------------------------------------------- */
@@ -282,15 +295,16 @@ li + li {
 
 .topbar {
   border-bottom: 1px solid var(--border);
+  background: var(--bg-dark);
 }
 
 .topbar .wrap {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
+  align-items: center;
   gap: var(--s1) 3ch;
-  padding-top: var(--s2);
-  padding-bottom: var(--s2);
+  padding-top: 0.85rem;
+  padding-bottom: 0.85rem;
 }
 
 .topbar p {
@@ -309,6 +323,11 @@ li + li {
   color: var(--accent);
   font-weight: 700;
   text-decoration: none;
+}
+
+.brandmark {
+  margin-right: 1ch;
+  vertical-align: -0.35em;
 }
 
 .prompt .sigil {
@@ -352,7 +371,7 @@ li + li {
 .tabs a {
   color: var(--fg);
   text-decoration: none;
-  padding: 0.1rem 0.5ch;
+  padding: 0.15rem 0.6ch;
 }
 
 .tabs a .n {
@@ -374,14 +393,14 @@ li + li {
   color: inherit;
 }
 
-/* the keys hint: the last item of the header */
 .whereami {
   color: var(--fg-muted);
 }
 
 .keyhint {
-  padding: 0;
-  border: 0;
+  padding: 0.1rem 1ch;
+  border: 1px solid var(--border);
+  border-radius: 4px;
   background: none;
   color: var(--fg-muted);
   cursor: pointer;
@@ -389,6 +408,7 @@ li + li {
 
 .keyhint:hover {
   color: var(--fg-bright);
+  border-color: var(--fg-muted);
 }
 
 .keyhint kbd {
@@ -421,19 +441,34 @@ html.js .nojs-keys {
 
 main.wrap {
   display: block;
-  padding-top: var(--s4);
+  padding-top: var(--band);
+}
+
+/* the pages other than home and the docs: a reading column at the header's left edge */
+main.wrap.md:not(.wide) > * {
+  max-width: 84ch;
+}
+
+main.wrap.md:not(.wide) p,
+main.wrap.md:not(.wide) li,
+main.wrap.md:not(.wide) dd {
+  max-width: var(--measure);
 }
 
 main:focus {
   outline: none;
 }
 
-main > :first-child,
-main > section:first-child > :first-child {
+main > :first-child {
   margin-top: 0;
 }
 
-/* a titled section: on the plain page, as every other section is */
+.lead {
+  color: var(--fg-bright);
+  font-size: var(--t-lead);
+}
+
+/* a titled section */
 .box {
   margin: var(--s4) 0 0;
 }
@@ -446,54 +481,18 @@ main > section:first-child > :first-child {
   margin-bottom: 0;
 }
 
-/* a caution: a rule down the left, nothing more */
+/* a caution: a yellow rule down the left */
 .note {
-  padding-left: 2ch;
-  border-left: 2px solid var(--yellow);
-}
-
-/* --- home ------------------------------------------------------------------------------- */
-
-.hero {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 0 2ch;
-  align-items: center;
-}
-
-.hero .mark {
-  display: block;
-}
-
-.hero h1 {
-  margin: 0;
-}
-
-.hero .pitch {
-  grid-column: 1 / -1;
-  margin: var(--s3) 0 0;
-}
-
-.hero h1::before {
-  content: none;
-}
-
-.tagline {
-  display: block;
-  color: var(--fg-muted);
-  font-size: 1rem;
-  font-weight: 400;
-}
-
-.pitch {
-  color: var(--fg-bright);
+  padding: var(--s2) 2ch;
+  border-left: 3px solid var(--yellow);
+  background: var(--bg-dark);
 }
 
 .cta {
   display: flex;
   flex-wrap: wrap;
   gap: var(--s1) 3ch;
-  margin: 0 0 var(--s2);
+  margin: 0 0 var(--s3);
   padding: 0;
   list-style: none;
 }
@@ -502,154 +501,53 @@ main > section:first-child > :first-child {
   margin-top: 0;
 }
 
-.cta a::before {
-  content: "→ " / "";
+.cta a::after,
+.links a::after {
+  content: " →" / "";
 }
 
-/* the install command: the one block on the home page with a frame of its own */
-.cmd {
-  position: relative;
+.links a {
+  margin-right: 3ch;
+}
+
+/* a command with its copy button, as one framed line */
+.cmdbox {
+  display: flex;
+  align-items: stretch;
   margin: 0 0 var(--s2);
+  border: 1px solid var(--border);
+  background: var(--bg-darker);
 }
 
-.cmd .code {
+.cmdbox .code {
+  flex: 1 1 auto;
+  min-width: 0;
   margin: 0;
-  padding-right: 9ch;
-  border-left-color: var(--mint);
+  border: 0;
+  background: none;
 }
 
 .copy {
-  position: absolute;
-  top: 0.75rem;
-  right: 1.5ch;
-  padding: 0 1ch;
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  background: var(--bg-darker);
+  flex: none;
+  padding: 0 2ch;
+  border: 0;
+  border-left: 1px solid var(--border);
+  background: none;
   color: var(--fg-muted);
-  font-size: var(--t-sm);
+  font-size: var(--t-xs);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
   cursor: pointer;
 }
 
 .copy:hover {
-  color: var(--fg-bright);
-  border-color: var(--fg-muted);
+  color: var(--accent);
 }
 
-/* the features: one line each, the keys in a column, as a help screen lists them */
-.feats {
-  margin: 0 0 var(--s2);
-}
-
-.feats > div {
-  display: grid;
-  grid-template-columns: 18ch minmax(0, 1fr);
-  gap: 0 2ch;
-  padding: 0.2rem 0;
-}
-
-/* keys in a help screen's column, and in the small print under the video: no caps, so the
-   text reads as one block */
-.feats kbd,
-.demo figcaption kbd {
-  padding: 0;
-  border: 0;
-}
-
-.feats dt {
-  color: var(--fg-bright);
-}
-
-.feats dd {
-  margin: 0;
-}
-
-@media (max-width: 640px) {
-  .feats > div {
-    grid-template-columns: minmax(0, 1fr);
-    padding: 0.4rem 0;
-  }
-
-  .feats dt {
-    font-weight: 700;
-  }
-}
-
-/* the promo video: the one 16:9 cut on every screen, so phones see the same video */
-.demo {
-  margin: 0;
-}
-
-.demo video {
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  height: auto;
-  background: var(--bg-dark);
-}
-
-.demo figcaption {
-  margin-top: var(--s2);
+.meta {
+  margin: 0 0 0.35rem;
+  color: var(--fg-muted);
   font-size: var(--t-sm);
-  color: var(--fg-muted);
-}
-
-/* the start page's paths: a short list, not a row of cards */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 30ch), 1fr));
-  gap: var(--s2) 4ch;
-  margin: 0 0 var(--s2);
-  padding: 0;
-  list-style: none;
-}
-
-.grid li + li {
-  margin-top: 0;
-}
-
-.card h3 {
-  margin: 0 0 0.25rem;
-}
-
-.card p {
-  margin: 0;
-}
-
-.checklist {
-  padding: 0;
-  list-style: none;
-}
-
-/* "[x] " is four columns of a monospace font: wrapped lines hang under the text */
-.checklist li {
-  padding-left: 4ch;
-  text-indent: -4ch;
-}
-
-.checklist li + li {
-  margin-top: 0.1rem;
-}
-
-.checklist .mark {
-  color: var(--fg-bright);
-}
-
-.checklist .mark.todo {
-  color: var(--fg-muted);
-}
-
-dfn {
-  font-style: normal;
-  font-weight: 700;
-  color: var(--fg-bright);
-}
-
-blockquote {
-  margin: 0 0 var(--s2);
-  padding-left: 2ch;
-  border-left: 2px solid var(--border);
-  color: var(--fg-bright);
 }
 
 /* --- keys ------------------------------------------------------------------------------- */
@@ -818,8 +716,8 @@ blockquote {
 
 .code {
   margin: 0 0 var(--s2);
-  padding: 0.85rem 2ch;
-  border-left: 2px solid var(--border);
+  padding: 0.9rem 2ch;
+  border: 1px solid var(--border);
   background: var(--bg-darker);
   color: var(--fg-bright);
   line-height: 1.55;
@@ -830,7 +728,7 @@ blockquote {
 }
 
 .code .p {
-  color: var(--fg-muted);
+  color: var(--accent);
   user-select: none;
 }
 
@@ -841,7 +739,8 @@ blockquote {
   overflow-wrap: anywhere;
 }
 
-.code .nw {
+.code .nw,
+.display .nw {
   white-space: nowrap;
 }
 
@@ -853,13 +752,36 @@ dl.faq dt {
 
 dl.faq dt::before {
   content: "? " / "";
-  color: var(--fg-muted);
+  color: var(--accent);
   font-weight: 400;
 }
 
 dl.faq dd {
   margin: var(--s1) 0 0;
   padding-left: 2ch;
+}
+
+/* on a wide screen the questions take a column of their own, each answer beside it */
+@media (min-width: 1000px) {
+  main.wrap.md > dl.faq {
+    display: grid;
+    grid-template-columns: 36ch minmax(0, 72ch);
+    max-width: none;
+    margin-top: var(--s4);
+  }
+
+  dl.faq dt,
+  dl.faq dd {
+    margin: 0;
+    padding: var(--s3) 0 var(--s2);
+    border-top: 1px solid var(--border);
+  }
+
+  dl.faq dt {
+    padding-right: 5ch;
+    font-size: var(--t-lead);
+    line-height: 1.4;
+  }
 }
 
 .table-wrap {
@@ -1232,26 +1154,19 @@ table.plain th {
 /* --- footer ----------------------------------------------------------------------------- */
 
 .site-foot {
-  margin-top: var(--s4);
   padding: var(--s3) 0;
-  color: var(--fg-muted);
-}
-
-.site-foot .wrap {
-  padding-top: var(--s2);
-}
-
-.site-foot .wrap::before {
-  content: "";
-  display: block;
-  width: 6ch;
-  margin-bottom: var(--s2);
   border-top: 1px solid var(--border);
+  background: var(--bg-dark);
+  color: var(--fg-muted);
+  font-size: var(--t-sm);
+}
+
+main.wrap + .site-foot {
+  margin-top: var(--band);
 }
 
 .site-foot p {
   margin: 0 0 0.25rem;
-  font-size: var(--t-sm);
 }
 
 /* --- the ? overlay ---------------------------------------------------------------------- */

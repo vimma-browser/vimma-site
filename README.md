@@ -3,9 +3,9 @@
 The website for Vimma, a keyboard-first Firefox fork with a Neovim-style modal layer and a
 tmux-style `ctrl+b` prefix. It looks like a terminal in Vimma's own colours, the mint and near-black of its logo, a
 light variant for light systems, monospace throughout, a prompt header with tmux-style tabs, and Vim
-keys on the site itself (press `?`). The layout is plain: sections separated by whitespace rather
-than boxes, three type sizes, prose held to about 70 columns, and the accent kept for links, the
-current tab and the cursor.
+keys on the site itself (press `?`). The home page is a run of full-width bands split by hairlines:
+a large headline with the logo, the install command with a copy button, four facts, the video,
+the features by key, and the status; the other pages keep a reading column under the same header.
 
 **Deployed** on Cloudflare Workers at [vimma.dev](https://vimma.dev). A push to `main` goes live
 in a minute or two. See [Deploying](#deploying).
@@ -14,7 +14,7 @@ in a minute or two. See [Deploying](#deploying).
 
 | Path       | Source                   | What                                                               |
 | ---------- | ------------------------ | ------------------------------------------------------------------ |
-| `/`        | `src/pages/index.html`   | Name, pitch, install command, features, the promo video, status    |
+| `/`        | `src/pages/index.html`   | Headline, install, facts, the promo video, features, status, name |
 | `/docs/`   | `src/docs/`, `data/docs/`| Start here, Why Vimma, Vimma compared, then pages from the guide   |
 | `/keys/`   | `src/pages/keys.html`    | Every default binding, filterable, from `data/bindings.json`       |
 | `/install/`| `src/pages/install.html` | Arch Linux command, release packages, build from source            |
@@ -53,10 +53,11 @@ npm run keys:sync -- <commit>      # … at a given commit
 - **external**: nothing loads from another origin (resource elements, CSS `url()`/`@import`, and
   network calls or URLs in the shipped JS). Plain `<a>` links to other sites are allowed.
 - **contrast**: each text/background token pair, in both palettes, is at least 4.5:1 (WCAG AA).
-- **weight**: what each page loads (HTML, stylesheet, scripts and their imports, and the docs
+- **weight**: what each page loads (HTML, stylesheets, scripts and their imports, and the docs
   search index on docs pages) stays under 150 KB. The heaviest is the known-limits page, about
-  149 KB, close to half of it the search index loaded on first search. The build ships the
-  stylesheet without comments or the whitespace around braces (`scripts/css.ts`). The index
+  148 KB, close to half of it the search index loaded on first search. The home page's bands have
+  their own stylesheet (`assets/css/home.css`), so the docs pages do not load them. The build ships the
+  stylesheets without comments or the whitespace around braces (`scripts/css.ts`). The index
   leaves out common words (a stop list) and verb forms nearly every section has, words already
   in a section's page title, heading or snippet, and words inside a longer word of the same
   section (the search matches substrings), and names each page's title and path once; if a sync

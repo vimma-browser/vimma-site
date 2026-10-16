@@ -18,14 +18,14 @@
     <link rel="icon" href="{{root}}assets/img/favicon-32.png" type="image/png" sizes="32x32">
     <link rel="icon" href="{{root}}assets/img/favicon-48.png" type="image/png" sizes="48x48">
     <link rel="apple-touch-icon" href="{{root}}assets/img/apple-touch-icon.png">
-    <link rel="stylesheet" href="{{root}}assets/css/site.css">
+    <link rel="stylesheet" href="{{root}}assets/css/site.css">{{page_css}}
     <script type="module" src="{{root}}assets/js/site.js"></script>
   </head>
   <body>
     <a class="skip" href="{{skip}}">Skip to content</a>
     <header class="topbar">
       <div class="{{head_class}}">
-        <p class="prompt"><a class="cwd" href="{{root}}">~/vimma</a> <span class="sigil">$</span> <span class="cmd">{{cmd}}</span><span class="cursor" aria-hidden="true"></span></p>
+        <p class="prompt"><a class="cwd" href="{{root}}"><img class="brandmark" src="{{root}}assets/img/favicon-48.png" width="22" height="22" alt="">~/vimma</a> <span class="sigil">$</span> <span class="cmd">{{cmd}}</span><span class="cursor" aria-hidden="true"></span></p>
         <nav class="tabs" aria-label="Site">
           <ul>
 {{nav}}
@@ -39,9 +39,9 @@
 {{content}}
     </main>
     <footer class="site-foot">
-      <div class="wrap">
+      <div class="{{head_class}}">
         <p>Vimma · pre-alpha · <a href="{{root}}about/#licence">MPL-2.0</a> · <a href="https://github.com/vimma-browser/vimma">source</a> · no cookies, no analytics, nothing loaded from other servers</p>
-        <p>Keys here: <button type="button" class="keyhint" data-open-help data-js-only hidden><kbd>?</kbd></button><span class="nojs-keys"><kbd>?</kbd> with JavaScript on</span>. In Vimma: <kbd>ctrl+b</kbd> <kbd>?</kbd>.</p>
+        <p>Keys here: <button type="button" class="keyhint" data-open-help data-js-only hidden><kbd>?</kbd></button><span class="nojs-keys"><kbd>?</kbd> with JavaScript on</span> · in Vimma: <kbd>ctrl+b</kbd> <kbd>?</kbd></p>
       </div>
     </footer>
     <dialog id="keyhelp" aria-labelledby="keyhelp-title">
