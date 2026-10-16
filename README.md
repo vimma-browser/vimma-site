@@ -90,7 +90,7 @@ npm run keys:sync -- <commit>      # … at a given commit
 
   To replace the cut (same name, same size), run `scripts/video.sh` on the new file. It copies
   it in with `+faststart` (a remux, no re-encode) and remakes the poster from a fixed frame
-  (`WIDE_AT=28.4`, in seconds, to override); it needs ffmpeg with libwebp:
+  (`WIDE_AT`, in seconds; the current cut uses 61.8, the live grep preview); it needs ffmpeg with libwebp:
 
   ```sh
   scripts/video.sh ~/Videos/vimma/v2/vimma-promo-1080p.mp4

@@ -80,6 +80,25 @@ main.bands {
   }
 }
 
+/* the hero as one centred block; the command keeps its left edge inside the box */
+.hero-center {
+  text-align: center;
+}
+
+.hero-center .lockup img,
+.hero-center .display,
+.hero-center .subhead,
+.hero-center .lead,
+.hero-center .cmdbox {
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.hero-center .cmdbox {
+  max-width: 52rem;
+  text-align: left;
+}
+
 /* four facts in a row of cells */
 .facts {
   padding: 0;

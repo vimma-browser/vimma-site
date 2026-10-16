@@ -1478,6 +1478,11 @@
           ]
         },
         {
+          "name": "check_updates",
+          "description": "Check for a newer Vimma",
+          "keys": []
+        },
+        {
           "name": "reload_hard",
           "description": "Reload, bypassing the cache",
           "keys": [
@@ -1984,6 +1989,49 @@
               ]
             }
           ]
+        },
+        {
+          "name": "live_grep",
+          "description": "Live grep: search the text of the workspace's tabs",
+          "keys": [
+            {
+              "keys": "ctrl+b f g",
+              "chords": [
+                "ctrl+b",
+                "f",
+                "g"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "grep_next",
+          "description": "Next result of the last live grep",
+          "keys": [
+            {
+              "keys": "]q",
+              "chords": [
+                "]q"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "grep_previous",
+          "description": "Previous result of the last live grep",
+          "keys": [
+            {
+              "keys": "[q",
+              "chords": [
+                "[q"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "grep_resume",
+          "description": "Live grep again with the last query (:grep)",
+          "keys": []
         }
       ]
     },
