@@ -10,8 +10,7 @@
         <pre class="code wrap" id="install-cmd"><span class="p">$ </span>curl -fLO https://github.com/vimma-browser/vimma/releases/latest/download/PKGBUILD &amp;&amp; <span class="nw">makepkg -si</span></pre>
         <button type="button" class="copy" data-copy="install-cmd" aria-live="polite" data-js-only hidden>copy</button>
       </div>
-      <p class="meta">Arch Linux · run as your normal user in an empty directory · <a href="{{root}}install/">other distributions</a></p>
-      <p class="meta">Run it again in the same directory to update: the in-app updater is not active yet.</p>
+      <p class="meta">Arch Linux · <a href="{{root}}install/">other distributions and updating</a></p>
     </div>
     <picture class="logo">
       <source type="image/avif" srcset="{{root}}assets/img/vimma-logo-256.avif 1x, {{root}}assets/img/vimma-logo-512.avif 2x">
@@ -81,16 +80,7 @@
         <p>Claude Code, Codex and other agents can browse through MCP, confined to an agent workspace with its own logins. Every request asks you first. <a href="{{root}}docs/agent-workspace/">How</a>.</p>
       </li>
     </ul>
-    <dl class="also">
-      <div><dt><kbd>ctrl+b</kbd> <kbd>b</kbd></dt><dd>the workspace's tabs in a side panel, there only when you ask</dd></div>
-      <div><dt><kbd>ctrl+b</kbd> <kbd>shift+p</kbd></dt><dd>a private workspace: Firefox's private browsing, nothing kept on disk</dd></div>
-      <div><dt><kbd>ctrl+b</kbd> <kbd>a</kbd></dt><dd>Firefox's bookmarks, a folder per workspace, filed and found by key</dd></div>
-      <div><dt><kbd>ctrl+b</kbd> <kbd>e</kbd></dt><dd>add-ons on a key: open, turn on and off, update or remove</dd></div>
-      <div><dt>status bar</dt><dd>mode, pending keys, workspace, <code>tab 2/5</code>, title, URL and find matches</dd></div>
-      <div><dt><code>[theme]</code></dt><dd>mint and near-black, dark or light, or your Omarchy theme, live (<a href="{{root}}docs/theming/">how</a>)</dd></div>
-      <div><dt><code>about:config</code></dt><dd>no studies, telemetry upload, crash reporter, sponsored content or promos</dd></div>
-      <div><dt>Firefox 158</dt><dd>the release channel: sites see Firefox's user agent, add-ons treat Vimma as Firefox</dd></div>
-    </dl>
+    <p class="meta links"><a href="{{root}}keys/">every key</a> <a href="{{root}}docs/">the docs</a></p>
   </div>
 </section>
 
@@ -98,46 +88,8 @@
   <div class="wrap split">
     <h2 id="why" class="title">Extensions get as far as the page. Vimma starts where they stop.</h2>
     <div>
-      <p>The keys work where extensions are switched off, sites can't take them, and tabs, panes and workspaces answer to the same keymap.</p>
       <p class="links"><a href="{{root}}docs/why/">Why Vimma</a> <a href="{{root}}docs/compared/">Vimma compared</a></p>
+      <p class="links"><strong>Pre-alpha.</strong> <a href="{{root}}about/#status">What works today</a> <a href="{{root}}docs/limits/">known limits</a></p>
     </div>
-  </div>
-</section>
-
-<section class="band" aria-labelledby="status">
-  <div class="wrap split">
-    <div>
-      <h2 id="status" class="title">Pre-alpha</h2>
-      <p>Version <code>0.1.1</code>, on Firefox 158.0, is released for Linux x86_64. Ticked items work today.</p>
-    </div>
-    <ul class="checklist">
-      <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> The fork, its build pipeline, the control socket and end-to-end tests</li>
-      <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> The modal page layer: scrolling, hints, find, copy mode, back, forward and reload</li>
-      <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> Tab keys, the status bar and tab search</li>
-      <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> Workspaces, the side panel and the private workspace</li>
-      <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> Split panes and tiling layouts</li>
-      <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> <code>config.toml</code>, theming and search engines</li>
-      <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> Local AI agents through MCP, confined to the agent workspace</li>
-      <li><span class="mark todo" aria-hidden="true">[ ]</span><span class="sr-only">To do:</span> The in-app updater (packages for Linux x86_64 are out)</li>
-      <li><span class="mark todo" aria-hidden="true">[ ]</span><span class="sr-only">To do:</span> macOS</li>
-    </ul>
-  </div>
-</section>
-
-<section class="band" aria-labelledby="name">
-  <div class="wrap split">
-    <h2 id="name" class="title"><dfn>vimma</dfn> <span class="muted">(Finnish)</span></h2>
-    <p>A burst of eager, focused energy. You hear it in <em>työvimma</em>: a spell of work where everything flows and the hours slip by. It also happens to start with <em>Vim</em>.</p>
-  </div>
-</section>
-
-<section class="band closing" aria-labelledby="get">
-  <div class="wrap">
-    <h2 id="get" class="title">Install on Arch Linux</h2>
-    <div class="cmdbox">
-      <pre class="code wrap" id="install-cmd-2"><span class="p">$ </span>curl -fLO https://github.com/vimma-browser/vimma/releases/latest/download/PKGBUILD &amp;&amp; <span class="nw">makepkg -si</span></pre>
-      <button type="button" class="copy" data-copy="install-cmd-2" aria-live="polite" data-js-only hidden>copy</button>
-    </div>
-    <p class="meta">A <code>.deb</code>, an AppImage and a tarball are in the <a href="https://github.com/vimma-browser/vimma/releases/latest">latest release</a>, with checksums and signatures (<a href="https://github.com/vimma-browser/vimma/blob/main/docs/guide.md#installing">how to check them</a>) · <a href="{{root}}docs/">read the docs</a></p>
   </div>
 </section>

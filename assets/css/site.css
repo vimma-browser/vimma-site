@@ -712,6 +712,27 @@ main > :first-child {
   }
 }
 
+/* the status checklist (About) */
+.checklist {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* "[x] " is four columns of a monospace font: wrapped lines hang under the text */
+.checklist li {
+  padding-left: 4ch;
+  text-indent: -4ch;
+}
+
+.checklist .mark {
+  color: var(--green);
+}
+
+.checklist .mark.todo {
+  color: var(--fg-muted);
+}
+
 /* --- install / about -------------------------------------------------------------------- */
 
 .code {

@@ -214,36 +214,10 @@ main.bands {
   margin: 0;
 }
 
-/* the rest, as a help screen lists keys */
-.also {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 60ch), 1fr));
-  gap: 0 5ch;
-  margin: 0;
-  font-size: var(--t-sm);
-}
 
-.also > div {
-  display: grid;
-  grid-template-columns: 18ch minmax(0, 1fr);
-  gap: 0 2ch;
-  padding: 0.5rem 0;
-  border-top: 1px solid var(--selection);
-}
 
-.also dt {
-  color: var(--fg-bright);
-}
 
-.also dd {
-  margin: 0;
-}
 
-@media (max-width: 480px) {
-  .also > div {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
 
 /* a headline on the left, what it means on the right */
 .split {
@@ -263,37 +237,8 @@ main.bands {
   }
 }
 
-.checklist {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
 
-/* "[x] " is four columns of a monospace font: wrapped lines hang under the text */
-.checklist li {
-  padding-left: 4ch;
-  text-indent: -4ch;
-}
 
-.checklist .mark {
-  color: var(--green);
-}
-
-.checklist .mark.todo {
-  color: var(--fg-muted);
-}
-
-dfn {
-  font-style: normal;
-}
-
-.closing {
-  background: var(--bg-dark);
-}
-
-.closing .cmdbox {
-  background: var(--bg-darker);
-}
 
 blockquote {
   margin: 0 0 var(--s2);
@@ -302,3 +247,8 @@ blockquote {
   color: var(--fg-bright);
 }
 
+
+.links strong {
+  margin-right: 3ch;
+  color: var(--fg-bright);
+}
