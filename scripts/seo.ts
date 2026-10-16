@@ -37,11 +37,11 @@ export const PROMO_VIDEO = {
   type: "video/mp4",
   width: 1920,
   height: 1080,
-  duration: "PT1M5S",
-  uploadDate: "2026-10-11",
-  name: "Vimma in a minute",
+  duration: "PT1M20S",
+  uploadDate: "2026-10-16",
+  name: "Vimma in action",
   description:
-    "A real Vimma window, driven from the keyboard: link hints and search, the keys on about:addons, split panes in a spiral and tmux's layouts, marking tabs into panes, flipping workspaces, and a live theme change.",
+    "A real Vimma window, driven from the keyboard: scrolling and link hints, workspaces and the private workspace, split panes and tmux's layouts, tabs marked into panes, tab search across every workspace, and live grep through the text of open tabs.",
 };
 
 /**

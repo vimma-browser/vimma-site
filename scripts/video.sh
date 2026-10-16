@@ -10,10 +10,10 @@
 #
 #   scripts/video.sh ~/Videos/vimma/v2/vimma-promo-1080p.mp4
 #
-# The poster frame is seconds into the cut: the dwindle spiral of four panes. Override it for a
+# The poster frame is seconds into the cut: live grep with its preview. Override it for a
 # re-cut where it moved:
 #
-#   WIDE_AT=28.4 scripts/video.sh wide.mp4
+#   WIDE_AT=61.8 scripts/video.sh wide.mp4
 #
 # The markup in src/pages/index.html and the VideoObject in scripts/seo.ts assume 1920x1080 at
 # the duration in seo.ts; the script stops if the size differs, and prints the duration to
@@ -21,7 +21,7 @@
 set -eu
 usage="usage: video.sh path/to/vimma-promo-1080p.mp4"
 wide=${1:?$usage}
-wide_at=${WIDE_AT:-28.4}
+wide_at=${WIDE_AT:-61.8}
 out=$(dirname "$0")/../assets/video
 mkdir -p "$out"
 

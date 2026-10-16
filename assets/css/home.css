@@ -29,13 +29,6 @@ main.bands {
   line-height: 1.15;
 }
 
-.hero-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: var(--s3) 5ch;
-}
-
 .display {
   margin: 0 0 var(--s2);
   max-width: 24ch;
@@ -74,29 +67,44 @@ main.bands {
   font-size: 1.05rem;
 }
 
-.logo img {
+.lockup img {
   display: block;
-  width: 240px;
-  height: 240px;
-  /* the logo is transparent; its white wordmark needs a dark tile on the light palette, as on
-     Vimma's start page (light-dark() follows the used color-scheme) */
-  background: light-dark(#0a0f13, transparent);
-  border-radius: 8%;
+  width: min(560px, 100%);
+  height: auto;
+  margin: 0 0 var(--s3) -4px;
 }
 
 @media (max-width: 900px) {
-  .hero-grid {
-    grid-template-columns: minmax(0, 1fr);
+  .lockup img {
+    width: min(360px, 100%);
   }
+}
 
-  .logo {
-    order: -1;
-  }
+/* the logo's own tagline, set as text under the lockup */
+.tagline {
+  margin: calc(-1 * var(--s2)) 0 var(--s3);
+  color: var(--accent);
+  font-size: var(--t-lead);
+  letter-spacing: 0.04em;
+}
 
-  .logo img {
-    width: 112px;
-    height: 112px;
-  }
+/* the hero as one centred block; the command keeps its left edge inside the box */
+.hero-center {
+  text-align: center;
+}
+
+.hero-center .lockup img,
+.hero-center .display,
+.hero-center .subhead,
+.hero-center .lead,
+.hero-center .cmdbox {
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.hero-center .cmdbox {
+  max-width: 52rem;
+  text-align: left;
 }
 
 /* four facts in a row of cells */
