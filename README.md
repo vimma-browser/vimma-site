@@ -12,10 +12,10 @@ in a minute or two. See [Deploying](#deploying).
 
 | Path       | Source                   | What                                                               |
 | ---------- | ------------------------ | ------------------------------------------------------------------ |
-| `/`        | `src/pages/index.html`   | Logo, pitch, the promo video, features, name, status              |
+| `/`        | `src/pages/index.html`   | Logo, pitch, install, the promo video, features, name, status      |
 | `/docs/`   | `src/docs/`, `data/docs/`| Start here, Why Vimma, Vimma compared, then pages from the guide   |
 | `/keys/`   | `src/pages/keys.html`    | Every default binding, filterable, from `data/bindings.json`       |
-| `/install/`| `src/pages/install.html` | Build from source; Linux x86_64 only; no binaries yet              |
+| `/install/`| `src/pages/install.html` | Arch Linux command, release packages, build from source            |
 | `/about/`  | `src/pages/about.html`   | Why another browser, privacy defaults, Firefox base, licence, FAQ  |
 | `404.html` | `src/pages/404.html`     | Not found (links are root-absolute: it assumes the site is at `/`) |
 

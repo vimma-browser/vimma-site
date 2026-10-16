@@ -767,6 +767,17 @@ blockquote {
   user-select: none;
 }
 
+/* a one-line command that is longer than the column wraps instead of scrolling, so all of it is
+   in view before it is copied; the wrap is soft, so a copy is still one line */
+.code.wrap {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.code .nw {
+  white-space: nowrap;
+}
+
 dl.faq dt {
   margin-top: 1.75rem;
   color: var(--fg-bright);

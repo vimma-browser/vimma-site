@@ -32,10 +32,14 @@ What works today, each with the section that explains it:
 - **[Search engines](#search-engines)** and `@aliases` from `config.toml`, such as `@gh vimma`.
 - **[Hide the toolbar](#hiding-the-toolbar)** with `ctrl+b u`: the page reaches the top of the
   window, and the address bar comes back when you need it.
-- **[Theming](#colours-and-themes):** the bars, Firefox's toolbar and prompts, pickers, hints,
-  start page and sidebar follow your desktop theme and change with it, or take your own colours.
+- **[Theming](#colours-and-themes):** the bars, Firefox's toolbar, menus, dialogs and settings
+  pages, pickers, hints, start page and sidebar follow your desktop theme and change with it, or
+  take your own colours.
 - **[Accessible](#accessibility):** Vimma's own UI works with a screen reader and meets WCAG AA
   contrast in dark and light themes.
+- **[Update checks](#updates)**, not active yet: once the update host is live, the status bar
+  will say when a newer Vimma exists (red for a security release), and `:update` will show the
+  exact commands for how you installed it.
 - **Firefox underneath** ([privacy defaults](#privacy-defaults)): the same user agent and
   [add-on](#add-ons) compatibility as Firefox; no studies, sponsored content or telemetry
   uploads; Safe Browsing on.
@@ -67,18 +71,18 @@ details, and [bindings.md](bindings.md) lists every action's config name with it
 
 ### Install
 
-There are no packages or binaries yet. Tarballs, an AppImage, a `.deb` and AUR `vimma-bin` are
-planned for M6. Until then, build from source as [CONTRIBUTING.md](../CONTRIBUTING.md#build-and-run)
-describes: `npm ci`, `npx surfer download`, `npx surfer bootstrap`, `npm run import`,
-`npx surfer build`. The first build takes about 40 minutes on a 16-thread machine and needs
+Each [GitHub Release](https://github.com/vimma-browser/vimma/releases) carries a tarball, an
+AppImage, a `.deb` and an Arch Linux `PKGBUILD` ([Installing](#installing)). To build from
+source instead, follow [CONTRIBUTING.md](../CONTRIBUTING.md#build-and-run): `npm ci`,
+`npx surfer download`, `npx surfer bootstrap`, `npm run import`, `npx surfer build`. The first build takes about 40 minutes on a 16-thread machine and needs
 about 35 GB of disk space (`engine/` 27 GB, the sccache compiler cache 6.8 GB, `~/.mozbuild`
 3.1 GB, `.surfer/` 0.8 GB).
 
-### Installing (planned, not yet released)
+### Installing
 
-**Planned for M6; no release has these files yet.** Each GitHub Release is titled with both
+Each [GitHub Release](https://github.com/vimma-browser/vimma/releases) is titled with both
 versions, such as `Vimma 0.5.2 · Firefox 158.0`, and its notes link the Mozilla security
-advisories of the Firefox it moves to. It will carry, for Linux x86_64 (`X.Y.Z` is the Vimma
+advisories of the Firefox it moves to. It carries, for Linux x86_64 (`X.Y.Z` is the Vimma
 version):
 
 | File                              | Install                                                                 |
@@ -90,10 +94,15 @@ version):
 
 The `.deb` and the Arch package add Vimma to your application menu and offer it for web links,
 but never make it your default browser on their own: `xdg-settings set default-web-browser
-vimma-vimma.desktop` does that. Vimma has no in-app updater: update through apt, by rerunning the
-Arch command, or by downloading the next AppImage or tarball. Next to the files are `SHA256SUMS`, a CycloneDX SBOM
+vimma-vimma.desktop` does that. Next to the files are `SHA256SUMS`, a CycloneDX SBOM
 (`vimma-X.Y.Z.cdx.json`) and cosign signatures (`*.sigstore.json`); how to check them is in
 [runbook.md](runbook.md#release-packages-releaseyml-spec-m6-packaging) ("Verify a release").
+
+**Updating.** Vimma checks for new releases and carries the key their announcements are signed
+with, but no release has been announced yet, so it does not tell you about new releases. Until one
+is, update by installing the newer release the way you installed this one: on Arch Linux, run the install command again in the
+same directory; otherwise, install the newer `.deb`, AppImage or tarball over the old one
+([Updates](#updates) lists the commands).
 
 #### Arch Linux
 
@@ -109,14 +118,15 @@ curl -fLO https://github.com/vimma-browser/vimma/releases/latest/download/PKGBUI
 `makepkg -si` installs the libraries Vimma needs with pacman, asks for your password to install
 the package, and refuses to run as root. To update, run the same command again in the same
 directory: it fetches the newest release's `PKGBUILD`, and pacman replaces the installed
-version. Once the in-app updater arrives, it shows this command when a new release is out
+version. Once the in-app updater is active, it shows this command when a new release is out
 ([spec m6a-updater](specs/m6a-updater.md)). `sudo pacman -R vimma-bin` removes Vimma; your
 profile stays in your home directory.
 
-A new release counts as the latest as soon as it is published, but its files are uploaded about
-two hours later, when the release build finishes. In that window, or if that build failed,
-`curl` prints `curl: (22) The requested URL returned error: 404` and exits; the `PKGBUILD` you
-already have stays as it was and `makepkg` does not run. Try again later.
+A release is built and its files are uploaded before it is published, so a published release
+has its `PKGBUILD` from the start. If `curl` prints `curl: (22) The requested URL returned
+error: 404`, the files are missing (no release is published yet, or one went out without them);
+`curl` then exits, the `PKGBUILD` you already have stays as it was and `makepkg` does not run.
+Try again later.
 
 To check the `PKGBUILD` before you build it, download it with the release's checksums and their
 signature, verify the signature with [cosign](https://github.com/sigstore/cosign), then the
@@ -126,7 +136,7 @@ checksum:
 base=https://github.com/vimma-browser/vimma/releases/latest/download
 curl -fL -O "$base/PKGBUILD" -O "$base/SHA256SUMS" -O "$base/SHA256SUMS.sigstore.json"
 cosign verify-blob --bundle SHA256SUMS.sigstore.json \
-  --certificate-identity-regexp '^https://github\.com/vimma-browser/vimma/\.github/workflows/release\.yml@refs/(heads/main|tags/v[0-9]+\.[0-9]+\.[0-9]+)$' \
+  --certificate-identity-regexp '^https://github\.com/vimma-browser/vimma/\.github/workflows/release\.yml@refs/heads/main$' \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com SHA256SUMS
 sha256sum -c --ignore-missing SHA256SUMS   # PKGBUILD: OK
 makepkg -si
@@ -228,7 +238,9 @@ a page without one (a game), lets every key through. Insert entered with `i` or 
 `Esc`, even if the page moves focus itself (a file finder jumping to its result list, a dialog
 taking focus), so the keys you type keep going to the page. Insert entered by clicking or
 tabbing into a field follows the focus: when focus leaves the text fields, the tab is back in
-normal.
+normal. After `Esc`, a page cannot put you back in insert on its own: a dialog that pulls focus
+back into its field leaves the tab in normal, and you return to typing with `i`, a click into
+the field or `Tab`.
 
 Clicking into a page that is editable as a whole (a `designMode` document, such as some rich
 text editors' frames) also enters insert.
@@ -261,7 +273,8 @@ fields, so Vimma adds nothing there.
 **`Esc` in a text field is Vimma's.** It leaves insert, so the page does not see that `Esc`: a
 site's own `Esc` (closing an autocomplete list or a dialog) does not fire from the field. Press
 `Esc` again: in normal mode `Esc` has no binding, so it reaches the page (the field no longer
-has focus, so the page's document gets it, not the field).
+has focus, so the page's document gets it, not the field; a dialog that put focus back into its
+field gets it there, and closes).
 
 **A key that starts a sequence passes when nothing in that sequence works yet.** `ctrl+w`
 starts the `ctrl+w h/j/k/l`, `H/J/K/L`, `o` and `< > + -` pane keys, which do something only with two panes or
@@ -318,6 +331,67 @@ is on screen), as Vim's starts at the cursor.
   next match. `i` or a click puts you in the field.
 
 `ctrl+f` still opens Firefox's own find bar, where `Enter` goes to the next match.
+
+### Live grep
+
+`ctrl+b f g` searches the text of every tab in your workspace as you type, as Telescope's
+`live_grep` searches files in Neovim. `/` finds text in one page; live grep finds the page.
+
+- **The picker** covers the page area, from below the toolbar (or the window's top when the
+  toolbar is hidden) to the status bar. The prompt, titled `Live Grep`, is at the bottom, with
+  `matches listed / found` on its right. Results stack above it, the best one next to the prompt
+  and marked `>`. Each row shows its window (`w1` is this one), the tab's number (the one
+  `ctrl+b 1..9` uses) and title, its host, `:line:`, and the line with the match highlighted. A line is a paragraph, list item, heading or table cell (text after a `<br>`
+  or in `pre` text starts a new one), numbered in the page. On the right, `Grep Preview` shows
+  the ten lines before and after the selected match, the matched line highlighted; its title
+  names the match's window, workspace, tab and host in full. In a window
+  narrower than 900 pixels the preview is hidden and the results take the whole width.
+- **The query** is a regular expression in JavaScript's syntax (`err(or)?s?\b`, `\d+ ms`), matched
+  line by line. Case follows ripgrep's smart case: all lower case ignores case, a capital letter
+  matches it. Text that is not a valid expression, such as `c++(`, is searched as typed and the
+  prompt says `literal`.
+- **Keys.** You type into the prompt. `ctrl+n` / `↓` move down the list, toward the best result,
+  `ctrl+p` / `↑` up; `Tab` / `shift+Tab` jump to the next / previous tab's first result.
+  `ctrl+d` / `ctrl+u` scroll the preview (without a preview, `ctrl+u` clears the prompt;
+  `ctrl+w` and `Backspace` always edit it). `Esc` leaves the prompt for browsing: `j` / `k`,
+  `gg` (top) and `G` (the best result), `/` or `i` back to the prompt, and `Esc` or `q` close.
+- **`ctrl+space`** keeps the results and filters them by fuzzy matching, as Telescope's refine:
+  the prompt says `fuzzy`, and `Esc` goes back to the search.
+- **The scope box** above the results says what is being searched, before you type: its title
+  names the scope (`Scope: this workspace · ctrl+s`), and a line per window gives its mark, its
+  workspaces with their tab counts and how many tabs are not loaded, for example
+  `w1 this window: work 12, notes 3 · 15 tabs, 2 not loaded`.
+- **`ctrl+s`** widens the search: this workspace → this window (every workspace in it) → all
+  windows → all windows and recently closed tabs and windows → back to this workspace. The
+  scope starts at this workspace each time live grep opens. `Enter` on a result in another
+  window brings that window to the front and selects the match there.
+- **Recently closed** tabs and windows are searched by their title and URL only, since Firefox
+  keeps no page text for them: at most the 25 tabs and 5 windows Firefox remembers. They are
+  listed after the open tabs' results, labelled `closed` or `closed window`; `Enter` reopens the
+  tab in this window and goes there, or reopens the window.
+- **`Enter`** goes to the result: it selects the tab (and the pane that shows it in a split),
+  selects the match with find's highlight and scrolls it to the middle. You are in normal mode;
+  `v` starts copy mode with the match selected, so `v` `y` copies it. If the page changed since
+  the search, the same match is found again; if it is gone, a notice says
+  `match no longer on the page`.
+- **`]q` / `[q`** go to the next / previous result of that search afterwards, across tabs (and
+  windows, in the wider scopes) and wrapping, as Vim's quickfix list; a notice says where you are (`grep 3/12`). `:grep` alone
+  opens live grep again with the last query; `:grep text` opens it with that text.
+- **Not searched:** tabs that have not loaded since a restart (they are listed at the far end as
+  `not loaded`; `Enter` opens one, so you can search again), form fields, text drawn on a canvas,
+  images, closed `<details>`, PDFs, and pages Vimma cannot read (`view-source:`). A page in a
+  frame from another site is searched; its rows say `↳ host`.
+- **Limits.** A search stops in a page, or in the closed tabs' titles, after a second
+  (`timed out`, so a pattern that would backtrack for ever never freezes the page or Vimma), covers at most 100 frames a tab and the first
+  million characters of a page (`cut`), and lists at most 2,000 results; a query over 1,000
+  characters is not run (`too long`).
+- **Private and agent tabs.** From a normal window live grep never sees the
+  [private workspace](#private-workspace), open or recently closed, in any scope; in the private
+  workspace it sees only private tabs. The [agent workspace](#agent-workspace)'s tabs are
+  searched only when the scope includes them (from `this window` on), listed last and marked
+  `◇ agent`.
+- Page text stays in the page's own process while the picker is open and is dropped when it
+  closes; Vimma keeps only the lines it shows, in memory, and never writes them to disk.
 
 ### Copy mode
 
@@ -472,7 +546,15 @@ help overlay. Firefox's own sidebar (history, bookmarks and synced tabs, opened 
 sidebar button or the View menu) follows the theme as well: its launcher strip and panel
 are on the same surface as Vimma's side panel, with the theme's text, edge and focus colours (the
 search box, the open panel's button in the launcher and the lists' scrollbars included), and
-an open sidebar recolours with the rest of the window.
+an open sidebar recolours with the rest of the window. So do Firefox's other surfaces: the find
+bar, the menu bar (`F10`) and every menu, the dialogs a page opens (`alert`, `confirm`,
+`prompt`), the print settings, and Firefox's own pages: Settings and its dialogs, Add-ons,
+Downloads (`about:downloads`), Troubleshooting (`about:support`), `about:config`,
+`about:profiles` and `about:processes`. Their accent (the selected category, checkboxes, main
+buttons) is the normal-mode badge's colour. Settings' default-browser card shows its text and
+button without Firefox's mascot. With your system's high-contrast setting on, these surfaces keep
+Firefox's own high-contrast colours. Pages that Firefox loads in a web content process, such as
+`about:logins` and Firefox's error pages, keep Firefox's colours.
 
 **Dark, light or the system's: `:theme`.** The start page says it too:
 
@@ -585,6 +667,7 @@ keys. A `[panel]` after a key means it works only in that mode.
 | `ctrl+b 1..9`, `alt+1..8`, `alt+9`                                                      | Tab 1 to 9, counting visible tabs (pinned tabs first); Firefox's `alt+9` is the last tab. With fewer tabs than N, nothing happens. `ctrl+shift+pageup` / `ctrl+shift+pagedown` move the tab left / right among them.                                                                                                                                                                                                                                                                                                                                                                      |
 | `:`                                                                                     | Normal mode: opens the command line at the bottom of the window ([below](#the-command-line)). In a text field `:` is typed.                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | `ctrl+b g`, `b`                                                                         | Opens tab search over the page, ready to type (`b` in normal mode): every tab of every workspace and window, and the recently closed ones ([below](#tab-search-and-tab-rename)).                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `ctrl+b f g`                                                                            | Opens [live grep](#live-grep): search the text of the workspace's tabs as you type. `]q` / `[q` in normal mode step through its results afterwards.                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | `ctrl+b shift+t`                                                                        | Renames the tab ([below](#tab-search-and-tab-rename)); an empty name restores the page title.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | `ctrl+b a`                                                                              | Bookmarks the page; type folders before its title: `work/docs/title` ([below](#bookmarks)).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | `ctrl+b shift+b`                                                                        | Opens or closes the bookmarks panel ([below](#bookmarks)).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
@@ -1692,6 +1775,7 @@ type reaches the page, and `ctrl+b` sequences still work.
 | `:tabrename [name]`                   | Renames the tab; without a name, opens the rename prompt.                                                                                   |
 | `:ls`                                 | Opens [tab search](#tab-search-and-tab-rename).                                                                                             |
 | `:tabsearch [text]`, `:ts`, `:b`      | Opens tab search with the text already typed.                                                                                               |
+| `:grep text`, `:grep`                 | Opens [live grep](#live-grep) with that text; alone, with the last query.                                                                   |
 | `:vsplit`/`:vs`, `:split`/`:sp`       | Splits the pane right / down, as `ctrl+b v` / `ctrl+b -`.                                                                                   |
 | `:layout [name]`                      | Arranges the panes in the named preset ([Layouts](#layouts)); Tab completes the names. Without one, the next preset.                        |
 | `:wsnext`/`:wn`, `:wsprev`/`:wp`      | Next / previous workspace, as `ctrl+b )` / `ctrl+b (`.                                                                                      |
@@ -1713,6 +1797,7 @@ type reaches the page, and `ctrl+b` sequences still work.
 | `:addons`                             | Opens the [add-on picker](#add-ons), as `ctrl+b e`.                                                                                         |
 | `:addon name`                         | Opens that add-on's popup; `Tab` completes the name ([Add-ons](#add-ons)).                                                                  |
 | `:bug`                                | Opens about:vimma and copies its redacted report to the clipboard, for a bug report.                                                        |
+| `:update`                             | Checks for a newer Vimma now; when there is one, opens about:vimma's Updates section with the exact commands ([Updates](#updates)).         |
 
 A command that is not built yet says so for a moment, as its keys do.
 
@@ -1723,6 +1808,10 @@ Refresh for the current state. It is an ordinary page, so `j` / `k` scroll it.
 
 - **Version:** Vimma's version, the Firefox release it is built on, the build ID and the update
   channel.
+- **Updates:** whether checks are on, how Vimma was installed, the last check and its result
+  (with the reason when the manifest was refused), the newer version if there is one, its
+  urgency, the manifest's serial and the key that signed it, and the exact commands to update
+  ([Updates](#updates)).
 - **Upstream patches:** how many patches to Firefox's own files the build carries, each with its
   hunk count (the fewer, the easier a Firefox update).
 - **Modes and keys:** each window's mode, and the last 20 keys Vimma saw with what each did
@@ -1832,9 +1921,10 @@ accent = "#ff9e64"
   `download_dir` and `download_max_mb`, [above](#downloads-from-the-agent-workspace)); `[search]`
   (the default engine and `@aliases`, [below](#search-engines)); `[ui] toolbar` (`"shown"`, the
   default, or `"hidden"`: [Firefox's toolbar](#hiding-the-toolbar) in every window; applied at
-  startup and when the line changes, so `ctrl+b u` lasts until then).
+  startup and when the line changes, so `ctrl+b u` lasts until then); `[updates] check`
+  (`true`, the default, or `false`: no [update check](#updates) at all).
 - **Schema:** `schema = 2` at the top enables `[panes]`, `[sites]`, `[[routes]]`, `[firefox]`,
-  `[bookmarks]`, `[private]`, `[mcp]`, `[search]`, `[ui]`,
+  `[bookmarks]`, `[private]`, `[mcp]`, `[search]`, `[ui]`, `[updates]`,
   `hint_chars`, `insert_editing`, `[theme] name` and `appearance`; every key,
   its type and default are in [m5-core-config-and-theme](specs/m5-core-config-and-theme.md#schema-v1)
   and [m3-m4-core-prep](specs/m3-m4-core-prep.md#config-schema-2), and
@@ -1950,6 +2040,51 @@ slots busy. Turn the pref off to stop either.
 With the help overlay open, plain keys go to the overlay, as when typing; chords that work in
 every mode (`ctrl+q`, `ctrl+t`) still run.
 
+## Updates
+
+**No releases announced yet.** Vimma has its signing key built in and checks `updates.vimma.dev`,
+but the host has no signed file yet, so every check finds nothing (about:vimma says `no manifest
+from the update host`) and the status bar never shows a new version. Until the first release is
+announced, update by hand with the commands in the table below ([Installing](#installing)). Once
+it is, this is how it works:
+
+Every 12 hours, and 30 seconds after startup if the last check is older, Vimma fetches one small
+signed file from `updates.vimma.dev` that names the newest release of its update channel. It
+checks the file's signature against the keys built into Vimma and refuses anything else: a file
+signed by another key, one for another channel or platform, or one older than a file it already
+accepted. It installs nothing; it tells you.
+
+- **A newer version:** the status bar's right side shows `⇡ 0.3.1 available`, dim. A release that
+  carries a Firefox security fix shows `⇡ 0.3.1 security: :update` in the error colour.
+- **`:update`** checks at once. When a newer version exists it opens `about:vimma` at its
+  Updates section, with the exact commands for how you installed Vimma; otherwise it says
+  `Vimma 0.1.0 is up to date`, or why the check failed.
+- **The commands, by install:**
+
+  | Installed with           | `:update` shows                                                                                     |
+  | ------------------------ | --------------------------------------------------------------------------------------------------- |
+  | The release's `PKGBUILD` | `curl -fLO https://github.com/vimma-browser/vimma/releases/latest/download/PKGBUILD && makepkg -si` |
+  | AUR `vimma-bin`          | `yay -Syu vimma-bin` (or your AUR helper's equivalent)                                              |
+  | `.deb`                   | `curl -LO …/vimma_X.Y.Z_amd64.deb && sudo apt install ./vimma_X.Y.Z_amd64.deb`                      |
+  | Tarball                  | quit Vimma, then `curl -L …/vimma-X.Y.Z-linux-x86_64.tar.xz \| tar -xJ -C <the install's parent>`   |
+  | AppImage                 | download the new AppImage next to yours and rename it over it; the next start runs it               |
+  | A build from source      | nothing: source builds never check (pull and rebuild)                                               |
+
+- **What a check sends:** a GET for
+  `https://updates.vimma.dev/updates/browser/Linux_x86_64-gcc3/<channel>/update.xml`, with no
+  cookies, no referrer, an empty `Accept-Language` and no cache, and follows no redirect. It names
+  your platform and update channel and nothing else: no Vimma version, build, language or
+  identifier, so every install on a channel asks for the same
+  file. The host sees your IP address and the time.
+- **Problems:** a host that does not answer (you are offline, or no release is published yet) is
+  not shown in the status bar; about:vimma has the reason. A file that answers but fails the
+  checks three times in a row shows `updates: check failed`, and one that is older than 45 days
+  (7 for nightly builds) shows `updates: no news for N days`.
+- **Off:** `[updates] check = false` in [config.toml](#configtoml), or `vimma.update.enabled` =
+  `false` in `about:config`, stops every request; about:vimma then says checks are off. A
+  `config.toml` with errors never turns checks back on: its `check = false` still holds, and
+  while Vimma runs on its defaults because of the errors, it does not check at all.
+
 ## Privacy defaults
 
 Vimma starts quieter than Firefox: no studies, no sponsored content and no telemetry uploads.
@@ -1972,7 +2107,8 @@ name, then toggle or edit it). Spec:
 Kept as in Firefox: Remote Settings (CRLite certificate revocation, intermediate certificates),
 the add-on blocklist, Firefox Sync, add-ons from addons.mozilla.org and their updates, and
 Google Safe Browsing (see below). Firefox's app updater is not built into Vimma, and system add-on
-updates are off, so neither asks Mozilla's update server. The one remaining request there is for
+updates are off, so neither asks Mozilla's update server; Vimma's own [update check](#updates)
+asks `updates.vimma.dev` only. The one remaining request there is for
 the OpenH264 and Widevine plugins, which video calls and DRM video need.
 
 Sites see Firefox 158's user agent, with no Vimma token, and add-ons see Firefox's version
@@ -2064,12 +2200,23 @@ default (see [Safe Browsing](#safe-browsing)). A build without a key fetches no 
 malware lists; Settings then shows "Block dangerous and deceptive content" unticked, and ticking
 it does not help. Mozilla's tracking-protection lists update either way.
 
-**Does Vimma update itself?** No. There are no releases yet, so build a newer `main` yourself.
+**Does Vimma update itself?** Not yet. Its update check is not active yet either, so install each
+new release yourself ([Installing](#installing)); once the check is active it tells you how
+([Updates](#updates)); installing updates itself is planned for M6a ([limits.md](limits.md)).
 Firefox's updater is not built into Vimma, so it never asks Mozilla's update server
-(`aus5.mozilla.org`) for a Firefox build. An updater of Vimma's own is planned for M6a
-([limits.md](limits.md)).
+(`aus5.mozilla.org`) for a Firefox build.
 
 **I want the tab strip back.** Set `vimma.ui.tabstrip.hidden` to `false` in `about:config`.
+
+**The Browser Toolbox (`ctrl+alt+shift+i`) does nothing, and the Browser Console has no input
+line.** Vimma ships Firefox's release defaults for the developer tools: the page's own tools work,
+but the tools that run code with the browser's full privileges are off. Code typed there can read
+every file, cookie and password the browser can, so a page that asks you to paste something into
+the console is a scam. To turn them on deliberately, set `devtools.chrome.enabled` and
+`devtools.debugger.remote-enabled` to `true` in `about:config`. When you are done, set them back
+to `false` and reset `devtools.selfxss.count` (its reset button in `about:config`): opening a
+console while they are on turns the paste warning off for good. The Browser Toolbox still asks
+before it connects. A build started with `npm start` has them on.
 
 **"List all tabs" is missing.** Firefox shows it only when the tab strip is visible. Show the
 strip, or move the "List all tabs" button to the toolbar in customize mode, or use Vimma's
