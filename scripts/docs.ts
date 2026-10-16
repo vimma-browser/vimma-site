@@ -421,7 +421,6 @@ ${keysTables(secs, { level: 3, idPrefix: "keys-", filterable: false })}`;
 ${sidebar(nav, entry.slug, root)}
 ${toc(content)}
 <article class="docs-body" id="doc" tabindex="-1">
-<p class="crumb" aria-hidden="true"><span class="sigil">~/vimma/docs</span> $ less ${escapeHtml(entry.slug || "start-here")}.md</p>
 ${content}
 ${src}
 ${pager(nav, i, root)}

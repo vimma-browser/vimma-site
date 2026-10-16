@@ -2,8 +2,10 @@
 
 The website for Vimma, a keyboard-first Firefox fork with a Neovim-style modal layer and a
 tmux-style `ctrl+b` prefix. It looks like a terminal in Vimma's own colours, the mint and near-black of its logo, a
-light variant for light systems, monospace throughout, a prompt header with the page position, and Vim
-keys on the site itself (press `?`).
+light variant for light systems, monospace throughout, a prompt header with tmux-style tabs, and Vim
+keys on the site itself (press `?`). The layout is plain: sections separated by whitespace rather
+than boxes, three type sizes, prose held to about 70 columns, and the accent kept for links, the
+current tab and the cursor.
 
 **Deployed** on Cloudflare Workers at [vimma.dev](https://vimma.dev). A push to `main` goes live
 in a minute or two. See [Deploying](#deploying).
@@ -12,7 +14,7 @@ in a minute or two. See [Deploying](#deploying).
 
 | Path       | Source                   | What                                                               |
 | ---------- | ------------------------ | ------------------------------------------------------------------ |
-| `/`        | `src/pages/index.html`   | Logo, pitch, install, the promo video, features, name, status      |
+| `/`        | `src/pages/index.html`   | Name, pitch, install command, features, the promo video, status    |
 | `/docs/`   | `src/docs/`, `data/docs/`| Start here, Why Vimma, Vimma compared, then pages from the guide   |
 | `/keys/`   | `src/pages/keys.html`    | Every default binding, filterable, from `data/bindings.json`       |
 | `/install/`| `src/pages/install.html` | Arch Linux command, release packages, build from source            |
@@ -53,7 +55,7 @@ npm run keys:sync -- <commit>      # … at a given commit
 - **contrast**: each text/background token pair, in both palettes, is at least 4.5:1 (WCAG AA).
 - **weight**: what each page loads (HTML, stylesheet, scripts and their imports, and the docs
   search index on docs pages) stays under 150 KB. The heaviest is the known-limits page, about
-  145 KB, close to half of it the search index loaded on first search. The build ships the
+  149 KB, close to half of it the search index loaded on first search. The build ships the
   stylesheet without comments or the whitespace around braces (`scripts/css.ts`). The index
   leaves out common words (a stop list) and verb forms nearly every section has, words already
   in a section's page title, heading or snippet, and words inside a longer word of the same
@@ -70,12 +72,13 @@ npm run keys:sync -- <commit>      # … at a given commit
 
 ## How it is built
 
-- `src/layout.html` is the shared shell (prompt header with the page position and the `?` hint, footer, `?` overlay);
+- `src/layout.html` is the shared shell (prompt header with the tabs and the `?` hint, footer, `?` overlay);
   `src/pages/*.html` are page bodies with a one-line JSON meta comment on top.
   `build.ts` fills `{{placeholders}}`; an unknown one fails the build.
 - `src/ts/site.ts` is the one browser script (an ES module): the keys (`j k d u gg G / ? [ ]
-  g h g d g k g i g a`), the overlay, the keys filter
-  and the docs search. Every page works without it.
+  g h g d g k g i g a`), the overlay, the keys filter,
+  the docs search and the install command's copy button (hidden where the clipboard API is missing).
+  Every page works without it.
 - **The promo video** (`assets/video/`): one 65-second 16:9 cut, no sound, H.264 with the
   `moov` atom first (`+faststart`), with a WebP poster. Every screen, phones included, gets the
   same `<video>`, scaled to the column's width. With `preload="none"` it downloads nothing until
@@ -191,8 +194,8 @@ project is put down.
 
 Semantic landmarks and headings, a skip link, visible focus, AA contrast in both schemes, and a
 layout that works down to 320 px. Nothing is fixed to the foot of the viewport: viewed in Vimma,
-a second status bar under Vimma's own was confusing, so the page position and the `?` hint sit
-in the header. The site's single-key shortcuts never fire while typing in a field or with a modifier
+a second status bar under Vimma's own was confusing, so the tabs (the current one
+highlighted, its position also given to screen readers) and the `?` hint sit in the header. The site's single-key shortcuts never fire while typing in a field or with a modifier
 held, and can be turned off in the `?` overlay (WCAG 2.1.4); `?` keeps working so they can be
 turned back on. The blinking cursor stops under `prefers-reduced-motion`.
 The promo video never plays by itself, has no sound, and has a text summary under it.

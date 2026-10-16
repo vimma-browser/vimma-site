@@ -4,7 +4,10 @@
 
 <h2 id="arch">Arch Linux</h2>
 <p>Run as your normal user, in an empty directory (makepkg leaves its build files there):</p>
-<pre class="code wrap"><span class="p">$ </span>curl -fLO https://github.com/vimma-browser/vimma/releases/latest/download/PKGBUILD &amp;&amp; <span class="nw">makepkg -si</span></pre>
+<div class="cmd">
+  <pre class="code wrap" id="arch-cmd"><span class="p">$ </span>curl -fLO https://github.com/vimma-browser/vimma/releases/latest/download/PKGBUILD &amp;&amp; <span class="nw">makepkg -si</span></pre>
+  <button type="button" class="copy" data-copy="arch-cmd" aria-live="polite" data-js-only hidden>copy</button>
+</div>
 <p>It downloads the release's <code>PKGBUILD</code> for the <code>vimma-bin</code> package, which installs Vimma to <code>/opt/vimma</code> with <code>vimma</code> on your <code>PATH</code>, a desktop entry and icons. <code>makepkg -si</code> asks for your password to install the package and refuses to run as root. To update, run the same command again in the same directory. <code>sudo pacman -R vimma-bin</code> removes Vimma; your profile stays in your home directory.</p>
 
 <h2 id="other">Other distributions</h2>

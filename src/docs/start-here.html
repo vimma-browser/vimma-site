@@ -40,12 +40,7 @@
 </ul>
 
 <h2 id="every-key-is-yours">Every key is yours</h2>
-<p>The defaults follow Vim and tmux, but they are a starting point, not a rule. Vimma writes a commented <code>config.toml</code> on its first launch, so the whole format is there to start from. Every binding and the <kbd>ctrl+b</kbd> prefix can be remapped in <code>~/.config/vimma/config.toml</code>, by the action names on the <a href="{{root}}keys/">keys page</a>. Save the file and Vimma picks it up; a mistake leaves your last working setup in place.</p>
-<pre class="code"><span class="c"># ~/.config/vimma/config.toml</span>
-[keys]
-prefix = "ctrl+a"         <span class="c"># the prefix, as tmux users often remap it</span>
-new_tab = ["prefix+t"]    <span class="c"># any action, any keys</span></pre>
-<p>The whole format is on the <a href="{{root}}docs/config/">config.toml</a> page.</p>
+<p>The defaults follow Vim and tmux, but they are a starting point. Every binding and the <kbd>ctrl+b</kbd> prefix can be remapped in <code>~/.config/vimma/config.toml</code>, by the action names on the <a href="{{root}}keys/">keys page</a> (<a href="{{root}}keys/#remap">an example</a>). Vimma writes a commented file on its first launch, picks up each save, and keeps your last working setup if a save has a mistake. The whole format is on the <a href="{{root}}docs/config/">config.toml</a> page.</p>
 
 <h2 id="these-pages">Getting around these pages</h2>
 <p>This site has a few keys of its own. Press <kbd>?</kbd> for the list. In the docs, <kbd>]</kbd> and <kbd>[</kbd> go to the next and previous page, and <kbd>/</kbd> searches every page.</p>

@@ -168,6 +168,7 @@ function main(): void {
         pos: n >= 0 ? `page ${n + 1}/${navPages.length}` : "page -/-",
         nav: nav(pages, page, root),
         main_class: page.meta.wide ? "wrap wide md" : "wrap md",
+        head_class: page.meta.wide ? "wrap wide" : "wrap",
         skip: page.meta.wide ? "#doc" : "#main",
         content,
       },

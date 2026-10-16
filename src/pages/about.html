@@ -1,18 +1,17 @@
 <!--{"title": "About Vimma: why, privacy, Firefox and licence", "short": "about", "out": "about/", "cmd": "cat FAQ.md", "description": "Why Vimma exists, its privacy defaults, the Firefox underneath, its licence and where the source is."}-->
 <h1>About</h1>
-<p>Vimma is a keyboard-first browser for people who live in Vim and tmux, made so the web keeps the flow of the rest of your work. <strong>Vim</strong> brings the modal layer: <kbd>j</kbd>/<kbd>k</kbd> to scroll, <kbd>f</kbd> for link hints, <kbd>/</kbd> to find, <kbd>:</kbd> for commands. <strong>tmux</strong> brings the prefix layer, on <kbd>ctrl+b</kbd> like tmux's default prefix: <kbd>ctrl+b</kbd> <kbd>c</kbd> for a new tab, <kbd>ctrl+b</kbd> <kbd>v</kbd> to split, <kbd>ctrl+b</kbd> <kbd>w</kbd> to switch workspace. Every one of those keys can be remapped in <code>config.toml</code>, and so can the prefix.</p>
+<p>Vimma is a keyboard-first browser for people who live in Vim and tmux, so the web keeps the flow of the rest of your work. <strong>Vim</strong> brings the modal layer: <kbd>j</kbd> <kbd>k</kbd> scroll, <kbd>f</kbd> shows link hints, <kbd>/</kbd> finds, <kbd>:</kbd> runs commands. <strong>tmux</strong> brings the prefix: after <kbd>ctrl+b</kbd>, <kbd>c</kbd> opens a tab, <kbd>v</kbd> splits and <kbd>w</kbd> switches workspace. Every key, and the prefix, can be remapped in <code>config.toml</code>.</p>
 
 <dl class="faq">
   <dt id="why">Why another browser, and not an extension?</dt>
   <dd>
     <p>Extensions such as Tridactyl and Vimium come close, but an extension cannot reach every key. Vimma's dispatcher sees each key before Firefox does, including in the URL bar, on <code>about:</code> pages and in the PDF viewer.</p>
-    <p>Splits, workspaces and a status bar belong to the window, and no extension owns the window. In Vimma they are built in.</p>
-    <p>The long version: <a href="{{root}}docs/why/">Why Vimma</a>.</p>
+    <p>Splits, workspaces and a status bar belong to the window, and no extension owns the window. In Vimma they are built in. The long version: <a href="{{root}}docs/why/">Why Vimma</a>.</p>
   </dd>
 
   <dt id="name">What does the name mean?</dt>
   <dd>
-    <p><em>Vimma</em> is Finnish for a burst of eager, focused energy. You hear it in <em>työvimma</em>: a spell of work where everything flows and the hours slip by. It also happens to start with <em>Vim</em>. That is how browsing should feel: fast, fluent and absorbed.</p>
+    <p><em>Vimma</em> is Finnish for a burst of eager, focused energy. You hear it in <em>työvimma</em>: a spell of work where everything flows and the hours slip by. It also happens to start with <em>Vim</em>.</p>
   </dd>
 
   <dt id="privacy">What are the privacy defaults?</dt>
