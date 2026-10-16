@@ -1,5 +1,5 @@
 <!-- Hand-written: the whole page. Vimma next to the keyboard browsers and extensions people already use; every claim about another project comes from its own site, docs or repository (listed at the bottom, with the date they were checked). -->
-<p class="lead"><strong>Each of these is good at something. Here is what each does well, and where Vimma is different.</strong></p>
+<p class="lead"><strong>Each of these projects does something well. This page says what, and where Vimma differs.</strong></p>
 <p>Vimma owes a lot to every project on this page. If one of them already fits the way you work, keep it. The table sets them side by side; the sections under it say more.</p>
 
 <h2 id="at-a-glance">At a glance</h2>
@@ -17,26 +17,26 @@
 <tr><th scope="row">Config</th><td>One <code>config.toml</code>, applied as you save</td><td>An options page, with <code>map</code> and <code>unmap</code> lines</td><td><code>:bind</code> and <code>:set</code>, and a <code>tridactylrc</code> file</td><td><code>config.py</code>, or <code>:set</code> saved to <code>autoconfig.yml</code></td><td>Settings, <code>about:config</code> and <code>userChrome.css</code></td></tr>
 <tr><th scope="row">Theming</th><td>A built-in palette, your own colours in <code>config.toml</code>, or your Omarchy theme, live</td><td>Your own CSS for its hints and bars</td><td>Colour schemes (<code>:colourscheme</code>), built-in or your own</td><td>Over a hundred <code>colors.*</code> settings and user stylesheets</td><td>Workspace colours, community mods and <code>userChrome.css</code></td></tr>
 <tr><th scope="row">Platforms</th><td>Linux x86_64: pre-alpha, release packages and an Arch Linux <code>PKGBUILD</code></td><td>Wherever Chrome, Edge or Firefox runs</td><td>Wherever desktop Firefox runs</td><td>Linux, macOS, Windows, FreeBSD</td><td>Linux, macOS, Windows</td></tr>
-<tr><th scope="row">Extensions</th><td>Firefox add-ons, driven from the keyboard</td><td>Is one; runs next to your others</td><td>Is one; runs next to your others</td><td>No WebExtensions; Greasemonkey user scripts and a built-in ad blocker</td><td>Firefox add-ons; not Firefox themes</td></tr>
+<tr><th scope="row">Extensions</th><td>Firefox add-ons, driven from the keyboard</td><td>It is one, and runs alongside your others</td><td>It is one, and runs alongside your others</td><td>No WebExtensions; Greasemonkey user scripts and a built-in ad blocker</td><td>Firefox add-ons; not Firefox themes</td></tr>
 </tbody>
 </table>
 </div>
 
 <h2 id="vimium">Vimium</h2>
-<p><strong>Good at:</strong> being simple and everywhere. It is mature, its link hints and Vomnibar take minutes to learn, and it runs in Chrome, Edge and Firefox, so the same keys follow you from browser to browser. Vimium C, a fork, adds much more for those who want it.</p>
-<p><strong>Where Vimma differs:</strong> Vimium is a guest in the browser, so it stops where extensions stop: on the browser's own pages, the extension store and the PDF viewer. Tabs, windows and anything beyond the page are the browser's. Vimma's keys are part of the browser, and the <kbd>ctrl+b</kbd> layer adds panes and workspaces. Vimium needs no new browser; Vimma does.</p>
+<p><strong>Good at:</strong> simplicity and reach. It is mature, its link hints and Vomnibar take minutes to learn, and it runs in Chrome, Edge and Firefox, so the same keys follow you from browser to browser. Vimium C, a fork, adds much more for those who want it.</p>
+<p><strong>Where Vimma differs:</strong> Vimium is a guest in the browser, so it stops where extensions stop: on the browser's own pages, the extension store and the PDF viewer. Tabs, windows and anything beyond the page are the browser's. Vimma's keys are part of the browser, and the <kbd>ctrl+b</kbd> layer adds panes and workspaces. Vimium works in the browser you already have; Vimma is a browser of its own.</p>
 
 <h2 id="tridactyl">Tridactyl</h2>
 <p><strong>Good at:</strong> depth. It is the closest heir to Vimperator and Pentadactyl: almost everything is an ex command you can bind, chain or put in your <code>tridactylrc</code>, and with its native messenger you can edit any text field in your own Vim.</p>
 <p><strong>Where Vimma differs:</strong> Firefox does not load Tridactyl on <code>about:</code> pages, <code>view-source:</code> and <code>data:</code> pages or addons.mozilla.org. Vimma's keys work on <code>about:</code> pages and addons.mozilla.org too, and Vimma sees each key before the page does. Tridactyl has far more commands today, and works in any Firefox; Vimma is a separate, pre-alpha browser.</p>
 
 <h2 id="qutebrowser">qutebrowser</h2>
-<p><strong>Good at:</strong> being a whole keyboard browser, for a long time. It has a minimal interface, keys that work everywhere, configuration and user scripts in Python, and builds for Linux, macOS and Windows.</p>
-<p><strong>Where Vimma differs:</strong> qutebrowser is built on Qt WebEngine, which is Chromium, and does not run WebExtensions, so add-ons such as uBlock Origin or a password manager's do not run in it (it has its own ad blocker and Greasemonkey user scripts). Vimma is Firefox underneath, with Firefox's add-ons, containers and privacy settings. Vimma also tiles panes inside one window and groups tabs into workspaces, as tmux does; qutebrowser keeps to tabs and windows.</p>
+<p><strong>Good at:</strong> being a complete keyboard-driven browser, and having been one for years. It has a minimal interface, keys that work everywhere, configuration and user scripts in Python, and builds for Linux, macOS and Windows.</p>
+<p><strong>Where Vimma differs:</strong> qutebrowser is built on Qt WebEngine, which is Chromium, and does not run WebExtensions, so add-ons such as uBlock Origin or a password manager's extension do not run in it (it has its own ad blocker and Greasemonkey user scripts). Vimma is Firefox underneath, with Firefox's add-ons, containers and privacy settings. Vimma also tiles panes inside one window and groups tabs into workspaces, as tmux does; qutebrowser keeps to tabs and windows.</p>
 
 <h2 id="zen-browser">Zen Browser</h2>
 <p><strong>Good at:</strong> making Firefox calm and beautiful. Vertical tabs, workspaces with their own containers and colours, split view, compact mode and a large community of mods, with release builds for Linux, macOS and Windows. Vimma is built with Surfer, the toolchain Zen made, and is grateful for it.</p>
-<p><strong>Where Vimma differs:</strong> Zen's interface is made for the mouse and trackpad as well as shortcuts, and it has no modal layer: for Vim keys you add an extension, with an extension's limits. Vimma is keyboard-first: one keymap for pages, tabs, panes and workspaces, Vim modes on every page and a status bar that shows the mode. Zen is released and cross-platform; Vimma is pre-alpha and Linux only.</p>
+<p><strong>Where Vimma differs:</strong> Zen's interface is made for the mouse and trackpad as well as shortcuts, and it has no modal layer: for Vim keys you add an extension, with an extension's limits. Vimma is keyboard-first: one keymap for pages, tabs, panes and workspaces, Vim modes on every page and a status bar that shows the mode. Zen runs on Linux, macOS and Windows; Vimma is pre-alpha and Linux-only.</p>
 
 <h2 id="also">Also worth a look</h2>
 <ul>
@@ -49,7 +49,7 @@
   <li>You want Vim keys in the browser you already use, on any system: <strong>Vimium</strong>, or <strong>Tridactyl</strong> in Firefox.</li>
   <li>You want a mature keyboard browser and can do without Firefox's add-ons: <strong>qutebrowser</strong>.</li>
   <li>You want a polished Firefox with workspaces and split view, on any system: <strong>Zen</strong>.</li>
-  <li>You live in Vim and tmux on Linux, want those habits for the whole browser and keep Firefox's add-ons, and don't mind building a pre-alpha from source: <strong>Vimma</strong>. Start with <a href="{{root}}docs/why/">why a browser and not an extension</a>, then <a href="{{root}}docs/install/">install</a>.</li>
+  <li>You live in Vim and tmux on Linux, want those habits across the whole browser, want to keep Firefox's add-ons, and accept pre-alpha software: <strong>Vimma</strong>. Start with <a href="{{root}}docs/why/">why a browser and not an extension</a>, then <a href="{{root}}docs/install/">install</a>.</li>
 </ul>
 
 <h2 id="sources">Sources</h2>

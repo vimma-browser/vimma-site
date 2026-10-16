@@ -2,11 +2,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-/* vimma-site: one stylesheet. A terminal in Vimma's own colours, taken from its logo: the mint
-   mark on its near-black tile, with an off-white wordmark. A light variant serves light systems.
-   Every text colour pair is checked for WCAG AA by `npm run check`, which reads the two palette
-   blocks below by their marker comments. (The browser itself ships Tokyo Night; that is the
-   browser's theme, not the site's, see docs/theming.) */
+/* vimma-site: the shared stylesheet (the home page adds home.css). A terminal in Vimma's own
+   colours, taken from its logo: the mint mark on its near-black tile, with an off-white wordmark.
+   A light variant serves light systems. Every text colour pair is checked for WCAG AA by
+   `npm run check`, which reads the two palette blocks below by their
+   marker comments. (The browser itself ships Tokyo Night; that is the browser's theme, not the
+   site's, see docs/theming.) */
 
 /* palette:dark — sampled from the logo (vimma-mark.png, vimma-logo-wide.jpg): the tile #0a0f13,
    the mint #1bf587, the wordmark #fcfbf7. --accent-2 is the logo's shaded mint #2ba564. */
@@ -56,13 +57,27 @@
 }
 /* end palette */
 
+/* The type runs from a display size for the home page's one headline down to small labels; the
+   body stays at 1rem. Bands separated by full-width hairlines carry the home page; the accent is
+   for links, keys that matter, the current tab and the cursor. */
 :root {
   --font: ui-monospace, "JetBrains Mono", "CaskaydiaMono Nerd Font", "Cascadia Mono",
     "SF Mono", Menlo, "DejaVu Sans Mono", "Liberation Mono", Consolas, monospace;
-  --measure: 104ch;
+  --t-xs: 0.75rem;
+  --t-sm: 0.875rem;
+  --t-lead: 1.125rem;
+  --t-title: clamp(1.5rem, 1.1rem + 1.6vw, 2.1rem);
+  --t-display: clamp(2.1rem, 1rem + 3.6vw, 3.8rem);
+  --s1: 0.5rem;
+  --s2: 1rem;
+  --s3: 2rem;
+  --s4: 3.5rem;
+  --band: clamp(3rem, 2rem + 4vw, 6rem);
+  --page: 1180px;
+  --measure: 72ch;
   font-family: var(--font);
   font-size: 15px;
-  line-height: 1.6;
+  line-height: 1.65;
   background: var(--bg);
   color: var(--fg);
   -webkit-text-size-adjust: 100%;
@@ -95,7 +110,7 @@ body {
 a {
   color: var(--accent);
   text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, var(--mint) 55%, transparent);
+  text-decoration-color: color-mix(in srgb, var(--mint) 45%, transparent);
   text-underline-offset: 0.2em;
 }
 
@@ -129,15 +144,16 @@ button {
   font: inherit;
 }
 
+/* keycaps: a raised bottom edge, as on a keyboard */
 kbd {
   display: inline-block;
-  padding: 0 0.6ch;
+  padding: 0 0.55ch;
   border: 1px solid var(--border);
   border-bottom-width: 2px;
-  border-radius: 3px;
+  border-radius: 4px;
   background: var(--bg-light);
   color: var(--fg-bright);
-  line-height: 1.4;
+  line-height: 1.35;
   white-space: nowrap;
 }
 
@@ -154,45 +170,52 @@ h1,
 h2,
 h3 {
   color: var(--fg-bright);
-  line-height: 1.3;
+  line-height: 1.25;
   font-weight: 700;
 }
 
 h1 {
-  font-size: 1.6rem;
-  margin: 0 0 1rem;
+  font-size: clamp(1.9rem, 1.4rem + 2vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0 0 var(--s3);
 }
 
 h2 {
-  font-size: 1.15rem;
-  margin: 2.5rem 0 0.75rem;
+  font-size: 1.35rem;
+  letter-spacing: -0.01em;
+  margin: var(--s4) 0 var(--s2);
 }
 
 h3 {
-  font-size: 1rem;
-  margin: 1.5rem 0 0.5rem;
+  font-size: 1.05rem;
+  margin: var(--s3) 0 var(--s1);
 }
 
 /* markdown-ish heading marks, as Neovim shows a .md file; not read out */
+.md h1::before,
+.md h2::before,
+.md h3::before {
+  color: var(--accent);
+  font-weight: 400;
+}
+
 .md h1::before {
   content: "# " / "";
-  color: var(--accent);
 }
 
 .md h2::before {
   content: "## " / "";
-  color: var(--accent);
 }
 
 .md h3::before {
   content: "### " / "";
-  color: var(--accent);
 }
 
 p,
 ul,
 ol {
-  margin: 0 0 1rem;
+  margin: 0 0 var(--s2);
 }
 
 ul,
@@ -226,15 +249,29 @@ li + li {
 }
 
 .wrap {
-  max-width: var(--measure);
+  max-width: calc(var(--page) + 4rem);
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 2rem;
 }
 
 @media (max-width: 480px) {
   .wrap {
-    padding: 0 1rem;
+    padding: 0 1.15rem;
   }
+}
+
+/* small capitals over a section: what it is, before what it says */
+.eyebrow {
+  margin: 0 0 var(--s2);
+  color: var(--accent);
+  font-size: var(--t-xs);
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.eyebrow.muted {
+  color: var(--fg-muted);
 }
 
 /* --- skip link -------------------------------------------------------------------------- */
@@ -264,14 +301,18 @@ li + li {
 .topbar .wrap {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.25rem 2ch;
-  padding-top: 0.6rem;
-  padding-bottom: 0.6rem;
+  align-items: center;
+  gap: var(--s1) 3ch;
+  padding-top: 0.85rem;
+  padding-bottom: 0.85rem;
+}
+
+.topbar p {
+  margin: 0;
 }
 
 .prompt {
+  flex: 1 1 auto;
   min-width: 0;
   white-space: nowrap;
   overflow: hidden;
@@ -284,8 +325,13 @@ li + li {
   text-decoration: none;
 }
 
+.brandmark {
+  margin-right: 1ch;
+  vertical-align: -0.35em;
+}
+
 .prompt .sigil {
-  color: var(--green);
+  color: var(--fg-muted);
 }
 
 .prompt .cmd {
@@ -312,7 +358,7 @@ li + li {
 .tabs ul {
   display: flex;
   flex-wrap: wrap;
-  gap: 0 1.5ch;
+  gap: 0 1ch;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -325,7 +371,7 @@ li + li {
 .tabs a {
   color: var(--fg);
   text-decoration: none;
-  padding: 0.1rem 0.5ch;
+  padding: 0.15rem 0.6ch;
 }
 
 .tabs a .n {
@@ -347,103 +393,106 @@ li + li {
   color: inherit;
 }
 
+.whereami {
+  color: var(--fg-muted);
+}
+
+.keyhint {
+  padding: 0.1rem 1ch;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: none;
+  color: var(--fg-muted);
+  cursor: pointer;
+}
+
+.keyhint:hover {
+  color: var(--fg-bright);
+  border-color: var(--fg-muted);
+}
+
+.keyhint kbd {
+  padding: 0 0.4ch;
+}
+
+html.keys-off .keyhint-on,
+html:not(.keys-off) .keyhint-off,
+html.js .nojs-keys {
+  display: none;
+}
+
+/* on a phone: the prompt and the keys hint share the first line, the tabs take the second */
+@media (max-width: 640px) {
+  .prompt {
+    flex-basis: 0;
+  }
+
+  .whereami {
+    order: 1;
+  }
+
+  .tabs {
+    order: 2;
+    flex-basis: 100%;
+  }
+}
+
 /* --- page body -------------------------------------------------------------------------- */
 
 main.wrap {
   display: block;
-  padding-top: 2rem;
+  padding-top: var(--band);
+}
+
+/* the pages other than home and the docs: a reading column at the header's left edge */
+main.wrap.md:not(.wide) > * {
+  max-width: 84ch;
+}
+
+main.wrap.md:not(.wide) p,
+main.wrap.md:not(.wide) li,
+main.wrap.md:not(.wide) dd {
+  max-width: var(--measure);
 }
 
 main:focus {
   outline: none;
 }
 
-.echo {
-  margin: 0 0 0.5rem;
-  color: var(--fg-muted);
+main > :first-child {
+  margin-top: 0;
 }
 
-.echo .sigil {
-  color: var(--green);
+.lead {
+  color: var(--fg-bright);
+  font-size: var(--t-lead);
 }
 
-/* boxes with the title set into the top border, as in a TUI */
+/* a titled section */
 .box {
-  position: relative;
-  margin: 2.25rem 0 1.5rem;
-  padding: 1.4rem 2ch 1rem;
-  border: 1px solid var(--border);
+  margin: var(--s4) 0 0;
 }
 
 .box > .box-title {
-  position: absolute;
-  top: 0;
-  left: 1.5ch;
-  margin: 0;
-  padding: 0 1ch;
-  transform: translateY(-50%);
-  background: var(--bg);
-  color: var(--accent);
-  font-size: 1rem;
-}
-
-.box > .box-title::before,
-.box > .box-title::after {
-  content: "─ " / "";
-  color: var(--border);
-}
-
-.box > .box-title::after {
-  content: " ─" / "";
+  margin-top: 0;
 }
 
 .box > :last-child {
   margin-bottom: 0;
 }
 
+/* a caution: a yellow rule down the left */
 .note {
-  border-color: var(--yellow);
-}
-
-.note > .box-title {
-  color: var(--yellow);
-}
-
-/* --- home ------------------------------------------------------------------------------- */
-
-.hero-head {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: center;
-  gap: 1.5rem 3ch;
-}
-
-.logo img {
-  display: block;
-  width: 168px;
-  height: 168px;
-  /* the logo is transparent; its white wordmark needs a dark tile on the light palette, as on
-     Vimma's start page (light-dark() follows the used color-scheme) */
-  background: light-dark(#0a0f13, transparent);
-  border-radius: 8%;
-}
-
-.pitch {
-  margin: 0 0 1rem;
-  font-size: 1.25rem;
-  line-height: 1.45;
-  color: var(--fg-bright);
-}
-
-.pitch + p {
-  color: var(--fg-muted);
+  padding: var(--s2) 2ch;
+  border-left: 3px solid var(--yellow);
+  background: var(--bg-dark);
 }
 
 .cta {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem 2ch;
-  margin: 0;
+  gap: var(--s1) 3ch;
+  margin: 0 0 var(--s3);
   padding: 0;
   list-style: none;
 }
@@ -452,137 +501,53 @@ main:focus {
   margin-top: 0;
 }
 
-.cta a {
-  display: inline-block;
-  padding: 0.2rem 1ch;
-  border: 1px solid var(--accent);
-  text-decoration: none;
+.cta a::after,
+.links a::after {
+  content: " →" / "";
 }
 
-.cta a:hover {
-  background: var(--accent);
-  color: var(--badge-fg);
+.links a {
+  margin-right: 3ch;
 }
 
-.cta a::before {
-  content: "→ " / "";
-}
-
-@media (max-width: 640px) {
-  .hero-head {
-    grid-template-columns: 1fr;
-    justify-items: start;
-  }
-
-  .logo img {
-    width: 120px;
-    height: 120px;
-  }
-
-  .pitch {
-    font-size: 1.1rem;
-  }
-}
-
-/* the terminal box around the promo video */
-.term {
-  margin-top: 2.5rem;
-  padding: 1.25rem 1.5ch 1rem;
+/* a command with its copy button, as one framed line */
+.cmdbox {
+  display: flex;
+  align-items: stretch;
+  margin: 0 0 var(--s2);
+  border: 1px solid var(--border);
   background: var(--bg-darker);
 }
 
-.term-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 2ch;
-  margin-bottom: 0.75rem;
-  color: var(--fg-muted);
-}
-
-/* the promo video: the one 16:9 cut on every screen, so phones see the same video */
-.demo {
+.cmdbox .code {
+  flex: 1 1 auto;
+  min-width: 0;
   margin: 0;
+  border: 0;
+  background: none;
 }
 
-.demo video {
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  height: auto;
-  border: 1px solid var(--border);
-  background: var(--bg-dark);
-}
-
-.demo figcaption {
-  margin-top: 0.75rem;
+.copy {
+  flex: none;
+  padding: 0 2ch;
+  border: 0;
+  border-left: 1px solid var(--border);
+  background: none;
   color: var(--fg-muted);
+  font-size: var(--t-xs);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
 }
 
-/* feature grid */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 30ch), 1fr));
-  gap: 1.25rem 2ch;
-  margin: 1.5rem 0 0;
-  padding: 0;
-  list-style: none;
+.copy:hover {
+  color: var(--accent);
 }
 
-.grid li + li {
-  margin-top: 0;
-}
-
-.card {
-  margin: 0;
-  padding: 1.25rem 1.5ch 0.9rem;
-  border: 1px solid var(--border);
-  background: var(--bg);
-}
-
-.card:hover {
-  border-color: var(--accent);
-}
-
-.card h3 {
-  margin: 0 0 0.4rem;
-  color: var(--fg-bright);
-}
-
-.card .k {
-  margin: 0 0 0.6rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem 1ch;
-}
-
-.card p:last-child {
-  margin: 0;
-  color: var(--fg);
-}
-
-.checklist {
-  padding: 0;
-  list-style: none;
-}
-
-.checklist .mark {
-  color: var(--green);
-}
-
-.checklist .mark.part {
-  color: var(--yellow);
-}
-
-.checklist .mark.todo {
+.meta {
+  margin: 0 0 0.35rem;
   color: var(--fg-muted);
-}
-
-blockquote {
-  margin: 0 0 1rem;
-  padding-left: 2ch;
-  border-left: 2px solid var(--green);
-  color: var(--fg-bright);
+  font-size: var(--t-sm);
 }
 
 /* --- keys ------------------------------------------------------------------------------- */
@@ -595,10 +560,9 @@ blockquote {
   flex-wrap: wrap;
   align-items: center;
   gap: 0.25rem 2ch;
-  margin: 1.5rem 0 0;
-  padding: 0.6rem 0;
+  margin: var(--s3) 0 0;
+  padding: var(--s1) 0;
   background: var(--bg);
-  border-bottom: 1px solid var(--border);
 }
 
 .filter label {
@@ -606,21 +570,25 @@ blockquote {
   font-weight: 700;
 }
 
-.filter input {
+.filter input,
+.docs-search input {
   flex: 1 1 24ch;
   min-width: 0;
-  padding: 0.3rem 1ch;
+  padding: 0.25rem 1ch;
   border: 1px solid var(--border);
+  border-radius: 3px;
   background: var(--bg-dark);
   color: var(--fg-bright);
 }
 
-.filter input::placeholder {
+.filter input::placeholder,
+.docs-search input::placeholder {
   color: var(--fg-muted);
   opacity: 1;
 }
 
-.filter input:focus {
+.filter input:focus,
+.docs-search input:focus {
   border-color: var(--accent);
   outline: none;
   box-shadow: 0 0 0 1px var(--accent);
@@ -628,6 +596,7 @@ blockquote {
 
 .filter .count {
   color: var(--fg-muted);
+  font-size: var(--t-sm);
 }
 
 .keys-table {
@@ -642,7 +611,7 @@ blockquote {
 }
 
 .keys-table th:nth-child(2) {
-  width: 38%;
+  width: 36%;
 }
 
 .keys-table td {
@@ -656,19 +625,16 @@ blockquote {
 .keys-table th {
   text-align: left;
   font-weight: 400;
+  font-size: var(--t-sm);
   color: var(--fg-muted);
   border-bottom: 1px solid var(--border);
-  padding: 0.25rem 1ch;
+  padding: 0.25rem 1ch 0.25rem 0;
 }
 
 .keys-table td {
   vertical-align: top;
-  padding: 0.45rem 1ch;
-  border-bottom: 1px dashed var(--selection);
-}
-
-.keys-table tr:hover td {
-  background: var(--bg-light);
+  padding: 0.4rem 1ch 0.4rem 0;
+  border-bottom: 1px solid var(--selection);
 }
 
 .keys-table td:first-child {
@@ -678,7 +644,7 @@ blockquote {
 .keys-table .bindings {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35rem 1.5ch;
+  gap: 0.25rem 1.5ch;
 }
 
 .binding {
@@ -692,13 +658,13 @@ blockquote {
 
 .binding .mode {
   margin-left: 0.5ch;
-  color: var(--accent-2);
-  font-size: 0.85em;
+  color: var(--fg-muted);
+  font-size: var(--t-sm);
 }
 
 .keys-table .name {
   color: var(--fg-muted);
-  font-size: 0.9em;
+  font-size: var(--t-sm);
 }
 
 .nokey {
@@ -706,13 +672,13 @@ blockquote {
 }
 
 .keys-section h2 {
-  margin-top: 2rem;
+  margin-top: var(--s3);
 }
 
-.keys-section h2 .n {
+.keys-section h2 .n,
+.keys-section h3 .n {
   color: var(--fg-muted);
   font-weight: 400;
-  font-size: 0.85em;
 }
 
 @media (max-width: 640px) {
@@ -732,8 +698,8 @@ blockquote {
   }
 
   .keys-table tr {
-    padding: 0.5rem 0;
-    border-bottom: 1px dashed var(--selection);
+    padding: var(--s1) 0;
+    border-bottom: 1px solid var(--selection);
   }
 
   .keys-table tr[hidden] {
@@ -746,16 +712,36 @@ blockquote {
   }
 }
 
+/* the status checklist (About) */
+.checklist {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* "[x] " is four columns of a monospace font: wrapped lines hang under the text */
+.checklist li {
+  padding-left: 4ch;
+  text-indent: -4ch;
+}
+
+.checklist .mark {
+  color: var(--green);
+}
+
+.checklist .mark.todo {
+  color: var(--fg-muted);
+}
+
 /* --- install / about -------------------------------------------------------------------- */
 
 .code {
-  margin: 0 0 1rem;
+  margin: 0 0 var(--s2);
   padding: 0.9rem 2ch;
   border: 1px solid var(--border);
-  border-left: 2px solid var(--green);
   background: var(--bg-darker);
   color: var(--fg-bright);
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
 .code .c {
@@ -763,7 +749,7 @@ blockquote {
 }
 
 .code .p {
-  color: var(--green);
+  color: var(--accent);
   user-select: none;
 }
 
@@ -779,7 +765,7 @@ blockquote {
 }
 
 dl.faq dt {
-  margin-top: 1.75rem;
+  margin-top: var(--s3);
   color: var(--fg-bright);
   font-weight: 700;
 }
@@ -787,11 +773,35 @@ dl.faq dt {
 dl.faq dt::before {
   content: "? " / "";
   color: var(--accent);
+  font-weight: 400;
 }
 
 dl.faq dd {
-  margin: 0.4rem 0 0;
+  margin: var(--s1) 0 0;
   padding-left: 2ch;
+}
+
+/* on a wide screen the questions take a column of their own, each answer beside it */
+@media (min-width: 1000px) {
+  main.wrap.md > dl.faq {
+    display: grid;
+    grid-template-columns: 36ch minmax(0, 72ch);
+    max-width: none;
+    margin-top: var(--s4);
+  }
+
+  dl.faq dt,
+  dl.faq dd {
+    margin: 0;
+    padding: var(--s3) 0 var(--s2);
+    border-top: 1px solid var(--border);
+  }
+
+  dl.faq dt {
+    padding-right: 5ch;
+    font-size: var(--t-lead);
+    line-height: 1.4;
+  }
 }
 
 .table-wrap {
@@ -800,50 +810,51 @@ dl.faq dd {
 
 table.plain {
   border-collapse: collapse;
-  margin: 0 0 1rem;
+  margin: 0 0 var(--s2);
 }
 
 table.plain th,
 table.plain td {
   text-align: left;
   vertical-align: top;
-  padding: 0.3rem 2ch 0.3rem 0;
-  border-bottom: 1px dashed var(--selection);
+  padding: 0.35rem 2ch 0.35rem 0;
+  border-bottom: 1px solid var(--selection);
 }
 
 table.plain th {
   color: var(--fg-muted);
   font-weight: 400;
+  font-size: var(--t-sm);
+  border-bottom-color: var(--border);
 }
 
 /* --- docs ------------------------------------------------------------------------------ */
 
 .wrap.wide {
-  max-width: 172ch;
+  max-width: 168ch;
 }
 
 .docs {
   display: grid;
-  grid-template-columns: 26ch minmax(0, 1fr) 26ch;
+  grid-template-columns: 26ch minmax(0, 1fr) 24ch;
   grid-template-areas: "nav body toc";
-  gap: 0 4ch;
+  gap: 0 5ch;
   align-items: start;
 }
 
 .docs-nav {
   grid-area: nav;
   position: sticky;
-  top: 1rem;
+  top: var(--s2);
   max-height: calc(100vh - 2rem);
   overflow-y: auto;
-  padding-right: 1ch;
-  border-right: 1px solid var(--border);
+  font-size: var(--t-sm);
 }
 
 .docs-body {
   grid-area: body;
   min-width: 0;
-  max-width: 92ch;
+  max-width: 84ch;
 }
 
 .docs-body:focus {
@@ -853,17 +864,15 @@ table.plain th {
 .toc {
   grid-area: toc;
   position: sticky;
-  top: 1rem;
+  top: var(--s2);
   max-height: calc(100vh - 2rem);
   overflow-y: auto;
-  padding-left: 1.5ch;
-  border-left: 1px solid var(--border);
-  font-size: 0.9rem;
+  font-size: var(--t-sm);
 }
 
 .toc-title,
 .docs-nav .group {
-  margin: 0 0 0.4rem;
+  margin: 0 0 0.25rem;
   color: var(--fg-muted);
 }
 
@@ -875,11 +884,6 @@ table.plain th {
   display: none;
 }
 
-.toc-title::before {
-  content: "─ " / "";
-  color: var(--border);
-}
-
 @media (max-width: 900px) {
   .toc-title {
     cursor: pointer;
@@ -888,7 +892,6 @@ table.plain th {
 
   .toc-title::before {
     content: "▸ " / "";
-    color: var(--accent);
   }
 
   .toc details[open] .toc-title::before {
@@ -902,14 +905,14 @@ table.plain th {
 
 .toc ul,
 .docs-nav ul {
-  margin: 0 0 1rem;
+  margin: 0 0 var(--s2);
   padding: 0;
   list-style: none;
 }
 
 .toc li + li,
 .docs-nav li + li {
-  margin-top: 0.15rem;
+  margin-top: 0.1rem;
 }
 
 .toc a,
@@ -936,8 +939,8 @@ table.plain th {
 }
 
 .docs-nav a[aria-current="page"] {
-  background: var(--accent);
-  color: var(--badge-fg);
+  background: var(--selection);
+  color: var(--fg-bright);
   font-weight: 700;
 }
 
@@ -946,14 +949,8 @@ table.plain th {
 }
 
 .docs-nav .group {
-  margin-top: 0.5rem;
-  font-size: 0.85rem;
-  text-transform: lowercase;
-}
-
-.docs-nav .group::before {
-  content: "# " / "";
-  color: var(--accent);
+  margin-top: var(--s2);
+  padding-left: 0.5ch;
 }
 
 .docs-pages > summary {
@@ -965,7 +962,7 @@ table.plain th {
   grid-template-columns: auto minmax(0, 1fr);
   gap: 0.25rem 1ch;
   align-items: center;
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--s1);
 }
 
 .docs-search[hidden] {
@@ -977,30 +974,10 @@ table.plain th {
   font-weight: 700;
 }
 
-.docs-search input {
-  min-width: 0;
-  padding: 0.2rem 1ch;
-  border: 1px solid var(--border);
-  background: var(--bg-dark);
-  color: var(--fg-bright);
-}
-
-.docs-search input::placeholder {
-  color: var(--fg-muted);
-  opacity: 1;
-}
-
-.docs-search input:focus {
-  border-color: var(--accent);
-  outline: none;
-  box-shadow: 0 0 0 1px var(--accent);
-}
-
 .docs-search .status {
   grid-column: 1 / -1;
   margin: 0;
   color: var(--fg-muted);
-  font-size: 0.85rem;
 }
 
 .docs-search .status:empty {
@@ -1021,7 +998,7 @@ table.plain th {
   padding: 0.35rem 1ch;
   text-decoration: none;
   color: var(--fg);
-  border-bottom: 1px dashed var(--selection);
+  border-bottom: 1px solid var(--selection);
 }
 
 .docs-search .results a:hover,
@@ -1033,7 +1010,6 @@ table.plain th {
 .docs-search .snip {
   display: block;
   color: var(--fg-muted);
-  font-size: 0.8rem;
 }
 
 .docs-search .head {
@@ -1041,33 +1017,13 @@ table.plain th {
   color: var(--accent);
 }
 
-.crumb {
-  margin: 0 0 1rem;
-  color: var(--fg-muted);
-}
-
-.crumb .sigil {
-  color: var(--accent);
-}
-
 .docs-body h1 {
   margin-top: 0;
-}
-
-.docs-body h2 {
-  padding-top: 0.5rem;
-  border-top: 1px dashed var(--selection);
-}
-
-.docs-body .box h2 {
-  border-top: 0;
-  padding-top: 0;
 }
 
 .docs-body .intro,
 .docs-body .lead {
   color: var(--fg-bright);
-  font-size: 1.05rem;
 }
 
 .docs-body pre.code code {
@@ -1091,7 +1047,7 @@ table.plain th {
 }
 
 .docs-body .keys-section h3 {
-  margin-top: 1.25rem;
+  margin-top: var(--s3);
 }
 
 .docs-body .keys-table th:nth-child(1) {
@@ -1099,13 +1055,13 @@ table.plain th {
 }
 
 .docs-body .keys-table th:nth-child(2) {
-  width: 36%;
+  width: 34%;
 }
 
 .limit-links {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25rem 2ch;
+  gap: 0.25rem 3ch;
   padding: 0;
   list-style: none;
 }
@@ -1119,52 +1075,43 @@ table.plain th {
 }
 
 .walk li {
-  margin-bottom: 0.4rem;
-}
-
-.paths {
-  margin-bottom: 1rem;
-}
-
-.paths .card p:last-child {
-  color: var(--fg);
+  margin-bottom: 0.25rem;
 }
 
 .source {
-  margin-top: 2.5rem;
+  margin-top: var(--s4);
   color: var(--fg-muted);
-  font-size: 0.9rem;
+  font-size: var(--t-sm);
 }
 
 .pager {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2ch;
-  margin-top: 1.5rem;
-  padding-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 4ch;
+  margin-top: var(--s3);
+  padding-top: var(--s2);
   border-top: 1px solid var(--border);
 }
 
 .pager a {
   display: block;
-  padding: 0.6rem 1.5ch;
-  border: 1px solid var(--border);
   text-decoration: none;
   color: var(--fg-bright);
 }
 
 .pager a:hover {
-  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .pager a[rel="next"] {
+  margin-left: auto;
   text-align: right;
 }
 
 .pager .dir {
   display: block;
   color: var(--fg-muted);
-  font-size: 0.85rem;
+  font-size: var(--t-sm);
 }
 
 @media (max-width: 1280px) {
@@ -1178,9 +1125,7 @@ table.plain th {
   .toc {
     position: static;
     max-height: none;
-    margin-bottom: 1.5rem;
-    padding: 0.75rem 1.5ch;
-    border: 1px solid var(--border);
+    margin-bottom: var(--s3);
   }
 
   .toc ul {
@@ -1202,10 +1147,12 @@ table.plain th {
   .docs-nav {
     position: static;
     max-height: none;
-    margin-bottom: 1rem;
-    padding: 0 0 0.75rem;
-    border-right: 0;
-    border-bottom: 1px solid var(--border);
+    margin-bottom: var(--s1);
+    font-size: 1rem;
+  }
+
+  .toc {
+    font-size: 1rem;
   }
 
   .docs-pages > summary {
@@ -1216,65 +1163,30 @@ table.plain th {
   }
 
   .docs-pages[open] > summary {
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--s1);
   }
 
   .toc ul {
     columns: 1;
-  }
-
-  .pager {
-    grid-template-columns: 1fr;
   }
 }
 
 /* --- footer ----------------------------------------------------------------------------- */
 
 .site-foot {
-  margin-top: 4rem;
+  padding: var(--s3) 0;
   border-top: 1px solid var(--border);
-  padding: 1.25rem 0 1rem;
+  background: var(--bg-dark);
   color: var(--fg-muted);
+  font-size: var(--t-sm);
+}
+
+main.wrap + .site-foot {
+  margin-top: var(--band);
 }
 
 .site-foot p {
-  margin: 0 0 0.4rem;
-}
-
-/* --- where am I: page position and the keys hint, in the header ----------------------- */
-
-.whereami {
-  flex-basis: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.25rem 2ch;
-  margin: 0;
-  color: var(--fg-muted);
-  font-size: 0.9rem;
-}
-
-.keyhint {
-  padding: 0 1ch;
-  border: 1px solid var(--border);
-  background: var(--bg-light);
-  color: var(--fg-bright);
-  cursor: pointer;
-}
-
-.keyhint:hover {
-  border-color: var(--accent);
-}
-
-.keyhint kbd {
-  padding: 0 0.4ch;
-}
-
-html.keys-off .keyhint-on,
-html:not(.keys-off) .keyhint-off,
-html.js .nojs-keys {
-  display: none;
+  margin: 0 0 0.25rem;
 }
 
 /* --- the ? overlay ---------------------------------------------------------------------- */
@@ -1286,7 +1198,7 @@ dialog {
   max-height: calc(100vh - 4rem);
   max-height: calc(100dvh - 4rem);
   padding: 0;
-  border: 1px solid var(--accent-2);
+  border: 1px solid var(--border);
   background: var(--bg-dark);
   color: var(--fg);
 }
@@ -1319,19 +1231,16 @@ dialog::backdrop {
 
 dialog h2 {
   margin: 0;
-  color: var(--accent);
-  font-size: 1rem;
 }
 
 dialog h3 {
-  margin: 1rem 0 0.5rem;
-  color: var(--accent-2);
-  font-size: 1rem;
+  margin: var(--s2) 0 var(--s1);
+  color: var(--fg-muted);
 }
 
 .keyhelp-site {
   border-collapse: collapse;
-  margin-bottom: 1rem;
+  margin-bottom: var(--s2);
 }
 
 .keyhelp-site th {
@@ -1366,7 +1275,8 @@ dialog input[type="checkbox"] {
 dialog button {
   padding: 0.1rem 1ch;
   border: 1px solid var(--border);
-  background: var(--bg-light);
+  border-radius: 3px;
+  background: none;
   color: var(--fg-bright);
   cursor: pointer;
 }
@@ -1377,7 +1287,7 @@ dialog button kbd {
 }
 
 .keyhelp-vimma {
-  border-top: 1px dashed var(--selection);
+  border-top: 1px solid var(--border);
 }
 
 .keyhelp-vimma .filter {
@@ -1399,11 +1309,6 @@ dialog button kbd {
 .keyhelp-vimma h4 .n {
   color: var(--fg-muted);
   font-weight: 400;
-  font-size: 0.85em;
-}
-
-.keyhelp-vimma .keys-table tr:hover td {
-  background: var(--bg);
 }
 
 @media (max-width: 640px) {
@@ -1453,9 +1358,9 @@ pre,
 }
 
 .docs-body h2.details-head {
-  margin-top: 3rem;
-  padding-top: 1rem;
-  border-top: 2px solid var(--border);
+  margin-top: var(--s4);
+  padding-top: var(--s3);
+  border-top: 1px solid var(--border);
   color: var(--fg-muted);
 }
 
@@ -1464,20 +1369,5 @@ pre,
 }
 
 .docs-body .steps-list li + li {
-  margin-top: 0.4rem;
-}
-
-.define {
-  margin: 0 0 0.5rem;
-  color: var(--fg-muted);
-}
-
-.define dfn {
-  font-style: normal;
-  font-weight: 700;
-  color: var(--green);
-}
-
-.define .pos {
-  font-style: italic;
+  margin-top: 0.25rem;
 }

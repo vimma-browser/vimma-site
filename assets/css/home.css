@@ -1,0 +1,259 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+/* The home page's bands, loaded by that page only; tokens and shared parts are in site.css. */
+
+main.bands {
+  display: block;
+}
+
+.band {
+  padding: var(--band) 0;
+  border-top: 1px solid var(--border);
+}
+
+.band:first-child {
+  border-top: 0;
+}
+
+.band h2 {
+  margin-top: 0;
+}
+
+.title {
+  margin: 0 0 var(--s3);
+  font-size: var(--t-title);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--s3) 5ch;
+}
+
+.display {
+  margin: 0 0 var(--s2);
+  max-width: 24ch;
+  text-wrap: balance;
+  font-size: var(--t-display);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+}
+
+.subhead .nw {
+  white-space: nowrap;
+}
+
+.subhead {
+  margin: 0 0 var(--s3);
+  max-width: 36ch;
+  text-wrap: balance;
+  color: var(--accent);
+  font-size: var(--t-title);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+}
+
+.hero .lead {
+  max-width: 58ch;
+  margin-bottom: var(--s3);
+}
+
+.hero .cmdbox {
+  max-width: 64rem;
+}
+
+.hero .code {
+  font-size: 1.05rem;
+}
+
+.logo img {
+  display: block;
+  width: 240px;
+  height: 240px;
+  /* the logo is transparent; its white wordmark needs a dark tile on the light palette, as on
+     Vimma's start page (light-dark() follows the used color-scheme) */
+  background: light-dark(#0a0f13, transparent);
+  border-radius: 8%;
+}
+
+@media (max-width: 900px) {
+  .hero-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .logo {
+    order: -1;
+  }
+
+  .logo img {
+    width: 112px;
+    height: 112px;
+  }
+}
+
+/* four facts in a row of cells */
+.facts {
+  padding: 0;
+  background: var(--bg-dark);
+}
+
+.facts-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style: none;
+}
+
+.facts-grid li {
+  margin: 0;
+  padding: var(--s3) 2ch var(--s3) 3ch;
+  border-left: 1px solid var(--border);
+}
+
+.facts-grid li:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.facts .big {
+  display: block;
+  color: var(--fg-bright);
+  font-size: var(--t-title);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.facts .label {
+  display: block;
+  margin-top: 0.4rem;
+  color: var(--fg-muted);
+  font-size: var(--t-xs);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 760px) {
+  .facts-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .facts-grid li:nth-child(odd) {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .facts-grid li:nth-child(n + 3) {
+    border-top: 1px solid var(--border);
+  }
+}
+
+.band-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0 3ch;
+}
+
+/* the promo video: the one 16:9 cut on every screen, so phones see the same video */
+.demo {
+  margin: 0;
+}
+
+.demo video {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--border);
+  background: var(--bg-dark);
+}
+
+.demo figcaption {
+  max-width: 96ch;
+  margin-top: var(--s2);
+  color: var(--fg-muted);
+  font-size: var(--t-sm);
+}
+
+/* the main features: cells under a hairline, key first */
+.cells {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 32ch), 1fr));
+  gap: 0 5ch;
+  margin: 0 0 var(--s3);
+  padding: 0;
+  list-style: none;
+}
+
+.cells li {
+  margin: 0;
+  padding: var(--s3) 0;
+  border-top: 1px solid var(--border);
+}
+
+/* a small label over each feature, in place of its keys: the keys page lists those */
+.cells .tag {
+  margin: 0 0 var(--s1);
+  color: var(--accent);
+  font-size: var(--t-xs);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.cells h3 {
+  margin: 0 0 var(--s1);
+  font-size: var(--t-lead);
+}
+
+.cells p {
+  margin: 0;
+}
+
+
+
+
+
+
+/* a headline on the left, what it means on the right */
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: var(--s2) 6ch;
+  align-items: start;
+}
+
+.split > :last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 900px) {
+  .split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+
+
+
+blockquote {
+  margin: 0 0 var(--s2);
+  padding-left: 2ch;
+  border-left: 2px solid var(--border);
+  color: var(--fg-bright);
+}
+
+
+.links strong {
+  margin-right: 3ch;
+  color: var(--fg-bright);
+}

@@ -1,8 +1,8 @@
 <!-- Hand-written guide for the agent-workspace page; the build adds the keys table and the details from guide.md. -->
-<p class="lead">Local AI agents, such as Claude Code, Codex, opencode or GitHub Copilot, can use Vimma through <code>vimma-ctl mcp</code>, an MCP server. They reach one workspace only, <code>agent</code>, with its own cookies and logins, and every request asks you first.</p>
+<p class="lead">Local AI agents, such as Claude Code, Codex, opencode or GitHub Copilot, can use Vimma through <code>vimma-ctl mcp</code>, an MCP server. They reach one workspace only, <code>agent</code>, with its own cookies and logins, and Vimma asks you before it carries out each request.</p>
 
 <section class="box note" aria-labelledby="off-by-default">
-<h2 class="box-title" id="off-by-default">off until you turn it on</h2>
+<h2 class="box-title" id="off-by-default">Off until you turn it on</h2>
 <p>Agents cannot reach Vimma until you type <code>:mcp on</code> and answer <kbd>y</kbd>. They never see your other workspaces, the private workspace or your logins there, and <code>:mcp off</code> disconnects them at once.</p>
 </section>
 
@@ -21,7 +21,7 @@
 
 <div class="table-wrap"><table class="plain"><thead><tr><th scope="col">To</th><th scope="col">Press</th></tr></thead><tbody>
 <tr><td>Allow it once</td><td><kbd>y</kbd></td></tr>
-<tr><td>Allow this tool for this agent for 15 minutes (a bare <kbd>a</kbd>: 10)</td><td><kbd>15a</kbd></td></tr>
+<tr><td>Allow this tool for this agent for 15 minutes (<kbd>a</kbd> alone: 10 minutes)</td><td><kbd>15a</kbd></td></tr>
 <tr><td>Deny it</td><td><kbd>n</kbd>, <kbd>Esc</kbd> or <kbd>Enter</kbd></td></tr>
 <tr><td>Deny it and ignore this agent until it reconnects</td><td><kbd>x</kbd></td></tr>
 <tr><td>Answer a request that is waiting</td><td><kbd>ctrl+b</kbd> <kbd>shift+a</kbd></td></tr>

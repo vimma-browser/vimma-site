@@ -1,10 +1,14 @@
 <!--{"title": "Install Vimma · Linux x86_64 releases and Arch Linux", "short": "install", "out": "install/", "cmd": "cat INSTALL.md", "description": "Install Vimma on Linux x86_64: one command on Arch Linux, or a .deb, AppImage or tarball from the latest release. Or build it from source."}-->
+<p class="eyebrow">Vimma 0.1.1 · Linux x86_64</p>
 <h1>Install</h1>
 <p>Vimma <code>0.1.1</code>, on Firefox 158.0, is released for <strong>Linux x86_64</strong>, the only platform it is built and tested on.</p>
 
 <h2 id="arch">Arch Linux</h2>
 <p>Run as your normal user, in an empty directory (makepkg leaves its build files there):</p>
-<pre class="code wrap"><span class="p">$ </span>curl -fLO https://github.com/vimma-browser/vimma/releases/latest/download/PKGBUILD &amp;&amp; <span class="nw">makepkg -si</span></pre>
+<div class="cmdbox">
+  <pre class="code wrap" id="arch-cmd"><span class="p">$ </span>curl -fLO https://github.com/vimma-browser/vimma/releases/latest/download/PKGBUILD &amp;&amp; <span class="nw">makepkg -si</span></pre>
+  <button type="button" class="copy" data-copy="arch-cmd" aria-live="polite" data-js-only hidden>copy</button>
+</div>
 <p>It downloads the release's <code>PKGBUILD</code> for the <code>vimma-bin</code> package, which installs Vimma to <code>/opt/vimma</code> with <code>vimma</code> on your <code>PATH</code>, a desktop entry and icons. <code>makepkg -si</code> asks for your password to install the package and refuses to run as root. To update, run the same command again in the same directory. <code>sudo pacman -R vimma-bin</code> removes Vimma; your profile stays in your home directory.</p>
 
 <h2 id="other">Other distributions</h2>
@@ -14,7 +18,7 @@
   <li>an AppImage: make it executable and run it</li>
   <li>a tarball: unpack it and run <code>vimma/vimma</code></li>
 </ul>
-<p>Next to them are <code>SHA256SUMS</code>, an SBOM and cosign signatures. How to check them is under <a href="https://github.com/vimma-browser/vimma/blob/main/docs/guide.md#installing">Installing</a> in the guide.</p>
+<p>Next to them are <code>SHA256SUMS</code>, an SBOM and cosign signatures. <a href="https://github.com/vimma-browser/vimma/blob/main/docs/guide.md#installing">Installing</a>, in the guide, explains how to check them.</p>
 
 <h2 id="updating">Updating</h2>
 <p>The in-app updater is not active yet, so updating means installing again: on Arch Linux, run the command above in the same directory; otherwise, install the newer <code>.deb</code>, AppImage or tarball over the old one.</p>
@@ -41,11 +45,11 @@
 <span class="p">$ </span>npx surfer build        <span class="c"># full build</span></pre>
 
 <h3 id="safebrowsing">Google Safe Browsing</h3>
-<p>Google Safe Browsing (phishing and malware protection) needs an API key, which is not in the repository. A build without one works but shows the protection as off. To turn it on, get a free key from Google and save it as <code>~/.config/vimma/keys/safebrowsing</code> before building (<a href="https://github.com/vimma-browser/vimma/blob/main/docs/runbook.md#google-safe-browsing-key-spec-m0-safebrowsing-key">the runbook</a> has the steps).</p>
+<p>Google Safe Browsing (phishing and malware protection) needs an API key, which is not in the repository. A build without one works, but Safe Browsing is off. To turn it on, get a free key from Google and save it as <code>~/.config/vimma/keys/safebrowsing</code> before building (<a href="https://github.com/vimma-browser/vimma/blob/main/docs/runbook.md#google-safe-browsing-key-spec-m0-safebrowsing-key">the runbook</a> has the steps).</p>
 
 <h3 id="run">Run</h3>
 <pre class="code"><span class="p">$ </span>npm start               <span class="c"># your build, with its own profile</span>
 <span class="p">$ </span>npm start -- --fresh    <span class="c"># a throwaway profile instead</span></pre>
-<p><code>npm start</code> runs Vimma with a profile of its own (<code>~/.cache/vimma-dev-profile</code>), so your Firefox profile is never touched. Press <kbd>ctrl+b</kbd> <kbd>?</kbd> to see every binding, and you are ready to go.</p>
+<p><code>npm start</code> runs Vimma with a profile of its own (<code>~/.cache/vimma-dev-profile</code>), so your Firefox profile is never touched. Press <kbd>ctrl+b</kbd> <kbd>?</kbd> to see every binding.</p>
 <p>To update a source build, pull the latest <code>main</code>, then run <code>npm run import</code> and <code>npx surfer build</code> again.</p>
 

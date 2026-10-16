@@ -1,5 +1,5 @@
 <!-- Hand-written guide for the routing page; the build adds the details from guide.md. -->
-<p class="lead">Routing puts each link where it belongs without you thinking about it. Send GitHub to your <code>work</code> workspace, or every link Slack opens, and it arrives there with that workspace's logins, wherever you clicked it.</p>
+<p class="lead">Routing puts each link in the workspace it belongs to, without you having to think about it. Send github.com to your <code>work</code> workspace, or every link Slack opens, and the page arrives there with that workspace's logins, wherever you clicked it.</p>
 
 <h2 id="first-rule">Write your first rule</h2>
 
@@ -32,7 +32,7 @@ workspace = &quot;work&quot;</pre>
 <h2 id="good-to-know">Good to know</h2>
 
 <ul>
-  <li>Rules apply to what you open: an address you type, <code>:open</code>, a bookmark, a link from another app. A link a page opens stays in that page's workspace, so no site can open another with your other logins; the status bar names the workspace its rule would choose, and <code>:route move</code> takes it there.</li>
-  <li>Routing by app works through <code>vimma-open</code>, which Vimma's packages set up as the browser's command. A link from an app Vimma cannot name (a Flatpak, say) follows the <code>domain</code> and <code>url</code> rules only.</li>
+  <li>Rules apply to what you open yourself: an address you type, <code>:open</code>, a bookmark or a link from another app. A link that a page opens stays in that page's workspace, so no site can open another site with your other logins. The status bar names the workspace the rule would choose, and <code>:route move</code> takes the tab there.</li>
+  <li>Routing by app works through <code>vimma-open</code>, which Vimma's packages register as the system's browser command. A link from an app Vimma cannot identify, a Flatpak for example, follows only the <code>domain</code> and <code>url</code> rules.</li>
   <li>Private windows are never routed.</li>
 </ul>

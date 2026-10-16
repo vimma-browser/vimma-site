@@ -1,11 +1,11 @@
 <!-- Hand-written guide for the theming page; the build adds the keys table and the details from guide.md. -->
-<p class="lead">Vimma's own parts of the window, the status bar, the command line, the pickers, link hints, pane borders and the start page, share one colour theme. Out of the box it is Vimma's own palette, the mint and near-black of this site, in a dark and a light variant.</p>
+<p class="lead">Vimma's own parts of the window share one colour theme: the status bar, the command line, the pickers, link hints, pane borders and the start page. Out of the box it is Vimma's own palette, the mint and near-black of this site, in a dark and a light variant.</p>
 
 <h2 id="where-colours-come-from">Where the colours come from</h2>
 
 <div class="table-wrap"><table class="plain"><thead><tr><th scope="col">Source</th><th scope="col">What you get</th></tr></thead><tbody>
 <tr><td>Omarchy, if you use it</td><td>Your current <a href="https://omarchy.org/">Omarchy</a> theme, followed live. This is the default whenever Omarchy is installed.</td></tr>
-<tr><td>Built in</td><td>Vimma's palette, dark or light as your system is, or Tokyo Night. The default without Omarchy.</td></tr>
+<tr><td>Built in</td><td>Vimma's palette, dark or light to match your system, or Tokyo Night. The default when Omarchy is not installed.</td></tr>
 <tr><td>Your config.toml</td><td>Single colours of your choice, on top of either one.</td></tr>
 </tbody></table></div>
 
@@ -31,4 +31,4 @@ accent = &quot;<span class="c">#ff9e64&quot;</span></pre>
 
 <p>There is nothing to set up. Switch themes with <code>omarchy-theme-set</code> or the Omarchy menu, and every Vimma window follows, without a restart.</p>
 
-<p>So that it changes at the same moment as the rest of your desktop, Vimma puts a small hook, <code>vimma-theme-reload.sh</code>, in <code>~/.config/omarchy/hooks/theme-set.d/</code> the first time it starts. Edit it and Vimma leaves it alone; delete it and it does not come back. Without the hook, Vimma still notices a new theme within two seconds. Without Omarchy, Vimma looks for it once at startup and reads nothing more.</p>
+<p>So that it changes at the same moment as the rest of your desktop, Vimma installs a small hook, <code>vimma-theme-reload.sh</code>, in <code>~/.config/omarchy/hooks/theme-set.d/</code> the first time it starts. If you edit the hook, Vimma leaves it alone; if you delete it, Vimma does not recreate it. Without the hook, Vimma still notices a new theme within two seconds. Without Omarchy, Vimma looks for it once at startup and then reads nothing more.</p>

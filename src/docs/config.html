@@ -4,9 +4,9 @@
 <h2 id="edit-the-file">Edit the file</h2>
 
 <ol class="steps-list">
-  <li>Vimma creates the file on a profile's first launch, with every default written out and commented, so it changes nothing yet; the status bar says <code>created ~/.config/vimma/config.toml</code> once. A file you already have is never touched. <code>:config</code> shows it in a tab.</li>
+  <li>On a profile's first launch Vimma creates the file with every default written out and commented, so at first it changes nothing. The status bar reports <code>created ~/.config/vimma/config.toml</code> once. A file you already have is never touched, and <code>:config</code> shows it in a tab.</li>
   <li>Open it in your editor, uncomment or add what you want to change, and save.</li>
-  <li>Vimma picks it up within two seconds, in every window. Nothing to restart. <code>:source</code> reloads it at once.</li>
+  <li>Vimma picks it up within two seconds, in every window. There is nothing to restart. <code>:source</code> reloads it at once.</li>
 </ol>
 
 <h2 id="remap-a-key">Remap a key</h2>
@@ -23,7 +23,7 @@ new_tab = [&quot;prefix+t&quot;]<span class="c">        # ctrl+a t opens a tab, 
 
 <div class="table-wrap"><table class="plain"><thead><tr><th scope="col">Section</th><th scope="col">What it changes</th></tr></thead><tbody>
 <tr><td><code>[panes]</code></td><td><code>max</code>: how many panes a split can have (1 to 16, default 4); <code>layout</code>: what <kbd>ctrl+b</kbd> <kbd>enter</kbd> does; <code>main_size</code>: the main pane's share in the <code>main-*</code> layouts.</td></tr>
-<tr><td><code>[sites."example.com"]</code></td><td><code>insert</code>: <code>auto</code>, <code>never</code> or <code>always</code>, whether text fields on that site put you in insert mode.</td></tr>
+<tr><td><code>[sites."example.com"]</code></td><td><code>insert</code>: <code>auto</code>, <code>never</code> or <code>always</code>: whether text fields on that site put you in insert mode.</td></tr>
 <tr><td><code>[theme]</code></td><td><code>name</code>: the built-in palette, <code>"vimma"</code> or <code>"tokyo-night"</code>; <code>appearance</code>: dark, light or the system's; <code>source = "file"</code> for the built-in palette instead of your Omarchy theme; <code>[theme.colors]</code> to change single colours (<a href="{{root}}docs/theming/">theming</a>).</td></tr>
 <tr><td><code>[workspaces]</code></td><td>Workspaces that always exist (<a href="{{root}}docs/workspaces/">workspaces</a>).</td></tr>
 <tr><td><code>[[routes]]</code></td><td>Send a site, or every link an app opens, to a workspace (<a href="{{root}}docs/routing/">routing</a>).</td></tr>

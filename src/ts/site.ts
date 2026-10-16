@@ -4,8 +4,8 @@
 
 // The site's one script, loaded as a module. Everything here is an enhancement: every page reads
 // and works without it. It adds Vim-style keys (j k d u gg G / ? [ ] g h g d g k g i g a), the ?
-// help overlay (the site's keys, then every Vimma binding, loaded on first open), the keys filter
-// and the docs search. There is no status bar of its own:
+// help overlay (the site's keys, then every Vimma binding, loaded on first open), the keys filter,
+// the docs search and the copy buttons. There is no status bar of its own:
 // viewed in Vimma, a second one at the foot of the window would be confusing.
 
 // It imports nothing; this keeps it a module, so its top-level names stay out of the global scope.
@@ -508,5 +508,32 @@ if (search && results && status) {
       e.preventDefault();
       search.focus();
     }
+  });
+}
+
+// --- copy buttons: a command block's text without its "$ " prompt ------------------------------
+
+for (const btn of document.querySelectorAll<HTMLButtonElement>("button[data-copy]")) {
+  const pre = document.getElementById(btn.dataset["copy"] ?? "");
+  if (!pre || !navigator.clipboard) {
+    btn.hidden = true;
+    continue;
+  }
+  const label = btn.textContent ?? "copy";
+  let reset = 0;
+  btn.addEventListener("click", () => {
+    const copy = pre.cloneNode(true) as HTMLElement;
+    for (const p of copy.querySelectorAll(".p")) p.remove();
+    const text = (copy.textContent ?? "").trim();
+    navigator.clipboard.writeText(text).then(
+      () => {
+        btn.textContent = "copied";
+        window.clearTimeout(reset);
+        reset = window.setTimeout(() => (btn.textContent = label), 2000);
+      },
+      () => {
+        btn.textContent = "select and copy";
+      },
+    );
   });
 }

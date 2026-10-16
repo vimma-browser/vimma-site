@@ -17,17 +17,17 @@
 <h2 id="what-to-expect">What to expect</h2>
 
 <ul>
-  <li>A new pane opens the start page with the URL bar focused: type where it should go.</li>
+  <li>A new pane opens the start page with the URL bar focused: type the address it should show.</li>
   <li>The focused pane has a coloured border, and the status bar says <code>pane 2/2</code>. Page keys such as <kbd>j</kbd>, <kbd>H</kbd> and <kbd>r</kbd> act on it. Clicking a pane focuses it too.</li>
   <li>Closing a pane keeps its tab: it is still in the workspace, and <kbd>ctrl+b</kbd> <kbd>g</kbd> finds it.</li>
-  <li>Four panes at most. Change that with <code>[panes] max</code> in config.toml.</li>
+  <li>Four panes at most, by default. Change the limit with <code>max</code> under <code>[panes]</code> in <code>config.toml</code>.</li>
   <li>Each <a href="{{root}}docs/workspaces/">workspace</a> keeps its own split, and a restart brings it back as you left it.</li>
 </ul>
 
 <h2 id="tiling">Tiling layouts</h2>
 
-<p>As in tmux, <kbd>ctrl+b</kbd> <kbd>space</kbd> moves the panes you have into the next preset: <code>even-horizontal</code>, <code>even-vertical</code>, <code>main-vertical</code>, <code>main-horizontal</code>, <code>tiled</code> and <code>dwindle</code>. The status bar names the one you get. No page reloads: each keeps its scroll position, form text and history. In the <code>main-*</code> presets the focused pane is the big one, and each workspace remembers its last preset.</p>
+<p>As in tmux, <kbd>ctrl+b</kbd> <kbd>space</kbd> moves the panes you have into the next preset: <code>even-horizontal</code>, <code>even-vertical</code>, <code>main-vertical</code>, <code>main-horizontal</code>, <code>tiled</code> and <code>dwindle</code>. The status bar names the preset you land on. No page reloads: each keeps its scroll position, form text and history. In the <code>main-*</code> presets the focused pane is the big one, and each workspace remembers its last preset.</p>
 
 <h2 id="resizing">Resizing</h2>
 
-<p><kbd>ctrl+b</kbd> <kbd>r</kbd> enters resize mode (the badge says <code>RESIZE</code>). <kbd>l</kbd> makes the pane wider, <kbd>h</kbd> narrower, <kbd>j</kbd> taller and <kbd>k</kbd> shorter, 5 % at a time; <kbd>4l</kbd> is four steps. <kbd>Esc</kbd>, <kbd>Enter</kbd> or <kbd>q</kbd> leave. Without the mode, <kbd>ctrl+w</kbd> <kbd>&gt;</kbd>, <kbd>ctrl+w</kbd> <kbd>&lt;</kbd>, <kbd>ctrl+w</kbd> <kbd>+</kbd> and <kbd>ctrl+w</kbd> <kbd>-</kbd> resize one step, as in Vim.</p>
+<p><kbd>ctrl+b</kbd> <kbd>r</kbd> enters resize mode (the badge says <code>RESIZE</code>). <kbd>l</kbd> makes the pane wider, <kbd>h</kbd> narrower, <kbd>j</kbd> taller and <kbd>k</kbd> shorter, 5 % at a time; <kbd>4l</kbd> is four steps. <kbd>Esc</kbd>, <kbd>Enter</kbd> or <kbd>q</kbd> leaves the mode. Without the mode, <kbd>ctrl+w</kbd> <kbd>&gt;</kbd>, <kbd>ctrl+w</kbd> <kbd>&lt;</kbd>, <kbd>ctrl+w</kbd> <kbd>+</kbd> and <kbd>ctrl+w</kbd> <kbd>-</kbd> resize one step, as in Vim.</p>
