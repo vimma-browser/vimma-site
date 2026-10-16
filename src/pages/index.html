@@ -1,22 +1,23 @@
 <!--{"title": "Vimma: a keyboard-first browser", "short": "home", "out": "", "cmd": "", "bands": true, "description": "Vimma is a Firefox fork for people who live in the terminal: Vim modes on every page, tmux-style workspaces and splits behind ctrl+b."}-->
 <section class="band hero" aria-labelledby="title">
-  <div class="wrap hero-grid">
-    <div class="hero-text">
-      <p class="eyebrow">Vimma · keyboard-first, built on Firefox</p>
-      <h1 id="title" class="display"><span class="sr-only">Vimma: </span>A browser for people who live in the terminal</h1>
-      <p class="subhead">Vim modes on every page, <span class="nw">tmux-style</span> workspaces and splits.</p>
-      <p class="lead">Single keys drive the page, and a prefix key, as in tmux, drives tabs, panes and workspaces, so your hands never leave the keyboard. Firefox is underneath, so your sites and add-ons keep working.</p>
-      <div class="cmdbox">
-        <pre class="code wrap" id="install-cmd"><span class="p">$ </span>curl -fLO https://github.com/vimma-browser/vimma/releases/latest/download/PKGBUILD &amp;&amp; <span class="nw">makepkg -si</span></pre>
-        <button type="button" class="copy" data-copy="install-cmd" aria-live="polite" data-js-only hidden>copy</button>
-      </div>
-      <p class="meta">Arch Linux · <a href="{{root}}install/">other distributions and updating</a></p>
-    </div>
-    <picture class="logo">
-      <source type="image/avif" srcset="{{root}}assets/img/vimma-logo-256.avif 1x, {{root}}assets/img/vimma-logo-512.avif 2x">
-      <source type="image/webp" srcset="{{root}}assets/img/vimma-logo-256.webp 1x, {{root}}assets/img/vimma-logo-512.webp 2x">
-      <img src="{{root}}assets/img/vimma-logo-256.png" srcset="{{root}}assets/img/vimma-logo-512.png 2x" width="256" height="256" alt="The Vimma logo: a browser window with a green V, the name Vimma, and the words Vim and Tmux inspired">
+  <div class="wrap">
+    <picture class="lockup">
+      <source type="image/avif" media="(prefers-color-scheme: light)" srcset="{{root}}assets/img/vimma-wide-light-560.avif 1x, {{root}}assets/img/vimma-wide-light-1120.avif 2x">
+      <source type="image/webp" media="(prefers-color-scheme: light)" srcset="{{root}}assets/img/vimma-wide-light-560.webp 1x, {{root}}assets/img/vimma-wide-light-1120.webp 2x">
+      <source type="image/png" media="(prefers-color-scheme: light)" srcset="{{root}}assets/img/vimma-wide-light-560.png">
+      <source type="image/avif" srcset="{{root}}assets/img/vimma-wide-dark-560.avif 1x, {{root}}assets/img/vimma-wide-dark-1120.avif 2x">
+      <source type="image/webp" srcset="{{root}}assets/img/vimma-wide-dark-560.webp 1x, {{root}}assets/img/vimma-wide-dark-1120.webp 2x">
+      <img src="{{root}}assets/img/vimma-wide-dark-560.png" width="560" height="115" alt="">
     </picture>
+    <p class="eyebrow">Keyboard-first · built on Firefox</p>
+    <h1 id="title" class="display"><span class="sr-only">Vimma: </span>A browser for people who live in the terminal</h1>
+    <p class="subhead">Vim modes on every page, <span class="nw">tmux-style</span> workspaces and splits.</p>
+    <p class="lead">Single keys drive the page, and a prefix key, as in tmux, drives tabs, panes and workspaces, so your hands never leave the keyboard. Firefox is underneath, so your sites and add-ons keep working.</p>
+    <div class="cmdbox">
+      <pre class="code wrap" id="install-cmd"><span class="p">$ </span>curl -fLO https://github.com/vimma-browser/vimma/releases/latest/download/PKGBUILD &amp;&amp; <span class="nw">makepkg -si</span></pre>
+      <button type="button" class="copy" data-copy="install-cmd" aria-live="polite" data-js-only hidden>copy</button>
+    </div>
+    <p class="meta">Arch Linux · <a href="{{root}}install/">other distributions and updating</a></p>
   </div>
 </section>
 
