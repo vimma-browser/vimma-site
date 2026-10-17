@@ -5,26 +5,18 @@
 // Vimma's default bindings, for the keys page, the docs pages' key tables and the ? overlay.
 //
 // Vimma's `npm run gen-docs` writes docs/bindings.json from the same keymap as its default
-// config.toml and its own `ctrl+b ?` overlay. `npm run keys:sync` copies that file, unchanged,
-// from the public repository at one commit into data/bindings.json, and records the commit in
-// data/bindings-source.json. Both are committed, so the site builds offline and without Vimma's
-// repository. The build reads them with readBindings().
-//
-//   npm run keys:sync                 the latest commit on Vimma's main
-//   npm run keys:sync -- <commit>     a given commit (a full or short hash, or a branch)
-//
-// .github/workflows/sync-keys.yml runs it when Vimma's site-dispatch workflow says the file
-// changed on main, and opens a pull request.
+// config.toml and its own `ctrl+b ?` overlay. `npm run release:sync` (scripts/sync-release.ts)
+// copies that file, unchanged, from the commit of the latest release's tag into
+// data/bindings.json, and records the commit in data/bindings-source.json. Both are committed,
+// so the site builds offline and without Vimma's repository. The build reads them with
+// readBindings().
 
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { pathToFileURL } from "node:url";
 
 import type { BindingsFile, BindingsSource, Section, VimmaBindings } from "./bindings-types.js";
 
 const ROOT = resolve(import.meta.dirname, "../..");
-const OWNER_REPO = "vimma-browser/vimma";
-const PATH = "docs/bindings.json";
 const DATA = "data/bindings.json";
 const SOURCE = "data/bindings-source.json";
 
@@ -73,40 +65,4 @@ export function readBindings(root: string = ROOT): BindingsFile {
   const data = validate(JSON.parse(readFileSync(resolve(root, DATA), "utf8")));
   const src = JSON.parse(readFileSync(resolve(root, SOURCE), "utf8")) as BindingsSource;
   return { commit: src.commit.slice(0, 7), commitFull: src.commit, date: src.date, sections: toSections(data) };
-}
-
-// --- keys:sync --------------------------------------------------------------------------------
-
-async function get(url: string, accept: string): Promise<string> {
-  const headers: Record<string, string> = { accept, "user-agent": "vimma-site keys:sync" };
-  const token = process.env["GITHUB_TOKEN"];
-  if (token && url.startsWith("https://api.github.com/")) headers["authorization"] = `Bearer ${token}`;
-  const res = await fetch(url, { headers });
-  if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
-  return res.text();
-}
-
-export async function syncBindings(ref: string): Promise<void> {
-  if (!/^[\w./-]+$/.test(ref)) throw new Error(`not a commit or branch: ${ref}`);
-  // Resolve the ref to a full commit first, so the file and the record agree.
-  const commit = JSON.parse(
-    await get(`https://api.github.com/repos/${OWNER_REPO}/commits/${ref}`, "application/vnd.github+json"),
-  ) as { sha: string; commit: { committer: { date: string } } };
-  if (!/^[0-9a-f]{40}$/.test(commit.sha)) throw new Error(`unexpected commit ${commit.sha}`);
-  const raw = await get(`https://raw.githubusercontent.com/${OWNER_REPO}/${commit.sha}/${PATH}`, "application/json");
-  const data = validate(JSON.parse(raw));
-  const source: BindingsSource = {
-    repo: `https://github.com/${OWNER_REPO}`,
-    path: PATH,
-    commit: commit.sha,
-    date: commit.commit.committer.date.slice(0, 10),
-  };
-  writeFileSync(resolve(ROOT, DATA), JSON.stringify(data, null, 2) + "\n");
-  writeFileSync(resolve(ROOT, SOURCE), JSON.stringify(source, null, 2) + "\n");
-  const n = data.groups.reduce((sum, g) => sum + g.actions.length, 0);
-  console.log(`wrote ${DATA}: ${data.groups.length} groups, ${n} actions (${commit.sha.slice(0, 7)}, ${source.date})`);
-}
-
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  await syncBindings(process.argv[2] || "main");
 }

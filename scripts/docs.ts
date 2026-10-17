@@ -81,6 +81,8 @@ export function packIndex(index: SearchEntry[]): PackedIndex {
 }
 
 interface Source {
+  /** The release tag the copies were taken at. */
+  ref: string;
   commit: string;
   date: string;
 }
@@ -94,7 +96,7 @@ const pageUrl = (s: string): string => (s === "" ? "docs/" : `docs/${s}/`);
 const LIMIT_ID = (title: string): string => `limit-${slug(title.replace(/\s*\(.*\)$/, ""))}`;
 
 function fail(msg: string): never {
-  throw new Error(`docs: ${msg}\n(run \`npm run docs:sync\`, then update scripts/docs-pages.ts)`);
+  throw new Error(`docs: ${msg}\n(the copy in data/docs/ comes from Vimma's latest release: update scripts/docs-pages.ts to match it)`);
 }
 
 function need(guide: MdSection, title: string): MdSection {
@@ -102,7 +104,7 @@ function need(guide: MdSection, title: string): MdSection {
 }
 
 /** Link targets in guide.md and limits.md, rewritten for the site. */
-function linker(ids: IdMap, here: string, root: string): RenderOptions["link"] {
+function linker(ids: IdMap, here: string, root: string, ref: string): RenderOptions["link"] {
   return (href) => {
     if (/^https?:\/\//.test(href)) return href;
     const [path = "", hash = ""] = href.split("#");
@@ -114,10 +116,11 @@ function linker(ids: IdMap, here: string, root: string): RenderOptions["link"] {
     if (path === "bindings.md") return `${root}keys/`;
     if (path === "limits.md") return `${root}docs/limits/`;
     if (path.endsWith("README.md")) return `${root}docs/install/`;
-    // specs, ADRs, the runbook and the plan: the file in Vimma's repository on GitHub
+    // specs, ADRs, the runbook and the plan: the file in Vimma's repository on GitHub, at the
+    // release the copies came from
     const file = posix.normalize(`docs/${path}`);
     if (file.startsWith("..")) return null;
-    return `${VIMMA_REPO}/blob/main/${file}${hash === "" ? "" : `#${hash}`}`;
+    return `${VIMMA_REPO}/blob/${encodeURIComponent(ref)}/${file}${hash === "" ? "" : `#${hash}`}`;
   };
 }
 
@@ -359,7 +362,7 @@ export function buildDocs(rootDir: string): { pages: BuiltDoc[]; index: SearchEn
     const page: DocPage | undefined = DOC_PAGES.find((p) => p.slug === entry.slug);
     const depth = entry.slug === "" ? 1 : 2;
     const root = "../".repeat(depth);
-    const opts: RenderOptions = { link: linker(ids, entry.slug, root) };
+    const opts: RenderOptions = { link: linker(ids, entry.slug, root, source.ref) };
     const introFile = `src/docs/${entry.slug || "start-here"}.html`;
     const intro = read(introFile)
       .replace(/^<!--[\s\S]*?-->\n?/, "")
@@ -449,7 +452,7 @@ ${pager(nav, i, root)}
  * the file on GitHub.
  */
 function fullMarkdown(guideMd: string, limitsMd: string, ids: IdMap, source: Source): string {
-  const link = linker(ids, "\0", "https://vimma.dev/");
+  const link = linker(ids, "\0", "https://vimma.dev/", source.ref);
   const fix = (md: string, file: string): string =>
     md.replace(/\]\(([^)\s]+)\)/g, (all, href: string) => {
       const to = link(href.startsWith("#") && file === "limits.md" ? `limits.md${href}` : href);

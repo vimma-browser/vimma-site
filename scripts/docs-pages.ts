@@ -6,7 +6,8 @@
 // (src/docs/<slug>.html), "Start here", "Why Vimma" and "Vimma compared" are written by hand;
 // everything else is cut from the synced copies of Vimma's guide.md, limits.md and bindings.json
 // at build time. Every heading, table row and paragraph named here must exist upstream, or the
-// build fails: that is the drift alarm. Run `npm run docs:sync`, then fix this file.
+// build fails: that is the drift alarm. `npm run release:sync` copies them from the latest
+// release; when it fails the build, fix this file.
 
 export type Block =
   /** A guide.md section by its heading, with its subsections unless `only` or `exclude`. */
@@ -44,7 +45,7 @@ export const LIMIT_SECTIONS = [
   "Find",
   "Copy mode",
   "Tabs and window",
-  "Workspaces (M3, by design)",
+  "Workspaces (by design)",
   "Bookmarks",
   "Add-ons",
   "Panes",
@@ -68,15 +69,10 @@ export const STALE_PREFIXES: string[] = [];
 /**
  * Rewrites of guide.md text before it is parsed: internal names (milestones, specs, the
  * project's code names) that mean nothing to a reader. Each is [pattern, replacement]; one that
- * no longer matches is reported at build time, so the list can shrink as upstream changes.
+ * no longer matches is reported at build time, so the list can shrink as upstream changes. Empty
+ * while the guide names none.
  */
-export const GUIDE_REWRITES: [RegExp, string][] = [
-  [/\s+Spec:\s+\[[^\]]+\]\([^)]+\)(,\s+protocol:\s*\[[^\]]+\]\([^)]+\))?\./g, ""],
-  [/For workspaces\s+\(\[m3-workspaces\]\([^)]+\)\); each/g, "For workspaces; each"],
-  [/every key,\s+its type and default are in \[[^\]]+\]\([^)]+\)\s+and \[[^\]]+\]\([^)]+\), and\s+/g, ""],
-  [/(\s)planned for M6\./g, "$1planned."],
-  [/\s+\(\[spec m6a-updater\]\([^)]+\)\)\./g, "."],
-];
+export const GUIDE_REWRITES: [RegExp, string][] = [];
 
 export const DOC_PAGES: DocPage[] = [
   {
@@ -104,10 +100,9 @@ export const DOC_PAGES: DocPage[] = [
     group: "Get going",
     description: "Install Vimma on Linux x86_64 from a release, on Arch Linux with one command, and start it with a profile of its own.",
     blocks: [
-      { guide: "Install" },
+      { guide: "Installing" },
       { guide: "First launch, with its own profile" },
       { guide: "The start page" },
-      { guide: "Installing" },
       { limits: ["Platforms and packaging", "Files and profiles"] },
     ],
   },
@@ -149,7 +144,7 @@ export const DOC_PAGES: DocPage[] = [
     group: "Tabs, panes, workspaces",
     description: "The ctrl+b prefix, the tab keys, the bindings overlay, tab search and tab names.",
     blocks: [
-      { guideParas: { section: "Picking a tab during a split", startsWith: ["While the overlay is open"] }, title: "The bindings overlay", id: "the-overlay" },
+      { guideParas: { section: "Keys", startsWith: ["While the overlay is open"] }, title: "The bindings overlay", id: "the-overlay" },
       { guide: "Tab search and tab rename" },
       { keys: ["Help", "Tabs"] },
       { limits: ["Tabs and window"] },
@@ -189,7 +184,7 @@ export const DOC_PAGES: DocPage[] = [
         exclude: ["Side panel", "Routing: which workspace a link opens in", "Agent workspace", "Private workspace"],
       },
       { keys: ["Workspaces"] },
-      { limits: ["Workspaces (M3, by design)"] },
+      { limits: ["Workspaces (by design)"] },
     ],
   },
   {
@@ -199,7 +194,7 @@ export const DOC_PAGES: DocPage[] = [
     headTitle: "The private workspace: Firefox's private browsing, one key away",
     group: "Tabs, panes, workspaces",
     description: "Firefox's private browsing as one more workspace: one key in and out, and nothing kept on disk.",
-    blocks: [{ guide: "Private workspace" }, { limits: ["Workspaces (M3, by design)"] }],
+    blocks: [{ guide: "Private workspace" }, { limits: ["Workspaces (by design)"] }],
   },
   {
     slug: "agent-workspace",
@@ -216,7 +211,7 @@ export const DOC_PAGES: DocPage[] = [
     nav: "Routing",
     group: "Tabs, panes, workspaces",
     description: "Send a site, or every link an app opens, to the workspace it belongs in.",
-    blocks: [{ guide: "Routing: which workspace a link opens in" }, { limits: ["Workspaces (M3, by design)"] }],
+    blocks: [{ guide: "Routing: which workspace a link opens in" }, { limits: ["Workspaces (by design)"] }],
   },
   {
     slug: "side-panel",

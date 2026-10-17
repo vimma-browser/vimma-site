@@ -36,9 +36,8 @@ npm run serve       # dist/ at http://127.0.0.1:8080/ (PORT=… to change)
 npm run check       # tsc --noEmit (both projects), then the dist/ checks below
 npm test            # unit tests of the build scripts (node:test)
 npm run wording     # no process wording in the Markdown, the pages or code comments (below)
-npm run docs:sync -- ../vimma      # copy guide.md and limits.md from its origin/main
-npm run keys:sync                  # fetch Vimma's docs/bindings.json from its main (network)
-npm run keys:sync -- <commit>      # … at a given commit
+npm run release:sync               # copy the latest Vimma release's facts, docs and keys (network)
+npm run release:sync -- v0.1.2     # … of a given release tag
 ```
 
 `npm run check` runs on the built `dist/`:
@@ -75,7 +74,12 @@ npm run keys:sync -- <commit>      # … at a given commit
 
 - `src/layout.html` is the shared shell (prompt header with the tabs and the `?` hint, footer, `?` overlay);
   `src/pages/*.html` are page bodies with a one-line JSON meta comment on top.
-  `build.ts` fills `{{placeholders}}`; an unknown one fails the build.
+  `build.ts` fills `{{placeholders}}`; an unknown one fails the build. No page types a version:
+  `{{version}}`, `{{firefox}}` (`158.0`), `{{firefox_major}}` (`158`), `{{release_tag}}`, `{{deb}}`,
+  `{{appimage}}` and `{{tarball}}` come from `data/release.json` (see [Keeping up with
+  releases](#keeping-up-with-releases)), and `{{arch_install}}` is the Arch Linux command
+  (`ARCH_INSTALL` in `scripts/release.ts`), so the home page, the install page and the docs show
+  the same line.
 - `src/ts/site.ts` is the one browser script (an ES module): the keys (`j k d u gg G / ? [ ]
   g h g d g k g i g a`), the overlay, the keys filter,
   the docs search and the install command's copy button (hidden where the clipboard API is missing).
@@ -99,24 +103,52 @@ npm run keys:sync -- <commit>      # … at a given commit
   If the length changes, update `duration` in `PROMO_VIDEO` and the duration in the page's
   fallback link; update `uploadDate` with a new cut.
 - **The keys** come from Vimma's `docs/bindings.json`, which Vimma's `npm run gen-docs` writes from
-  the same keymap as its default `config.toml` and its own `ctrl+b ?` overlay. `npm run keys:sync`
-  (`scripts/gen-keys.ts`) fetches it unchanged from `raw.githubusercontent.com` at one commit of
-  the public repository into `data/bindings.json`, and records the commit in
-  `data/bindings-source.json`. Both are committed, so the build works offline and without
-  Vimma's repository. The keys page, the docs pages' key tables and the `?` overlay are all
+  the same keymap as its default `config.toml` and its own `ctrl+b ?` overlay. `npm run release:sync`
+  copies it unchanged from the latest release's tag into `data/bindings.json`, and records the
+  commit in `data/bindings-source.json`. Both are committed, so the build works offline and
+  without Vimma's repository. The keys page, the docs pages' key tables and the `?` overlay are all
   built from it, and the build fails if its shape is not the one `gen-keys.ts` expects.
 - **The `?` overlay** has two parts: "This site" (the site's keys and the shortcuts toggle), then
   "In Vimma", every default binding grouped as Vimma's `ctrl+b ?` groups them, with a `/`
   filter. The build writes the Vimma part as the data module `assets/js/vimma-keys.js`, which
   the overlay imports when it first opens. In the overlay, `q`, `?` and `Esc` close it, `/`
   filters, and `j k d u gg G` scroll it; in the filter, `Esc` clears it, then closes the overlay.
-- **Keeping the keys current:** when `docs/bindings.json` changes on Vimma's `main`, Vimma's
-  `site-dispatch.yml` sends a `repository_dispatch` (`vimma-bindings`) here, and
-  `.github/workflows/sync-keys.yml` runs `keys:sync` at that commit and opens a pull request. It
-  also runs by hand (Actions → sync-keys → Run workflow, with an optional commit). A pull request
-  opened with the workflow's own token starts no `pull_request` workflows, so the workflow starts
-  `ci.yml` on the new branch itself (`workflow_dispatch`). It needs "Allow GitHub Actions to create
-  and approve pull requests" on (Settings → Actions → General).
+
+## Keeping up with releases
+
+The site describes Vimma's latest published release, not its `main`: the version on every page,
+the package names, the docs and the keys all come from the commit the release's tag points to,
+so they match what a visitor downloads.
+
+- `npm run release:sync` (`scripts/sync-release.ts`) reads the latest published release from
+  GitHub (or the tag given), takes the Vimma and Firefox versions from its title (`Vimma 0.1.2 ·
+  Firefox 158.0`; Firefox from `surfer.json` at the tag if the title has none), the `.deb`,
+  AppImage and tarball names from its assets, and copies `docs/guide.md`, `docs/limits.md` and
+  `docs/bindings.json` at the tag's commit. It writes `data/release.json`, `data/docs/` and
+  `data/bindings.json` with their source files, and only once everything is fetched and checked.
+  It uses `GITHUB_TOKEN` when set, for the API's higher rate limit. Every value it records must
+  have its expected form (a version number, a full commit hash, a release URL), since the pages
+  print them as they are. A scheduled run refuses a "latest" release older than the one the site
+  shows; going back takes the tag, by hand.
+- The build reads only those committed files and never calls GitHub, so it works offline and
+  Cloudflare's builders, which share GitHub's unauthenticated rate limit, cannot fail it. It
+  fails if `data/release.json` is missing or malformed.
+- `.github/workflows/release-sync.yml` runs the sync once a day (and by hand: Actions →
+  release-sync → Run workflow, with an optional tag). When `data/` changes, a read-only job builds
+  and checks the site, and a second job, which holds the write token and runs no npm code, opens
+  or updates the pull request `release-sync/<tag>`. A pull request opened
+  with the workflow's own token starts no `pull_request` workflows, so it starts `ci.yml` on the
+  branch itself (`workflow_dispatch`), and turns on auto-merge (squash), so the pull request
+  merges once the required `build` check passes, and Cloudflare deploys it.
+- When the new release renames or drops a guide heading, paragraph or limits section that
+  `scripts/docs-pages.ts` names, the build fails on purpose. The pull request then says which
+  one, is not set to merge, and stays red: fix `scripts/docs-pages.ts` on its branch and merge
+  it by hand. The next run keeps those commits and adds its own on top. A sync for an older
+  release that never merged is closed when a newer one opens; its branch is kept, with any fix on
+  it. A `release-sync/<tag>` branch left without an open pull request stops the sync for that
+  tag, with an error saying so, until it is deleted.
+- It needs two repository settings: "Allow GitHub Actions to create and approve pull requests"
+  (Settings → Actions → General) and "Allow auto-merge" (Settings → General).
 
 ## The docs
 
@@ -129,8 +161,8 @@ box, previous/next links (`[` and `]`). Each page has two tiers:
 2. **The reference**, cut at build time: the page's keys table from `bindings.json`, then the
    matching `guide.md` sections under one "Details" heading, then links to the known limits.
    They come from copies of Vimma's `docs/guide.md` and `docs/limits.md` in
-   `data/docs/`, taken from the main repository's `origin/main` by `npm run docs:sync` (which runs
-   only `git fetch` and `git show` there) and committed with the commit they came from.
+   `data/docs/`, taken from the latest release's tag by `npm run release:sync` and committed with
+   the commit they came from.
 
 "Why Vimma" (`src/docs/why.html`, `handWritten` in `docs-pages.ts`) has only the first tier: why a
 browser and not an extension, the long version of the home page's block. Its claims are checked
@@ -146,12 +178,13 @@ project is put down.
 - `scripts/docs-pages.ts` lists the pages and what each is made of: guide sections by heading,
   rows of the guide's keys table by their first cell, paragraphs by their opening words,
   bindings sections, and links to the known-limits sections. If upstream renames or drops any
-  of them, the build fails and names it: re-sync, then update that file. `GUIDE_REWRITES` there
+  of them, the build fails and names it: update that file to match the synced copy. `GUIDE_REWRITES` there
   strips internal names (milestones, spec links, code names) from the guide's text; a rewrite
   that no longer matches is reported at build time.
 - `scripts/md.ts` is a small Markdown reader for the subset the guide uses. Links to other
   guide headings are pointed at whichever docs page renders them; links to specs, ADRs and the
-  runbook point at the file in the public repository on GitHub.
+  runbook point at the file in the public repository on GitHub, at the release tag the copies
+  came from.
 - The known-limits page leaves out the `limits.md` lines the same commit's guide contradicts
   (listed in `STALE_LIMITS`, reported at build time), so they disappear when upstream fixes them.
 - Search: the build writes `assets/js/docs-index.js` (each section's heading, a snippet and its

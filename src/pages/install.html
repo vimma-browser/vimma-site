@@ -1,27 +1,27 @@
 <!--{"title": "Install Vimma · Linux x86_64 releases and Arch Linux", "short": "install", "out": "install/", "cmd": "cat INSTALL.md", "description": "Install Vimma on Linux x86_64: one command on Arch Linux, or a .deb, AppImage or tarball from the latest release. Or build it from source."}-->
-<p class="eyebrow">Vimma 0.1.1 · Linux x86_64</p>
+<p class="eyebrow">Vimma {{version}} · Linux x86_64</p>
 <h1>Install</h1>
-<p>Vimma <code>0.1.1</code>, on Firefox 158.0, is released for <strong>Linux x86_64</strong>, the only platform it is built and tested on.</p>
+<p>Vimma <code>{{version}}</code>, on Firefox {{firefox}}, is released for <strong>Linux x86_64</strong>, the only platform it is built and tested on.</p>
 
 <h2 id="arch">Arch Linux</h2>
-<p>Run as your normal user, in an empty directory (makepkg leaves its build files there):</p>
+<p>Run as your normal user, from any directory. The same command installs and updates:</p>
 <div class="cmdbox">
-  <pre class="code wrap" id="arch-cmd"><span class="p">$ </span>curl -fLO https://github.com/vimma-browser/vimma/releases/latest/download/PKGBUILD &amp;&amp; <span class="nw">makepkg -si</span></pre>
+  <pre class="code wrap" id="arch-cmd"><span class="p">$ </span>{{arch_install}}</pre>
   <button type="button" class="copy" data-copy="arch-cmd" aria-live="polite" data-js-only hidden>copy</button>
 </div>
-<p>It downloads the release's <code>PKGBUILD</code> for the <code>vimma-bin</code> package, which installs Vimma to <code>/opt/vimma</code> with <code>vimma</code> on your <code>PATH</code>, a desktop entry and icons. <code>makepkg -si</code> asks for your password to install the package and refuses to run as root. To update, run the same command again in the same directory. <code>sudo pacman -R vimma-bin</code> removes Vimma; your profile stays in your home directory.</p>
+<p>It builds in <code>~/.cache/vimma-build</code>, which you can delete at any time: it downloads the release's <code>PKGBUILD</code> for the <code>vimma-bin</code> package, which installs Vimma to <code>/opt/vimma</code> with <code>vimma</code> on your <code>PATH</code>, a desktop entry and icons. <code>makepkg -si</code> asks for your password to install the package and refuses to run as root. To update, run the same command again. <code>sudo pacman -R vimma-bin</code> removes Vimma; your profile stays in your home directory.</p>
 
 <h2 id="other">Other distributions</h2>
 <p>The <a href="https://github.com/vimma-browser/vimma/releases/latest">latest release</a> has, for Linux x86_64:</p>
 <ul>
-  <li>a <code>.deb</code> for Debian 12+ and Ubuntu 22.04+: <code>sudo apt install ./vimma_0.1.1_amd64.deb</code></li>
-  <li>an AppImage: make it executable and run it</li>
-  <li>a tarball: unpack it and run <code>vimma/vimma</code></li>
+  <li>a <code>.deb</code> for Debian 12+ and Ubuntu 22.04+: <code>sudo apt install ./{{deb}}</code></li>
+  <li>an AppImage, <code>{{appimage}}</code>: make it executable and run it</li>
+  <li>a tarball, <code>{{tarball}}</code>: unpack it and run <code>vimma/vimma</code></li>
 </ul>
-<p>Next to them are <code>SHA256SUMS</code>, an SBOM and cosign signatures. <a href="https://github.com/vimma-browser/vimma/blob/main/docs/guide.md#installing">Installing</a>, in the guide, explains how to check them.</p>
+<p>Next to them are <code>SHA256SUMS</code>, an SBOM and cosign signatures. <a href="https://github.com/vimma-browser/vimma/blob/{{release_tag}}/docs/guide.md#installing">Installing</a>, in the guide, explains how to check them.</p>
 
 <h2 id="updating">Updating</h2>
-<p>The in-app updater is not active yet, so updating means installing again: on Arch Linux, run the command above in the same directory; otherwise, install the newer <code>.deb</code>, AppImage or tarball over the old one.</p>
+<p>The in-app updater is not active yet, so updating means installing again: on Arch Linux, run the command above again; otherwise, install the newer <code>.deb</code>, AppImage or tarball over the old one.</p>
 
 <p>Next: your <a href="{{root}}docs/install/">first launch</a>, then the rest of the <a href="{{root}}docs/">docs</a>.</p>
 

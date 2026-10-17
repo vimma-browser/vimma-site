@@ -7,7 +7,7 @@ export const VIMMA_REPO = "https://github.com/vimma-browser/vimma";
 
 /**
  * The shape of data/bindings.json: Vimma's docs/bindings.json as `npm run gen-docs` writes it
- * there (version 1), copied unchanged by `npm run keys:sync`.
+ * there (version 1), copied unchanged by `npm run release:sync`.
  */
 export interface VimmaBindings {
   version: 1;

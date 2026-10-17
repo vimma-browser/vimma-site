@@ -14,7 +14,7 @@
     <p class="subhead">Vim modes on every page, <span class="nw">tmux-style</span> workspaces and splits.</p>
     <p class="lead">Single keys drive the page, and a prefix key, as in tmux, drives tabs, panes and workspaces, so your hands never leave the keyboard. Firefox is underneath, so your sites and add-ons keep working.</p>
     <div class="cmdbox">
-      <pre class="code wrap" id="install-cmd"><span class="p">$ </span>curl -fLO https://github.com/vimma-browser/vimma/releases/latest/download/PKGBUILD &amp;&amp; <span class="nw">makepkg -si</span></pre>
+      <pre class="code wrap" id="install-cmd"><span class="p">$ </span>{{arch_install}}</pre>
       <button type="button" class="copy" data-copy="install-cmd" aria-live="polite" data-js-only hidden>copy</button>
     </div>
     <p class="meta">Arch Linux · <a href="{{root}}install/">other distributions and updating</a></p>
@@ -23,9 +23,9 @@
 
 <section class="band facts" aria-label="Vimma in four numbers">
   <ul class="wrap facts-grid">
-    <li><span class="big">0.1.1</span><span class="label">released for Linux x86_64</span></li>
+    <li><span class="big">{{version}}</span><span class="label">released for Linux x86_64</span></li>
     <li><span class="big">{{keys_total}}</span><span class="label">default bindings, every one remappable</span></li>
-    <li><span class="big">158</span><span class="label">the Firefox release underneath</span></li>
+    <li><span class="big">{{firefox_major}}</span><span class="label">the Firefox release underneath</span></li>
     <li><span class="big">MPL-2.0</span><span class="label">open-source licence</span></li>
   </ul>
 </section>

@@ -13,8 +13,7 @@
     "build": "npm run compile && node .build/build.js",
     "serve": "npm run compile && node .build/scripts/serve.js",
     "check": "tsc -p tsconfig.json --noEmit && tsc -p src/ts/tsconfig.json --noEmit && node .build/scripts/check.js",
-    "keys:sync": "npm run compile && node .build/scripts/gen-keys.js",
-    "docs:sync": "npm run compile && node .build/scripts/sync-docs.js",
+    "release:sync": "npm run compile && node .build/scripts/sync-release.js",
     "test": "npm run compile && node --test .build/scripts/*.test.js",
     "wording": "npm run compile && node .build/scripts/wording.js"
   },
