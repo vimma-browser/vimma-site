@@ -21,7 +21,7 @@
 <p>Next to them are <code>SHA256SUMS</code>, an SBOM and cosign signatures. <a href="https://github.com/vimma-browser/vimma/blob/{{release_tag}}/docs/guide.md#installing">Installing</a>, in the guide, explains how to check them.</p>
 
 <h2 id="updating">Updating</h2>
-<p>The in-app updater is not active yet, so updating means installing again: on Arch Linux, run the command above again; otherwise, install the newer <code>.deb</code>, AppImage or tarball over the old one.</p>
+<p>Since 0.1.2, Vimma checks for a new release every 12 hours, or at once with <code>:update</code>. When one is out, the status bar shows <code>⇡</code> and its version (in red for a security release), and <code>:update</code> shows the command for how you installed Vimma; each update file is checked with SHA-512. Vimma only tells you: it never installs an update by itself. To update, run that command: on Arch Linux, the command above again; otherwise, install the newer <code>.deb</code>, AppImage or tarball over the old one. A 0.1.1 install has no update check, so update it this way by hand once.</p>
 
 <p>Next: your <a href="{{root}}docs/install/">first launch</a>, then the rest of the <a href="{{root}}docs/">docs</a>.</p>
 
