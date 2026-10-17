@@ -94,7 +94,7 @@ const pageUrl = (s: string): string => (s === "" ? "docs/" : `docs/${s}/`);
 const LIMIT_ID = (title: string): string => `limit-${slug(title.replace(/\s*\(.*\)$/, ""))}`;
 
 function fail(msg: string): never {
-  throw new Error(`docs: ${msg}\n(run \`npm run docs:sync\`, then update scripts/docs-pages.ts)`);
+  throw new Error(`docs: ${msg}\n(the copy in data/docs/ comes from Vimma's latest release: update scripts/docs-pages.ts to match it)`);
 }
 
 function need(guide: MdSection, title: string): MdSection {

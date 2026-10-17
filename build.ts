@@ -14,6 +14,7 @@ import { minifyCss } from "./scripts/css.js";
 import { buildDocs, packIndex } from "./scripts/docs.js";
 import { readBindings } from "./scripts/gen-keys.js";
 import { keysTables } from "./scripts/keys-html.js";
+import { ARCH_INSTALL, RELEASE_FILE, fill, readRelease, releaseVars } from "./scripts/release.js";
 import {
   type LlmsLink,
   OG_IMAGE,
@@ -62,15 +63,6 @@ function readPage(file: string): Page {
   if (!m?.[1]) throw new Error(`${file}: missing the <!--{…}--> meta line`);
   const sources = [`src/pages/${file}`, ...(file === "keys.html" ? ["data/bindings.json", "data/bindings-source.json"] : [])];
   return { meta: JSON.parse(m[1]) as PageMeta, body: src.slice(m[0].length), sources };
-}
-
-/** Replaces {{name}} with vars[name]; an unknown name is an error, not an empty string. */
-function fill(template: string, vars: Record<string, string>, where: string): string {
-  return template.replace(/\{\{(\w+)\}\}/g, (_, name: string) => {
-    const v = vars[name];
-    if (v === undefined) throw new Error(`${where}: no value for {{${name}}}`);
-    return v;
-  });
 }
 
 // --- pages ------------------------------------------------------------------------------------
@@ -133,6 +125,13 @@ function main(): void {
   const pages = [home, start, keysPage, install, about, notFound, ...docPages.slice(1)];
   const navPages = pages.filter((p) => p.meta.nav !== false);
   const keys = readBindings(ROOT);
+  const release = releaseVars(readRelease(ROOT));
+  // The Arch command as shown in a page's command box. A narrow screen breaks lines at hyphens,
+  // so the directory and each command with its option stay on one line; only the URL may break.
+  const archInstall = ["mkdir -p", "~/.cache/vimma-build", "curl -fLO", "makepkg -si"].reduce(
+    (html, part) => html.replaceAll(part, `<span class="nw">${part}</span>`),
+    escapeHtml(ARCH_INSTALL),
+  );
   const total = keys.sections.reduce((n, s) => n + s.rows.length, 0);
 
   const notFoundPage = (p: Page): boolean => p.meta.out === "404.html";
@@ -151,6 +150,8 @@ function main(): void {
     ].join("\n    ");
     const n = navPages.findIndex((p) => p === page || p.meta.out === page.meta.section);
     const vars: Record<string, string> = {
+      ...release,
+      arch_install: archInstall,
       root,
       keys_tables: keysTables(keys.sections),
       keys_total: String(total),
@@ -158,6 +159,8 @@ function main(): void {
       keys_commit_url: `${VIMMA_REPO}/commit/${escapeHtml(keys.commitFull)}`,
     };
     const content = fill(page.body, vars, page.meta.out || "index");
+    // a page that names the release changes with it, for its date in the sitemap
+    if (Object.keys(release).some((k) => page.body.includes(`{{${k}}}`))) page.sources.push(RELEASE_FILE);
     const html = fill(
       layout,
       {
