@@ -80,8 +80,28 @@ export function validateRelease(data: unknown): Release {
   }
   const a = r?.assets;
   if (!a || !isString(a.deb) || !isString(a.appimage) || !isString(a.tarball)) fail("no assets");
-  if (!/^[0-9a-f]{40}$/.test(r?.commit ?? "")) fail("commit is not a full hash");
+  // The values go into pages unescaped and into the sync workflow's shell, so each must have the
+  // exact form expected of it.
+  const forms: [keyof Release, RegExp][] = [
+    ["tag", /^v\d+\.\d+\.\d+(-[\w.]+)?$/],
+    ["version", /^\d+\.\d+\.\d+(-[\w.]+)?$/],
+    ["firefox", /^\d+(\.\d+)*$/],
+    ["commit", /^[0-9a-f]{40}$/],
+    ["published", /^\d{4}-\d{2}-\d{2}$/],
+    ["url", /^https:\/\/github\.com\/vimma-browser\/vimma\/releases\/tag\/v[\w.-]+$/],
+  ];
+  for (const [k, re] of forms) if (!re.test(String(r?.[k]))) fail(`${k} "${String(r?.[k])}" is not in the expected form`);
+  const pkg = /^[\w.+-]+$/;
+  if (a && ![a.deb, a.appimage, a.tarball].every((n) => pkg.test(n))) fail("an asset name has unexpected characters");
   return r as Release;
+}
+
+/** Compares two X.Y.Z versions (pre-release suffixes ignored): negative when a is older. */
+export function compareVersions(a: string, b: string): number {
+  const parts = (v: string): number[] => v.split("-")[0]!.split(".").map(Number);
+  const [x, y] = [parts(a), parts(b)];
+  for (let i = 0; i < 3; i++) if ((x[i] ?? 0) !== (y[i] ?? 0)) return (x[i] ?? 0) - (y[i] ?? 0);
+  return 0;
 }
 
 export function readRelease(root: string): Release {

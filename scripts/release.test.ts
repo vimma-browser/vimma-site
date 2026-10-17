@@ -227,3 +227,45 @@ test(
     assert.throws(() => readFileSync(join(dir, "data/docs/guide.md")));
   }),
 );
+
+test(
+  "sync: a Firefox version from surfer.json that is not a version number fails",
+  inTmp(async (dir) => {
+    const latest = JSON.parse((await github().fetch(`${API}/releases/latest`, "application/json")).text) as Record<string, unknown>;
+    const gh = github({
+      [`${API}/releases/latest`]: { status: 200, text: JSON.stringify({ ...latest, name: "Vimma 0.1.2" }) },
+      [`${RAW}/surfer.json`]: { status: 200, text: JSON.stringify({ version: { version: "158 <script>" } }) },
+    });
+    await assert.rejects(syncRelease({ root: dir, fetch: gh.fetch, log: () => {} }), /firefox/);
+    assert.throws(() => readFileSync(join(dir, "data/release.json")));
+  }),
+);
+
+test("release file: every field has its expected form", () => {
+  const dir = mkdtempSync(join(tmpdir(), "vimma-site-"));
+  try {
+    mkdirSync(join(dir, "data"));
+    for (const [k, v] of [
+      ["tag", "0.1.2"],
+      ["version", "0.1.2 x"],
+      ["published", "yesterday"],
+      ["url", "https://example.com/"],
+    ] as const) {
+      writeFileSync(join(dir, "data/release.json"), JSON.stringify({ ...RELEASE, [k]: v }));
+      assert.throws(() => readRelease(dir), new RegExp(k));
+    }
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test(
+  "sync: the latest release older than the one the site shows is refused, unless asked for by tag",
+  inTmp(async (dir) => {
+    writeFileSync(join(dir, "data/release.json"), JSON.stringify({ ...RELEASE, tag: "v0.2.0", version: "0.2.0" }));
+    await assert.rejects(syncRelease({ root: dir, fetch: github().fetch, log: () => {} }), /older than v0\.2\.0/);
+    const gh = github({ [`${API}/releases/tags/v0.1.2`]: { status: 200, text: (await github().fetch(`${API}/releases/latest`, "")).text } });
+    await syncRelease({ root: dir, tag: "v0.1.2", fetch: gh.fetch, log: () => {} });
+    assert.equal((json(dir, "data/release.json") as Release).tag, "v0.1.2");
+  }),
+);

@@ -2,10 +2,14 @@
 # day, copy the release's facts, docs and keys into data/ (npm run release:sync) and, when they
 # changed, open or update a pull request that merges itself once the required checks pass.
 #
-# A pull request opened with GITHUB_TOKEN starts no pull_request or push workflows, so this starts
-# ci.yml on the branch itself (workflow_dispatch is the exception GitHub allows). Needs Settings →
-# Actions → General → "Allow GitHub Actions to create and approve pull requests", and Settings →
-# General → "Allow auto-merge".
+# Two jobs: `sync` runs the npm code (the sync, the build and the checks) with a read-only token;
+# `publish` holds the write token and runs no npm code, only git and gh on the files `sync` hands
+# it, so nothing the build runs can reach that token.
+#
+# A pull request opened with GITHUB_TOKEN starts no pull_request or push workflows, so `publish`
+# starts ci.yml on the branch itself (workflow_dispatch is the exception GitHub allows). Needs
+# Settings → Actions → General → "Allow GitHub Actions to create and approve pull requests", and
+# Settings → General → "Allow auto-merge".
 name: release-sync
 
 on:
@@ -25,18 +29,24 @@ concurrency:
   group: release-sync
   cancel-in-progress: false
 
+env:
+  SYNCED: >-
+    data/release.json data/bindings.json data/bindings-source.json
+    data/docs/guide.md data/docs/limits.md data/docs/source.json
+
 jobs:
   sync:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:
-      contents: write # push the branch
-      pull-requests: write # open or update the pull request and turn on auto-merge
-      actions: write # start ci.yml on the branch
-    env:
-      SYNCED: >-
-        data/release.json data/bindings.json data/bindings-source.json
-        data/docs/guide.md data/docs/limits.md data/docs/source.json
+      contents: read
+      pull-requests: read # find the open pull request for the release
+    outputs:
+      changed: ${{ steps.sync.outputs.changed }}
+      tag: ${{ steps.branch.outputs.tag }}
+      branch: ${{ steps.branch.outputs.branch }}
+      reuse: ${{ steps.branch.outputs.reuse }}
+      build_ok: ${{ steps.build.outputs.ok }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -45,7 +55,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - run: npm ci
+      - run: npm ci --ignore-scripts
 
       - name: Sync the release
         id: sync
@@ -61,44 +71,49 @@ jobs:
           npm run release:sync -- ${TAG:+"$TAG"}
           # shellcheck disable=SC2086 # SYNCED is a list of paths
           if [[ -z "$(git status --porcelain -- $SYNCED)" ]]; then
-            echo "The site is already on $(node -p 'require("./data/release.json").tag')."
+            echo "The site is already on $(jq -r .tag data/release.json)."
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Put the sync on its branch
+      - name: Lay the sync on its branch
         id: branch
         if: steps.sync.outputs.changed == 'true'
         env:
+          GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
         run: |
-          tag=$(node -p 'require("./data/release.json").tag')
+          tag=$(jq -r .tag data/release.json)
           branch="release-sync/$tag"
-          echo "tag=$tag" >> "$GITHUB_OUTPUT"
-          echo "branch=$branch" >> "$GITHUB_OUTPUT"
-          # Keep the synced files aside, then lay them on the branch: a new one from main, or
-          # the one already open for this release, on top of whatever was pushed to it (a fix to
-          # scripts/docs-pages.ts, say), never rewriting it.
+          # Build on what the pull request will hold: the open one for this release, with any fix
+          # pushed to it by hand (to scripts/docs-pages.ts, say), or else main.
           keep=$(mktemp -d)
           # shellcheck disable=SC2086
           cp --parents $SYNCED "$keep"
           git checkout --quiet -- data/
           git clean -fdq -- data/
-          if git ls-remote --exit-code --heads "https://github.com/$REPO" "$branch" >/dev/null; then
+          open=$(gh pr list --repo "$REPO" --head "$branch" --state open --json number --jq 'length')
+          if [[ "$open" != "0" ]]; then
             git fetch --quiet "https://github.com/$REPO" "$branch"
-            git switch --quiet -c "$branch" FETCH_HEAD
+            git switch --quiet --detach FETCH_HEAD
+            reuse=true
           else
-            git switch --quiet -c "$branch"
+            reuse=false
           fi
           cp -r "$keep/data" .
+          {
+            echo "tag=$tag"
+            echo "branch=$branch"
+            echo "reuse=$reuse"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Build and check
         id: build
         if: steps.sync.outputs.changed == 'true'
         run: |
-          # A failure here is reported in the pull request, which then stays red and does not
-          # merge; it does not stop the workflow.
+          # A failure is reported in the pull request, which then stays red and does not merge;
+          # it does not stop the workflow.
           if { npm run build && npm run check; } > build.log 2>&1; then
             echo "ok=true" >> "$GITHUB_OUTPUT"
           else
@@ -106,34 +121,95 @@ jobs:
             echo "::warning::the site does not build with this release; see the pull request"
           fi
           cat build.log
+          grep -E '^(Error: |✗ |\(the copy)' build.log > build-errors.log || tail -n 20 build.log > build-errors.log
 
-      - name: Open or update the pull request
-        if: steps.sync.outputs.changed == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPO: ${{ github.repository }}
-          TAG: ${{ steps.branch.outputs.tag }}
-          BRANCH: ${{ steps.branch.outputs.branch }}
-          BUILD_OK: ${{ steps.build.outputs.ok }}
+      - if: steps.sync.outputs.changed == 'true'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: release-sync
+          path: |
+            data/
+            build-errors.log
+          retention-days: 3
+          if-no-files-found: error
+
+  publish:
+    needs: sync
+    if: needs.sync.outputs.changed == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write # push the branch
+      pull-requests: write # open or update the pull request and turn on auto-merge
+      actions: write # start ci.yml on the branch
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      TAG: ${{ needs.sync.outputs.tag }}
+      BRANCH: ${{ needs.sync.outputs.branch }}
+      REUSE: ${{ needs.sync.outputs.reuse }}
+      BUILD_OK: ${{ needs.sync.outputs.build_ok }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check the hand-off and take the branch
         run: |
-          read -r version firefox commit url < <(node -p \
-            'const r = require("./data/release.json"); [r.version, r.firefox, r.commit, r.url].join(" ")')
-          short=${commit:0:7}
-          title="chore(release): sync the site with vimma $TAG"
+          # The values come from the other job; check them before use.
+          [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$ && "$BRANCH" == "release-sync/$TAG" ]] \
+            || { echo "::error::unexpected tag or branch: $TAG $BRANCH"; exit 1; }
+          if [[ "$REUSE" == "true" ]]; then
+            git fetch --quiet "https://github.com/$REPO" "$BRANCH"
+            git switch --quiet -c "$BRANCH" FETCH_HEAD
+          elif git ls-remote --exit-code --heads "https://github.com/$REPO" "$BRANCH" >/dev/null; then
+            # Left over from a closed pull request: building on it would carry a stale diff, and
+            # deleting it could lose commits someone pushed to it.
+            echo "::error::$BRANCH exists without an open pull request; delete it to let the sync reopen one"
+            exit 1
+          else
+            git switch --quiet -c "$BRANCH"
+          fi
 
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: release-sync
+          path: ${{ runner.temp }}/release-sync
+
+      - name: Commit and push
+        id: push
+        env:
+          FROM: ${{ runner.temp }}/release-sync
+        run: |
+          set -o pipefail
+          for f in $SYNCED; do cp "$FROM/$f" "$f"; done
+          read -r version firefox commit < <(jq -r '[.version, .firefox, .commit] | join(" ")' data/release.json)
+          [[ "$version" == "${TAG#v}" && "$firefox" =~ ^[0-9.]+$ && "$commit" =~ ^[0-9a-f]{40}$ ]] \
+            || { echo "::error::data/release.json does not match $TAG"; exit 1; }
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           # shellcheck disable=SC2086
           git add -- $SYNCED
-          pushed=false
-          if ! git diff --cached --quiet; then
-            git commit --quiet -m "$title" -m "Vimma $version (Firefox $firefox) is the latest published release. This copies its
-          facts, docs/guide.md, docs/limits.md and docs/bindings.json at the tag's commit ($short),
-          so the pages, the docs and the keys describe the release a visitor downloads."
-            git push --quiet "https://x-access-token:$GH_TOKEN@github.com/$REPO" "HEAD:refs/heads/$BRANCH"
-            pushed=true
+          if git diff --cached --quiet; then
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
+          git commit --quiet -m "chore(release): sync the site with vimma $TAG" -m "Vimma $version (Firefox $firefox) is the latest published release. This copies its
+          facts, docs/guide.md, docs/limits.md and docs/bindings.json at the tag's commit (${commit:0:7}),
+          so the pages, the docs and the keys describe the release a visitor downloads."
+          # gh as git's credential helper, so the token is never on a command line
+          gh auth setup-git
+          git push --quiet origin "HEAD:refs/heads/$BRANCH"
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
 
+      - name: Open or update the pull request
+        env:
+          FROM: ${{ runner.temp }}/release-sync
+          PUSHED: ${{ steps.push.outputs.pushed }}
+        run: |
+          set -o pipefail
+          read -r firefox commit url < <(jq -r '[.firefox, .commit, .url] | join(" ")' data/release.json)
+          title="chore(release): sync the site with vimma $TAG"
           {
             echo "Vimma [$TAG]($url) (Firefox $firefox) is the latest published release. This copies"
             echo "its facts into \`data/release.json\` and Vimma's \`docs/guide.md\`, \`docs/limits.md\` and"
@@ -148,7 +224,7 @@ jobs:
               echo "\`scripts/docs-pages.ts\` names was renamed or removed upstream. The build says which:"
               echo
               echo '~~~'
-              grep -E '^(Error: |✗ |\(the copy)' build.log || tail -n 20 build.log
+              cat "$FROM/build-errors.log"
               echo '~~~'
               echo
               echo "Fix \`scripts/docs-pages.ts\` (or the page) on this branch, then merge it by hand."
@@ -157,15 +233,15 @@ jobs:
             echo
             echo "Opened by \`.github/workflows/release-sync.yml\`; CI was started on the branch with"
             echo "\`workflow_dispatch\`, since a pull request opened with the workflow's token starts none."
-          } > pr-body.md
+          } > "$RUNNER_TEMP/pr-body.md"
 
           pr=$(gh pr list --repo "$REPO" --head "$BRANCH" --state open --json number --jq '.[0].number // empty')
           if [[ -z "$pr" ]]; then
-            gh pr create --repo "$REPO" --base main --head "$BRANCH" --title "$title" --body-file pr-body.md
+            gh pr create --repo "$REPO" --base main --head "$BRANCH" --title "$title" --body-file "$RUNNER_TEMP/pr-body.md"
           else
-            gh pr edit "$pr" --repo "$REPO" --body-file pr-body.md
+            gh pr edit "$pr" --repo "$REPO" --body-file "$RUNNER_TEMP/pr-body.md"
           fi
-          if [[ "$pushed" == "true" ]]; then
+          if [[ "$PUSHED" == "true" ]]; then
             gh workflow run ci.yml --repo "$REPO" --ref "$BRANCH"
           fi
           if [[ "$BUILD_OK" == "true" ]]; then
@@ -175,9 +251,10 @@ jobs:
             gh pr merge "$BRANCH" --repo "$REPO" --disable-auto 2>/dev/null || true
           fi
 
-          # A sync for an older release that never merged is superseded by this one.
+          # A sync for an older release that never merged is superseded by this one. Its branch
+          # stays, with any fix pushed to it, for whoever wants to carry the fix over.
           gh pr list --repo "$REPO" --state open --json number,headRefName \
             --jq ".[] | select(.headRefName | startswith(\"release-sync/\")) | select(.headRefName != \"$BRANCH\") | .number" |
             while read -r old; do
-              gh pr close "$old" --repo "$REPO" --delete-branch --comment "Superseded by the sync for $TAG."
+              gh pr close "$old" --repo "$REPO" --comment "Superseded by the sync for $TAG."
             done

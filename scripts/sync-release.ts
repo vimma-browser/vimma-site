@@ -18,13 +18,13 @@
 // and checked before anything is written, so a failed sync leaves data/ as it was.
 // .github/workflows/release-sync.yml runs it daily and opens a pull request when data/ changes.
 
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
 import type { BindingsSource } from "./bindings-types.js";
 import { validate as validateBindings } from "./gen-keys.js";
-import { RELEASE_FILE, type Release, parseTitle, pickAssets, validateRelease } from "./release.js";
+import { RELEASE_FILE, type Release, compareVersions, parseTitle, pickAssets, readRelease, validateRelease } from "./release.js";
 
 const OWNER_REPO = "vimma-browser/vimma";
 const REPO_URL = `https://github.com/${OWNER_REPO}`;
@@ -77,6 +77,15 @@ export async function syncRelease(opts: SyncOptions): Promise<Release> {
   if (gh.draft || gh.prerelease) throw new Error(`${what}: ${gh.tag_name} is a ${gh.draft ? "draft" : "pre-release"}`);
   const tag = gh.tag_name;
   if (!/^v\d+\.\d+\.\d+(-[\w.]+)?$/.test(tag)) throw new Error(`release tag ${tag} is not vX.Y.Z`);
+
+  // GitHub's "latest" can move back (a release deleted or demoted); a scheduled run must not take
+  // the site back with it. Going back to an older release takes its tag, by hand.
+  if (!opts.tag && existsSync(resolve(opts.root, RELEASE_FILE))) {
+    const current = readRelease(opts.root);
+    if (compareVersions(tag.slice(1), current.version) < 0) {
+      throw new Error(`the latest release, ${tag}, is older than ${current.tag}, which the site shows: pass the tag to go back`);
+    }
+  }
 
   const title = parseTitle(gh.name ?? "");
   const version = title.version ?? tag.slice(1);

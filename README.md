@@ -126,13 +126,17 @@ so they match what a visitor downloads.
   AppImage and tarball names from its assets, and copies `docs/guide.md`, `docs/limits.md` and
   `docs/bindings.json` at the tag's commit. It writes `data/release.json`, `data/docs/` and
   `data/bindings.json` with their source files, and only once everything is fetched and checked.
-  It uses `GITHUB_TOKEN` when set, for the API's higher rate limit.
+  It uses `GITHUB_TOKEN` when set, for the API's higher rate limit. Every value it records must
+  have its expected form (a version number, a full commit hash, a release URL), since the pages
+  print them as they are. A scheduled run refuses a "latest" release older than the one the site
+  shows; going back takes the tag, by hand.
 - The build reads only those committed files and never calls GitHub, so it works offline and
   Cloudflare's builders, which share GitHub's unauthenticated rate limit, cannot fail it. It
   fails if `data/release.json` is missing or malformed.
 - `.github/workflows/release-sync.yml` runs the sync once a day (and by hand: Actions →
-  release-sync → Run workflow, with an optional tag). When `data/` changes, it builds and checks
-  the site, then opens or updates the pull request `release-sync/<tag>`. A pull request opened
+  release-sync → Run workflow, with an optional tag). When `data/` changes, a read-only job builds
+  and checks the site, and a second job, which holds the write token and runs no npm code, opens
+  or updates the pull request `release-sync/<tag>`. A pull request opened
   with the workflow's own token starts no `pull_request` workflows, so it starts `ci.yml` on the
   branch itself (`workflow_dispatch`), and turns on auto-merge (squash), so the pull request
   merges once the required `build` check passes, and Cloudflare deploys it.
@@ -140,7 +144,9 @@ so they match what a visitor downloads.
   `scripts/docs-pages.ts` names, the build fails on purpose. The pull request then says which
   one, is not set to merge, and stays red: fix `scripts/docs-pages.ts` on its branch and merge
   it by hand. The next run keeps those commits and adds its own on top. A sync for an older
-  release that never merged is closed when a newer one opens.
+  release that never merged is closed when a newer one opens; its branch is kept, with any fix on
+  it. A `release-sync/<tag>` branch left without an open pull request stops the sync for that
+  tag, with an error saying so, until it is deleted.
 - It needs two repository settings: "Allow GitHub Actions to create and approve pull requests"
   (Settings → Actions → General) and "Allow auto-merge" (Settings → General).
 
@@ -177,7 +183,8 @@ project is put down.
   that no longer matches is reported at build time.
 - `scripts/md.ts` is a small Markdown reader for the subset the guide uses. Links to other
   guide headings are pointed at whichever docs page renders them; links to specs, ADRs and the
-  runbook point at the file in the public repository on GitHub.
+  runbook point at the file in the public repository on GitHub, at the release tag the copies
+  came from.
 - The known-limits page leaves out the `limits.md` lines the same commit's guide contradicts
   (listed in `STALE_LIMITS`, reported at build time), so they disappear when upstream fixes them.
 - Search: the build writes `assets/js/docs-index.js` (each section's heading, a snippet and its
