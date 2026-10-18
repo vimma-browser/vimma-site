@@ -51,8 +51,6 @@ export const LIMIT_SECTIONS = [
   "Panes",
   "Privacy, security and services",
   "Compatibility and versions",
-  "Files and profiles",
-  "Branding",
   "Platforms and packaging",
 ];
 
@@ -103,7 +101,7 @@ export const DOC_PAGES: DocPage[] = [
       { guide: "Installing" },
       { guide: "First launch, with its own profile" },
       { guide: "The start page" },
-      { limits: ["Platforms and packaging", "Files and profiles"] },
+      { limits: ["Platforms and packaging"] },
     ],
   },
   {
