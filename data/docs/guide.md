@@ -36,8 +36,9 @@ What works today, each with the section that explains it:
   take your own colours.
 - **[Accessible](#accessibility):** Vimma's own UI works with a screen reader and meets WCAG AA
   contrast in dark and light themes.
-- **[Update checks](#updates)** (not active until the first release is announced): the status
-  bar says when a newer Vimma exists (red for a security release), and `:update` shows the exact
+- **[Update checks](#updates)** (from 0.1.2): the status bar says when a newer Vimma exists (red
+  for a security release), a short message announces each new version once, a security release
+  asks once per session whether to show the update command, and `:update` shows the exact
   commands for how you installed it.
 - **Firefox underneath** ([privacy defaults](#privacy-defaults)): the same user agent and
   [add-on](#add-ons) compatibility as Firefox; no studies, sponsored content or telemetry
@@ -89,9 +90,9 @@ vimma-vimma.desktop` does that. Next to the files are `SHA256SUMS`, a CycloneDX 
 [runbook.md](runbook.md#release-packages-releaseyml-spec-m6-packaging) ("Verify a release").
 
 **Updating.** Install the newer release the way you installed this one: on Arch Linux, run the
-install command again in the same directory; otherwise, install the newer `.deb`, AppImage or
-tarball over the old one. [Updates](#updates) lists the commands and says when Vimma tells you
-about a new release.
+install command again; otherwise, install the newer `.deb`, AppImage or
+tarball over the old one. From 0.1.2 on, Vimma tells you when a new release is out and shows the
+command for your install ([Updates](#updates)); Vimma 0.1.1 never does, so update it this way once.
 
 **Building from source.** Follow [CONTRIBUTING.md](../CONTRIBUTING.md#build-and-run): `npm ci`,
 `npx surfer download`, `npx surfer bootstrap`, `npm run import`, `npx surfer build`. The first
@@ -102,20 +103,21 @@ build takes about 40 minutes on a 16-thread machine and needs about 35 GB of dis
 
 Each release carries a `PKGBUILD` for the `vimma-bin` package. It needs no other file: it
 downloads the release tarball, checks it against the SHA-256 written into it, and installs Vimma
-to `/opt/vimma` with `vimma` and `vimma-open` on your `PATH`, a desktop entry and icons. In an
-empty directory (makepkg leaves its build files there), run as your normal user:
+to `/opt/vimma` with `vimma` and `vimma-open` on your `PATH`, a desktop entry and icons. Run
+this as your normal user, from any directory:
 
 ```sh
-curl -fLO https://github.com/vimma-browser/vimma/releases/latest/download/PKGBUILD && makepkg -si
+mkdir -p ~/.cache/vimma-build && cd ~/.cache/vimma-build && curl -fLO https://github.com/vimma-browser/vimma/releases/latest/download/PKGBUILD && makepkg -si
 ```
 
 `makepkg -si` installs the libraries Vimma needs with pacman, asks for your password to install
-the package, and refuses to run as root. To update, run the same command again in the same
-directory: it fetches the newest release's `PKGBUILD`, and pacman replaces the installed
-version. `:update` shows this command when a new release is out ([Updates](#updates)).
-`sudo pacman -R vimma-bin` removes Vimma; your
-
-profile stays in your home directory.
+the package, and refuses to run as root. A first install and every update use the same
+command: it builds in `~/.cache/vimma-build`, so it leaves nothing in the directory you run it
+from, fetches the newest release's `PKGBUILD` each time, and pacman replaces the installed
+version. The folder holds the build files and the last package built (about 450 MB during a
+build), and you can delete it at any time. `:update` shows this command when a new release is
+out ([Updates](#updates)). `sudo pacman -R vimma-bin` removes Vimma; your profile stays in your
+home directory.
 
 A release is built and its files are uploaded before it is published, so a published release
 has its `PKGBUILD` from the start. If `curl` prints `curl: (22) The requested URL returned
@@ -128,6 +130,7 @@ signature, verify the signature with [cosign](https://github.com/sigstore/cosign
 checksum:
 
 ```sh
+mkdir -p ~/.cache/vimma-build && cd ~/.cache/vimma-build
 base=https://github.com/vimma-browser/vimma/releases/latest/download
 curl -fL -O "$base/PKGBUILD" -O "$base/SHA256SUMS" -O "$base/SHA256SUMS.sigstore.json"
 cosign verify-blob --bundle SHA256SUMS.sigstore.json \
@@ -192,8 +195,8 @@ New windows and new tabs open Vimma's start page: the logo, and under it the thr
 from (`ctrl+b ?` keys, `:` commands, `f` hints), and, unless the colours are your Omarchy
 theme's, `:theme light/dark` to [switch the colours](#colours-and-themes). The address bar is empty and focused, so you can type an
 address straight away; click the page to use `:` and the other keys there. At the bottom, a small
-line shows which Vimma you run and the Firefox release it is built on (`Vimma 0.1.0 · Firefox
-158.0`). It is a local page (`chrome://browser/content/vimma/start/start.html`); nothing loads
+line shows which Vimma you run and the Firefox release it is built on (`Vimma X.Y.Z · Firefox
+N`). It is a local page (`chrome://browser/content/vimma/start/start.html`); nothing loads
 from the network.
 
 To change it back:
@@ -556,6 +559,12 @@ button without Firefox's mascot. With your system's high-contrast setting on, th
 Firefox's own high-contrast colours. Pages that Firefox loads in a web content process, such as
 `about:logins` and Firefox's error pages, keep Firefox's colours.
 
+The Vimma logo on the start page and on `about:vimma` follows the theme too: the window and the
+brushstroke V are the theme's accent colour, and the "imma" lettering is white with a dark theme
+and the theme's text colour with a light one. It changes with the rest of the theme, and with
+your system's high-contrast setting on it is drawn in the high-contrast text colour. The app
+icon and Firefox's About dialog keep the logo's own colours.
+
 **Dark, light or the system's: `:theme`.** The start page says it too:
 
 - `:theme dark` or `:theme light` keeps the built-in palette dark or light whatever the system
@@ -687,7 +696,7 @@ keys. A `[panel]` after a key means it works only in that mode.
 | `ctrl+b r`                                                                              | Resize mode ([below](#resize-mode)): `h j k l` move the pane's divider, `Esc` leaves. `ctrl+w < > + -` resize directly in normal mode.                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | `ctrl+b enter`                                                                          | A new pane along the focused pane's longer side: side by side when it is wide, stacked when it is tall ([Layouts](#layouts)). `[panes] layout = "manual"`: as `ctrl+b v`.                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | `ctrl+b space`                                                                          | Cycles the layout presets, as tmux does; the status bar names the one you get ([Layouts](#layouts)). `:layout tiled` picks one.                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| `ctrl+b shift+x`, `x`, `ctrl+F4`                                                        | Closes the tab, as Firefox's `ctrl+w` did: on a pinned tab it selects the first unpinned tab instead; the last tab closes the window. `x` in normal mode. `ctrl+shift+t` reopens the last closed tab, in every mode.                                                                                                                                                                                                                                                                                                                                                                      |
+| `ctrl+b shift+x`, `x`, `ctrl+F4`                                                        | Closes the tab, as Firefox's `ctrl+w` did: on a pinned tab it selects the first unpinned tab instead; closing the last tab opens a new tab and keeps the window ([Firefox behaviour Vimma changes](#firefox-behaviour-vimma-changes)). `x` in normal mode. `ctrl+shift+t` reopens the last closed tab, in every mode.                                                                                                                                                                                                                                                                     |
 | `ctrl+b` then anything else                                                             | Never leaks to the page. A binding without a command shows "… not implemented yet" for 1.5 s; an unbound key does nothing. Firefox's `ctrl+b` bookmarks sidebar is off.                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | Firefox's keys                                                                          | Vimma bindings with Firefox's meaning ([below](#firefoxs-keys-are-vimma-bindings)): `ctrl+n` / `ctrl+shift+w` new / close window, `ctrl+shift+n` reopen it, `ctrl+q` quit (Firefox asks first), `ctrl+plus` / `ctrl+minus` / `ctrl+0` page zoom, `F11` full screen, `ctrl+s` save, `ctrl+p` print, `ctrl+m` mute the tab, `alt+home` home page, `ctrl+shift+y` downloads, `ctrl+shift+a` add-ons, `ctrl+shift+h` / `ctrl+shift+o` history / bookmarks (the Library), `ctrl+}` Picture-in-Picture, `ctrl+alt+r` Reader View, `ctrl+shift+s` screenshot, `ctrl+shift+delete` clear history. |
 | Developer tools                                                                         | Exactly as in Firefox: `F12` / `ctrl+shift+i` the toolbox, `ctrl+shift+c` Inspector, `ctrl+shift+k` Web Console, `ctrl+shift+z` Debugger (in a text field: redo), `ctrl+shift+e` Network, `shift+F7` Style Editor, `shift+F5` Performance, `shift+F9` Storage, `shift+F12` Accessibility, `ctrl+shift+m` Responsive Design Mode, `ctrl+shift+j` Browser Console, `ctrl+alt+shift+i` Browser Toolbox. Each is an action you can rebind in `[keys]`.                                                                                                                                        |
@@ -1318,7 +1327,7 @@ highlighted and its number coloured; a tab playing sound shows `♪`, one from a
 | `j` / `k`               | Move the highlight down / up.                                                                                                                                                                              |
 | `Enter`                 | Go to the highlighted tab and close the panel. With marks, show the marked tabs together ([below](#showing-tabs-together)); with a split, apply your changes to it ([below](#changing-or-ending-a-split)). |
 | `1` … `9`               | Go to that row's tab and close the panel.                                                                                                                                                                  |
-| `space`                 | Mark the highlighted tab (or unmark it) and move down.                                                                                                                                                     |
+| `space`                 | Mark the highlighted tab (or unmark it). The highlight stays on it.                                                                                                                                        |
 | `V`                     | Start a range: `j` / `k` stretch it, and `V` or `space` marks every row in it.                                                                                                                             |
 | `x`                     | Close the highlighted tab; the highlight moves to the next row and the panel stays open, so `x x x` closes three.                                                                                          |
 | `ctrl+shift+t`          | Reopen the last closed tab, as in Firefox.                                                                                                                                                                 |
@@ -1344,10 +1353,10 @@ you add there (`toggle_sidebar = ["prefix+b", "<leader>n"]`) closes it too.
 
 Mark the tabs you want side by side, then press `Enter`: they become the panes of this
 workspace, replacing its split, and the panel closes. Say you want your editor, the docs and a
-preview at once: `ctrl+b b`, `space` on each of the three, `Enter`.
+preview at once: `ctrl+b b`, `space` on each of the three (`j` / `k` between them), `Enter`.
 
-- **Marking.** `space` marks the highlighted row and moves down, like ranger; `space` on a
-  marked row unmarks it. `V` starts a range as in Vim's line-wise visual mode; `j` / `k` stretch
+- **Marking.** `space` marks the highlighted row and leaves the highlight on it; `space` on a
+  marked row unmarks it. Move to the next row you want with `j` or `k`, above or below. `V` starts a range as in Vim's line-wise visual mode; `j` / `k` stretch
   it, and `V` or `space` marks the rows in it (`Enter` marks them and goes on). A marked row has
   a `●` before its number and a green bar on its edge; a row in an open range shows `│`. Below
   the head the panel says `3 marked` (or `range: 2 · 3 marked`).
@@ -2055,20 +2064,33 @@ slots busy. Turn the pref off to stop either.
 
 ## Updates
 
-**Not active until the first release is announced.** Vimma has its signing key built in and
-checks `updates.vimma.dev`, but the host has no signed file yet, so every check finds nothing
-(`about:vimma` says `no manifest from the update host`) and the status bar never shows a new
-version. Until then, update by hand with the commands in the table below
-([Installing](#installing)). Once a release is announced, this is how it works:
+Vimma 0.1.2 and later tell you when a newer release is out; Linux x86_64 builds are the only
+ones checked, since they are the only ones released. Vimma notifies you and shows the command; it
+does not install the update itself.
 
-Every 12 hours, and 30 seconds after startup if the last check is older, Vimma fetches one small
-signed file from `updates.vimma.dev` that names the newest release of its update channel. It
-checks the file's signature against the keys built into Vimma and refuses anything else: a file
-signed by another key, one for another channel or platform, or one older than a file it already
-accepted. It installs nothing; it tells you.
+**Coming from 0.1.1?** Vimma 0.1.1 has no signing key built in, so it refuses every update file
+and never shows a notice. Update it once by hand, the way you installed it: the commands are in
+the table below and in [Installing](#installing). From 0.1.2 on, the status bar tells you.
+
+Every 12 hours, and a few seconds after startup when the last successful check is older, Vimma
+fetches one small signed file from `updates.vimma.dev` that names the newest release of its
+update channel. A check that fails is tried again every hour while Vimma runs. Vimma checks the
+file's signature against the keys built into Vimma and refuses anything else: a file signed by
+another key, one for another channel or platform, or one older than a file it already accepted.
+It installs nothing; it tells you.
 
 - **A newer version:** the status bar's right side shows `⇡ 0.3.1 available`, dim. A release that
   carries a Firefox security fix shows `⇡ 0.3.1 security: :update` in the error colour.
+- **The first time a version is offered**, a message above the status bar says
+  `Vimma 0.3.1 is available · :update shows the command` (or `fixes security issues` for a
+  security release) for a few seconds. It takes no focus and no keys, and is not shown again for
+  that version, even after a restart.
+- **A security release also asks**, once per session:
+  `Vimma 0.3.1 fixes security issues. Show the update command? (y/N)`. `y` shows the update steps,
+  as `:update` does; `n`, Esc or any other key dismisses it until the next start. The question
+  waits until you are not typing in a field and have not pressed a key for a moment, never takes
+  focus, and is not asked in a private window. Keys pressed in its first second are ignored, so a
+  key you were already typing, or one a page asked you to press, cannot answer it.
 - **`:update`** checks at once. When a newer version exists it opens `about:vimma` at its
   Updates section, with the exact commands for how you installed Vimma; otherwise it says
   `Vimma 0.1.0 is up to date`, or why the check failed.
@@ -2076,14 +2098,14 @@ accepted. It installs nothing; it tells you.
   and is checked against the SHA-512 the signed file gives for it (`sha512sum -c`) before
   anything is installed or replaced, so a file changed on the release page stops the command.
 
-  | Installed with           | `:update` shows                                                                                     |
-  | ------------------------ | --------------------------------------------------------------------------------------------------- |
-  | The release's `PKGBUILD` | `curl -fLO https://github.com/vimma-browser/vimma/releases/latest/download/PKGBUILD && makepkg -si` |
-  | AUR `vimma-bin`          | `yay -Syu vimma-bin` (or your AUR helper's equivalent)                                              |
-  | `.deb`                   | download `vimma_X.Y.Z_amd64.deb`, check it, then `sudo apt install ./vimma_X.Y.Z_amd64.deb`         |
-  | Tarball                  | quit Vimma, download the tarball, check it, then `tar -xJf` it into the install's parent directory  |
-  | AppImage                 | download the new AppImage next to yours, check it, and rename it over yours; the next start runs it |
-  | A build from source      | nothing: source builds never check (pull and rebuild)                                               |
+  | Installed with           | `:update` shows                                                                                                                                                 |
+  | ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | The release's `PKGBUILD` | `mkdir -p ~/.cache/vimma-build && cd ~/.cache/vimma-build && curl -fLO https://github.com/vimma-browser/vimma/releases/latest/download/PKGBUILD && makepkg -si` |
+  | AUR `vimma-bin`          | `yay -Syu vimma-bin` (or your AUR helper's equivalent)                                                                                                          |
+  | `.deb`                   | download `vimma_X.Y.Z_amd64.deb`, check it, then `sudo apt install ./vimma_X.Y.Z_amd64.deb`                                                                     |
+  | Tarball                  | quit Vimma, download the tarball, check it, then `tar -xJf` it into the install's parent directory                                                              |
+  | AppImage                 | download the new AppImage next to yours, check it, and rename it over yours; the next start runs it                                                             |
+  | A build from source      | nothing: source builds never check (pull and rebuild)                                                                                                           |
 
 - **What a check sends:** a GET for
   `https://updates.vimma.dev/updates/browser/Linux_x86_64-gcc3/<channel>/update.xml`, with no
@@ -2096,8 +2118,8 @@ accepted. It installs nothing; it tells you.
   checks three times in a row shows `updates: check failed`, and one that is older than 45 days
   (7 for nightly builds) shows `updates: no news for N days`.
 - **Off:** `[updates] check = false` in [config.toml](#configtoml), or `vimma.update.enabled` =
-  `false` in `about:config`, stops every request; `about:vimma` then says checks are off. A
-  `config.toml` with errors never turns checks back on: its `check = false` still holds, and
+  `false` in `about:config`, stops every request, the message and the question; `about:vimma`
+  then says checks are off. A `config.toml` with errors never turns checks back on: its `check = false` still holds, and
   while Vimma runs on its defaults because of the errors, it does not check at all.
 
 ## Privacy defaults
@@ -2128,8 +2150,8 @@ need.
 
 Sites see Firefox 158's user agent, with no Vimma token, and add-ons see Firefox's version
 (`runtime.getBrowserInfo()`), so Vimma is treated like Firefox. The About dialog shows Vimma's own
-version (`0.1.0`); `vimma --version` and the start page show it with the Firefox release it is
-built on, `Vimma 0.1.0 · Firefox 158.0`.
+version; `vimma --version` and the start page show it with the Firefox release it is built on,
+for example `Vimma X.Y.Z · Firefox N`.
 
 ### Safe Browsing
 
@@ -2218,9 +2240,9 @@ malware lists; Settings then shows "Block dangerous and deceptive content" untic
 it does not help. Mozilla's tracking-protection lists update either way.
 
 **Does Vimma update itself?** No. Install each new release yourself ([Installing](#installing));
-Vimma's update check tells you when one is out and how to install it ([Updates](#updates)).
-Installing updates from inside Vimma is planned
-([limits.md](limits.md#privacy-security-and-services)).
+from 0.1.2 on, Vimma's update check tells you when one is out and how to install it
+([Updates](#updates)). Vimma 0.1.1 shows no notice: update it once by hand.
+Vimma notifies you and shows the command; it does not install updates itself.
 Firefox's updater is not built into Vimma, so it never asks Mozilla's update server
 (`aus5.mozilla.org`) for a Firefox build.
 
