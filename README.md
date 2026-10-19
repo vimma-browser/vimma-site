@@ -133,8 +133,10 @@ so they match what a visitor downloads.
 - The build reads only those committed files and never calls GitHub, so it works offline and
   Cloudflare's builders, which share GitHub's unauthenticated rate limit, cannot fail it. It
   fails if `data/release.json` is missing or malformed.
-- `.github/workflows/release-sync.yml` runs the sync once a day (and by hand: Actions →
-  release-sync → Run workflow, with an optional tag). When `data/` changes, a read-only job builds
+- `.github/workflows/release-sync.yml` runs the sync when Vimma publishes a release (Vimma's
+  `site-dispatch.yml` sends a `repository_dispatch`, `vimma-release`, which needs its
+  `SITE_DISPATCH_TOKEN` secret), every hour as a fallback, and by hand (Actions → release-sync →
+  Run workflow, with an optional tag). When `data/` changes, a read-only job builds
   and checks the site, and a second job, which holds the write token and runs no npm code, opens
   or updates the pull request `release-sync/<tag>`. A pull request opened
   with the workflow's own token starts no `pull_request` workflows, so it starts `ci.yml` on the
