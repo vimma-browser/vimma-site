@@ -138,10 +138,13 @@ so they match what a visitor downloads.
   `SITE_DISPATCH_TOKEN` secret), every hour as a fallback, and by hand (Actions → release-sync →
   Run workflow, with an optional tag). When `data/` changes, a read-only job builds
   and checks the site, and a second job, which holds the write token and runs no npm code, opens
-  or updates the pull request `release-sync/<tag>`. A pull request opened
-  with the workflow's own token starts no `pull_request` workflows, so it starts `ci.yml` on the
-  branch itself (`workflow_dispatch`), and turns on auto-merge (squash), so the pull request
-  merges once the required `build` check passes, and Cloudflare deploys it.
+  or updates the pull request `release-sync/<tag>`. A push made with the
+  workflow's own token starts no workflows, so it starts `ci.yml` on the branch itself
+  (`workflow_dispatch`). The pull request's own `ci` run waits for approval, since
+  `github-actions[bot]` is an outside contributor here and Actions asks approval for all of them,
+  and that waiting run holds the merge, so the job approves it. It then turns on auto-merge
+  (squash), so the pull request merges once the required `build` check passes, and Cloudflare
+  deploys it.
 - When the new release renames or drops a guide heading, paragraph or limits section that
   `scripts/docs-pages.ts` names, the build fails on purpose. The pull request then says which
   one, is not set to merge, and stays red: fix `scripts/docs-pages.ts` on its branch and merge
