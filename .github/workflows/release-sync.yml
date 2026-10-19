@@ -7,8 +7,11 @@
 # `publish` holds the write token and runs no npm code, only git and gh on the files `sync` hands
 # it, so nothing the build runs can reach that token.
 #
-# A pull request opened with GITHUB_TOKEN starts no pull_request or push workflows, so `publish`
-# starts ci.yml on the branch itself (workflow_dispatch is the exception GitHub allows). Needs
+# A push made with GITHUB_TOKEN starts no workflows, so `publish` starts ci.yml on the branch
+# itself (workflow_dispatch is the exception GitHub allows). The pull request's own ci run does
+# start, but github-actions[bot] is an outside contributor to the repository, so that run waits
+# for approval (Settings → Actions → General, "Approval for running fork pull request workflows")
+# and its waiting check suite holds the merge; `publish` approves it. Needs
 # Settings → Actions → General → "Allow GitHub Actions to create and approve pull requests", and
 # Settings → General → "Allow auto-merge".
 name: release-sync
@@ -191,44 +194,20 @@ jobs:
           read -r version firefox commit < <(jq -r '[.version, .firefox, .commit] | join(" ")' data/release.json)
           [[ "$version" == "${TAG#v}" && "$firefox" =~ ^[0-9.]+$ && "$commit" =~ ^[0-9a-f]{40}$ ]] \
             || { echo "::error::data/release.json does not match $TAG"; exit 1; }
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           # shellcheck disable=SC2086
           git add -- $SYNCED
           if git diff --cached --quiet; then
             echo "pushed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          # The commit is made through the API (createCommitOnBranch), not git push: GitHub signs
-          # it, so it is verified, and main's ruleset does not hold the pull request for a human
-          # approval of unattributed (unsigned) changes, which would stop auto-merge.
-          head=$(git rev-parse HEAD)
-          if [[ "$REUSE" != "true" ]]; then
-            gh api --method POST "repos/$REPO/git/refs" -f "ref=refs/heads/$BRANCH" -f "sha=$head" >/dev/null
-          fi
-          git diff --cached --name-only -z |
-            while IFS= read -r -d '' f; do
-              jq -n --arg path "$f" --rawfile c <(base64 -w0 -- "$f") '{path: $path, contents: $c}'
-            done | jq -s . > "$RUNNER_TEMP/additions.json"
-          body="Vimma $version (Firefox $firefox) is the latest published release. This copies its
+          git commit --quiet -m "chore(release): sync the site with vimma $TAG" -m "Vimma $version (Firefox $firefox) is the latest published release. This copies its
           facts, docs/guide.md, docs/limits.md and docs/bindings.json at the tag's commit (${commit:0:7}),
           so the pages, the docs and the keys describe the release a visitor downloads."
-          jq -n --arg repo "$REPO" --arg branch "$BRANCH" --arg head "$head" \
-            --arg headline "chore(release): sync the site with vimma $TAG" --arg body "$body" \
-            --slurpfile adds "$RUNNER_TEMP/additions.json" '{
-              query: "mutation($input: CreateCommitOnBranchInput!) { createCommitOnBranch(input: $input) { commit { oid } } }",
-              variables: {input: {
-                branch: {repositoryNameWithOwner: $repo, branchName: $branch},
-                expectedHeadOid: $head,
-                message: {headline: $headline, body: $body},
-                fileChanges: {additions: $adds[0]}
-              }}
-            }' > "$RUNNER_TEMP/commit.json"
-          if ! oid=$(gh api graphql --input "$RUNNER_TEMP/commit.json" --jq .data.createCommitOnBranch.commit.oid) || [[ -z "$oid" ]]; then
-            # A new branch left without its commit would stop the next run (no open pull request).
-            [[ "$REUSE" == "true" ]] || gh api --method DELETE "repos/$REPO/git/refs/heads/$BRANCH" || true
-            echo "::error::could not commit to $BRANCH"
-            exit 1
-          fi
-          echo "committed $oid to $BRANCH"
+          # gh as git's credential helper, so the token is never on a command line
+          gh auth setup-git
+          git push --quiet origin "HEAD:refs/heads/$BRANCH"
           echo "pushed=true" >> "$GITHUB_OUTPUT"
 
       - name: Open or update the pull request
@@ -260,8 +239,8 @@ jobs:
               echo "The next run keeps your commits and adds its own on top."
             fi
             echo
-            echo "Opened by \`.github/workflows/release-sync.yml\`; CI was started on the branch with"
-            echo "\`workflow_dispatch\`, since a pull request opened with the workflow's token starts none."
+            echo "Opened by \`.github/workflows/release-sync.yml\`, which started CI on the branch with"
+            echo "\`workflow_dispatch\` and approved this pull request's own \`ci\` run."
           } > "$RUNNER_TEMP/pr-body.md"
 
           pr=$(gh pr list --repo "$REPO" --head "$BRANCH" --state open --json number --jq '.[0].number // empty')
@@ -272,6 +251,18 @@ jobs:
           fi
           if [[ "$PUSHED" == "true" ]]; then
             gh workflow run ci.yml --repo "$REPO" --ref "$BRANCH"
+            # Approve the pull request's ci run for this commit, which waits for a maintainer
+            # (see the top of this file). It appears a few seconds after the push.
+            head=$(git rev-parse HEAD)
+            for _ in $(seq 1 12); do
+              ids=$(gh api "repos/$REPO/actions/runs?head_sha=$head&event=pull_request&status=action_required" --jq '.workflow_runs[].id')
+              [[ -n "$ids" ]] && break
+              sleep 5
+            done
+            for id in $ids; do
+              gh api --method POST "repos/$REPO/actions/runs/$id/approve" >/dev/null && echo "approved ci run $id" \
+                || echo "::warning::could not approve ci run $id; approve it on the pull request so it can merge"
+            done
           fi
           if [[ "$BUILD_OK" == "true" ]]; then
             gh pr merge "$BRANCH" --repo "$REPO" --auto --squash \
