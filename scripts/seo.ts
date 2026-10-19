@@ -110,7 +110,7 @@ export function homeJsonLd(description: string): string {
       name: SITE_NAME,
       description,
       applicationCategory: "BrowserApplication",
-      operatingSystem: "Linux",
+      operatingSystem: "Linux, macOS",
       offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
       license: "https://www.mozilla.org/en-US/MPL/2.0/",
       url: `${SITE_URL}/`,

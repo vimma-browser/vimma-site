@@ -96,7 +96,7 @@ export const DOC_PAGES: DocPage[] = [
     title: "Install and first launch",
     nav: "Install",
     group: "Get going",
-    description: "Install Vimma on Linux x86_64 from a release, on Arch Linux with one command, and start it with a profile of its own.",
+    description: "Install Vimma on Linux x86_64 from a release, on Arch Linux with one command, or on a Mac with Homebrew, and start it with a profile of its own.",
     blocks: [
       { guide: "Installing" },
       { guide: "First launch, with its own profile" },

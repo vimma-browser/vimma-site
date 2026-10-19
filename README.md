@@ -76,7 +76,8 @@ npm run release:sync -- v0.1.2     # … of a given release tag
   `src/pages/*.html` are page bodies with a one-line JSON meta comment on top.
   `build.ts` fills `{{placeholders}}`; an unknown one fails the build. No page types a version:
   `{{version}}`, `{{firefox}}` (`158.0`), `{{firefox_major}}` (`158`), `{{release_tag}}`, `{{deb}}`,
-  `{{appimage}}` and `{{tarball}}` come from `data/release.json` (see [Keeping up with
+  `{{appimage}}`, `{{tarball}}` and `{{dmg}}` (the macOS `.dmg`, which a release may lack; using it
+  then fails the build) come from `data/release.json` (see [Keeping up with
   releases](#keeping-up-with-releases)), and `{{arch_install}}` is the Arch Linux command
   (`ARCH_INSTALL` in `scripts/release.ts`), so the home page, the install page and the docs show
   the same line.
@@ -123,7 +124,7 @@ so they match what a visitor downloads.
 - `npm run release:sync` (`scripts/sync-release.ts`) reads the latest published release from
   GitHub (or the tag given), takes the Vimma and Firefox versions from its title (`Vimma 0.1.2 ·
   Firefox 158.0`; Firefox from `surfer.json` at the tag if the title has none), the `.deb`,
-  AppImage and tarball names from its assets, and copies `docs/guide.md`, `docs/limits.md` and
+  AppImage and tarball names (and the macOS `.dmg`, when there is one) from its assets, and copies `docs/guide.md`, `docs/limits.md` and
   `docs/bindings.json` at the tag's commit. It writes `data/release.json`, `data/docs/` and
   `data/bindings.json` with their source files, and only once everything is fetched and checked.
   It uses `GITHUB_TOKEN` when set, for the API's higher rate limit. Every value it records must

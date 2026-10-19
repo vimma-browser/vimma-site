@@ -44,7 +44,7 @@
 
   <dt id="status">What works today?</dt>
   <dd>
-    <p>Vimma is pre-alpha. Version <code>{{version}}</code>, on Firefox {{firefox}}, is released for Linux x86_64; ticked items work in it.</p>
+    <p>Vimma is pre-alpha. Version <code>{{version}}</code>, on Firefox {{firefox}}, is released for Linux x86_64 and for macOS on Apple Silicon; ticked items work in it.</p>
       <ul class="checklist">
         <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> The fork, its build pipeline, the control socket and end-to-end tests</li>
         <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> The modal page layer: scrolling, hints, find, copy mode, back, forward and reload</li>
@@ -54,13 +54,14 @@
         <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> <code>config.toml</code>, theming and search engines</li>
         <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> Local AI agents through MCP, confined to the agent workspace</li>
         <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> Update notices in the status bar, with the command to update (Vimma never installs an update by itself)</li>
-        <li><span class="mark todo" aria-hidden="true">[ ]</span><span class="sr-only">To do:</span> macOS</li>
+        <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> macOS on Apple Silicon, with a Homebrew cask</li>
+        <li><span class="mark todo" aria-hidden="true">[ ]</span><span class="sr-only">To do:</span> Update notices, passkeys and notarisation on macOS</li>
       </ul>
   </dd>
 
   <dt id="platforms">Which platforms?</dt>
   <dd>
-    <p>Linux x86_64 is the only platform built and tested today; macOS is next. See <a href="{{root}}install/">install</a>.</p>
+    <p>Linux x86_64, and macOS on Apple Silicon (M1 or later), through Homebrew or a <code>.dmg</code>. There is no build for Intel Macs or Windows. See <a href="{{root}}install/">install</a>.</p>
   </dd>
 
   <dt id="licence">What is the licence?</dt>
@@ -70,7 +71,7 @@
 
   <dt id="source">Where is the source?</dt>
   <dd>
-    <p>On GitHub, at <a href="https://github.com/vimma-browser/vimma">github.com/vimma-browser/vimma</a>, public since 10 October 2026. The releases for Linux x86_64, the issue tracker and the specification behind each feature are there too.</p>
+    <p>On GitHub, at <a href="https://github.com/vimma-browser/vimma">github.com/vimma-browser/vimma</a>, public since 10 October 2026. The releases for Linux and macOS, the issue tracker and the specification behind each feature are there too.</p>
   </dd>
 
   <dt id="site">Does this site track me?</dt>

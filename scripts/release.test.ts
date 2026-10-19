@@ -70,6 +70,17 @@ test("assets: a package of another version fails", () => {
   assert.throws(() => pickAssets(ASSETS, "0.1.3"), /no \.deb/);
 });
 
+test("assets: the macOS .dmg when the release has one, not its checksums or the cask", () => {
+  const mac = [...ASSETS, "vimma-0.1.2-macos-aarch64.dmg", "vimma-0.1.2-macos-aarch64.dmg.sigstore.json", "SHA256SUMS-macos", "vimma.rb"];
+  assert.deepEqual(pickAssets(mac, "0.1.2"), { ...RELEASE.assets, dmg: "vimma-0.1.2-macos-aarch64.dmg" });
+});
+
+test("placeholders: {{dmg}} fails the build for a release without a macOS build", () => {
+  assert.throws(() => fill("{{dmg}}", releaseVars(RELEASE), "install/"), /install\/: no value for \{\{dmg\}\}/);
+  const mac = { ...RELEASE, assets: { ...RELEASE.assets, dmg: "vimma-0.1.2-macos-aarch64.dmg" } };
+  assert.equal(fill("{{dmg}}", releaseVars(mac), "t"), "vimma-0.1.2-macos-aarch64.dmg");
+});
+
 // --- placeholders -----------------------------------------------------------------------------
 
 test("placeholders: filled from the release file", () => {
