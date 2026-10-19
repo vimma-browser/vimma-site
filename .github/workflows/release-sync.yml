@@ -1,5 +1,5 @@
 # Keep the site on Vimma's latest published release (README, "Keeping up with releases"): when
-# Vimma publishes a release (its site-dispatch.yml sends the repository_dispatch) and once a day
+# Vimma publishes a release (its site-dispatch.yml sends the repository_dispatch) and every hour
 # as a fallback, copy the release's facts, docs and keys into data/ (npm run release:sync) and, when they
 # changed, open or update a pull request that merges itself once the required checks pass.
 #
@@ -19,7 +19,7 @@ on:
   repository_dispatch:
     types: [vimma-release]
   schedule:
-    - cron: "17 5 * * *" # daily, 05:17 UTC
+    - cron: "17 * * * *" # hourly, at :17 (a run with nothing new ends in seconds)
   workflow_dispatch:
     inputs:
       tag:
@@ -257,7 +257,7 @@ jobs:
               echo '~~~'
               echo
               echo "Fix \`scripts/docs-pages.ts\` (or the page) on this branch, then merge it by hand."
-              echo "The next daily run keeps your commits and adds its own on top."
+              echo "The next run keeps your commits and adds its own on top."
             fi
             echo
             echo "Opened by \`.github/workflows/release-sync.yml\`; CI was started on the branch with"
