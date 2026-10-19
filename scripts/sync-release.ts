@@ -16,7 +16,8 @@
 // It calls GitHub's API (with GITHUB_TOKEN when set, for the higher rate limit) and
 // raw.githubusercontent.com. The build reads only the committed files. Everything is fetched
 // and checked before anything is written, so a failed sync leaves data/ as it was.
-// .github/workflows/release-sync.yml runs it daily and opens a pull request when data/ changes.
+// .github/workflows/release-sync.yml runs it when Vimma publishes a release and daily, and opens
+// a pull request when data/ changes.
 
 import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";

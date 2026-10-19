@@ -1,5 +1,6 @@
-# Keep the site on Vimma's latest published release (README, "Keeping up with releases"): once a
-# day, copy the release's facts, docs and keys into data/ (npm run release:sync) and, when they
+# Keep the site on Vimma's latest published release (README, "Keeping up with releases"): when
+# Vimma publishes a release (its site-dispatch.yml sends the repository_dispatch) and once a day
+# as a fallback, copy the release's facts, docs and keys into data/ (npm run release:sync) and, when they
 # changed, open or update a pull request that merges itself once the required checks pass.
 #
 # Two jobs: `sync` runs the npm code (the sync, the build and the checks) with a read-only token;
@@ -13,6 +14,10 @@
 name: release-sync
 
 on:
+  # Sent by Vimma's site-dispatch.yml when a release is published. Its payload is not used: the
+  # run syncs the latest published release, so it keeps the scheduled run's refusal to go back.
+  repository_dispatch:
+    types: [vimma-release]
   schedule:
     - cron: "17 5 * * *" # daily, 05:17 UTC
   workflow_dispatch:
@@ -186,20 +191,44 @@ jobs:
           read -r version firefox commit < <(jq -r '[.version, .firefox, .commit] | join(" ")' data/release.json)
           [[ "$version" == "${TAG#v}" && "$firefox" =~ ^[0-9.]+$ && "$commit" =~ ^[0-9a-f]{40}$ ]] \
             || { echo "::error::data/release.json does not match $TAG"; exit 1; }
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           # shellcheck disable=SC2086
           git add -- $SYNCED
           if git diff --cached --quiet; then
             echo "pushed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          git commit --quiet -m "chore(release): sync the site with vimma $TAG" -m "Vimma $version (Firefox $firefox) is the latest published release. This copies its
+          # The commit is made through the API (createCommitOnBranch), not git push: GitHub signs
+          # it, so it is verified, and main's ruleset does not hold the pull request for a human
+          # approval of unattributed (unsigned) changes, which would stop auto-merge.
+          head=$(git rev-parse HEAD)
+          if [[ "$REUSE" != "true" ]]; then
+            gh api --method POST "repos/$REPO/git/refs" -f "ref=refs/heads/$BRANCH" -f "sha=$head" >/dev/null
+          fi
+          git diff --cached --name-only -z |
+            while IFS= read -r -d '' f; do
+              jq -n --arg path "$f" --rawfile c <(base64 -w0 -- "$f") '{path: $path, contents: $c}'
+            done | jq -s . > "$RUNNER_TEMP/additions.json"
+          body="Vimma $version (Firefox $firefox) is the latest published release. This copies its
           facts, docs/guide.md, docs/limits.md and docs/bindings.json at the tag's commit (${commit:0:7}),
           so the pages, the docs and the keys describe the release a visitor downloads."
-          # gh as git's credential helper, so the token is never on a command line
-          gh auth setup-git
-          git push --quiet origin "HEAD:refs/heads/$BRANCH"
+          jq -n --arg repo "$REPO" --arg branch "$BRANCH" --arg head "$head" \
+            --arg headline "chore(release): sync the site with vimma $TAG" --arg body "$body" \
+            --slurpfile adds "$RUNNER_TEMP/additions.json" '{
+              query: "mutation($input: CreateCommitOnBranchInput!) { createCommitOnBranch(input: $input) { commit { oid } } }",
+              variables: {input: {
+                branch: {repositoryNameWithOwner: $repo, branchName: $branch},
+                expectedHeadOid: $head,
+                message: {headline: $headline, body: $body},
+                fileChanges: {additions: $adds[0]}
+              }}
+            }' > "$RUNNER_TEMP/commit.json"
+          if ! oid=$(gh api graphql --input "$RUNNER_TEMP/commit.json" --jq .data.createCommitOnBranch.commit.oid) || [[ -z "$oid" ]]; then
+            # A new branch left without its commit would stop the next run (no open pull request).
+            [[ "$REUSE" == "true" ]] || gh api --method DELETE "repos/$REPO/git/refs/heads/$BRANCH" || true
+            echo "::error::could not commit to $BRANCH"
+            exit 1
+          fi
+          echo "committed $oid to $BRANCH"
           echo "pushed=true" >> "$GITHUB_OUTPUT"
 
       - name: Open or update the pull request
