@@ -1,7 +1,7 @@
-<!--{"title": "Install Vimma · Linux x86_64 releases and Arch Linux", "short": "install", "out": "install/", "cmd": "cat INSTALL.md", "description": "Install Vimma on Linux x86_64: one command on Arch Linux, or a .deb, AppImage or tarball from the latest release. Or build it from source."}-->
-<p class="eyebrow">Vimma {{version}} · Linux x86_64</p>
+<!--{"title": "Install Vimma · Linux x86_64, Arch Linux and macOS", "short": "install", "out": "install/", "cmd": "cat INSTALL.md", "description": "Install Vimma on Linux x86_64: one command on Arch Linux, or a .deb, AppImage or tarball from the latest release. On a Mac with Apple Silicon: Homebrew or a .dmg. Or build it from source."}-->
+<p class="eyebrow">Vimma {{version}} · Linux x86_64 · macOS</p>
 <h1>Install</h1>
-<p>Vimma <code>{{version}}</code>, on Firefox {{firefox}}, is released for <strong>Linux x86_64</strong>, the only platform it is built and tested on.</p>
+<p>Vimma <code>{{version}}</code>, on Firefox {{firefox}}, is released for <strong>Linux x86_64</strong> and for <strong>macOS on Apple Silicon</strong> (M1 or later). There is no build for Intel Macs or Windows.</p>
 
 <h2 id="arch">Arch Linux</h2>
 <p>Run as your normal user, from any directory. The same command installs and updates:</p>
@@ -20,8 +20,21 @@
 </ul>
 <p>Next to them are <code>SHA256SUMS</code>, an SBOM and cosign signatures. <a href="https://github.com/vimma-browser/vimma/blob/{{release_tag}}/docs/guide.md#installing">Installing</a>, in the guide, explains how to check them.</p>
 
+<h2 id="macos">macOS</h2>
+<p>For Macs with Apple Silicon. With <a href="https://brew.sh/">Homebrew</a>, install the cask from Vimma's own tap:</p>
+<div class="cmdbox">
+  <pre class="code wrap" id="brew-cmd"><span class="p">$ </span>brew install --cask vimma-browser/tap/vimma</pre>
+  <button type="button" class="copy" data-copy="brew-cmd" aria-live="polite" data-js-only hidden>copy</button>
+</div>
+<p>Homebrew checks the download against the checksum the cask pins, puts Vimma in Applications and <code>vimma</code> on your <code>PATH</code>. <code>brew upgrade --cask vimma</code> updates it, <code>brew uninstall --cask vimma</code> removes it and keeps your profile, and <code>brew uninstall --zap --cask vimma</code> removes your profiles, caches and preferences as well; your <code>~/.config/vimma/</code> stays.</p>
+<p>Without Homebrew, download <code>{{dmg}}</code> from the <a href="https://github.com/vimma-browser/vimma/releases/latest">latest release</a>, open it and drag Vimma into Applications. Its checksum is in <code>SHA256SUMS-macos</code>, signed like the Linux files.</p>
+<p><strong>The first time you open it</strong>, macOS says it cannot check Vimma for malicious software: Vimma is not yet notarised by Apple. Open it once, then go to System Settings → Privacy &amp; Security, choose <strong>Open Anyway</strong> next to Vimma, and confirm. A newer version asks again. If macOS instead says the app "is damaged", clear the download's quarantine flag:</p>
+<pre class="code wrap"><span class="p">$ </span>xattr -dr com.apple.quarantine /Applications/Vimma.app</pre>
+<p>On a Mac, passkeys do not work yet, and your profile lives in <code>~/Library/Application Support/Vimma/</code>.</p>
+
 <h2 id="updating">Updating</h2>
 <p>Since 0.1.2, Vimma checks for a new release every 12 hours, or at once with <code>:update</code>. When one is out, the status bar shows <code>⇡</code> and its version (in red for a security release), and <code>:update</code> shows the command for how you installed Vimma; each update file is checked with SHA-512. Vimma only tells you: it never installs an update by itself. To update, run that command: on Arch Linux, the command above again; otherwise, install the newer <code>.deb</code>, AppImage or tarball over the old one. A 0.1.1 install has no update check, so update it this way by hand once.</p>
+<p>On a Mac, Vimma has no update notices yet: run <code>brew upgrade --cask vimma</code>, or install the newer <code>.dmg</code> over the old one, and choose <strong>Open Anyway</strong> again.</p>
 
 <p>Next: your <a href="{{root}}docs/install/">first launch</a>, then the rest of the <a href="{{root}}docs/">docs</a>.</p>
 
@@ -30,7 +43,7 @@
 
 <h3 id="requirements">Requirements</h3>
 <ul>
-  <li>Linux x86_64.</li>
+  <li>Linux x86_64, for the macOS build too: it is cross-compiled on Linux (<a href="https://github.com/vimma-browser/vimma/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a> has the steps).</li>
   <li>About 35 GB of free disk: the Firefox source and full build take 27 GB, the compiler cache 6.8 GB, Mozilla's toolchains 3.1 GB and the source download 0.8 GB.</li>
   <li>Node.js 20 or later, Python 3, git.</li>
   <li>Time: about 40 minutes for the first full build on a 16-thread machine, plus the Firefox source download.</li>

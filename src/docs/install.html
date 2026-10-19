@@ -1,5 +1,5 @@
 <!-- Hand-written guide for the install page; the build adds the keys table and the details from guide.md. -->
-<p class="lead">Install Vimma from a release on Linux x86_64, or build it from source, then start it with a profile of its own, so your Firefox profile is never touched.</p>
+<p class="lead">Install Vimma from a release on Linux x86_64 or on a Mac with Apple Silicon, or build it from source, then start it with a profile of its own, so your Firefox profile is never touched.</p>
 
 <h2 id="install-it">Install it</h2>
 
@@ -8,6 +8,12 @@
 <pre class="code wrap">{{arch_install}}</pre>
 
 <p>On other distributions, the <a href="https://github.com/vimma-browser/vimma/releases/latest">latest release</a> has a <code>.deb</code>, an AppImage and a tarball. Vimma tells you in the status bar when a newer release is out, and <code>:update</code> shows the command to install it; it never updates by itself. The <a href="{{root}}install/">install page</a> has the details, and <a href="#installing">Installing</a>, below, explains how to verify a download.</p>
+
+<p>On a Mac with Apple Silicon, install it with Homebrew, or open the release's <code>.dmg</code> and drag Vimma into Applications:</p>
+
+<pre class="code wrap">brew install --cask vimma-browser/tap/vimma</pre>
+
+<p>Vimma is not yet notarised by Apple, so the first time you open it, go to System Settings → Privacy &amp; Security and choose <strong>Open Anyway</strong>. On a Mac there are no update notices yet: <code>brew upgrade --cask vimma</code> updates it. The <a href="{{root}}install/#macos">install page</a> has the details.</p>
 
 <p>The Arch package puts <code>vimma</code> on your <code>PATH</code>; both it and the <code>.deb</code> add Vimma to your application menu. Vimma's profiles live in <code>~/.config/vimma/vimma/</code>, separate from Firefox's.</p>
 
@@ -50,5 +56,5 @@ npm start -- --profile DIR<span class="c">  # another profile you keep</span></p
 
 <div class="table-wrap"><table class="plain"><thead><tr><th scope="col">Path</th><th scope="col">What</th></tr></thead><tbody>
 <tr><td><code>~/.config/vimma/config.toml</code></td><td>Your settings and key bindings (see <a href="{{root}}docs/config/">config.toml</a>). Vimma writes it on the first launch, every line commented out, so you have the whole format to start from.</td></tr>
-<tr><td><code>~/.config/vimma/vimma/</code></td><td>Installed Vimma's profiles. A build started with <code>npm start</code> uses <code>~/.cache/vimma-dev-profile</code> instead.</td></tr>
+<tr><td><code>~/.config/vimma/vimma/</code></td><td>Installed Vimma's profiles on Linux; on a Mac, <code>~/Library/Application Support/Vimma/</code>. A build started with <code>npm start</code> uses <code>~/.cache/vimma-dev-profile</code> instead.</td></tr>
 </tbody></table></div>

@@ -1513,6 +1513,11 @@
           ]
         },
         {
+          "name": "firefox_command",
+          "description": "Run a Firefox command or key by its id (:firefox)",
+          "keys": []
+        },
+        {
           "name": "go_home",
           "description": "Go to the home page",
           "keys": [
@@ -1715,6 +1720,114 @@
               ]
             }
           ]
+        },
+        {
+          "name": "web_search",
+          "description": "Web search (the address bar's search)",
+          "keys": [
+            {
+              "keys": "ctrl+j",
+              "chords": [
+                "ctrl+j"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "about_processes",
+          "description": "Process manager (about:processes)",
+          "keys": [
+            {
+              "keys": "shift+esc",
+              "chords": [
+                "shift+esc"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "bookmark_all_tabs",
+          "description": "Bookmark all tabs",
+          "keys": [
+            {
+              "keys": "ctrl+shift+d",
+              "chords": [
+                "ctrl+shift+d"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "toggle_bookmarks_toolbar",
+          "description": "Show / hide the bookmarks toolbar",
+          "keys": [
+            {
+              "keys": "ctrl+shift+b",
+              "chords": [
+                "ctrl+shift+b"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "ai_chatbot_sidebar",
+          "description": "Firefox sidebar: AI chatbot",
+          "keys": [
+            {
+              "keys": "ctrl+alt+x",
+              "chords": [
+                "ctrl+alt+x"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "open_tabs_sidebar",
+          "description": "Firefox sidebar: tabs from other devices",
+          "keys": [
+            {
+              "keys": "ctrl+alt+u",
+              "chords": [
+                "ctrl+alt+u"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "toggle_firefox_sidebar",
+          "description": "Show / hide Firefox's sidebar",
+          "keys": [
+            {
+              "keys": "ctrl+alt+z",
+              "chords": [
+                "ctrl+alt+z"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "switch_text_direction",
+          "description": "Switch a text field's direction",
+          "keys": [
+            {
+              "keys": "ctrl+shift+x",
+              "chords": [
+                "ctrl+shift+x"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "caret_browsing",
+          "description": "Caret browsing (asks first)",
+          "keys": [
+            {
+              "keys": "f7",
+              "chords": [
+                "f7"
+              ]
+            }
+          ]
         }
       ]
     },
@@ -1870,6 +1983,11 @@
               ]
             }
           ]
+        },
+        {
+          "name": "devtools_dom",
+          "description": "Developer tools: DOM",
+          "keys": []
         }
       ]
     },
@@ -1922,6 +2040,12 @@
           "name": "find_forward",
           "description": "Search in page",
           "keys": [
+            {
+              "keys": "ctrl+f",
+              "chords": [
+                "ctrl+f"
+              ]
+            },
             {
               "keys": "/",
               "chords": [
@@ -2734,6 +2858,19 @@
               "mode": "panel"
             }
           ]
+        },
+        {
+          "name": "panel_move_tab",
+          "description": "Move the selected row's tab to a workspace (picker); in bookmarks, move to a folder",
+          "keys": [
+            {
+              "keys": "m",
+              "chords": [
+                "m"
+              ],
+              "mode": "panel"
+            }
+          ]
         }
       ]
     },
@@ -2873,15 +3010,7 @@
         {
           "name": "bookmarks_move",
           "description": "Bookmarks: move to a folder",
-          "keys": [
-            {
-              "keys": "m",
-              "chords": [
-                "m"
-              ],
-              "mode": "panel"
-            }
-          ]
+          "keys": []
         },
         {
           "name": "bookmarks_delete",
@@ -2935,6 +3064,11 @@
         {
           "name": "edit_config",
           "description": "Open config.toml in a tab",
+          "keys": []
+        },
+        {
+          "name": "setup",
+          "description": "Open the first-run setup (add-ons, search engine)",
           "keys": []
         },
         {

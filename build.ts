@@ -227,8 +227,8 @@ function main(): void {
   writeFileSync(
     join(DIST, "llms.txt"),
     llmsTxt(
-      `${TAGLINE}. Vimma is a Firefox fork for Linux: Vim modes on every page, a tmux-style ctrl+b prefix for tabs, split panes and workspaces, and one config.toml for every key.`,
-      `Vimma is pre-alpha and open source (MPL-2.0): releases for Linux x86_64 are on GitHub, and on Arch Linux it installs with one command. Source: ${VIMMA_REPO}. The whole user guide as one Markdown file: https://vimma.dev/llms-full.txt`,
+      `${TAGLINE}. Vimma is a Firefox fork for Linux and macOS: Vim modes on every page, a tmux-style ctrl+b prefix for tabs, split panes and workspaces, and one config.toml for every key.`,
+      `Vimma is pre-alpha and open source (MPL-2.0): releases for Linux x86_64 and macOS (Apple Silicon) are on GitHub; on Arch Linux it installs with one command, and on a Mac with Homebrew (brew install --cask vimma-browser/tap/vimma). Source: ${VIMMA_REPO}. The whole user guide as one Markdown file: https://vimma.dev/llms-full.txt`,
       [
         ["Start", [link(home, "Vimma"), ...docsOf("Start"), link(install, "Install Vimma"), link(keysPage, "Key bindings")]],
         ["Docs", ["Get going", "Tabs, panes, workspaces", "Make it yours"].flatMap(docsOf)],
