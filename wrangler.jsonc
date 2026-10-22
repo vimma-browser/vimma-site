@@ -1,0 +1,20 @@
+// The vimma-site Worker: static assets only, served from dist/ (npm run build). Workers Builds
+// runs `npx wrangler deploy` on main and `npx wrangler versions upload` on other branches; both
+// read this file. The values match what the Worker had when it was set up in the dashboard.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "vimma-site",
+  "compatibility_date": "2026-10-12",
+  "assets": {
+    "directory": "./dist"
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1,
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 1,
+      "invocation_logs": true
+    }
+  }
+}
