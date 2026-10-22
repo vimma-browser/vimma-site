@@ -9,6 +9,7 @@
     "visual",
     "command",
     "hint",
+    "element",
     "help",
     "panel",
     "resize"
@@ -1483,6 +1484,11 @@
           "keys": []
         },
         {
+          "name": "restart",
+          "description": "Restart Vimma; an installed update applies",
+          "keys": []
+        },
+        {
           "name": "reload_hard",
           "description": "Reload, bypassing the cache",
           "keys": [
@@ -2011,10 +2017,29 @@
           "description": "Follow link in new tab",
           "keys": [
             {
+              "keys": "gF",
+              "chords": [
+                "gF"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "focus_element",
+          "description": "Focus a text block: v selects it, y copies it",
+          "keys": [
+            {
               "keys": "F",
               "chords": [
                 "F"
               ]
+            },
+            {
+              "keys": "F",
+              "chords": [
+                "F"
+              ],
+              "mode": "element"
             }
           ]
         },
@@ -2028,6 +2053,102 @@
                 "esc"
               ],
               "mode": "hint"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Element focus",
+      "actions": [
+        {
+          "name": "element_visual",
+          "description": "Select the focused block in copy mode",
+          "keys": [
+            {
+              "keys": "v",
+              "chords": [
+                "v"
+              ],
+              "mode": "element"
+            }
+          ]
+        },
+        {
+          "name": "element_visual_line",
+          "description": "Select the focused block's lines in copy mode",
+          "keys": [
+            {
+              "keys": "V",
+              "chords": [
+                "V"
+              ],
+              "mode": "element"
+            }
+          ]
+        },
+        {
+          "name": "element_yank",
+          "description": "Copy the focused block's text",
+          "keys": [
+            {
+              "keys": "y",
+              "chords": [
+                "y"
+              ],
+              "mode": "element"
+            }
+          ]
+        },
+        {
+          "name": "element_parent",
+          "description": "Focus the block around this one",
+          "keys": [
+            {
+              "keys": "+",
+              "chords": [
+                "+"
+              ],
+              "mode": "element"
+            }
+          ]
+        },
+        {
+          "name": "element_child",
+          "description": "Focus back down, or the first block inside",
+          "keys": [
+            {
+              "keys": "-",
+              "chords": [
+                "-"
+              ],
+              "mode": "element"
+            }
+          ]
+        },
+        {
+          "name": "element_next",
+          "description": "Focus the next block",
+          "keys": [
+            {
+              "keys": "j",
+              "chords": [
+                "j"
+              ],
+              "mode": "element"
+            }
+          ]
+        },
+        {
+          "name": "element_prev",
+          "description": "Focus the previous block",
+          "keys": [
+            {
+              "keys": "k",
+              "chords": [
+                "k"
+              ],
+              "mode": "element"
             }
           ]
         }
@@ -2179,6 +2300,13 @@
                 "esc"
               ],
               "mode": "visual"
+            },
+            {
+              "keys": "esc",
+              "chords": [
+                "esc"
+              ],
+              "mode": "element"
             }
           ]
         },
@@ -2615,6 +2743,32 @@
               "keys": "aw",
               "chords": [
                 "aw"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
+          "name": "select_inner_block",
+          "description": "Select the text block at the caret",
+          "keys": [
+            {
+              "keys": "ip",
+              "chords": [
+                "ip"
+              ],
+              "mode": "visual"
+            }
+          ]
+        },
+        {
+          "name": "select_a_block",
+          "description": "Select the block at the caret; again: its parent",
+          "keys": [
+            {
+              "keys": "ap",
+              "chords": [
+                "ap"
               ],
               "mode": "visual"
             }
