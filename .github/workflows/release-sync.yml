@@ -95,13 +95,24 @@ jobs:
           tag=$(jq -r .tag data/release.json)
           branch="release-sync/$tag"
           # Build on what the pull request will hold: the open one for this release, with any fix
-          # pushed to it by hand (to scripts/docs-pages.ts, say), or else main.
+          # pushed to it by hand (to scripts/docs-pages.ts, say), or else main. A branch with only
+          # this workflow's commits that main has moved past is rebuilt on main (and force-pushed
+          # by `publish`): its data/ changes would conflict with main's next sync, and a fix
+          # merged to main since would not reach it.
           keep=$(mktemp -d)
           # shellcheck disable=SC2086
           cp --parents $SYNCED "$keep"
           git checkout --quiet -- data/
           git clean -fdq -- data/
           open=$(gh pr list --repo "$REPO" --head "$branch" --state open --json number --jq 'length')
+          if [[ "$open" != "0" ]]; then
+            read -r behind hand < <(gh api "repos/$REPO/compare/main...$branch" \
+              --jq '[.behind_by, ([.commits[] | select(.author.login != "github-actions[bot]")] | length)] | @tsv')
+            if [[ "$hand" == "0" && "$behind" != "0" ]]; then
+              echo "$branch is $behind commit(s) behind main with no hand-made commits; rebuilding it on main"
+              open=0
+            fi
+          fi
           if [[ "$open" != "0" ]]; then
             git fetch --quiet "https://github.com/$REPO" "$branch"
             git switch --quiet --detach FETCH_HEAD
@@ -170,11 +181,18 @@ jobs:
           if [[ "$REUSE" == "true" ]]; then
             git fetch --quiet "https://github.com/$REPO" "$BRANCH"
             git switch --quiet -c "$BRANCH" FETCH_HEAD
-          elif git ls-remote --exit-code --heads "https://github.com/$REPO" "$BRANCH" >/dev/null; then
-            # Left over from a closed pull request: building on it would carry a stale diff, and
-            # deleting it could lose commits someone pushed to it.
-            echo "::error::$BRANCH exists without an open pull request; delete it to let the sync reopen one"
-            exit 1
+          elif old=$(git ls-remote --exit-code --heads "https://github.com/$REPO" "$BRANCH" | cut -f1); then
+            open=$(gh pr list --repo "$REPO" --head "$BRANCH" --state open --json number --jq 'length')
+            if [[ "$open" == "0" ]]; then
+              # Left over from a closed pull request: building on it would carry a stale diff, and
+              # deleting it could lose commits someone pushed to it.
+              echo "::error::$BRANCH exists without an open pull request; delete it to let the sync reopen one"
+              exit 1
+            fi
+            # `sync` rebuilt the open pull request's stale branch on main; replace it, unless it
+            # moved since that check.
+            echo "LEASE=$old" >> "$GITHUB_ENV"
+            git switch --quiet -c "$BRANCH"
           else
             git switch --quiet -c "$BRANCH"
           fi
@@ -207,7 +225,7 @@ jobs:
           so the pages, the docs and the keys describe the release a visitor downloads."
           # gh as git's credential helper, so the token is never on a command line
           gh auth setup-git
-          git push --quiet origin "HEAD:refs/heads/$BRANCH"
+          git push --quiet ${LEASE:+"--force-with-lease=refs/heads/$BRANCH:$LEASE"} origin "HEAD:refs/heads/$BRANCH"
           echo "pushed=true" >> "$GITHUB_OUTPUT"
 
       - name: Open or update the pull request
