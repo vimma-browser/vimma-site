@@ -52,17 +52,19 @@ npm run release:sync -- v0.1.2     # … of a given release tag
 - **external**: nothing loads from another origin (resource elements, CSS `url()`/`@import`, and
   network calls or URLs in the shipped JS). Plain `<a>` links to other sites are allowed.
 - **contrast**: each text/background token pair, in both palettes, is at least 4.5:1 (WCAG AA).
-- **weight**: what each page loads (HTML, stylesheets, scripts and their imports, and the docs
-  search index on docs pages) stays under 150 KB. The heaviest is the known-limits page, about
-  148 KB, close to half of it the search index loaded on first search. The home page's bands have
-  their own stylesheet (`assets/css/home.css`), so the docs pages do not load them. The build ships the
-  stylesheets without comments or the whitespace around braces (`scripts/css.ts`). The index
-  leaves out common words (a stop list) and verb forms nearly every section has, words already
-  in a section's page title, heading or snippet, and words inside a longer word of the same
-  section (the search matches substrings), and names each page's title and path once; if a sync
-  pushes a page over, slim the index or the page, not the budget. The `?` overlay's list of
-  Vimma keys (`assets/js/vimma-keys.js`) loads only when the overlay first opens, on any page,
-  so it has its own budget, 32 KB (about 20 KB today).
+- **weight**: what each page loads (HTML, stylesheets, scripts and their imports) stays under
+  150 KB. The home page's bands have their own stylesheet (`assets/css/home.css`), so the docs
+  pages do not load them. The build ships the stylesheets without comments or the whitespace
+  around braces (`scripts/css.ts`). If a sync pushes a page over, slim the page or split it, not
+  the budget. Two scripts load only on first use, on any page, and so have budgets of their own:
+  the docs search index (`assets/js/docs-index.js`, 112 KB, about 74 KB today), imported on the
+  first search, and the `?` overlay's list of Vimma keys (`assets/js/vimma-keys.js`, 32 KB, about
+  23 KB today). The index used to count against every docs page, so each new guide section pushed
+  all of them toward 150 KB at once and left about 40 KB for a page's own content. The index
+  leaves out common words (a stop list) and verb forms nearly every section has, words already in
+  a section's page title, heading or snippet, and words inside a longer word of the same section
+  (the search matches substrings), and names each page's title and path once; if it outgrows its
+  budget, slim it the same way.
 - **seo**: one `<link rel="canonical">` per page with its `https://vimma.dev/` address (none, and
   `noindex`, on the 404 page), the Open Graph and `twitter:card` tags, titles and descriptions
   unique across pages, JSON-LD that parses, each `VideoObject` in it with a name, description,

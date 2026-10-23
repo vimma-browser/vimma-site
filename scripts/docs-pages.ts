@@ -39,6 +39,22 @@ export interface DocPage {
   handWritten?: boolean;
 }
 
+/**
+ * The agent workspace's tool subsections, on a page of their own: with them, the agent workspace
+ * page is over the page-weight budget, and the tools are a reference an agent's user looks up
+ * apart from setting the workspace up.
+ */
+const AGENT_TOOL_SECTIONS = [
+  "Moving around a page",
+  "Listing a page's buttons and fields",
+  "Clicking on a page",
+  "Filling in a form",
+  "Seeing a page",
+  "Reading a page's errors",
+  "Showing you a page",
+  "Timeouts in agent tools",
+];
+
 /** limits.md sections shown on the Known limits page, in this order. */
 export const LIMIT_SECTIONS = [
   "Features",
@@ -201,7 +217,16 @@ export const DOC_PAGES: DocPage[] = [
     headTitle: "The agent workspace: local AI agents through MCP, with your consent",
     group: "Tabs, panes, workspaces",
     description: "Let a local AI agent use one workspace of its own through vimma-ctl mcp; Vimma asks you before each request.",
-    blocks: [{ guide: "Agent workspace" }, { keys: ["Agents"] }],
+    blocks: [{ guide: "Agent workspace", exclude: AGENT_TOOL_SECTIONS }, { keys: ["Agents"] }],
+  },
+  {
+    slug: "agent-tools",
+    title: "What agents can do on a page",
+    nav: "Agent tools",
+    headTitle: "Agent tools: move around, click, fill in and see pages in the agent workspace",
+    group: "Tabs, panes, workspaces",
+    description: "The tools an agent uses in its workspace: move around a page, list and click its controls, fill in forms, and see the page and its errors.",
+    blocks: AGENT_TOOL_SECTIONS.map((guide) => ({ guide })),
   },
   {
     slug: "routing",

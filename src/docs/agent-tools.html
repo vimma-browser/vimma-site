@@ -1,0 +1,17 @@
+<!-- Hand-written guide for the agent-tools page; the build adds the details from guide.md. -->
+<p class="lead">Once an agent is connected to the <a href="{{root}}docs/agent-workspace/">agent workspace</a>, it can work on a page there much as you do with hints: move around it, list its buttons and fields, click them, fill in forms, and see the page and its errors. Each tool asks you first, and everything happens in the background, so your window keeps its workspace, tab and focus.</p>
+
+<div class="table-wrap"><table class="plain"><thead><tr><th scope="col">To</th><th scope="col">The agent uses</th></tr></thead><tbody>
+<tr><td>Scroll, find a word, follow a link, go back or forward</td><td><code>vimma_keys</code></td></tr>
+<tr><td>List the buttons, fields and links on screen, each with a hint label</td><td><code>vimma_elements</code></td></tr>
+<tr><td>Click one of them</td><td><code>vimma_activate</code></td></tr>
+<tr><td>Fill in fields, and send the form if you agree</td><td><code>vimma_fill</code></td></tr>
+<tr><td>See the page as you would</td><td><code>vimma_screenshot</code></td></tr>
+<tr><td>Read the page's script errors and failed requests</td><td><code>vimma_console</code></td></tr>
+<tr><td>Show you one of its tabs</td><td><code>vimma_show</code></td></tr>
+</tbody></table></div>
+
+<section class="box note" aria-labelledby="what-always-asks">
+<h2 class="box-title" id="what-always-asks">What always asks</h2>
+<p>Sending a form asks every time, also while you have allowed a tool for some minutes, and the question says where the data goes. Password, payment card and one-time-code fields are never filled: the agent asks you to type them.</p>
+</section>

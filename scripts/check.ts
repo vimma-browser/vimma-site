@@ -28,6 +28,13 @@ const BUDGET = 150 * 1024;
 /** assets/js/vimma-keys.js: every page imports it when the ? overlay first opens. */
 const OVERLAY_KEYS = "assets/js/vimma-keys.js";
 const OVERLAY_BUDGET = 32 * 1024;
+/**
+ * assets/js/docs-index.js: imported when the docs search is first used, never on page load. It
+ * grows with every guide section on every docs page at once, so it has a budget of its own
+ * instead of eating into each page's, like the ? overlay's keys.
+ */
+const DOCS_INDEX = "assets/js/docs-index.js";
+const DOCS_INDEX_BUDGET = 112 * 1024;
 
 const errors: string[] = [];
 const fail = (where: string, msg: string): void => {
@@ -338,8 +345,8 @@ function withImports(file: string, seen = new Set<string>()): Set<string> {
   return seen;
 }
 
-/** What a page loads: itself, its stylesheets and scripts with their imports, and the docs
- * search index on pages with the docs search (imported on first use, counted anyway). */
+/** What a page loads: itself, and its stylesheets and scripts with their imports. The docs
+ * search index is imported on first use and is measured against DOCS_INDEX_BUDGET instead. */
 function pageWeight(file: string): number {
   const html = readFileSync(file, "utf8");
   const files = new Set<string>([file]);
@@ -353,11 +360,17 @@ function pageWeight(file: string): number {
     if (src) for (const f of withImports(path)) files.add(f);
     else files.add(path);
   }
-  if (html.includes('id="docsearch"')) files.add(join(DIST, "assets/js/docs-index.js"));
   return [...files].reduce((n, f) => n + (existsSync(f) ? size(f) : 0), 0);
 }
 
 const weights = htmlFiles.map((f) => [rel(f), pageWeight(f)] as const);
+const docsIndex = join(DIST, DOCS_INDEX);
+const docsIndexWeight = existsSync(docsIndex) ? size(docsIndex) : 0;
+if (!docsIndexWeight) fail(DOCS_INDEX, "missing (build.ts writes it)");
+if (docsIndexWeight > DOCS_INDEX_BUDGET) {
+  fail(DOCS_INDEX, `${(docsIndexWeight / 1024).toFixed(1)} KB, over ${DOCS_INDEX_BUDGET / 1024} KB`);
+}
+
 const overlayKeys = join(DIST, OVERLAY_KEYS);
 const overlayWeight = existsSync(overlayKeys) ? size(overlayKeys) : 0;
 if (!overlayWeight) fail(OVERLAY_KEYS, "missing (build.ts writes it)");
@@ -519,4 +532,5 @@ console.log(`✓ seo: ${locs.length} sitemap URLs, canonical and preview tags on
 console.log(`✓ contrast: ${PAIRS.length * 2} pairs, lowest ${worst.toFixed(2)}:1`);
 const heaviest = weights.reduce((a, b) => (b[1] > a[1] ? b : a));
 console.log(`✓ weight: heaviest page ${heaviest[0]} ${(heaviest[1] / 1024).toFixed(1)} KB without images (budget ${BUDGET / 1024} KB)`);
+console.log(`✓ weight: the docs search index ${(docsIndexWeight / 1024).toFixed(1)} KB, loaded on first search (budget ${DOCS_INDEX_BUDGET / 1024} KB)`);
 console.log(`✓ weight: the ? overlay's Vimma keys ${(overlayWeight / 1024).toFixed(1)} KB, loaded on first open (budget ${OVERLAY_BUDGET / 1024} KB)`);
