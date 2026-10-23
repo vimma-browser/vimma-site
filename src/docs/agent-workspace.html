@@ -9,7 +9,7 @@
 <h2 id="connect-an-agent">Connect an agent</h2>
 
 <ol class="steps-list">
-  <li>Build <code>vimma-ctl</code> and put it on your <code>PATH</code> (<a href="{{root}}docs/vimma-ctl/">vimma-ctl</a>, step 2).</li>
+  <li>Use the <code>vimma-ctl</code> that came with Vimma, so it is updated with it: the <code>.deb</code>, <code>.rpm</code>, Arch Linux package and Homebrew put it on your <code>PATH</code>; for the tarball, the AppImage and the <code>.dmg</code>, see <a href="{{root}}docs/vimma-ctl/#set-it-up">where it is</a>.</li>
   <li>In Vimma, type <code>:mcp on</code> and press <kbd>y</kbd>.</li>
   <li>Add the server to your agent's tool. For Claude Code: <code>claude mcp add --transport stdio --scope user vimma -- vimma-ctl mcp</code>; for Codex: <code>codex mcp add vimma -- vimma-ctl mcp</code>. Other tools take the same command, <code>vimma-ctl mcp</code>, in their MCP settings.</li>
   <li>Ask the agent to open a page in Vimma's agent workspace. Its request appears at the foot of the window, and nothing happens until you answer.</li>

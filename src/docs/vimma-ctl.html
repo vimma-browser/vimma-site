@@ -10,7 +10,14 @@
 
 <ol class="steps-list">
   <li>In <code>about:config</code>, set <code>vimma.control.enabled</code> to <code>true</code>. It starts at once.</li>
-  <li>Build the client: <code>cargo build --release</code> in <code>tools/vimma-ctl/</code> of Vimma's checkout. Put <code>target/release/vimma-ctl</code> on your <code>PATH</code>.</li>
+  <li>Use the <code>vimma-ctl</code> that came with Vimma; it is updated with it:
+    <ul>
+      <li><code>.deb</code>, <code>.rpm</code>, Arch Linux and Homebrew: already on your <code>PATH</code>.</li>
+      <li>Tarball: <code>vimma/vimma-ctl</code>, next to <code>vimma/vimma</code>; link it onto your <code>PATH</code>.</li>
+      <li>AppImage: a link named <code>vimma-ctl</code> to the AppImage runs it, such as <code>ln -s ~/Apps/vimma-X.Y.Z-x86_64.AppImage ~/.local/bin/vimma-ctl</code>.</li>
+      <li><code>.dmg</code>: <code>/Applications/Vimma.app/Contents/MacOS/vimma-ctl</code>.</li>
+    </ul>
+  </li>
 </ol>
 
 <h2 id="examples">Examples</h2>
