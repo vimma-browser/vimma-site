@@ -137,8 +137,8 @@ so they match what a visitor downloads.
   Cloudflare's builders, which share GitHub's unauthenticated rate limit, cannot fail it. It
   fails if `data/release.json` is missing or malformed.
 - `.github/workflows/release-sync.yml` runs the sync when Vimma publishes a release (Vimma's
-  `site-dispatch.yml` sends a `repository_dispatch`, `vimma-release`, which needs its
-  `SITE_DISPATCH_TOKEN` secret), every hour as a fallback, and by hand (Actions → release-sync →
+  `site-dispatch.yml` sends a `repository_dispatch`, `vimma-release`, as the org's GitHub App
+  vimma-site-dispatch, installed on this repository only), every hour as a fallback, and by hand (Actions → release-sync →
   Run workflow, with an optional tag). When `data/` changes, a read-only job builds
   and checks the site, and a second job, which holds the write token and runs no npm code, opens
   or updates the pull request `release-sync/<tag>`. A push made with the
