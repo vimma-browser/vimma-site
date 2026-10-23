@@ -119,6 +119,10 @@ the [user guide](guide.md); planned work is on the
   in the parent process.
 - The agent's name in a question (`claude-code`) is what the agent says it is; Vimma cannot check
   it. Grants belong to the connection, and `:mcp` shows the program that started it.
+- A grant covers every agent tool for its minutes. Only form submissions are recognised as
+  steps that send or spend: a button whose script sends data without a form, such as a saved
+  card's one-button checkout, runs unasked under a grant until the payment checkpoint
+  ([#508](https://github.com/vimma-browser/vimma/issues/508)) is built.
 - Each agent tool's own approvals, sandbox and timeouts are its own; Vimma neither reads nor
   changes them. What an agent does outside Vimma, with its shell and files, is up to that tool
   ([what Vimma protects](guide.md#what-vimma-protects-and-what-it-does-not)).
@@ -136,9 +140,15 @@ the [user guide](guide.md); planned work is on the
 - The macOS `.dmg` is ad hoc signed, not notarised, until Vimma has an Apple Developer ID:
   macOS asks once, under Privacy & Security, before it first opens, and passkeys do not work.
   It has no update notices (no update manifest exists for macOS): install a newer `.dmg` by hand.
-- The mounted macOS `.dmg` is a plain Finder window, without a background or a volume icon
-  (spec macos-homebrew, decision 14).
-- On macOS, Omarchy theming, the Omarchy hook and the Hyprland private-window swap do nothing.
+- Finder on recent macOS (checked on 27.0.1) opens the mounted `.dmg`'s window at the frame of
+  the last Finder window and ignores the size the `.dmg` stores, as it does for Firefox's: a
+  small last window can cut off the Applications link, and a large one shows blank space past
+  the background.
+- On macOS, Omarchy theming and the Omarchy hook do nothing.
+- On macOS, the normal window hidden while the private workspace is shown still runs its pages
+  (audio keeps playing), and scripts still see it: `vimma-ctl state` lists both windows. A
+  window in full screen is never hidden, so from full screen the private workspace is a
+  fullscreen Space of its own and switching moves between Spaces.
 - The AUR package `vimma-bin` is not published yet; use the release's `PKGBUILD`.
 - The `.rpm` has no OpenPGP signature and there is no dnf or zypper repository for it: zypper
   installs it only with `--allow-unsigned-rpm`, `SHA256SUMS` and its cosign signature are what
