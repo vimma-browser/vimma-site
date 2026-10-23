@@ -50,7 +50,8 @@ What works today, each with the section that explains it:
   local AI agents reach one [agent workspace](#agent-workspace) through MCP, where they can read,
   open, scroll and search pages, follow their links, list and click their buttons, fill their
   fields (never a password or card number), take a screenshot, read a page's errors and show
-  you a page, and every request asks you first; a form they submit asks every time.
+  you a page. Every request asks you first, one answer can let an agent work through a task for
+  some minutes, and a form they submit asks every time.
 
 ## Every key is yours
 
@@ -713,7 +714,9 @@ meant for the page never answers a prompt. While you type in a text field of the
 address bar, `y` and `n` are text, and the line starts with `Esc, then`: `Esc` leaves the field
 and keeps the prompt open, and then `y` and `n` answer it. The same holds while one of Vimma's
 own pickers, live grep, the command line or a search you are typing is open: what you type is
-theirs. Vimma never moves focus onto the prompt. The same keys answer Firefox's
+theirs. In link hints, copy mode and element mode, `y` and `n` stay theirs too (a hint label, the
+yank), and the line starts with `Esc, then`: `Esc` leaves the mode, and then `y` and `n` answer
+the prompt. Vimma never moves focus onto the prompt. The same keys answer Firefox's
 other prompts in that panel, such as "Save password?" (`y` saves, `n` is Not now), and the "Add
 <name>?" prompt for installing an add-on, which Firefox opens with focus on the prompt itself.
 
@@ -1059,6 +1062,18 @@ only. Three are left alone: the `alt+letter` keys that open the menu bar's menus
 and a bare `alt` tap and `'` (quick find for links) do nothing (the `ui.key.menuAccessKeyFocuses`
 and `accessibility.typeaheadfind.manual` prefs are `false` in Vimma's defaults).
 
+**On macOS** Firefox's keys use `cmd` where Linux has `ctrl` (`cmd+t`, `cmd+l`, `cmd+w`, written
+`meta+t` in config.toml), and it has tab keys of its own: `meta+{` and `meta+}` (cmd+shift+[ and
+cmd+shift+]), also with `ctrl` (`ctrl+meta+{`, `ctrl+meta+}`), and `alt+meta+left`,
+`alt+meta+right`, `alt+meta+up` and `alt+meta+down`. Its sidebar keys use `ctrl`: `ctrl+x` (AI
+chatbot), `ctrl+z` (show or hide the sidebar) and `ctrl+u` (open tabs, which stays Vimma's
+half-page scroll). Vimma's keymap is the same as on Linux, so the others are unbound, and the
+default `disable = "all"` turns them off, `ctrl+x` and `ctrl+z` included:
+`[firefox] enable = ["meta+t"]` or `["meta+{"]` gives one back. In a windowed Mac build a key that
+also has a menu bar item (`cmd+t` is File > New Tab) may still run from the menu bar; this has not
+been checked on a Mac yet. `cmd+q` stays macOS's own quit key, and the Mac menu bar has no `alt`
+access keys.
+
 **Any Firefox command from a key.** `:firefox <id>` runs one of the window's commands or keys by
 its id (Tab completes them): `:firefox Tools:Downloads`, `:firefox key_search2`. A value that
 starts with `:` in a `[modal.<mode>]` table binds a key to a command line; such bindings are
@@ -1324,7 +1339,7 @@ ever reaches this workspace, and every request asks you first. To let one in, se
 | `:mcp revoke`    | Ends every time-limited grant you gave agents, at once.                                                             |
 | `:mcp forget`    | Asks, then deletes the agent workspace's cookies and site data (its logins). The workspace stays.                   |
 | `:mcp log`       | Lists the last 100 agent requests, newest first: time, agent, tool, tab, keys or address, and what came of it.      |
-| `ctrl+b shift+a` | Answers the waiting agent request; with none, offers to end every grant.                                            |
+| `ctrl+b shift+a` | Answers the waiting agent request; with none, ends every grant at once.                                             |
 | `:control on 15` | Turns full control (`vimma-ctl`) on for 15 minutes, after a `y/N`; `:control off` ends it now.                      |
 
 - When the agent workspace is one of yours rather than one Vimma made, `:mcp on` warns:
@@ -1415,6 +1430,14 @@ denied.` Codex CLI gives up on a tool call
   (or Vimma restarts), they end, and the next session asks again.
 - **Cancelling** a call in the agent (`Esc` in Claude Code) takes its question off the line.
 
+#### When to use Playwright instead
+
+Vimma's agent tools are for tasks an agent does for you in your own browser: shopping, filling in
+forms, bookings, looking things up. For testing your own site, CI, headless or parallel runs,
+scripting a page, intercepting network requests or uploading files, use Playwright or a similar
+tool against a throwaway browser profile, never your daily one: a profile driven that way gives
+the agent every login and cookie in it, with no question before it sends or pays.
+
 #### Timeouts in agent tools
 
 A call waits for your answer up to `[mcp] ask_timeout` (50 s by default, 10 to 300), and
@@ -1458,9 +1481,13 @@ with the rest of your computer.
 
 **What Vimma does not protect:**
 
-- **Grants are wide.** A grant lets that agent use that tool without asking until it ends. A
-  `vimma_open` grant means "let it fetch any address", and an address can carry what the agent
-  has read elsewhere. Grant reads; answer opens one at a time.
+- **Grants are wide.** A grant lets that agent use every tool without asking until it ends:
+  read, open, press keys, click, fill, take screenshots and download. Only sending a form,
+  showing you a page and a dangerous or unscanned download still ask
+  ([What a grant covers](#what-a-grant-covers)). A grant given for a read therefore also means
+  "let it fetch any address", and an address can carry what the agent has read elsewhere. Every
+  call under a grant shows a notice and a row in `:mcp log`, so you can see where it went; give
+  a grant for a task you are watching, and answer `y` one at a time otherwise.
 - **The name is the agent's claim.** `claude-code` in the question is what the agent says it is.
   Grants belong to the connection, not the name, and `:mcp` shows the program that started it.
 - **The rest of your computer is the agent tool's matter.** An agent with a shell or file tools
@@ -1497,8 +1524,8 @@ workspace, tab, focus, find bar and hint mode.
   not run, so a link cannot post a form or start a purchase through `vimma_keys`. Only http and
   https links are followed, only on web pages, and without a referrer. A link to another site (another registrable domain:
   `docs.example.com` is the same site as `example.com`, `example.org` is not) asks you again, as
-  a `vimma_open` of its whole address, unless you granted that agent `vimma_open`; a no stops
-  the call there.
+  a `vimma_open` of its whole address, unless that agent holds a grant; a no stops the call
+  there.
 - **The keys it never presses:** `ctrl+b` and every binding after it, `:`, tab, workspace,
   window and split keys, `i` and every way into a text field, copy mode, `yy` and `p` (your
   clipboard), `gF` and `gf` (they open tabs), element focus (`F`), `r` (a reload can send a form
@@ -1511,10 +1538,9 @@ workspace, tab, focus, find bar and hint mode.
   copy or hint mode in it, with its find bar open, or halfway through a key sequence, is denied
   (`in-use`) without a question, and keys stop at the next step if you start using it while they
   run. Watching is fine: in normal mode you see the agent scroll.
-- **A grant covers it:** `15a` lets that agent run keys for 15 minutes, and each call then shows
+- **A grant covers it:** under a grant each call shows
   `claude-code pressed 2j in "Pricing · Example" (grant, 12m left)`; a follow adds
-  `claude-code followed a link to docs.example.com in "Pricing · Example"`. A `vimma_keys` grant
-  is not a read or open grant. At most 30 calls a minute; a follow, `gu`, `gU`, `H` and `L`
+  `claude-code followed a link to docs.example.com in "Pricing · Example"`. At most 30 calls a minute; a follow, `gu`, `gU`, `H` and `L`
   count towards the 10 opens a minute. A find does not run in the tab you are in, since the browser's find would
   put your focus in a text field it matched.
 - **`:mcp log`** lists what agents did, asked or under a grant, each follow with the address it
@@ -1544,9 +1570,8 @@ focus and hint mode.
   as a load of its address; the label of a button or a field is refused, and so is a link the
   page has replaced since it was listed.
 - **A grant covers it:** each call then shows
-  `claude-code listed the buttons and fields of "Sign up · Example" (grant, 12m left)`. It is
-  not a read grant: the list holds no page text beyond the elements' own. At most 30 calls a
-  minute; each is in `:mcp log`.
+  `claude-code listed the buttons and fields of "Sign up · Example" (grant, 12m left)`. The list
+  holds no page text beyond the elements' own. At most 30 calls a minute; each is in `:mcp log`.
 
 #### Clicking on a page
 
@@ -1556,7 +1581,12 @@ clickable element. The question names the tab and the element,
 `◇ claude-code wants vimma_activate: 2 "List · Example" example.com/list  sg button "Add to list"`,
 and on `y` the element is clicked in the background: the tab is not selected and nothing in it is
 focused. The agent gets the page after the click, whether a new page loaded, and any dialog the
-page opened.
+page opened. When no page loaded, it is told which parts of the page changed in place within
+about 2 seconds (the clicked element, other listed elements, the page's text, a dialog drawn by
+the page), or that nothing did, so that a button that updates a basket in place is not pressed
+twice. It gets no page text this way: it calls `vimma_elements` to see what changed. Only the
+frame of the clicked element is compared, so a button inside an embedded frame that updates the
+page around it reads as no change.
 
 - **A plain click, no user activation.** The page gets the same click your `f` hints give it,
   never a mouse press from the system. It therefore cannot do what needs a real gesture of yours
@@ -1574,8 +1604,8 @@ page opened.
   `the page tried to submit a form to example.com; Vimma stopped it`, and asks you properly by
   clicking the form's submit button. Your own submissions in an agent tab, and those of a page
   the agent has not touched, go through. A button whose script sends data without a form (with
-  `fetch`) cannot be told apart from any other button: under a `vimma_activate` grant the agent
-  can press it unasked, with a notice and a row in `:mcp log`.
+  `fetch`) cannot be told apart from any other button: under a grant the agent can press it
+  unasked, with a notice and a row in `:mcp log`.
 - **Agents cannot answer dialogs.** An `alert`, `confirm` or `prompt` the page opens waits in the
   tab for you; the agent only learns its text, as untrusted content.
 - **A grant covers clicks** (not submissions): each shows
@@ -1636,7 +1666,7 @@ has not scrolled since.
 - **Untrusted, like page text.** The agent is told that text in the image is web content, not
   yours. Only the viewport of an http or https page is captured, never the browser around it,
   another tab, or a settings page or local file opened in the agent workspace.
-- **A grant covers screenshots** only: each shows
+- **A grant covers screenshots:** each shows
   `claude-code took a screenshot of "Sign up · Example" (grant, 12m left)`. At most 12 a minute.
 
 #### Reading a page's errors
@@ -1662,7 +1692,7 @@ can pass back as `since` to see only what a later click or fill caused.
 - **Untrusted, like page text.** Messages and addresses are the page's own: they may carry
   instructions, which the agent is told are not yours, or tokens the page put in a URL. Only an
   http or https page's are read.
-- **A grant covers console reads** only: each shows
+- **A grant covers console reads:** each shows
   `claude-code read the errors of "Sign up · Example" (grant, 12m left)`. At most 30 a minute.
 
 #### Showing you a page
@@ -1721,8 +1751,8 @@ on it.
 
 #### Ending an agent's access
 
-- `:mcp revoke`, or `ctrl+b shift+a` with nothing waiting and then `y`: ends every grant now.
-  The agents stay connected, and their next requests ask.
+- `ctrl+b shift+a` with nothing waiting, or `:mcp revoke`: ends every grant now, without a
+  second question. The agents stay connected, and their next requests ask.
 - `x` on a question: denies everything that agent asked and ignores it until it reconnects.
 - `:mcp off`: disconnects every agent and ends their grants; `vimma-ctl mcp` then answers each
   call with `MCP is off in Vimma`.
@@ -1736,7 +1766,7 @@ on it.
 Each request an agent makes appears as one line at the foot of the window, above the status bar:
 
 ```
-◇ claude-code wants vimma_read_page: 2 "Pull requests · vimma-browser/vimma" github.com/vimma-browser/vimma/pulls   y once · 10a for 10 min · n deny · x mute
+◇ claude-code wants vimma_read_page: 2 "Pull requests · vimma-browser/vimma" github.com/vimma-browser/vimma/pulls   y once · 10a 10 min, all but forms · n deny · x mute
 ```
 
 It names the agent (as the agent calls itself), the tool, and what it touches: the tab's place,
@@ -1744,23 +1774,25 @@ title and address for a read, a close, keys or a show (then the keys as they wil
 workspace a show switches you to), the whole address for an open (its host in bold), the number
 of agent tabs for the tab list.
 
-| Key                   | Answer                                                                                  |
-| --------------------- | --------------------------------------------------------------------------------------- |
-| `y`                   | Allow this request once.                                                                |
-| a count, then `a`     | Allow this agent's use of this tool for that many minutes (`15a`); a bare `a` gives 10. |
-| `n`, `Esc` or `Enter` | Deny it.                                                                                |
-| `x`                   | Deny it and everything else this agent asked, and ignore it until it reconnects.        |
-| `Backspace`           | Take back a digit of the count.                                                         |
+| Key                   | Answer                                                                           |
+| --------------------- | -------------------------------------------------------------------------------- |
+| `y`                   | Allow this request once.                                                         |
+| a count, then `a`     | Allow this agent every tool for that many minutes (`15a`); a bare `a` gives 10.  |
+| `n`, `Esc` or `Enter` | Deny it.                                                                         |
+| `x`                   | Deny it and everything else this agent asked, and ignore it until it reconnects. |
+| `Backspace`           | Take back a digit of the count.                                                  |
 
 - **Nothing else answers.** Any other key does nothing and the line stays; a key held down from
   before never counts; and for its first second the line takes no key at all (the hint appears
   when it is ready), so a key meant for something else cannot answer it. The second starts
   again whenever the window comes to the front or goes to the back, and with every key you
-  press before it is over. A prompt, picker or the command line you open over the line gets your keys; the
-  question waits and comes back when it closes.
+  press before it is over. A prompt, picker or the command line you open over the line gets
+  your keys; the question waits and comes back when it closes. Link hints, copy mode and
+  element mode keep their keys the same way (a hint label, `y` to copy): the line waits until
+  `Esc` leaves them, also after `ctrl+b shift+a`.
 - **It never interrupts your typing.** It opens by itself only when the window is in front,
-  focus is not in a text field, you have not pressed a key for 1.5 s, and no other prompt,
-  picker or panel is open. Otherwise it waits, and the status bar says `◇ agent 1?`; press
+  focus is not in a text field, you have not pressed a key for 1.5 s, no other prompt,
+  picker or panel is open, and you are not in link hints, copy mode or element mode. Otherwise it waits, and the status bar says `◇ agent 1?`; press
   `ctrl+b shift+a` to answer it then. It never takes focus: answer, and you carry on where you
   were. If you click into a text field while it shows, it goes back to waiting.
 - **One at a time**, oldest first. An agent may have 4 waiting, and all agents 16. With no
@@ -1772,8 +1804,31 @@ of agent tabs for the tab list.
   title and no buttons: you answer in Vimma. `[mcp] notify = false` turns the notification off.
 - **Grants show.** `◇ agent 14m` counts down the shortest one, and each request a grant lets
   through shows a notice (`claude-code read "Pull requests · vimma-browser/vimma" (grant, 14m left)`).
-  `:mcp revoke`, or `ctrl+b shift+a` with nothing waiting and then `y`, ends them all. A grant
+  `ctrl+b shift+a` with nothing waiting, or `:mcp revoke`, ends them all at once. A grant
   also ends when the agent disconnects or `:mcp off` runs, and is never written to disk.
+
+#### What a grant covers
+
+One grant covers a task. Answer any request with `15a`, and that agent may use every tool for
+15 minutes without asking: read pages, list tabs, open and close tabs, press keys and follow
+links, list a page's buttons and fields, click, fill, take screenshots, read a page's errors and
+download. The notice says so:
+`claude-code may use the agent workspace for 15 min; sending a form still asks (ctrl+b shift+a ends it)`.
+Requests that wait when you answer run at once.
+
+These still ask under any grant, and your yes allows that one step without making a grant or
+ending the one in force:
+
+- **Sending a form** ([Clicking on a page](#clicking-on-a-page),
+  [Filling in a form](#filling-in-a-form)): it sends data to a server, where sign-ups, messages
+  and purchases happen.
+- **Showing you a page** ([Showing you a page](#showing-you-a-page)): it changes what you see.
+- **A dangerous or unscanned download**, and a download a page started by itself
+  ([Downloads from the agent workspace](#downloads-from-the-agent-workspace)).
+
+A grant belongs to one agent session: another agent, or the same one after it reconnects, asks
+again. Buttons that pay without sending a form are not yet recognised as payments: a grant lets
+the agent press them like any button.
 
 #### Full control while agents are on
 
@@ -1817,7 +1872,7 @@ same line as every other request:
 
 It shows the file's name, its size (or `unknown size`), its type and extension and the site it
 comes from, never the full address. `y`, `n`, `x` and a count with `a` work as for any request;
-a `vimma_download` grant lets that agent's next downloads through without asking. A download
+a grant lets that agent's next downloads through without asking. A download
 counts as the agent's only when it is the address the agent itself opened (`vimma_open`), right
 then. Anything else, such as a page the agent opened downloading something later, says `a page
 in the agent workspace wants vimma_download` and takes only `y` or `n`, whatever grants you
@@ -1897,6 +1952,14 @@ is fast. It does so only when `/etc/clamav/clamd.conf` is root's, clamd listens 
 (`LocalSocket`, no `TCPSocket`) owned by root or `clamav`, and the config has
 `AlertEncrypted yes` and `AlertExceedsMax yes`, so clamd reports what it cannot look inside.
 Otherwise, or if clamd fails or its definitions are old, Vimma uses `clamscan`.
+
+On macOS the same rules apply. Vimma looks for `clamscan` and `clamdscan` only in `/usr/bin`
+and `/usr/local/bin`, owned by root, and for the config only at `/etc/clamav/clamd.conf`.
+macOS's own ClamAV account is listed as `_clamav`, not `clamav`, in `/etc/passwd`, so the socket
+must be root's. The common installs are
+not used: Homebrew (`/opt/homebrew`), MacPorts (`/opt/local`) and the official installer
+(`/usr/local/clamav`) put ClamAV elsewhere. So on macOS, ClamAV, and clamd especially, is
+usually not used.
 
 ### Side panel
 
@@ -2115,8 +2178,8 @@ restore all forget it, and so do Vimma's own files.
   Searches use Firefox's private search engine if you set one. Vimma's own keys and pages need
   no add-on.
 - **Links from other apps** open in your normal window, as Firefox does, so you leave the
-  private workspace to see them (on Hyprland the normal window swaps back into place; the
-  private workspace stays one key away). Routing rules never send a page into or out of it.
+  private workspace to see them (on Hyprland and macOS the normal window swaps back into place;
+  the private workspace stays one key away). Routing rules never send a page into or out of it.
 - **Scripts:** `vimma-ctl state` in the private workspace says `"private": true` and
   `"workspace": "private"`, and gives every tab's `url` and `title` as `null`. `vimma-ctl open`
   and `send-keys` act on the focused window, so with the private workspace focused they load
@@ -2174,7 +2237,32 @@ to disk.
 - **Opting out:** `[private] placement = "window"` in `config.toml` (below) opens it as a second
   window, as on other systems.
 
-**Elsewhere** (other window managers, X11, or `placement = "window"`) it is a second window:
+**On macOS it takes your Vimma window's place too.** Going to the private workspace opens the
+private window exactly where your Vimma window was (same screen, position and size, and zoomed
+if it was zoomed), with macOS's window animations turned off (zooming may still animate), and
+hides your normal window. Going back (any of the keys above) shows your normal window where the
+private window is now, so if you moved or resized the private window, your normal window takes
+that frame. Your normal window comes back in its place
+when the private window closes in any way (`ctrl+b shift+d`, `ctrl+shift+w`, `cmd+shift+w`,
+`cmd+w` on its last tab, the red close button, File → Close Window), when a link from another
+app arrives, and when you pick it from the Window menu or the Dock menu if macOS lists it there.
+If Vimma quits or crashes meanwhile, the next start shows your normal window as usual: nothing
+about the swap is written to disk.
+
+- **How:** no window manager is involved. Vimma's browser process owns both windows and hides
+  and shows them itself, with the same call Firefox uses to hide its windows while it quits.
+  Other normal windows stay on screen: the private workspace replaces one window, not the app.
+- **Full screen:** a window in full screen (its own Space) is never hidden. From a fullscreen
+  window, the private workspace opens in a fullscreen Space of its own, and switching moves
+  between the two Spaces, with macOS's animation.
+- **If a swap fails**, Vimma shows your normal window, says
+  `private: the swap failed; showing it as a window`, and opens the private workspace as a
+  window of its own until the config is next reloaded. `about:vimma` says
+  `Window manager: none needed (macOS)` and which placement is in force.
+- **Opting out:** `[private] placement = "window"` in `config.toml` (below) opens it as a second
+  window.
+
+**Elsewhere** (Linux without Hyprland, or `placement = "window"`) it is a second window:
 Vimma opens it at the current window's size (and, on X11 and floating window managers, its
 position) and focuses it when you switch.
 
@@ -2565,7 +2653,8 @@ accent = "#ff9e64"
   `ctrl+u`, `ctrl+h` in text fields, default `true`); `[bookmarks] root` (`"workspace"`, the
   default: the current workspace's folder; `"toolbar"`; or `"all"`: what the
   [bookmarks panel](#bookmarks) lists and where paths start); `[private] placement` (`"swap"`, the
-  default: on Hyprland the [private workspace](#private-workspace) takes the Vimma window's place;
+  default: on Hyprland and macOS the [private workspace](#private-workspace) takes the Vimma
+  window's place;
   `"window"`: it is a window of its own beside it); `[mcp]` (local AI agents:
   `enabled`, which wins over `:mcp on|off`; `workspace`, the [agent workspace](#agent-workspace)'s
   name, default `"agent"`, never `"private"`; `ask_timeout`, 10 to 300 seconds, default 50;
@@ -2724,8 +2813,9 @@ Except for the AppImage, it installs nothing; it tells you.
 - **A security release also asks**, once per session:
   `Vimma 0.3.1 fixes security issues. Show the update command? (y/N)`. `y` shows the update steps,
   as `:update` does; `n`, Esc or any other key dismisses it until the next start. The question
-  waits until you are not typing in a field and have not pressed a key for a moment, never takes
-  focus, and is not asked in a private window. Keys pressed in its first second are ignored, so a
+  waits until you are not typing in a field, are not in link hints, copy mode or element mode,
+  and have not pressed a key for a moment, never takes focus, and is not asked in a private
+  window. Keys pressed in its first second are ignored, so a
   key you were already typing, or one a page asked you to press, cannot answer it.
 - **The AppImage updates itself.** When a newer release is offered, Vimma downloads the new
   AppImage from the project's GitHub release into a hidden file next to yours, checks its size
