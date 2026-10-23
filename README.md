@@ -149,7 +149,9 @@ so they match what a visitor downloads.
 - When the new release renames or drops a guide heading, paragraph or limits section that
   `scripts/docs-pages.ts` names, the build fails on purpose. The pull request then says which
   one, is not set to merge, and stays red: fix `scripts/docs-pages.ts` on its branch and merge
-  it by hand. The next run keeps those commits and adds its own on top. A sync for an older
+  it by hand. The next run keeps those commits and adds its own on top. A branch with only the
+  workflow's own commits that main has moved past (a fix merged to main, say) is instead rebuilt
+  on main and force-pushed, so the fix reaches it and it does not conflict. A sync for an older
   release that never merged is closed when a newer one opens; its branch is kept, with any fix on
   it. A `release-sync/<tag>` branch left without an open pull request stops the sync for that
   tag, with an error saying so, until it is deleted.
