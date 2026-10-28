@@ -30,6 +30,7 @@
   --red: #ff6b6b;
   --badge-fg: #04120a;
   --hint-fg: #1a1300;
+  --neon: #22e4f0;
 }
 
 /* palette:light — the logo's off-white for ground. The mint is too pale for text on it, so text
@@ -53,9 +54,23 @@
     --red: #a1232d;
     --badge-fg: #fcfbf7;
     --hint-fg: #fcfbf7;
+    --neon: #0e7490;
   }
 }
 /* end palette */
+
+/* Space Grotesk (SIL Open Font License, assets/fonts/space-grotesk-OFL.txt) for headings: a
+   retro-futuristic grotesk drawn from Space Mono. One variable file, Latin only, 22 KB, served
+   from this site like everything else; the text keeps the system sans. */
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url("../fonts/space-grotesk.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308,
+    U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
 
 /* The type runs from a display size for the home page's one headline down to small labels; the
    body stays at 1rem. Bands separated by full-width hairlines carry the home page; the accent is
@@ -63,6 +78,7 @@
 :root {
   --font: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
     "Noto Sans", Arial, sans-serif;
+  --display: "Space Grotesk", var(--font);
   --mono: ui-monospace, "JetBrains Mono", "CaskaydiaMono Nerd Font", "Cascadia Mono",
     "SF Mono", Menlo, "DejaVu Sans Mono", "Liberation Mono", Consolas, monospace;
   --t-xs: 0.75rem;
@@ -98,11 +114,11 @@
   box-sizing: border-box;
 }
 
-/* a mint haze at the top of every page, as if the logo lit it */
+/* a faint mint light at the top of every page, as if the logo lit it */
 body {
   margin: 0;
   min-height: 100vh;
-  background: radial-gradient(ellipse 70% 38rem at 50% -8rem, color-mix(in srgb, var(--mint) 11%, transparent), transparent 70%) no-repeat,
+  background: radial-gradient(ellipse 60% 32rem at 50% -8rem, color-mix(in srgb, var(--mint) 8%, transparent), transparent 70%) no-repeat,
     var(--bg);
 }
 
@@ -178,6 +194,7 @@ pre {
 h1,
 h2,
 h3 {
+  font-family: var(--display);
   color: var(--fg-bright);
   line-height: 1.25;
   font-weight: 700;
@@ -312,6 +329,7 @@ li + li {
 }
 
 .brand a {
+  font-family: var(--display);
   color: var(--fg-bright);
   font-weight: 700;
   font-size: 1.05rem;
@@ -360,7 +378,6 @@ li + li {
 .tabs a[aria-current] {
   border-color: color-mix(in srgb, var(--mint) 50%, transparent);
   background: color-mix(in srgb, var(--mint) 14%, var(--bg));
-  box-shadow: 0 0 18px -4px color-mix(in srgb, var(--mint) 50%, transparent);
   color: var(--fg-bright);
   font-weight: 600;
 }

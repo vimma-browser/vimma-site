@@ -3,9 +3,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 /* The home page's bands, loaded by that page only; tokens and shared parts are in site.css.
-   Dark ground, mint light: a haze over the hero, an arc of mint rising behind the video's frame,
-   hairline cells that fade at their ends, and pills over the headings. Every effect is a CSS
-   gradient, so nothing loads but this file. */
+   An 80s synthwave poster and a retro tech brochure, in Vimma's mint and cyan on near-black: the
+   hero is a poster, a perspective grid running to a horizon with one lens flare, under faint
+   scanlines; racing stripes divide the bands; the facts are an instrument strip, the video plays
+   in a terminal window and the features are numbered spec panels, both in HUD corner brackets. Every effect is a CSS gradient, so nothing
+   loads but this file. */
 
 main.bands {
   display: block;
@@ -17,342 +19,45 @@ main.bands {
   padding: var(--band) 0;
 }
 
+/* racing stripes over every band but the first: mint, then cyan, thinning out */
+.band + .band::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: min(var(--page), calc(100% - 4rem));
+  height: 9px;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg,
+    var(--mint) 0 3px, transparent 3px 5px,
+    color-mix(in srgb, var(--mint) 50%, var(--neon)) 5px 7px, transparent 7px 8px,
+    var(--neon) 8px 9px);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent);
+  opacity: 0.55;
+}
+
 .band h2 {
   margin-top: 0;
 }
 
-/* a heading's words fade from bright to the ground, as if lit from above */
-.display,
-.title {
-  background: linear-gradient(180deg, var(--fg-bright) 35%, color-mix(in srgb, var(--fg-bright) 55%, var(--bg)));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-@media (forced-colors: active) {
-  .display,
-  .title {
-    background: none;
-    color: CanvasText;
-  }
-}
-
-.title {
-  margin: 0 0 var(--s3);
-  font-size: var(--t-title);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
-  text-wrap: balance;
-}
-
-.display {
-  margin: 0 0 var(--s2);
-  max-width: 22ch;
-  text-wrap: balance;
-  font-size: var(--t-display);
-  font-weight: 800;
-  letter-spacing: -0.045em;
-  line-height: 1.05;
-}
-
-.subhead .nw {
-  white-space: nowrap;
-}
-
-.subhead {
-  margin: 0 0 var(--s3);
-  max-width: 36ch;
-  text-wrap: balance;
+/* a small monospace label, as on a spec sheet */
+.label {
+  margin: 0 0 var(--s1);
   color: var(--accent);
-  font-size: var(--t-lead);
-  font-weight: 700;
-  line-height: 1.4;
-}
-
-/* a small rounded label over a heading */
-.pill {
-  display: inline-block;
-  margin: 0 0 var(--s2);
-  padding: 0.2rem 1.6ch;
-  border: 1px solid color-mix(in srgb, var(--mint) 35%, transparent);
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--mint) 8%, var(--bg));
-  box-shadow: 0 0 24px -6px color-mix(in srgb, var(--mint) 45%, transparent);
-  color: var(--fg-bright);
-  font-size: var(--t-sm);
-}
-
-.pill strong {
-  color: var(--accent);
-}
-
-/* --- hero ------------------------------------------------------------------------------- */
-
-.hero {
-  z-index: 1;
-  padding-top: calc(var(--band) * 0.9);
-  padding-bottom: var(--s3);
-}
-
-.hero-center {
-  position: relative;
-  text-align: center;
-}
-
-.hero-center > * {
-  margin-right: auto;
-  margin-left: auto;
-}
-
-.hero .lead {
-  max-width: 58ch;
-  margin-bottom: var(--s3);
-  color: var(--fg);
-  font-size: 1rem;
-}
-
-.lockup img {
-  display: block;
-  width: min(420px, 100%);
-  height: auto;
-  margin: 0 auto var(--s3);
-  filter: drop-shadow(0 0 28px color-mix(in srgb, var(--mint) 22%, transparent));
-}
-
-@media (max-width: 900px) {
-  .lockup img {
-    width: min(320px, 100%);
-  }
-}
-
-.buttons {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--s1) 1.5ch;
-  margin-bottom: var(--s3);
-}
-
-.button {
-  padding: 0.5rem 2.2ch;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: color-mix(in srgb, var(--bg-light) 70%, transparent);
-  color: var(--fg-bright);
-  font-weight: 700;
-  text-decoration: none;
-  transition: border-color 0.15s, box-shadow 0.15s;
-}
-
-.button:hover {
-  border-color: color-mix(in srgb, var(--mint) 60%, var(--border));
-}
-
-.button.primary {
-  border-color: color-mix(in srgb, var(--mint) 55%, transparent);
-  background: color-mix(in srgb, var(--mint) 16%, var(--bg));
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--mint) 12%, transparent),
-    0 8px 32px -8px color-mix(in srgb, var(--mint) 55%, transparent);
-}
-
-.button.primary:hover {
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--mint) 30%, transparent),
-    0 8px 40px -6px color-mix(in srgb, var(--mint) 70%, transparent);
-}
-
-/* --- the video on a stage: an arc of mint rising behind its frame ---------------------------- */
-
-.stage {
-  --stage-top: clamp(9rem, 5rem + 12vw, 17rem);
-  --orbit: min(1100px, 170vw);
-  padding-top: var(--stage-top);
-  isolation: isolate;
-}
-
-/* rings centred on the frame's top edge, only their upper halves shown, with stars among them;
-   behind the frame (the stage isolates them) and under the hero, which sits a layer up */
-.orbit {
-  position: absolute;
-  z-index: -1;
-  top: calc(var(--stage-top) - var(--orbit) / 2);
-  left: 50%;
-  width: var(--orbit);
-  aspect-ratio: 1;
-  transform: translateX(-50%);
-  pointer-events: none;
-  background:
-    radial-gradient(1.5px 1.5px at 22% 30%, color-mix(in srgb, var(--fg-bright) 70%, transparent), transparent),
-    radial-gradient(1px 1px at 70% 22%, color-mix(in srgb, var(--fg-bright) 60%, transparent), transparent),
-    radial-gradient(1px 1px at 38% 18%, color-mix(in srgb, var(--fg-bright) 50%, transparent), transparent),
-    radial-gradient(1.5px 1.5px at 80% 38%, color-mix(in srgb, var(--fg-bright) 55%, transparent), transparent),
-    radial-gradient(1px 1px at 58% 26%, color-mix(in srgb, var(--fg-bright) 60%, transparent), transparent),
-    radial-gradient(1px 1px at 14% 44%, color-mix(in srgb, var(--fg-bright) 40%, transparent), transparent),
-    radial-gradient(1px 1px at 63% 36%, color-mix(in srgb, var(--fg-bright) 45%, transparent), transparent),
-    radial-gradient(1px 1px at 31% 40%, color-mix(in srgb, var(--fg-bright) 50%, transparent), transparent),
-    radial-gradient(1px 1px at 45% 31%, color-mix(in srgb, var(--fg-bright) 55%, transparent), transparent),
-    radial-gradient(1px 1px at 87% 46%, color-mix(in srgb, var(--fg-bright) 40%, transparent), transparent),
-    radial-gradient(circle closest-side, transparent 99.4%, color-mix(in srgb, var(--mint) 14%, transparent) 99.7%, transparent 100%),
-    radial-gradient(circle closest-side, transparent 79.4%, color-mix(in srgb, var(--mint) 18%, transparent) 79.7%, transparent 80%),
-    radial-gradient(circle closest-side, transparent 59.4%, color-mix(in srgb, var(--mint) 24%, transparent) 59.7%, transparent 60%);
-  -webkit-mask-image: linear-gradient(180deg, transparent 6%, #000 28%, #000 49%, transparent 50.5%);
-  mask-image: linear-gradient(180deg, transparent 6%, #000 28%, #000 49%, transparent 50.5%);
-}
-
-/* a bright ring nearest the frame, and the light pooling where it meets it */
-.orbit::before,
-.orbit::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-}
-
-.orbit::before {
-  width: 34%;
-  aspect-ratio: 1;
-  transform: translate(-50%, -50%);
-  border: 2px solid color-mix(in srgb, var(--mint) 70%, var(--fg-bright));
-  border-radius: 50%;
-  box-shadow: 0 0 40px 6px color-mix(in srgb, var(--mint) 45%, transparent),
-    inset 0 0 30px 2px color-mix(in srgb, var(--mint) 28%, transparent);
-  filter: blur(1.5px);
-}
-
-.orbit::after {
-  width: 64%;
-  height: 26%;
-  transform: translate(-50%, -100%);
-  background: radial-gradient(ellipse 50% 100% at 50% 100%,
-    color-mix(in srgb, var(--fg-bright) 85%, transparent) 0%,
-    color-mix(in srgb, var(--mint) 65%, transparent) 14%,
-    color-mix(in srgb, var(--mint) 18%, transparent) 40%,
-    transparent 70%);
-  filter: blur(16px);
-}
-
-.demo {
-  position: relative;
-  margin: 0;
-}
-
-/* a glass frame round the video, its top edge lit */
-.frame {
-  position: relative;
-  padding: 10px;
-  border: 1px solid color-mix(in srgb, var(--mint) 22%, var(--border));
-  border-radius: 18px;
-  background: color-mix(in srgb, var(--bg-light) 55%, transparent);
-  box-shadow: 0 -1px 0 0 color-mix(in srgb, var(--mint) 55%, transparent),
-    0 -30px 90px -20px color-mix(in srgb, var(--mint) 45%, transparent),
-    0 40px 120px -40px rgb(0 0 0 / 0.6);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
-}
-
-.frame::before {
-  content: "";
-  position: absolute;
-  top: -1px;
-  left: 15%;
-  right: 15%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--mint), transparent);
-}
-
-.demo video {
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  height: auto;
-  border-radius: 10px;
-  background: var(--bg-darker);
-}
-
-.demo figcaption {
-  max-width: 96ch;
-  margin: var(--s3) auto 0;
-  color: var(--fg-muted);
-  font-size: var(--t-sm);
-  text-align: center;
-}
-
-.demo figcaption .eyebrow {
-  display: block;
-  margin-bottom: var(--s1);
-}
-
-/* --- hairline cells: lines that fade out at their ends ----------------------------------- */
-
-.facts {
-  padding-top: var(--s3);
-  padding-bottom: var(--s3);
-}
-
-.facts-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin-top: 0;
-  margin-bottom: 0;
-  list-style: none;
-}
-
-.facts-grid li,
-.cells li {
-  position: relative;
-  margin: 0;
-}
-
-.facts-grid li {
-  padding: var(--s2) 2ch var(--s2) 3ch;
-  text-align: center;
-}
-
-.facts-grid li + li::before,
-.cells li::before,
-.cells li::after {
-  content: "";
-  position: absolute;
-  pointer-events: none;
-}
-
-/* a vertical hairline left of each cell but the first */
-.facts-grid li + li::before,
-.cells li::before {
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 1px;
-  background: linear-gradient(180deg, transparent, var(--border) 25%, var(--border) 75%, transparent);
-}
-
-.facts .big {
-  display: block;
-  color: var(--fg-bright);
-  font-size: var(--t-title);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-}
-
-.facts .label {
-  display: block;
-  margin-top: 0.4rem;
-  color: var(--fg-muted);
+  font-family: var(--mono);
   font-size: var(--t-xs);
-  letter-spacing: 0.15em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
 }
 
-@media (max-width: 760px) {
-  .facts-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .facts-grid li:nth-child(odd)::before {
-    display: none;
-  }
+.title {
+  margin: 0 0 var(--s3);
+  font-size: var(--t-title);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  text-wrap: balance;
 }
 
 .section-head {
@@ -361,143 +66,458 @@ main.bands {
 }
 
 .section-head .title {
-  max-width: 30ch;
+  max-width: 28ch;
   margin-right: auto;
   margin-left: auto;
-}
-
-.cells {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin: 0 0 var(--s3);
-  padding: 0;
-  list-style: none;
-}
-
-.cells li {
-  padding: var(--s3) 2rem;
-  text-align: center;
-}
-
-/* a horizontal hairline over the second row */
-.cells li:nth-child(n + 4)::after {
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--border) 20%, var(--border) 80%, transparent);
-}
-
-.cells li:nth-child(3n + 1)::before {
-  display: none;
-}
-
-@media (max-width: 900px) {
-  .cells {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .cells li:nth-child(3n + 1)::before {
-    display: block;
-  }
-
-  .cells li:nth-child(odd)::before {
-    display: none;
-  }
-
-  .cells li:nth-child(n + 3)::after {
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--border) 20%, var(--border) 80%, transparent);
-  }
-}
-
-@media (max-width: 560px) {
-  .cells {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .cells li {
-    padding-right: 0;
-    padding-left: 0;
-  }
-
-  .cells li::before {
-    display: none !important;
-  }
-
-  .cells li:nth-child(n + 2)::after {
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--border) 20%, var(--border) 80%, transparent);
-  }
-}
-
-/* line icons, lit in mint */
-.ico {
-  display: block;
-  width: 28px;
-  height: 28px;
-  margin: 0 auto var(--s2);
-  fill: none;
-  stroke: var(--accent);
-  stroke-width: 1.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--mint) 50%, transparent));
-}
-
-.cells h3 {
-  margin: 0 0 var(--s1);
-  font-size: var(--t-lead);
-}
-
-.cells p {
-  margin: 0;
-  color: var(--fg-muted);
 }
 
 .centered {
   text-align: center;
 }
 
-.centered a:last-child {
-  margin-right: 0;
+/* --- hero: a poster, a grid running to a flare on the horizon at its foot -------------- */
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  min-height: min(calc(100svh - 4rem), 60rem);
+  padding: clamp(3rem, 10vh, 7rem) 0 0;
 }
 
-/* --- closing: a beam of light rising to the last heading -------------------------------- */
-
-.closing {
-  padding-top: calc(var(--band) * 1.6);
-  padding-bottom: calc(var(--band) * 1.4);
+/* the copy runs from the left, like a poster's headline; the mark stands behind it on the right */
+.hero-copy {
+  position: relative;
+  z-index: 1;
+  width: 100%;
 }
 
-.closing .glow {
+/* a short rule before the label, as on a spec sheet */
+.kicker::before {
+  content: "";
+  display: inline-block;
+  width: 2.5rem;
+  height: 1px;
+  margin-right: 1.5ch;
+  vertical-align: middle;
+  background: currentColor;
+}
+
+/* the mark, large and faint, cropped by the page's right edge and fading into the horizon:
+   part of the backdrop, as a watermark, rather than an icon set on top */
+.emblem {
   position: absolute;
-  top: 0;
+  z-index: 0;
+  top: clamp(1rem, 4vh, 3rem);
+  right: max(-6vw, calc(50% - 46rem));
+  width: min(52vw, 680px);
+  opacity: 0.16;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(180deg, #000 45%, transparent 92%);
+  mask-image: linear-gradient(180deg, #000 45%, transparent 92%);
+}
+
+.emblem img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media (max-width: 760px) {
+  .emblem {
+    top: 0;
+    right: -18vw;
+    width: 85vw;
+    opacity: 0.1;
+  }
+}
+
+.display {
+  max-width: 13ch;
+  margin: 0 0 var(--s3);
+  font-size: clamp(2.6rem, 1rem + 6vw, 6rem);
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  line-height: 0.98;
+  text-wrap: balance;
+}
+
+/* the one word in light: sunset colours, mint into cyan */
+.display .accent {
+  background: linear-gradient(180deg, var(--accent) 30%, var(--neon));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@media (forced-colors: active) {
+  .display .accent {
+    background: none;
+    color: CanvasText;
+  }
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: var(--s1) 1.5ch;
+  margin: 0;
+}
+
+.button {
+  padding: 0.55rem 2.4ch;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+  color: var(--fg-bright);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.button:hover {
+  border-color: var(--accent);
+}
+
+.button.primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--badge-fg);
+}
+
+.button.primary:hover {
+  box-shadow: 0 6px 24px -10px var(--mint);
+}
+
+/* the scene fills the rest of the first screen: the sky with the horizon, then the floor */
+.horizon {
+  position: relative;
+  -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent);
+  mask-image: linear-gradient(180deg, #000 70%, transparent);
+  flex: 1 0 clamp(15rem, 40vh, 26rem);
+  margin-top: clamp(1rem, 4vh, 3rem);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.sky {
+  position: absolute;
+  inset: 0 0 38%;
+  overflow: hidden;
+  background: radial-gradient(ellipse 40% 90% at 50% 100%, color-mix(in srgb, var(--mint) 16%, transparent), transparent 70%),
+    radial-gradient(1px 1px at 18% 30%, color-mix(in srgb, var(--fg-bright) 60%, transparent), transparent),
+    radial-gradient(1px 1px at 30% 62%, color-mix(in srgb, var(--fg-bright) 40%, transparent), transparent),
+    radial-gradient(1px 1px at 76% 24%, color-mix(in srgb, var(--fg-bright) 55%, transparent), transparent),
+    radial-gradient(1px 1px at 86% 58%, color-mix(in srgb, var(--fg-bright) 40%, transparent), transparent),
+    radial-gradient(1px 1px at 64% 12%, color-mix(in srgb, var(--fg-bright) 50%, transparent), transparent),
+    radial-gradient(1px 1px at 9% 70%, color-mix(in srgb, var(--fg-bright) 35%, transparent), transparent);
+}
+
+/* the horizon: a cyan line that fades out at both ends */
+.sky::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 5%, var(--neon) 30%, var(--mint) 50%, var(--neon) 70%, transparent 95%);
+}
+
+/* a lens flare where the sun would be: a white core on the horizon (white in both palettes:
+   it is light, not text), drawn out sideways in mint */
+.sky::before {
+  content: "";
+  position: absolute;
+  bottom: -14px;
   left: 50%;
-  width: min(700px, 100vw);
-  height: 70%;
+  width: min(520px, 80vw);
+  height: 30px;
   transform: translateX(-50%);
+  background: radial-gradient(ellipse 8% 45% at 50% 50%, #fff, transparent 100%),
+    radial-gradient(ellipse 50% 40% at 50% 50%, color-mix(in srgb, var(--mint) 80%, transparent), transparent 100%),
+    radial-gradient(ellipse 18% 100% at 50% 50%, color-mix(in srgb, var(--mint) 45%, transparent), transparent 100%);
+  filter: blur(1px);
+}
+
+/* faint CRT scanlines over the scene only, never over text */
+.horizon::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(180deg, color-mix(in srgb, var(--bg) 55%, transparent) 0 1px, transparent 1px 3px);
+}
+
+/* the floor: a grid in perspective, running towards the horizon, fading at its sides */
+.floor {
+  position: absolute;
+  top: 62%;
+  left: -50%;
+  width: 200%;
+  height: 900px;
+  transform-origin: top center;
+  transform: perspective(300px) rotateX(64deg);
+  background-image:
+    linear-gradient(90deg, color-mix(in srgb, var(--mint) 40%, transparent) 1px, transparent 1px),
+    linear-gradient(180deg, color-mix(in srgb, var(--neon) 30%, transparent) 1px, transparent 1px);
+  background-size: 56px 56px;
+  background-position: center top;
+  -webkit-mask-image: radial-gradient(ellipse 30% 70% at 50% 0, #000 30%, transparent 75%);
+  mask-image: radial-gradient(ellipse 30% 70% at 50% 0, #000 30%, transparent 75%);
+  animation: floor-run 3s linear infinite;
+}
+
+@keyframes floor-run {
+  to {
+    background-position: center 56px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floor {
+    animation: none;
+  }
+}
+
+/* --- the facts: an instrument strip ---------------------------------------------------- */
+
+.specs-strip {
+  padding: var(--s4) 0;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style: none;
+}
+
+.facts li {
+  margin: 0;
+  padding: var(--s2) 2rem;
+  border-left: 1px solid var(--border);
+}
+
+.facts li:first-child {
+  border-left: 0;
+}
+
+.facts span {
+  display: block;
+}
+
+.facts .label {
+  margin-bottom: 0.3rem;
+}
+
+.facts .big {
+  color: var(--fg-bright);
+  font-family: var(--display);
+  font-size: clamp(2rem, 1.2rem + 2.4vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.facts .sub {
+  margin-top: 0.3rem;
+  color: var(--fg-muted);
+  font-size: var(--t-sm);
+}
+
+@media (max-width: 760px) {
+  .facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .facts li {
+    padding: var(--s2) 1rem;
+  }
+
+  .facts li:nth-child(odd) {
+    border-left: 0;
+  }
+
+  .facts li:nth-child(n + 3) {
+    border-top: 1px solid var(--border);
+  }
+}
+
+/* --- HUD corner brackets: a short mint stroke each way at every corner, a little outside -- */
+
+.hud {
+  position: relative;
+}
+
+.hud::after {
+  --c: var(--accent);
+  --l: 16px;
+  --w: 2px;
+  content: "";
+  position: absolute;
+  inset: -7px;
   pointer-events: none;
   background:
-    radial-gradient(1px 1px at 20% 40%, color-mix(in srgb, var(--fg-bright) 50%, transparent), transparent),
-    radial-gradient(1px 1px at 75% 30%, color-mix(in srgb, var(--fg-bright) 50%, transparent), transparent),
-    radial-gradient(1px 1px at 62% 62%, color-mix(in srgb, var(--fg-bright) 40%, transparent), transparent),
-    radial-gradient(1px 1px at 33% 70%, color-mix(in srgb, var(--fg-bright) 45%, transparent), transparent),
-    radial-gradient(ellipse 22% 100% at 50% 100%, color-mix(in srgb, var(--mint) 26%, transparent), transparent 75%);
+    linear-gradient(var(--c), var(--c)) top left / var(--l) var(--w),
+    linear-gradient(var(--c), var(--c)) top left / var(--w) var(--l),
+    linear-gradient(var(--c), var(--c)) top right / var(--l) var(--w),
+    linear-gradient(var(--c), var(--c)) top right / var(--w) var(--l),
+    linear-gradient(var(--c), var(--c)) bottom left / var(--l) var(--w),
+    linear-gradient(var(--c), var(--c)) bottom left / var(--w) var(--l),
+    linear-gradient(var(--c), var(--c)) bottom right / var(--l) var(--w),
+    linear-gradient(var(--c), var(--c)) bottom right / var(--w) var(--l);
+  background-repeat: no-repeat;
 }
+
+.hud > .specs {
+  margin-bottom: 0;
+}
+
+.hud:has(> .specs) {
+  margin-bottom: var(--s3);
+}
+
+/* --- the video in a terminal window ---------------------------------------------------- */
+
+.demo {
+  margin: 0;
+}
+
+.window {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg-darker);
+  box-shadow: 0 40px 100px -40px rgb(0 0 0 / 0.8),
+    0 0 0 1px color-mix(in srgb, var(--mint) 8%, transparent);
+}
+
+.window-bar {
+  display: flex;
+  align-items: center;
+  gap: 1.5ch;
+  margin: 0;
+  padding: 0.55rem 1rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--fg-muted);
+  font-family: var(--mono);
+  font-size: var(--t-xs);
+}
+
+.lights {
+  display: flex;
+  gap: 6px;
+}
+
+.lights span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--border);
+}
+
+.lights span:first-child {
+  background: var(--mint);
+}
+
+.lights span:nth-child(2) {
+  background: var(--neon);
+}
+
+.demo video {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+
+.demo figcaption {
+  max-width: 72ch;
+  margin: var(--s2) auto 0;
+  color: var(--fg-muted);
+  font-size: var(--t-sm);
+  text-align: center;
+}
+
+/* --- features: numbered spec panels ---------------------------------------------------- */
+
+.specs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin: 0 0 var(--s3);
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--border);
+  list-style: none;
+}
+
+.specs li {
+  margin: 0;
+  padding: var(--s3) 2rem;
+  background: var(--bg);
+  transition: background 0.2s;
+}
+
+.specs li:hover {
+  background: color-mix(in srgb, var(--mint) 4%, var(--bg));
+}
+
+.specs .label {
+  margin-bottom: var(--s2);
+  color: var(--fg-muted);
+}
+
+.specs .n {
+  margin-right: 1ch;
+  color: var(--accent);
+}
+
+.specs h3 {
+  margin: 0 0 var(--s1);
+  font-size: 1.3rem;
+  letter-spacing: -0.02em;
+}
+
+.specs p {
+  margin: 0;
+  color: var(--fg-muted);
+}
+
+@media (max-width: 900px) {
+  .specs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .specs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .specs li {
+    padding: var(--s3) 1.25rem;
+  }
+}
+
+/* --- closing --------------------------------------------------------------------------- */
 
 .closing .title {
-  font-size: var(--t-display);
-  max-width: 24ch;
+  max-width: 22ch;
+  font-size: clamp(2rem, 1rem + 3.4vw, 3.6rem);
+  letter-spacing: -0.04em;
+  line-height: 1.05;
 }
 
-.links strong {
-  margin-right: 3ch;
-  color: var(--fg-bright);
+.closing .links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--s1) 3ch;
+}
+
+.closing .links a {
+  margin-right: 0;
 }
