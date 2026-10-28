@@ -1046,6 +1046,12 @@
               ]
             },
             {
+              "keys": "ctrl+shift+a",
+              "chords": [
+                "ctrl+shift+a"
+              ]
+            },
+            {
               "keys": "b",
               "chords": [
                 "b"
@@ -1636,9 +1642,9 @@
           "description": "Add-ons manager (about:addons)",
           "keys": [
             {
-              "keys": "ctrl+shift+a",
+              "keys": "ctrl+shift+f",
               "chords": [
-                "ctrl+shift+a"
+                "ctrl+shift+f"
               ]
             }
           ]
