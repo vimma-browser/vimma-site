@@ -46,12 +46,13 @@ What works today, each with the section that explains it:
 - **Firefox underneath** ([privacy defaults](#privacy-defaults)): the same user agent and
   [add-on](#add-ons) compatibility as Firefox; no studies, sponsored content or telemetry
   uploads; Safe Browsing on.
-- **Scriptable** ([vimma-ctl](#scripting-with-vimma-ctl)): a token-protected control socket;
-  local AI agents reach one [agent workspace](#agent-workspace) through MCP, where they can read,
-  open, scroll and search pages, follow their links, list and click their buttons, fill their
-  fields (never a password or card number), take a screenshot, read a page's errors and show
-  you a page. Every request asks you first, one answer can let an agent work through a task for
-  some minutes, and a form they submit asks every time.
+- **Scriptable** ([vimma-ctl](#scripting-with-vimma-ctl), shipped and updated with Vimma): a
+  token-protected control socket; local AI agents reach one [agent workspace](#agent-workspace)
+  through MCP, where they can read, open, scroll and search pages, follow their links, list and
+  click their buttons, fill their fields (never a password or card number), take a screenshot,
+  read a page's errors and show you a page. Every request asks you first, one answer can let an
+  agent work through a task for some minutes, and sending a form or paying asks every time,
+  showing what is sent or the total the page states.
 
 ## Every key is yours
 
@@ -90,6 +91,21 @@ version; for a Mac, see [macOS](#macos) below):
 | `vimma-X.Y.Z-linux-x86_64.tar.xz` | `tar -xJf vimma-X.Y.Z-linux-x86_64.tar.xz && ./vimma/vimma`             |
 | `PKGBUILD` (Arch Linux)           | the command in [Arch Linux](#arch-linux) below                          |
 
+Each of them, and the Mac's `.dmg`, also carries `vimma-ctl`, the client for
+[scripting](#scripting-with-vimma-ctl) and [agents](#connecting-an-agents-tool), next to the
+`vimma` binary, so updating Vimma updates it too:
+
+| Installed from             | `vimma-ctl` is                                                                                                      |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `.deb`, `.rpm`, Arch Linux | on your `PATH`: `/usr/bin/vimma-ctl`                                                                                |
+| tarball                    | `vimma/vimma-ctl` next to `vimma/vimma`; link it onto your `PATH`                                                   |
+| AppImage                   | a link named `vimma-ctl` to the AppImage runs it: `ln -s ~/Apps/vimma-X.Y.Z-x86_64.AppImage ~/.local/bin/vimma-ctl` |
+| Homebrew (macOS)           | on your `PATH`, linked by the cask                                                                                  |
+| `.dmg` (macOS)             | `/Applications/Vimma.app/Contents/MacOS/vimma-ctl`                                                                  |
+
+The AppImage keeps its file name when it updates itself (it renames the new one over it), so the
+link keeps working.
+
 The `.deb`, the `.rpm` and the Arch Linux package add Vimma to your application menu and offer it for web links,
 but never make it your default browser on their own: `xdg-settings set default-web-browser
 vimma-vimma.desktop` does that. Next to the files are `SHA256SUMS`, a CycloneDX SBOM
@@ -117,7 +133,8 @@ sudo dnf install ./vimma-X.Y.Z-1.x86_64.rpm                           # Fedora
 sudo zypper install --allow-unsigned-rpm ./vimma-X.Y.Z-1.x86_64.rpm   # openSUSE
 ```
 
-It installs to `/usr/lib/vimma`, with `vimma` and `vimma-open` in `/usr/bin`, as the `.deb` does.
+It installs to `/usr/lib/vimma`, with `vimma`, `vimma-open` and `vimma-ctl` in `/usr/bin`, as the
+`.deb` does.
 The package carries no OpenPGP signature, so dnf says it skipped the OpenPGP check and zypper
 needs `--allow-unsigned-rpm`. What vouches for it is the release's `SHA256SUMS` and its cosign
 signature; check them before installing ("Verify a release" in
@@ -876,7 +893,7 @@ keys. A `[panel]` after a key means it works only in that mode.
 | `ctrl+b n` / `ctrl+b p`, `ctrl+tab` / `ctrl+shift+tab`, `ctrl+pagedown` / `ctrl+pageup` | Next / previous tab, wrapping around at the ends. Hidden tabs are skipped. `gt` / `gT` in normal mode; `3gt` goes to tab 3.                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | `ctrl+b 1..9`, `alt+1..8`, `alt+9`                                                      | Tab 1 to 9, counting visible tabs (pinned tabs first); Firefox's `alt+9` is the last tab. With fewer tabs than N, nothing happens. `ctrl+shift+pageup` / `ctrl+shift+pagedown` move the tab left / right among them.                                                                                                                                                                                                                                                                                                                                                                      |
 | `:`                                                                                     | Normal mode: opens the command line at the bottom of the window ([below](#the-command-line)). In a text field `:` is typed.                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| `ctrl+b g`, `b`                                                                         | Opens tab search over the page, ready to type (`b` in normal mode): every tab of every workspace and window, and the recently closed ones ([below](#tab-search-and-tab-rename)).                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `ctrl+b g`, `ctrl+shift+a`, `b`                                                         | Opens tab search over the page, ready to type (`b` in normal mode; `ctrl+shift+a` is Firefox's tab search key): every tab of every workspace and window, and the recently closed ones ([below](#tab-search-and-tab-rename)).                                                                                                                                                                                                                                                                                                                                                              |
 | `ctrl+b f g`                                                                            | Opens [live grep](#live-grep): search the text of the workspace's tabs as you type. `]q` / `[q` in normal mode step through its results afterwards.                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | `ctrl+b shift+t`                                                                        | Renames the tab ([below](#tab-search-and-tab-rename)); an empty name restores the page title.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | `ctrl+b a`                                                                              | Bookmarks the page; type folders before its title: `work/docs/title` ([below](#bookmarks)).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
@@ -892,7 +909,7 @@ keys. A `[panel]` after a key means it works only in that mode.
 | `ctrl+b space`                                                                          | Cycles the layout presets, as tmux does; the status bar names the one you get ([Layouts](#layouts)). `:layout tiled` picks one.                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | `ctrl+b shift+x`, `x`, `ctrl+F4`                                                        | Closes the tab, as Firefox's `ctrl+w` did: on a pinned tab it selects the first unpinned tab instead; closing the last tab opens a new tab and keeps the window ([Firefox behaviour Vimma changes](#firefox-behaviour-vimma-changes)). `x` in normal mode. `ctrl+shift+t` reopens the last closed tab, in every mode.                                                                                                                                                                                                                                                                     |
 | `ctrl+b` then anything else                                                             | Never leaks to the page. A binding without a command shows "… not implemented yet" for 1.5 s; an unbound key does nothing. Firefox's `ctrl+b` bookmarks sidebar is off.                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| Firefox's keys                                                                          | Vimma bindings with Firefox's meaning ([below](#firefoxs-keys-are-vimma-bindings)): `ctrl+n` / `ctrl+shift+w` new / close window, `ctrl+shift+n` reopen it, `ctrl+q` quit (Firefox asks first), `ctrl+plus` / `ctrl+minus` / `ctrl+0` page zoom, `F11` full screen, `ctrl+s` save, `ctrl+p` print, `ctrl+m` mute the tab, `alt+home` home page, `ctrl+shift+y` downloads, `ctrl+shift+a` add-ons, `ctrl+shift+h` / `ctrl+shift+o` history / bookmarks (the Library), `ctrl+}` Picture-in-Picture, `ctrl+alt+r` Reader View, `ctrl+shift+s` screenshot, `ctrl+shift+delete` clear history. |
+| Firefox's keys                                                                          | Vimma bindings with Firefox's meaning ([below](#firefoxs-keys-are-vimma-bindings)): `ctrl+n` / `ctrl+shift+w` new / close window, `ctrl+shift+n` reopen it, `ctrl+q` quit (Firefox asks first), `ctrl+plus` / `ctrl+minus` / `ctrl+0` page zoom, `F11` full screen, `ctrl+s` save, `ctrl+p` print, `ctrl+m` mute the tab, `alt+home` home page, `ctrl+shift+y` downloads, `ctrl+shift+f` add-ons, `ctrl+shift+h` / `ctrl+shift+o` history / bookmarks (the Library), `ctrl+}` Picture-in-Picture, `ctrl+alt+r` Reader View, `ctrl+shift+s` screenshot, `ctrl+shift+delete` clear history. |
 | Developer tools                                                                         | Exactly as in Firefox: `F12` / `ctrl+shift+i` the toolbox, `ctrl+shift+c` Inspector, `ctrl+shift+k` Web Console, `ctrl+shift+z` Debugger (in a text field: redo), `ctrl+shift+e` Network, `shift+F7` Style Editor, `shift+F5` Performance, `shift+F9` Storage, `shift+F12` Accessibility, `ctrl+shift+m` Responsive Design Mode, `ctrl+shift+j` Browser Console, `ctrl+alt+shift+i` Browser Toolbox. Each is an action you can rebind in `[keys]`.                                                                                                                                        |
 
 `p` and `P` read the system clipboard (the one `yy` and copy mode's `y` write). The text is
@@ -1363,13 +1380,16 @@ and output, connects to Vimma as an agent (never with full control), and offers 
 | `vimma_keys`       | Scroll, find text, follow a link, go back and forward or up a level in one of its tabs, with Vimma keys. |
 | `vimma_show`       | Show you one of its tabs: your window switches to the agent workspace, and `ctrl+^` brings you back.     |
 | `vimma_elements`   | List the buttons, fields and links on screen in one of its tabs, with labels; never a password's value.  |
-| `vimma_activate`   | Click a button, link or checkbox from that list; a form it would send asks you every time.               |
+| `vimma_activate`   | Click a button, link or checkbox from that list; sending a form or paying asks you every time.           |
 | `vimma_fill`       | Fill fields from that list, never passwords, card numbers, one-time codes or files.                      |
 | `vimma_screenshot` | See what one of its tabs shows, as an image, with that list's labels drawn on it if it asks.             |
 | `vimma_console`    | Read one of its tabs' script errors, console errors and warnings, and failed requests.                   |
 
-1. Build `vimma-ctl` ([Scripting with vimma-ctl](#scripting-with-vimma-ctl), step 2) and put it
-   on your `PATH`.
+1. Use the `vimma-ctl` that came with Vimma, so it is updated with it: it is on your `PATH`
+   from the `.deb`, the `.rpm`, the Arch Linux package and Homebrew; for the tarball, the
+   AppImage and the `.dmg`, see [Installing](#installing) for where it is. With the tarball or
+   the `.dmg`, give your tool its full path instead of `vimma-ctl` in the commands below if it
+   is not on your `PATH`.
 2. In Vimma, `:mcp on` and `y`. Leave full control (`vimma.control.enabled`) off: agents do not
    need it ([why](#what-vimma-protects-and-what-it-does-not)).
 3. Add the server to your tool, with one of the commands below. Each was run against the version
@@ -1429,6 +1449,14 @@ denied.` Codex CLI gives up on a tool call
   session runs; `◇ agent` in the status bar shows it. Grants belong to it: when the session ends
   (or Vimma restarts), they end, and the next session asks again.
 - **Cancelling** a call in the agent (`Esc` in Claude Code) takes its question off the line.
+- **An older `vimma-ctl`.** A `vimma-ctl` older than Vimma still works, with the tools it knows,
+  since Vimma checks every request whichever client sends it. When the agent connects, Vimma
+  says so once its first question is answered:
+  `vimma-ctl 0.1.7 is older than Vimma 0.1.8: agents get fewer tools until you update it`.
+  `vimma-ctl mcp` tells the agent too, in its instructions and at the top of its first answer,
+  so neither of you takes a missing tool for one Vimma lacks. A `vimma-ctl` built before releases
+  shipped it names no version, and the notice says `vimma-ctl is older than Vimma`. Point your
+  tool at the `vimma-ctl` that came with Vimma (step 1) to end it.
 
 #### When to use Playwright instead
 
@@ -1483,7 +1511,7 @@ with the rest of your computer.
 
 - **Grants are wide.** A grant lets that agent use every tool without asking until it ends:
   read, open, press keys, click, fill, take screenshots and download. Only sending a form,
-  showing you a page and a dangerous or unscanned download still ask
+  paying, showing you a page and a dangerous or unscanned download still ask
   ([What a grant covers](#what-a-grant-covers)). A grant given for a read therefore also means
   "let it fetch any address", and an address can carry what the agent has read elsewhere. Every
   call under a grant shows a notice and a row in `:mcp log`, so you can see where it went; give
@@ -1597,18 +1625,23 @@ page around it reads as no change.
   another site (the agent follows those with `vimma_keys`, which asks as an open of that site)
   and links that are not web pages. These are refused before you are asked.
 - **A form submission asks every time**, also under a grant, with only `y` and `n`, naming where
-  the form goes and how many fields it sends:
-  `◇ claude-code wants to submit a form: 2 "Sign up · Example" → POST example.com/api/signup (3 fields)`.
-  A `y` sends that one form; it never makes a grant.
+  the form goes and what it sends
+  ([Checkpoints: sending a form and paying](#checkpoints-sending-a-form-and-paying)):
+  `▲ claude-code wants to send a form: 2 "Sign up · Example" → POST example.com/api/signup  email "ada@example.com", password •••, + 1 hidden`.
+  A `y` sends that one form; it never makes or ends a grant.
+- **A click that may pay asks every time** too: on a page that shows a payment card field, or
+  on a button that says it pays (`Pay now`, `Place order`, `Vahvista tilaus` and the like),
+  even when the button sends no form.
 - **A form the page sends by itself after an agent's click is stopped**: the agent is told
   `the page tried to submit a form to example.com; Vimma stopped it`, and asks you properly by
   clicking the form's submit button. Your own submissions in an agent tab, and those of a page
   the agent has not touched, go through. A button whose script sends data without a form (with
-  `fetch`) cannot be told apart from any other button: under a grant the agent can press it
-  unasked, with a notice and a row in `:mcp log`.
+  `fetch`) cannot be told apart from any other button by what it sends: under a grant the agent
+  can press it unasked, with a notice and a row in `:mcp log`, unless its words or the page's
+  card fields say it may pay.
 - **Agents cannot answer dialogs.** An `alert`, `confirm` or `prompt` the page opens waits in the
   tab for you; the agent only learns its text, as untrusted content.
-- **A grant covers clicks** (not submissions): each shows
+- **A grant covers clicks** (not submissions or payments): each shows
   `claude-code clicked button "Add to list" in "List · Example" (grant, 12m left)`. A click that
   loads a page counts as one of the 10 opens a minute, and no click is made while those are used
   up. At most 30 clicks a minute, none while you are typing in the tab, and each is in
@@ -1634,15 +1667,17 @@ pages react to key presses only, which Vimma never sends).
   stops the fill there.
 - **Sending the form asks every time.** With `submit`, the agent asks to fill the fields and
   then send their form, through one of its submit buttons or as its first submit button would;
-  that question comes also under a grant, with only `y` and `n`, naming where the form goes and the fields:
-  `◇ claude-code wants to submit a form: 2 "Sign up · Example" → POST example.com/api/signup (3 fields)  after filling 1 field: sd Email = "ada@example.com"`.
+  that question comes also under a grant, with only `y` and `n`, naming where the form goes, the
+  fields it fills and what else the form sends:
+  `▲ claude-code wants to send a form: 2 "Sign up · Example" → POST example.com/api/signup  after filling 1 field: sd Email = "ada@example.com"  also plan "pro", password •••, + 1 hidden`.
+  When its submit button may pay, it asks as a payment.
   It must show every value whole, or the agent is told to fill first and submit apart. If the
   page puts back a value you were shown, the form is not sent. A form the page sends by itself
   during or after a fill is stopped, as after a click.
 - **Nothing hidden in a value.** Values with characters that draw nothing (zero-width spaces,
   direction marks and the like) are refused, so the question shows all a value holds; values
   longer than the line are cut with `…`, and `:mcp log` keeps them whole.
-- **A grant covers fills** (not submissions): each shows
+- **A grant covers fills** (not submissions or payments): each shows
   `claude-code filled 2 fields in "Sign up · Example" (grant, 12m left)`, and `:mcp log` keeps
   every value. At most 32 fields a call, 30 clicks and fills a minute, none while you are typing
   in the tab.
@@ -1766,7 +1801,7 @@ on it.
 Each request an agent makes appears as one line at the foot of the window, above the status bar:
 
 ```
-◇ claude-code wants vimma_read_page: 2 "Pull requests · vimma-browser/vimma" github.com/vimma-browser/vimma/pulls   y once · 10a 10 min, all but forms · n deny · x mute
+◇ claude-code wants vimma_read_page: 2 "Pull requests · vimma-browser/vimma" github.com/vimma-browser/vimma/pulls   y once · 10a 10 min · n deny · x mute
 ```
 
 It names the agent (as the agent calls itself), the tool, and what it touches: the tab's place,
@@ -1813,22 +1848,71 @@ One grant covers a task. Answer any request with `15a`, and that agent may use e
 15 minutes without asking: read pages, list tabs, open and close tabs, press keys and follow
 links, list a page's buttons and fields, click, fill, take screenshots, read a page's errors and
 download. The notice says so:
-`claude-code may use the agent workspace for 15 min; sending a form still asks (ctrl+b shift+a ends it)`.
-Requests that wait when you answer run at once.
+`claude-code may use the agent workspace for 15 min; sending a form or paying still asks (ctrl+b shift+a ends it)`.
+The question's hint leaves that out, so the line stays short; the notice says it the moment you
+answer. Requests that wait when you answer run at once.
 
 These still ask under any grant, and your yes allows that one step without making a grant or
 ending the one in force:
 
-- **Sending a form** ([Clicking on a page](#clicking-on-a-page),
-  [Filling in a form](#filling-in-a-form)): it sends data to a server, where sign-ups, messages
-  and purchases happen.
+- **Sending a form and paying**
+  ([Checkpoints: sending a form and paying](#checkpoints-sending-a-form-and-paying)): a form
+  sends data to a server, where sign-ups, messages and purchases happen, and a payment spends
+  your money.
 - **Showing you a page** ([Showing you a page](#showing-you-a-page)): it changes what you see.
 - **A dangerous or unscanned download**, and a download a page started by itself
   ([Downloads from the agent workspace](#downloads-from-the-agent-workspace)).
 
 A grant belongs to one agent session: another agent, or the same one after it reconnects, asks
-again. Buttons that pay without sending a form are not yet recognised as payments: a grant lets
-the agent press them like any button.
+again.
+
+#### Checkpoints: sending a form and paying
+
+Under a grant an agent works through its task without asking, except at two checkpoints: before
+it sends a form and before it pays. A checkpoint is one question that shows what the step will
+do, answered with one key, after which the agent goes on under the grant it had:
+
+```
+▲ claude-code wants to pay: "Vahvista tilaus" on shop.example · the page says "Yhteensä 42,90 €"   y pay · n stop
+▲ claude-code wants to send a form: 2 "Sign up · Example" → POST example.com/api/signup  email "ada@example.com", name "Ada", password •••, + 2 hidden   y send it · n stop
+```
+
+- **It stands out.** A checkpoint starts with `▲` instead of `◇`, and its `▲` and verb are in
+  your theme's warning colour, so it is not taken for a routine question.
+- **One key.** `y` runs that one step. `n`, `Esc`, `Enter` or `x` stops it: the agent is told
+  no for that step and may go on with others under its grant (`ctrl+b shift+a` ends the grant).
+  No count or grant is offered, and neither answer makes, lengthens or ends a grant. Three noes
+  in a row ignore the agent for a minute, as for any question.
+- **What a payment shows.** The button's text (for a key, such as `H` on a checkout page, the
+  keys), the site in bold, and the total the page states, quoted after "the page says". A button
+  inside a payment provider's frame of another site names that frame's site, which takes the
+  money, then the shop's: `on pay.provider.example (in shop.example)`. The
+  amount is the page's own claim: your bank or card statement is what counts. When the page
+  states no total, none is shown.
+- **What a form shows.** Where it goes, then each field it sends with its value, cut to fit the
+  line (`… (3 more)`); a password, payment card or one-time-code field by its name and `•••`,
+  never its value; hidden fields (such as anti-forgery tokens) counted, `+ 2 hidden`. A fill
+  that sends a form shows the fields it fills, then `also` and the rest. These are the form's
+  own fields: a page's script can still add data to the request as it is sent.
+- **What counts as paying.** A click, a fill that sends a form, or a key that loads a page (a
+  followed link, `gu`, `gU`, `H`, `L`) when the page shows a payment card field, also inside a
+  payment provider's frame, or when the button or link says it pays: `pay`, `buy`,
+  `place order`, `confirm order`, `complete purchase` and their Finnish, Swedish, German, French
+  and Spanish counterparts (`maksa`, `osta`, `tilaa`, `vahvista tilaus`, `betala`, `köp`,
+  `jetzt kaufen`, `zahlungspflichtig bestellen`, `payer`, `commander`, `pagar`, `comprar`, …),
+  as whole words. A button such as `Buy now` that only leads to a checkout asks too; that costs
+  one key. Adding to a basket (`Add to basket`, `Lisää ostoskoriin`) does not ask.
+- **What is not recognised.** A page that hides its checkout: no card field on screen and a
+  button worded otherwise (`Continue`, an icon with no name). A load of another site is not
+  stopped, so a payment provider's or bank's own page, reached through such a button, stops the
+  agent only at that page's card fields or pay button. Keep grants short on sites where you
+  have a saved card, and read `:mcp log` after a task.
+- **Afterwards.** A yes shows `allowed payment on shop.example` or
+  `allowed sending the form to example.com` as you answer, before the step runs, a no
+  `stopped claude-code's payment on shop.example`, and `:mcp log` marks the row
+  `allowed (checkpoint)` or `denied (checkpoint)`. When Vimma is not in front, the desktop
+  notification says only `claude-code asks to pay` or `claude-code asks to send a form`, never
+  the site or the amount.
 
 #### Full control while agents are on
 
@@ -2374,7 +2458,7 @@ before this default has it hidden once, with a notice that says how to bring it 
 
 ## Tab search and tab rename
 
-`ctrl+b g` (or `b` in normal mode, or `:ls`) opens tab search over the page, ready to type. It
+`ctrl+b g` (or `ctrl+shift+a`, `b` in normal mode, or `:ls`) opens tab search over the page, ready to type. It
 finds any tab: every workspace of this window, your other windows, and the tabs and windows
 you closed recently. The current tab is selected. Like the bindings overlay it takes every key
 while open, so nothing reaches the page.
@@ -2574,7 +2658,10 @@ defaults, with every URL replaced by `<url>` and your home directory by `~`. It 
 page titles or addresses.
 
 The licences of Firefox's third-party code are in `about:license`; the third-party code Vimma
-adds (the smol-toml TOML parser, BSD-3-Clause) is listed there too, under Vimma.
+adds (the smol-toml TOML parser, BSD-3-Clause) is listed there too, under Vimma. `vimma-ctl` is
+one file with Rust's standard library in it, and on Linux musl and LLVM's libunwind too; their
+notices are in `vimma-ctl-licenses/` next to it (`/usr/lib/vimma/vimma-ctl-licenses/` from the
+`.deb` or `.rpm`), or in `Vimma.app/Contents/Resources/vimma-ctl-licenses/` on a Mac.
 
 ## Settings (about:config)
 
@@ -2721,8 +2808,9 @@ is **off by default**.
 1. Turn the socket on: in `about:config`, set `vimma.control.enabled` to `true`. It starts at
    once and writes `vimma-control.json` into your profile directory. Setting it back to `false`
    stops it and deletes the file.
-2. Build the client (Rust, no dependencies): `cargo build --release` in `tools/vimma-ctl/`; the
-   binary is `tools/vimma-ctl/target/release/vimma-ctl`. Packages will ship it later.
+2. Use the `vimma-ctl` that came with Vimma: [Installing](#installing) says where each package
+   puts it. `vimma-ctl --version` names the Vimma version it came with. Building it from source
+   is for contributors ([CONTRIBUTING.md](../CONTRIBUTING.md#vimma-ctl-from-source)).
 3. Use it:
 
    ```sh
