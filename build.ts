@@ -38,7 +38,6 @@ interface PageMeta {
   short: string;
   /** Output path under dist/: "" for the home page, "keys/" for a directory, or a file name. */
   out: string;
-  cmd: string;
   description: string;
   /** false: not in the tab list (the 404 page, docs pages other than Start here). */
   nav?: boolean;
@@ -70,11 +69,11 @@ function readPage(file: string): Page {
 function nav(pages: Page[], current: Page, root: string): string {
   return pages
     .filter((p) => p.meta.nav !== false)
-    .map((p, i) => {
+    .map((p) => {
       const here = p === current || p.meta.out === current.meta.section;
       const cur = here ? (p === current ? ' aria-current="page"' : ' aria-current="true"') : "";
       const href = p.meta.out === "" ? root : root + p.meta.out;
-      return `            <li><a href="${href}"${cur}><span class="n">${i + 1}:</span>${p.meta.short}</a></li>`;
+      return `            <li><a href="${href}"${cur}>${p.meta.short[0]?.toUpperCase()}${p.meta.short.slice(1)}</a></li>`;
     })
     .join("\n");
 }
@@ -110,7 +109,6 @@ function main(): void {
       title: `${d.headTitle} · Vimma docs`,
       short: d.slug ? `docs/${d.slug}` : "docs",
       out: d.out,
-      cmd: `less docs/${d.slug || "start-here"}.md`,
       description: d.description,
       nav: d.slug === "",
       section: "docs/",
@@ -123,7 +121,6 @@ function main(): void {
   const start = docPages[0];
   if (!home || !keysPage || !install || !about || !notFound || !start) throw new Error("missing page");
   const pages = [home, start, keysPage, install, about, notFound, ...docPages.slice(1)];
-  const navPages = pages.filter((p) => p.meta.nav !== false);
   const keys = readBindings(ROOT);
   const release = releaseVars(readRelease(ROOT));
   // The Arch command as shown in a page's command box. A narrow screen breaks lines at hyphens,
@@ -148,7 +145,6 @@ function main(): void {
       }),
       ...(page === home ? [homeJsonLd(page.meta.description)] : []),
     ].join("\n    ");
-    const n = navPages.findIndex((p) => p === page || p.meta.out === page.meta.section);
     const vars: Record<string, string> = {
       ...release,
       arch_install: archInstall,
@@ -168,9 +164,6 @@ function main(): void {
         title: escapeHtml(page.meta.title),
         description: escapeHtml(page.meta.description),
         seo,
-        cmd: escapeHtml(page.meta.cmd),
-        short: escapeHtml(page.meta.short),
-        pos: n >= 0 ? `page ${n + 1}/${navPages.length}` : "page -/-",
         nav: nav(pages, page, root),
         main_class: page.meta.wide ? "wrap wide md" : page.meta.bands ? "bands" : "wrap md",
         head_class: page.meta.wide ? "wrap wide" : "wrap",
