@@ -162,15 +162,6 @@ main.bands {
     0 8px 40px -6px color-mix(in srgb, var(--mint) 70%, transparent);
 }
 
-.hero .cmdbox {
-  max-width: 52rem;
-  text-align: left;
-}
-
-.hero .code {
-  font-size: 0.95rem;
-}
-
 /* --- the video on a stage: an arc of mint rising behind its frame ---------------------------- */
 
 .stage {

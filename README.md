@@ -6,7 +6,7 @@ with a light variant for light systems: a system sans-serif for text (monospace 
 a header with the logo, the pages centred in a rounded tray and the keys hint, and Vim keys on the
 site itself (press `?`). The home page is lit in mint, in the
 manner of reflect.app: a centred hero (the logo, a pill over a headline that fades from bright,
-two buttons and the install command with a copy button), the video in a glass frame with rings of
+two buttons, Install and the docs), the video in a glass frame with rings of
 light rising behind it, four facts, six feature cells with line icons between fading hairlines,
 and a closing band. Every glow, ring and star is a CSS gradient, so nothing loads but the
 stylesheet. The other pages keep a reading column under the same header.
@@ -18,7 +18,7 @@ in a minute or two. See [Deploying](#deploying).
 
 | Path       | Source                   | What                                                               |
 | ---------- | ------------------------ | ------------------------------------------------------------------ |
-| `/`        | `src/pages/index.html`   | Headline, install, facts, the promo video, features, closing band |
+| `/`        | `src/pages/index.html`   | Headline and buttons, the promo video, facts, features, closing   |
 | `/docs/`   | `src/docs/`, `data/docs/`| Start here, Why Vimma, Vimma compared, then pages from the guide   |
 | `/keys/`   | `src/pages/keys.html`    | Every default binding, filterable, from `data/bindings.json`       |
 | `/install/`| `src/pages/install.html` | Arch Linux command, release packages, build from source            |
@@ -85,7 +85,7 @@ npm run release:sync -- v0.1.2     # … of a given release tag
   `{{appimage}}`, `{{tarball}}` and `{{dmg}}` (the macOS `.dmg`, which a release may lack; using it
   then fails the build) come from `data/release.json` (see [Keeping up with
   releases](#keeping-up-with-releases)), and `{{arch_install}}` is the Arch Linux command
-  (`ARCH_INSTALL` in `scripts/release.ts`), so the home page, the install page and the docs show
+  (`ARCH_INSTALL` in `scripts/release.ts`), so the install page and the docs show
   the same line.
 - `src/ts/site.ts` is the one browser script (an ES module): the keys (`j k d u gg G / ? [ ]
   g h g d g k g i g a`), the overlay, the keys filter,
