@@ -1,0 +1,24 @@
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+// The vimma-site Worker as Workers Builds deploys it: static assets from dist/ only, no script.
+// It states what the dashboard already had (the domain, workers.dev, logs), so a deploy from
+// main changes nothing; the empty `previews` block is what `wrangler preview`, the deploy
+// command for other branches, needs to build a Preview of a pull request.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "vimma-site",
+  "compatibility_date": "2026-10-23",
+  "assets": {
+    "directory": "./dist"
+  },
+  "routes": [{ "pattern": "vimma.dev", "custom_domain": true }],
+  "workers_dev": true,
+  "preview_urls": true,
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+  "previews": {}
+}
