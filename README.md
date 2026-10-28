@@ -34,7 +34,7 @@ npm ci
 npm run build       # tsc, then .build/build.js: dist/
 npm run serve       # dist/ at http://127.0.0.1:8080/ (PORT=… to change)
 npm run check       # tsc --noEmit (both projects), then the dist/ checks below
-npm test            # unit tests of the build scripts (node:test)
+npm test            # unit tests of the build scripts and of release-sync.yml's branch step (node:test)
 npm run wording     # no process wording in the Markdown, the pages or code comments (below)
 npm run release:sync               # copy the latest Vimma release's facts, docs and keys (network)
 npm run release:sync -- v0.1.2     # … of a given release tag

@@ -178,10 +178,14 @@ jobs:
           # The values come from the other job; check them before use.
           [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$ && "$BRANCH" == "release-sync/$TAG" ]] \
             || { echo "::error::unexpected tag or branch: $TAG $BRANCH"; exit 1; }
+          # `ls-remote --exit-code` exits 2 when the branch does not exist and 128 when the remote
+          # cannot be read. Its status must reach the elif unchanged, so no pipe there: the step
+          # has no pipefail, and a pipe's status would be its last command's.
           if [[ "$REUSE" == "true" ]]; then
             git fetch --quiet "https://github.com/$REPO" "$BRANCH"
             git switch --quiet -c "$BRANCH" FETCH_HEAD
-          elif old=$(git ls-remote --exit-code --heads "https://github.com/$REPO" "$BRANCH" | cut -f1); then
+          elif heads=$(git ls-remote --exit-code --heads "https://github.com/$REPO" "$BRANCH"); then
+            old=${heads%%$'\t'*}
             open=$(gh pr list --repo "$REPO" --head "$BRANCH" --state open --json number --jq 'length')
             if [[ "$open" == "0" ]]; then
               # Left over from a closed pull request: building on it would carry a stale diff, and
@@ -193,8 +197,12 @@ jobs:
             # moved since that check.
             echo "LEASE=$old" >> "$GITHUB_ENV"
             git switch --quiet -c "$BRANCH"
-          else
+          elif [[ $? -eq 2 ]]; then
+            # No such branch on the remote: the release's first sync.
             git switch --quiet -c "$BRANCH"
+          else
+            echo "::error::could not read $BRANCH from the remote"
+            exit 1
           fi
 
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
