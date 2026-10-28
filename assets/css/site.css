@@ -61,7 +61,9 @@
    body stays at 1rem. Bands separated by full-width hairlines carry the home page; the accent is
    for links, keys that matter, the current tab and the cursor. */
 :root {
-  --font: ui-monospace, "JetBrains Mono", "CaskaydiaMono Nerd Font", "Cascadia Mono",
+  --font: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    "Noto Sans", Arial, sans-serif;
+  --mono: ui-monospace, "JetBrains Mono", "CaskaydiaMono Nerd Font", "Cascadia Mono",
     "SF Mono", Menlo, "DejaVu Sans Mono", "Liberation Mono", Consolas, monospace;
   --t-xs: 0.75rem;
   --t-sm: 0.875rem;
@@ -76,8 +78,8 @@
   --page: 1180px;
   --measure: 72ch;
   font-family: var(--font);
-  font-size: 15px;
-  line-height: 1.65;
+  font-size: 16px;
+  line-height: 1.6;
   background: var(--bg);
   color: var(--fg);
   -webkit-text-size-adjust: 100%;
@@ -96,10 +98,12 @@
   box-sizing: border-box;
 }
 
+/* a mint haze at the top of every page, as if the logo lit it */
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--bg);
+  background: radial-gradient(ellipse 70% 38rem at 50% -8rem, color-mix(in srgb, var(--mint) 11%, transparent), transparent 70%) no-repeat,
+    var(--bg);
 }
 
 ::selection {
@@ -136,12 +140,17 @@ a:hover {
   outline-offset: 2px;
 }
 
-code,
-kbd,
-pre,
 input,
 button {
   font: inherit;
+}
+
+/* code and keys stay monospace, a touch smaller to sit level with the sans text */
+code,
+kbd,
+pre {
+  font-family: var(--mono);
+  font-size: 0.92em;
 }
 
 /* keycaps: a raised bottom edge, as on a keyboard */
@@ -190,26 +199,6 @@ h2 {
 h3 {
   font-size: 1.05rem;
   margin: var(--s3) 0 var(--s1);
-}
-
-/* markdown-ish heading marks, as Neovim shows a .md file; not read out */
-.md h1::before,
-.md h2::before,
-.md h3::before {
-  color: var(--accent);
-  font-weight: 400;
-}
-
-.md h1::before {
-  content: "# " / "";
-}
-
-.md h2::before {
-  content: "## " / "";
-}
-
-.md h3::before {
-  content: "### " / "";
 }
 
 p,
@@ -294,73 +283,58 @@ li + li {
 /* --- the prompt header ------------------------------------------------------------------ */
 
 .topbar {
-  border-bottom: 1px solid var(--border);
-  background: var(--bg-dark);
+  position: relative;
 }
 
+/* a hairline under the header that fades at both ends */
+.topbar::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border) 20%, var(--border) 80%, transparent);
+}
+
+/* the brand, the tabs centred on the page, the keys hint: three columns, the outer two equal */
 .topbar .wrap {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  gap: var(--s1) 3ch;
-  padding-top: 0.85rem;
-  padding-bottom: 0.85rem;
+  gap: var(--s1) 2rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
 .topbar p {
   margin: 0;
 }
 
-.prompt {
-  flex: 1 1 auto;
-  min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.prompt .cwd {
-  color: var(--accent);
+.brand a {
+  color: var(--fg-bright);
   font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
   text-decoration: none;
 }
 
 .brandmark {
-  margin-right: 1ch;
-  vertical-align: -0.35em;
+  margin-right: 0.6rem;
+  vertical-align: -0.4em;
 }
 
-.prompt .sigil {
-  color: var(--fg-muted);
-}
-
-.prompt .cmd {
-  color: var(--fg-bright);
-}
-
-.cursor {
-  display: inline-block;
-  width: 1ch;
-  height: 1.15em;
-  margin-left: 0.15ch;
-  vertical-align: -0.2em;
-  background: var(--mint);
-  animation: blink 1.1s steps(1, end) infinite;
-}
-
-@keyframes blink {
-  50% {
-    opacity: 0;
-  }
-}
-
-/* tmux's window list: 1:home 2:keys* … */
+/* the site's pages, in a rounded tray */
 .tabs ul {
   display: flex;
   flex-wrap: wrap;
-  gap: 0 1ch;
+  justify-content: center;
+  gap: 0 0.25rem;
   margin: 0;
-  padding: 0;
+  padding: 0.25rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--bg-light) 60%, transparent);
   list-style: none;
 }
 
@@ -369,13 +343,13 @@ li + li {
 }
 
 .tabs a {
+  display: block;
+  border: 1px solid transparent;
+  border-radius: 999px;
   color: var(--fg);
   text-decoration: none;
-  padding: 0.15rem 0.6ch;
-}
-
-.tabs a .n {
-  color: var(--fg-muted);
+  padding: 0.25rem 0.95rem;
+  font-size: var(--t-sm);
 }
 
 .tabs a:hover {
@@ -383,24 +357,23 @@ li + li {
   background: var(--selection);
 }
 
-.tabs a[aria-current="page"] {
-  background: var(--accent);
-  color: var(--badge-fg);
-  font-weight: 700;
-}
-
-.tabs a[aria-current="page"] .n {
-  color: inherit;
+.tabs a[aria-current] {
+  border-color: color-mix(in srgb, var(--mint) 50%, transparent);
+  background: color-mix(in srgb, var(--mint) 14%, var(--bg));
+  box-shadow: 0 0 18px -4px color-mix(in srgb, var(--mint) 50%, transparent);
+  color: var(--fg-bright);
+  font-weight: 600;
 }
 
 .whereami {
+  justify-self: end;
   color: var(--fg-muted);
 }
 
 .keyhint {
-  padding: 0.1rem 1ch;
+  padding: 0.2rem 1.4ch;
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: 999px;
   background: none;
   color: var(--fg-muted);
   cursor: pointer;
@@ -421,19 +394,26 @@ html.js .nojs-keys {
   display: none;
 }
 
-/* on a phone: the prompt and the keys hint share the first line, the tabs take the second */
-@media (max-width: 640px) {
-  .prompt {
-    flex-basis: 0;
-  }
-
-  .whereami {
-    order: 1;
+/* on a narrow screen: the brand and the keys hint share the first line, the tabs take the second */
+@media (max-width: 860px) {
+  .topbar .wrap {
+    grid-template-columns: minmax(0, 1fr) auto;
   }
 
   .tabs {
-    order: 2;
-    flex-basis: 100%;
+    grid-row: 2;
+    grid-column: 1 / -1;
+  }
+
+  .tabs ul {
+    flex-wrap: nowrap;
+    width: max-content;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .tabs a {
+    padding: 0.25rem 0.55rem;
   }
 }
 
@@ -444,9 +424,26 @@ main.wrap {
   padding-top: var(--band);
 }
 
-/* the pages other than home and the docs: a reading column at the header's left edge */
+/* the pages other than home and the docs: a reading column centred under the header; the opening
+   (eyebrow, title, first paragraph) centred like the home page, the rest left-aligned for reading */
+main.wrap.md:not(.wide) {
+  max-width: calc(84ch + 4rem);
+}
+
 main.wrap.md:not(.wide) > * {
   max-width: 84ch;
+}
+
+main.wrap.md:not(.wide) > .eyebrow:first-child,
+main.wrap.md:not(.wide) > h1,
+main.wrap.md:not(.wide) > h1 + p {
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
+}
+
+main.wrap.md:not(.wide) > h1 + p {
+  margin-bottom: var(--s3);
 }
 
 main.wrap.md:not(.wide) p,
@@ -515,8 +512,11 @@ main > :first-child {
   display: flex;
   align-items: stretch;
   margin: 0 0 var(--s2);
+  overflow: hidden;
   border: 1px solid var(--border);
+  border-radius: 12px;
   background: var(--bg-darker);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--fg-bright) 6%, transparent);
 }
 
 .cmdbox .code {
@@ -1174,6 +1174,7 @@ table.plain th {
 /* --- footer ----------------------------------------------------------------------------- */
 
 .site-foot {
+  position: relative;
   padding: var(--s3) 0;
   border-top: 1px solid var(--border);
   background: var(--bg-dark);
@@ -1328,10 +1329,6 @@ dialog button kbd {
 /* --- motion ----------------------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
-  .cursor {
-    animation: none;
-  }
-
   html {
     scroll-behavior: auto;
   }

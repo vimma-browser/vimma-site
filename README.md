@@ -1,11 +1,15 @@
 # vimma-site
 
 The website for Vimma, a keyboard-first Firefox fork with a Neovim-style modal layer and a
-tmux-style `ctrl+b` prefix. It looks like a terminal in Vimma's own colours, the mint and near-black of its logo, a
-light variant for light systems, monospace throughout, a prompt header with tmux-style tabs, and Vim
-keys on the site itself (press `?`). The home page is a run of full-width bands split by hairlines:
-a large headline with the logo, the install command with a copy button, four facts, the video,
-six feature cells and a closing band; the other pages keep a reading column under the same header.
+tmux-style `ctrl+b` prefix. It is set in Vimma's own colours, the mint and near-black of its logo,
+with a light variant for light systems: a system sans-serif for text (monospace for code and keys),
+a header with the logo, the pages centred in a rounded tray and the keys hint, and Vim keys on the
+site itself (press `?`). The home page is lit in mint, in the
+manner of reflect.app: a centred hero (the logo, a pill over a headline that fades from bright,
+two buttons, Install and the docs), the video in a glass frame with rings of
+light rising behind it, four facts, six feature cells with line icons between fading hairlines,
+and a closing band. Every glow, ring and star is a CSS gradient, so nothing loads but the
+stylesheet. The other pages keep a reading column under the same header.
 
 **Deployed** on Cloudflare Workers at [vimma.dev](https://vimma.dev). A push to `main` goes live
 in a minute or two. See [Deploying](#deploying).
@@ -14,7 +18,7 @@ in a minute or two. See [Deploying](#deploying).
 
 | Path       | Source                   | What                                                               |
 | ---------- | ------------------------ | ------------------------------------------------------------------ |
-| `/`        | `src/pages/index.html`   | Headline, install, facts, the promo video, features, closing band |
+| `/`        | `src/pages/index.html`   | Headline and buttons, the promo video, facts, features, closing   |
 | `/docs/`   | `src/docs/`, `data/docs/`| Start here, Why Vimma, Vimma compared, then pages from the guide   |
 | `/keys/`   | `src/pages/keys.html`    | Every default binding, filterable, from `data/bindings.json`       |
 | `/install/`| `src/pages/install.html` | Arch Linux command, release packages, build from source            |
@@ -74,14 +78,14 @@ npm run release:sync -- v0.1.2     # … of a given release tag
 
 ## How it is built
 
-- `src/layout.html` is the shared shell (prompt header with the tabs and the `?` hint, footer, `?` overlay);
+- `src/layout.html` is the shared shell (header with the logo, the tabs and the `?` hint, footer, `?` overlay);
   `src/pages/*.html` are page bodies with a one-line JSON meta comment on top.
   `build.ts` fills `{{placeholders}}`; an unknown one fails the build. No page types a version:
   `{{version}}`, `{{firefox}}` (`158.0`), `{{firefox_major}}` (`158`), `{{release_tag}}`, `{{deb}}`,
   `{{appimage}}`, `{{tarball}}` and `{{dmg}}` (the macOS `.dmg`, which a release may lack; using it
   then fails the build) come from `data/release.json` (see [Keeping up with
   releases](#keeping-up-with-releases)), and `{{arch_install}}` is the Arch Linux command
-  (`ARCH_INSTALL` in `scripts/release.ts`), so the home page, the install page and the docs show
+  (`ARCH_INSTALL` in `scripts/release.ts`), so the install page and the docs show
   the same line.
 - `src/ts/site.ts` is the one browser script (an ES module): the keys (`j k d u gg G / ? [ ]
   g h g d g k g i g a`), the overlay, the keys filter,

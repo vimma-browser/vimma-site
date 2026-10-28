@@ -25,14 +25,14 @@
     <a class="skip" href="{{skip}}">Skip to content</a>
     <header class="topbar">
       <div class="{{head_class}}">
-        <p class="prompt"><a class="cwd" href="{{root}}"><img class="brandmark" src="{{root}}assets/img/favicon-48.png" width="22" height="22" alt="">~/vimma</a> <span class="sigil">$</span> <span class="cmd">{{cmd}}</span><span class="cursor" aria-hidden="true"></span></p>
+        <p class="brand"><a href="{{root}}"><img class="brandmark" src="{{root}}assets/img/favicon-48.png" width="24" height="24" alt="">Vimma</a></p>
         <nav class="tabs" aria-label="Site">
           <ul>
 {{nav}}
-            <li><a href="https://github.com/vimma-browser/vimma"><span class="n">src:</span>github</a></li>
+            <li><a href="https://github.com/vimma-browser/vimma">GitHub</a></li>
           </ul>
         </nav>
-        <p class="whereami"><span class="sr-only">{{pos}} · {{short}}</span><button type="button" class="keyhint keyhint-on" data-open-help data-js-only hidden><kbd>?</kbd> keys</button><button type="button" class="keyhint keyhint-off" data-open-help data-js-only hidden>keys off · <kbd>?</kbd></button></p>
+        <p class="whereami"><button type="button" class="keyhint keyhint-on" data-open-help data-js-only hidden><kbd>?</kbd> keys</button><button type="button" class="keyhint keyhint-off" data-open-help data-js-only hidden>keys off · <kbd>?</kbd></button></p>
       </div>
     </header>
     <main id="main" class="{{main_class}}" tabindex="-1">
