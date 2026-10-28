@@ -1,15 +1,19 @@
 # vimma-site
 
 The website for Vimma, a keyboard-first Firefox fork with a Neovim-style modal layer and a
-tmux-style `ctrl+b` prefix. It is set in Vimma's own colours, the mint and near-black of its logo,
-with a light variant for light systems: a system sans-serif for text (monospace for code and keys),
-a header with the logo, the pages centred in a rounded tray and the keys hint, and Vim keys on the
-site itself (press `?`). The home page is lit in mint, in the
-manner of reflect.app: a centred hero (the logo, a pill over a headline that fades from bright,
-two buttons, Install and the docs), the video in a glass frame with rings of
-light rising behind it, four facts, six feature cells with line icons between fading hairlines,
-and a closing band. Every glow, ring and star is a CSS gradient, so nothing loads but the
-stylesheet. The other pages keep a reading column under the same header.
+tmux-style `ctrl+b` prefix. It is set in Vimma's own colours, the mint and near-black of its logo
+with cyan beside the mint, and a light variant for light systems: Space Grotesk for headings
+(served from `assets/fonts/`, SIL Open Font License), the system sans-serif for text and monospace
+for code and keys, a header with the logo, the pages centred in a rounded tray and the keys hint,
+and Vim keys on the site itself (press `?`).
+
+The home page is a retro-futurist poster and spec sheet. The hero is left-aligned, a monospace
+label over a large headline and two buttons, with the mark large and faint behind it as a
+watermark and, at its foot, a perspective grid running to a horizon with one lens flare, under
+faint scanlines. Racing stripes divide the bands below: the facts as an instrument strip, the
+video in a terminal window, the features as numbered spec panels (both in HUD corner brackets),
+and a closing band. Every effect is a CSS gradient, so nothing loads but the stylesheet, the font
+and the mark. The other pages keep a reading column under the same header.
 
 **Deployed** on Cloudflare Workers at [vimma.dev](https://vimma.dev). A push to `main` goes live
 in a minute or two. See [Deploying](#deploying).
@@ -18,7 +22,7 @@ in a minute or two. See [Deploying](#deploying).
 
 | Path       | Source                   | What                                                               |
 | ---------- | ------------------------ | ------------------------------------------------------------------ |
-| `/`        | `src/pages/index.html`   | Headline and buttons, the promo video, facts, features, closing   |
+| `/`        | `src/pages/index.html`   | Headline and buttons, facts, the promo video, features, closing   |
 | `/docs/`   | `src/docs/`, `data/docs/`| Start here, Why Vimma, Vimma compared, then pages from the guide   |
 | `/keys/`   | `src/pages/keys.html`    | Every default binding, filterable, from `data/bindings.json`       |
 | `/install/`| `src/pages/install.html` | Arch Linux command, release packages, build from source            |
