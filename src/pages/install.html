@@ -28,13 +28,12 @@
 </div>
 <p>Homebrew checks the download against the checksum the cask pins, puts Vimma in Applications and <code>vimma</code> on your <code>PATH</code>. <code>brew upgrade --cask vimma</code> updates it, <code>brew uninstall --cask vimma</code> removes it and keeps your profile, and <code>brew uninstall --zap --cask vimma</code> removes your profiles, caches and preferences as well; your <code>~/.config/vimma/</code> stays.</p>
 <p>Without Homebrew, download <code>{{dmg}}</code> from the <a href="https://github.com/vimma-browser/vimma/releases/latest">latest release</a>, open it and drag Vimma into Applications. Its checksum is in <code>SHA256SUMS-macos</code>, signed like the Linux files.</p>
-<p><strong>The first time you open it</strong>, macOS says it cannot check Vimma for malicious software: Vimma is not yet notarised by Apple. Open it once, then go to System Settings → Privacy &amp; Security, choose <strong>Open Anyway</strong> next to Vimma, and confirm. A newer version asks again. If macOS instead says the app "is damaged", clear the download's quarantine flag:</p>
-<pre class="code wrap"><span class="p">$ </span>xattr -dr com.apple.quarantine /Applications/Vimma.app</pre>
+<p>Vimma is signed with its Apple Developer ID and notarised by Apple, so it opens like any other app: the first time, macOS only asks whether to open an app downloaded from the internet.</p>
 <p>On a Mac, passkeys do not work yet, and your profile lives in <code>~/Library/Application Support/Vimma/</code>.</p>
 
 <h2 id="updating">Updating</h2>
 <p>Since 0.1.2, Vimma checks for a new release every 12 hours, or at once with <code>:update</code>. When one is out, the status bar shows <code>⇡</code> and its version (in red for a security release), and <code>:update</code> shows the command for how you installed Vimma; each update file is checked with SHA-512. Vimma only tells you: it never installs an update by itself. To update, run that command: on Arch Linux, the command above again; otherwise, install the newer <code>.deb</code>, AppImage or tarball over the old one. A 0.1.1 install has no update check, so update it this way by hand once.</p>
-<p>On a Mac, Vimma has no update notices yet: run <code>brew upgrade --cask vimma</code>, or install the newer <code>.dmg</code> over the old one, and choose <strong>Open Anyway</strong> again.</p>
+<p>On a Mac, Vimma has no update notices yet: run <code>brew upgrade --cask vimma</code>, or install the newer <code>.dmg</code> over the old one.</p>
 
 <p>Next: your <a href="{{root}}docs/install/">first launch</a>, then the rest of the <a href="{{root}}docs/">docs</a>.</p>
 
