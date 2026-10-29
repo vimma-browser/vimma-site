@@ -7,15 +7,15 @@
 
 <pre class="code wrap">{{arch_install}}</pre>
 
-<p>On other distributions, the <a href="https://github.com/vimma-browser/vimma/releases/latest">latest release</a> has a <code>.deb</code>, an AppImage and a tarball. Vimma tells you in the status bar when a newer release is out, and <code>:update</code> shows the command to install it; it never updates by itself. The <a href="{{root}}install/">install page</a> has the details, and <a href="#installing">Installing</a>, below, explains how to verify a download.</p>
+<p>On other distributions, the <a href="https://github.com/vimma-browser/vimma/releases/latest">latest release</a> has a <code>.deb</code>, an <code>.rpm</code>, an AppImage and a tarball. Vimma tells you in the status bar when a newer release is out, and <code>:update</code> shows the command to install it; only the AppImage updates itself. The <a href="{{root}}install/">install page</a> has the details, and <a href="#installing">Installing</a>, below, explains how to verify a download.</p>
 
 <p>On a Mac with Apple Silicon, install it with Homebrew, or open the release's <code>.dmg</code> and drag Vimma into Applications:</p>
 
 <pre class="code wrap">brew install --cask vimma-browser/tap/vimma</pre>
 
-<p>Vimma is signed with its Apple Developer ID and notarised by Apple, so it opens like any other app. On a Mac there are no update notices yet: <code>brew upgrade --cask vimma</code> updates it. The <a href="{{root}}install/#macos">install page</a> has the details.</p>
+<p>Vimma is signed with its Apple Developer ID and notarised by Apple, so it opens like any other app. It tells you of a newer release as on Linux, and <code>brew upgrade --cask vimma</code> updates it. The <a href="{{root}}install/#macos">install page</a> has the details.</p>
 
-<p>The Arch package puts <code>vimma</code> on your <code>PATH</code>; both it and the <code>.deb</code> add Vimma to your application menu. Vimma's profiles live in <code>~/.config/vimma/vimma/</code>, separate from Firefox's.</p>
+<p>The Arch package puts <code>vimma</code> on your <code>PATH</code>; it, the <code>.deb</code> and the <code>.rpm</code> add Vimma to your application menu. Vimma's profiles live in <code>~/.config/vimma/vimma/</code>, separate from Firefox's.</p>
 
 <h2 id="build-it">Or build it</h2>
 

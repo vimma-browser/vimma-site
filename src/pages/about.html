@@ -34,7 +34,7 @@
 
   <dt id="agents">Can AI agents use Vimma?</dt>
   <dd>
-    <p>Only if you let them. Turn agents on with <code>:mcp on</code>, and a local agent such as Claude Code or Codex can open, read and close tabs through <code>vimma-ctl mcp</code>, in the agent workspace only, with its own logins. Vimma asks you before it acts on each request. See <a href="{{root}}docs/agent-workspace/">The agent workspace</a>.</p>
+    <p>Only if you let them. Turn agents on with <code>:mcp on</code>, and a local agent such as Claude Code or Codex can open, read and close tabs, follow links, click buttons and fill fields through <code>vimma-ctl mcp</code>, in the agent workspace only, with its own logins. Vimma asks you first, one answer lets the agent work until it quits, and sending a form or paying asks every time. See <a href="{{root}}docs/agent-workspace/">The agent workspace</a>.</p>
   </dd>
 
   <dt id="omarchy">Do I need Omarchy?</dt>
@@ -53,9 +53,9 @@
         <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> Split panes and tiling layouts</li>
         <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> <code>config.toml</code>, theming and search engines</li>
         <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> Local AI agents through MCP, confined to the agent workspace</li>
-        <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> Update notices in the status bar, with the command to update (Vimma never installs an update by itself)</li>
-        <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> macOS on Apple Silicon, with a Homebrew cask</li>
-        <li><span class="mark todo" aria-hidden="true">[ ]</span><span class="sr-only">To do:</span> Update notices and passkeys on macOS</li>
+        <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> Update notices in the status bar, with the command to update; only the AppImage installs an update by itself</li>
+        <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> macOS on Apple Silicon, signed and notarised, with a Homebrew cask and update notices</li>
+        <li><span class="mark todo" aria-hidden="true">[ ]</span><span class="sr-only">To do:</span> Passkeys on macOS</li>
       </ul>
   </dd>
 

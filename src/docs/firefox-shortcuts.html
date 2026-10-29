@@ -4,7 +4,7 @@
 <h2 id="what-moved">What moved where</h2>
 
 <div class="table-wrap"><table class="plain"><thead><tr><th scope="col">Firefox's key</th><th scope="col">In Vimma</th><th scope="col">Firefox's action is now on</th></tr></thead><tbody>
-<tr><td><kbd>ctrl+w</kbd> close tab</td><td>Pane keys; delete a word in a text field</td><td><kbd>x</kbd>, <kbd>ctrl+b</kbd> <kbd>shift+x</kbd>, <code>:q</code></td></tr>
+<tr><td><kbd>ctrl+w</kbd> close tab</td><td>Pane keys; delete a word in a text field</td><td><kbd>x</kbd>, <kbd>ctrl+b</kbd> <kbd>shift+x</kbd>, <kbd>ctrl+F4</kbd>, <code>:q</code></td></tr>
 <tr><td><kbd>ctrl+u</kbd> page source</td><td>Half a page up; delete to the line's start when typing</td><td><kbd>gf</kbd></td></tr>
 <tr><td><kbd>ctrl+d</kbd> bookmark</td><td>Half a page down</td><td><kbd>ctrl+b</kbd> <kbd>a</kbd></td></tr>
 <tr><td><kbd>ctrl+o</kbd> open file, <kbd>ctrl+i</kbd> page info</td><td>Back / forward, as Vim's jump list</td><td><code>:open file:///path</code>; the context menu's page info</td></tr>
@@ -15,9 +15,11 @@
 
 <p>Everything else works as in Firefox: <kbd>ctrl+t</kbd>, <kbd>ctrl+shift+t</kbd>, <kbd>ctrl+l</kbd>, <kbd>ctrl+f</kbd>, <kbd>ctrl+tab</kbd>, <kbd>alt+1</kbd>…<kbd>alt+9</kbd>, <kbd>ctrl+q</kbd> and the rest.</p>
 
+<p>On macOS, Option types characters, so the keys that are <kbd>alt</kbd> chords on Linux are Firefox's Mac keys there: <kbd>cmd+left</kbd> / <kbd>cmd+right</kbd> and <kbd>cmd+[</kbd> / <kbd>cmd+]</kbd> for back and forward, <kbd>cmd+1</kbd>…<kbd>cmd+9</kbd> for the tabs and <kbd>cmd+l</kbd> for the address bar. Firefox's other <kbd>cmd</kbd> keys, such as <kbd>cmd+t</kbd> and <kbd>cmd+w</kbd>, are off unless you list them in <code>enable</code>; <kbd>cmd+q</kbd> still quits. See <a href="#on-macos-the-alt-keys-are-cmd-keys">On macOS the alt keys are cmd keys</a>.</p>
+
 <h2 id="firefox-keys-are-bindings">Firefox's keys are Vimma bindings</h2>
 
-<p>Most of Firefox's keys, such as <kbd>ctrl+t</kbd>, <kbd>alt+left</kbd>, <kbd>F5</kbd>, <kbd>ctrl+plus</kbd> and <kbd>F12</kbd>, are Vimma's own bindings with Firefox's meaning. <kbd>ctrl+b</kbd> <kbd>?</kbd> lists them under their actions, and <code>[keys]</code> in <code>config.toml</code> rebinds them by name, as any other key: <code>new_tab = ["prefix+c"]</code> takes <kbd>ctrl+t</kbd> away from "New tab". A page that uses one of them itself, such as an editor that saves on <kbd>ctrl+s</kbd>, still gets it first, as in Firefox.</p>
+<p>Most of Firefox's keys, such as <kbd>ctrl+t</kbd>, <kbd>alt+left</kbd> (<kbd>cmd+left</kbd> on macOS), <kbd>F5</kbd>, <kbd>ctrl+plus</kbd> and <kbd>F12</kbd>, are Vimma's own bindings with Firefox's meaning. <kbd>ctrl+b</kbd> <kbd>?</kbd> lists them under their actions, and <code>[keys]</code> in <code>config.toml</code> rebinds them by name, as any other key: <code>new_tab = ["prefix+c"]</code> takes <kbd>ctrl+t</kbd> away from "New tab". A page that uses one of them itself, such as an editor that saves on <kbd>ctrl+s</kbd>, still gets it first, as in Firefox.</p>
 
 <h2 id="vim-keys-in-fields">Vim's keys in text fields</h2>
 

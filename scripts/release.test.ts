@@ -75,6 +75,17 @@ test("assets: the macOS .dmg when the release has one, not its checksums or the 
   assert.deepEqual(pickAssets(mac, "0.1.2"), { ...RELEASE.assets, dmg: "vimma-0.1.2-macos-aarch64.dmg" });
 });
 
+test("assets: the .rpm when the release has one, not its signature", () => {
+  const rpm = [...ASSETS, "vimma-0.1.2-1.x86_64.rpm", "vimma-0.1.2-1.x86_64.rpm.sigstore.json"];
+  assert.deepEqual(pickAssets(rpm, "0.1.2"), { ...RELEASE.assets, rpm: "vimma-0.1.2-1.x86_64.rpm" });
+});
+
+test("placeholders: {{rpm}} fails the build for a release without an .rpm", () => {
+  assert.throws(() => fill("{{rpm}}", releaseVars(RELEASE), "install/"), /install\/: no value for \{\{rpm\}\}/);
+  const rpm = { ...RELEASE, assets: { ...RELEASE.assets, rpm: "vimma-0.1.2-1.x86_64.rpm" } };
+  assert.equal(fill("{{rpm}}", releaseVars(rpm), "t"), "vimma-0.1.2-1.x86_64.rpm");
+});
+
 test("placeholders: {{dmg}} fails the build for a release without a macOS build", () => {
   assert.throws(() => fill("{{dmg}}", releaseVars(RELEASE), "install/"), /install\/: no value for \{\{dmg\}\}/);
   const mac = { ...RELEASE, assets: { ...RELEASE.assets, dmg: "vimma-0.1.2-macos-aarch64.dmg" } };

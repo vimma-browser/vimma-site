@@ -10,12 +10,12 @@
 
 <ol class="steps-list">
   <li>In <code>about:config</code>, set <code>vimma.control.enabled</code> to <code>true</code>. It starts at once.</li>
-  <li>Build the client: <code>cargo build --release</code> in <code>tools/vimma-ctl/</code> of Vimma's checkout. Put <code>target/release/vimma-ctl</code> on your <code>PATH</code>.</li>
+  <li>Use the <code>vimma-ctl</code> that came with Vimma, so it is updated with it. The <code>.deb</code>, the <code>.rpm</code>, the Arch Linux package and Homebrew put it on your <code>PATH</code>; with the tarball, the AppImage or the <code>.dmg</code>, put it there yourself (<a href="{{root}}docs/install/">Install</a>, under Details). <code>vimma-ctl --version</code> names the Vimma version it came with.</li>
 </ol>
 
 <h2 id="examples">Examples</h2>
 
-<pre class="code">vimma-ctl state<span class="c">                    # mode, workspace and tabs</span>
+<pre class="code">vimma-ctl state<span class="c">                    # mode, workspace, tabs, and whether each is loading</span>
 vimma-ctl state --json<span class="c">             # the same, as JSON</span>
 vimma-ctl send-keys &quot;ctrl+b ?&quot;<span class="c">     # as if typed: opens the key list</span>
 vimma-ctl send-keys esc

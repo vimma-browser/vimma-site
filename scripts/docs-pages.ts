@@ -75,7 +75,10 @@ export const LIMIT_SECTIONS = [
  * matched by their opening words. Each one is reported at build time. Empty while limits.md and
  * the guide agree.
  */
-export const STALE_LIMITS: string[] = [];
+export const STALE_LIMITS: string[] = [
+  // Pending notarisation and no macOS update notices: the guide says otherwise since 0.1.11.
+  "A macOS release is signed with Vimma's Developer ID and notarised only once",
+];
 
 /** limits.md bullet prefixes that are out of date upstream and are dropped from the text. */
 export const STALE_PREFIXES: string[] = [];

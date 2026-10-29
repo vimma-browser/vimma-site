@@ -9,7 +9,7 @@
 <h2 id="connect-an-agent">Connect an agent</h2>
 
 <ol class="steps-list">
-  <li>Build <code>vimma-ctl</code> and put it on your <code>PATH</code> (<a href="{{root}}docs/vimma-ctl/">vimma-ctl</a>, step 2).</li>
+  <li>Use the <code>vimma-ctl</code> that came with Vimma, so it is updated with it. The <code>.deb</code>, the <code>.rpm</code>, the Arch Linux package and Homebrew put it on your <code>PATH</code>; with the tarball, the AppImage or the <code>.dmg</code>, put it there yourself or give your tool its full path (<a href="{{root}}docs/install/">Install</a>, under Details).</li>
   <li>In Vimma, type <code>:mcp on</code> and press <kbd>y</kbd>.</li>
   <li>Add the server to your agent's tool. For Claude Code: <code>claude mcp add --transport stdio --scope user vimma -- vimma-ctl mcp</code>; for Codex: <code>codex mcp add vimma -- vimma-ctl mcp</code>. Other tools take the same command, <code>vimma-ctl mcp</code>, in their MCP settings.</li>
   <li>Ask the agent to open a page in Vimma's agent workspace. Its request appears at the foot of the window, and nothing happens until you answer.</li>
@@ -21,13 +21,16 @@
 
 <div class="table-wrap"><table class="plain"><thead><tr><th scope="col">To</th><th scope="col">Press</th></tr></thead><tbody>
 <tr><td>Allow it once</td><td><kbd>y</kbd></td></tr>
-<tr><td>Allow this tool for this agent for 15 minutes (<kbd>a</kbd> alone: 10 minutes)</td><td><kbd>15a</kbd></td></tr>
+<tr><td>Allow this agent every tool until it quits</td><td><kbd>a</kbd></td></tr>
+<tr><td>Allow this agent every tool for 15 minutes only</td><td><kbd>15a</kbd></td></tr>
 <tr><td>Deny it</td><td><kbd>n</kbd>, <kbd>Esc</kbd> or <kbd>Enter</kbd></td></tr>
 <tr><td>Deny it and ignore this agent until it reconnects</td><td><kbd>x</kbd></td></tr>
-<tr><td>Answer a request that is waiting</td><td><kbd>ctrl+b</kbd> <kbd>shift+a</kbd></td></tr>
+<tr><td>Answer a request that is waiting; with none, end every grant</td><td><kbd>ctrl+b</kbd> <kbd>shift+a</kbd></td></tr>
 </tbody></table></div>
 
 <p>The question never interrupts your typing: while you type, or with focus in a text field, it waits, and the status bar says <code>◇ agent 1?</code>. An unanswered request is denied after 50 seconds.</p>
+
+<p>A grant lasts one agent session: when the agent quits, it ends, and the next session asks again. Under a grant, sending a form, paying, showing you a page and a dangerous or unscanned download still ask, each with <kbd>y</kbd> or <kbd>n</kbd> only.</p>
 
 <h2 id="what-agents-can-do">What an agent can do</h2>
 

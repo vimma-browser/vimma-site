@@ -8,8 +8,9 @@
 // so the build never calls GitHub: it works offline, and Cloudflare's builders, which share
 // GitHub's unauthenticated rate limit, cannot fail it. Pages say {{version}}, {{firefox}},
 // {{deb}} and so on instead of typing a version, so a sync updates every page at once.
-// {{dmg}} exists only when the release has a macOS build: a page that names it then fails the
-// build for a release without one, instead of printing an empty file name.
+// {{dmg}} exists only when the release has a macOS build, and {{rpm}} only when it has an .rpm
+// (from 0.1.7): a page that names one then fails the build for a release without it, instead of
+// printing an empty file name.
 
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -31,8 +32,8 @@ export interface Release {
   published: string;
   /** The release's page on GitHub. */
   url: string;
-  /** The package file names in the release; `dmg` (macOS, Apple Silicon) only when it has one. */
-  assets: { deb: string; appimage: string; tarball: string; dmg?: string };
+  /** The package file names in the release; `rpm` and `dmg` (macOS, Apple Silicon) only when it has them. */
+  assets: { deb: string; appimage: string; tarball: string; rpm?: string; dmg?: string };
 }
 
 /**
@@ -52,12 +53,13 @@ export function parseTitle(title: string): { version?: string; firefox?: string 
 /** [key, label, matches, required]: a release without a required package fails the sync. */
 const PACKAGES: [keyof Release["assets"], string, (name: string, v: string) => boolean, boolean][] = [
   ["deb", ".deb", (n, v) => n === `vimma_${v}_amd64.deb`, true],
+  ["rpm", ".rpm", (n, v) => n === `vimma-${v}-1.x86_64.rpm`, false],
   ["appimage", "AppImage", (n, v) => n === `vimma-${v}-x86_64.AppImage`, true],
   ["tarball", "tarball", (n, v) => /^vimma-(.+)-linux-x86_64\.tar\.(xz|gz|zst)$/.exec(n)?.[1] === v, true],
   ["dmg", "macOS .dmg", (n, v) => n === `vimma-${v}-macos-aarch64.dmg`, false],
 ];
 
-/** The .deb, AppImage, tarball and, if there is one, macOS .dmg of `version` among a release's asset names. */
+/** The .deb, AppImage, tarball and, if the release has them, .rpm and macOS .dmg of `version` among a release's asset names. */
 export function pickAssets(names: string[], version: string): Release["assets"] {
   const out: Partial<Release["assets"]> = {};
   for (const [key, label, match, required] of PACKAGES) {
@@ -97,8 +99,9 @@ export function validateRelease(data: unknown): Release {
   ];
   for (const [k, re] of forms) if (!re.test(String(r?.[k]))) fail(`${k} "${String(r?.[k])}" is not in the expected form`);
   const pkg = /^[\w.+-]+$/;
+  if (a && a.rpm !== undefined && !isString(a.rpm)) fail("assets.rpm is not a file name");
   if (a && a.dmg !== undefined && !isString(a.dmg)) fail("assets.dmg is not a file name");
-  if (a && ![a.deb, a.appimage, a.tarball, ...(a.dmg ? [a.dmg] : [])].every((n) => pkg.test(n))) {
+  if (a && ![a.deb, a.appimage, a.tarball, ...(a.rpm ? [a.rpm] : []), ...(a.dmg ? [a.dmg] : [])].every((n) => pkg.test(n))) {
     fail("an asset name has unexpected characters");
   }
   return r as Release;
@@ -128,6 +131,7 @@ export function releaseVars(r: Release): Record<string, string> {
     deb: r.assets.deb,
     appimage: r.assets.appimage,
     tarball: r.assets.tarball,
+    ...(r.assets.rpm ? { rpm: r.assets.rpm } : {}),
     ...(r.assets.dmg ? { dmg: r.assets.dmg } : {}),
   };
 }

@@ -10,6 +10,7 @@
     "deb": "vimma_0.1.11_amd64.deb",
     "appimage": "vimma-0.1.11-x86_64.AppImage",
     "tarball": "vimma-0.1.11-linux-x86_64.tar.xz",
+    "rpm": "vimma-0.1.11-1.x86_64.rpm",
     "dmg": "vimma-0.1.11-macos-aarch64.dmg"
   }
 }

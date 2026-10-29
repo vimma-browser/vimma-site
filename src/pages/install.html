@@ -1,4 +1,4 @@
-<!--{"title": "Install Vimma · Linux x86_64, Arch Linux and macOS", "short": "install", "out": "install/", "description": "Install Vimma on Linux x86_64: one command on Arch Linux, or a .deb, AppImage or tarball from the latest release. On a Mac with Apple Silicon: Homebrew or a .dmg. Or build it from source."}-->
+<!--{"title": "Install Vimma · Linux x86_64, Arch Linux and macOS", "short": "install", "out": "install/", "description": "Install Vimma on Linux x86_64: one command on Arch Linux, or a .deb, .rpm, AppImage or tarball from the latest release. On a Mac with Apple Silicon: Homebrew or a .dmg. Or build it from source."}-->
 <p class="eyebrow">Vimma {{version}} · Linux x86_64 · macOS</p>
 <h1>Install</h1>
 <p>Vimma <code>{{version}}</code>, on Firefox {{firefox}}, is released for <strong>Linux x86_64</strong> and for <strong>macOS on Apple Silicon</strong> (M1 or later). There is no build for Intel Macs or Windows.</p>
@@ -15,7 +15,8 @@
 <p>The <a href="https://github.com/vimma-browser/vimma/releases/latest">latest release</a> has, for Linux x86_64:</p>
 <ul>
   <li>a <code>.deb</code> for Debian 12+ and Ubuntu 22.04+: <code>sudo apt install ./{{deb}}</code></li>
-  <li>an AppImage, <code>{{appimage}}</code>: make it executable and run it</li>
+  <li>an <code>.rpm</code> for Fedora and openSUSE: <code>sudo dnf install ./{{rpm}}</code>, or <code>sudo zypper install --allow-unsigned-rpm ./{{rpm}}</code> (the package has no OpenPGP signature; the release's signed <code>SHA256SUMS</code> vouches for it)</li>
+  <li>an AppImage, <code>{{appimage}}</code>: make it executable and run it; it updates itself</li>
   <li>a tarball, <code>{{tarball}}</code>: unpack it and run <code>vimma/vimma</code></li>
 </ul>
 <p>Next to them are <code>SHA256SUMS</code>, an SBOM and cosign signatures. <a href="https://github.com/vimma-browser/vimma/blob/{{release_tag}}/docs/guide.md#installing">Installing</a>, in the guide, explains how to check them.</p>
@@ -32,8 +33,8 @@
 <p>On a Mac, passkeys do not work yet, and your profile lives in <code>~/Library/Application Support/Vimma/</code>.</p>
 
 <h2 id="updating">Updating</h2>
-<p>Since 0.1.2, Vimma checks for a new release every 12 hours, or at once with <code>:update</code>. When one is out, the status bar shows <code>⇡</code> and its version (in red for a security release), and <code>:update</code> shows the command for how you installed Vimma; each update file is checked with SHA-512. Vimma only tells you: it never installs an update by itself. To update, run that command: on Arch Linux, the command above again; otherwise, install the newer <code>.deb</code>, AppImage or tarball over the old one. A 0.1.1 install has no update check, so update it this way by hand once.</p>
-<p>On a Mac, Vimma has no update notices yet: run <code>brew upgrade --cask vimma</code>, or install the newer <code>.dmg</code> over the old one.</p>
+<p>Since 0.1.2, Vimma checks for a new release every 12 hours, or at once with <code>:update</code>. When one is out, the status bar shows <code>⇡</code> and its version (in red for a security release), and <code>:update</code> shows the command for how you installed Vimma; each update file is checked with SHA-512. Vimma only tells you, except as an AppImage, which replaces its own file with the new release and runs it from the next start. Otherwise, run that command: on Arch Linux, the command above again; otherwise, install the newer <code>.deb</code>, <code>.rpm</code> or tarball over the old one (there is no Vimma repository for apt, dnf or zypper, so a system upgrade does not update it). A 0.1.1 install has no update check, so update it this way by hand once.</p>
+<p>On a Mac, the notice and <code>:update</code> work the same way: run <code>brew upgrade --cask vimma</code>, or install the newer <code>.dmg</code> over the old one.</p>
 
 <p>Next: your <a href="{{root}}docs/install/">first launch</a>, then the rest of the <a href="{{root}}docs/">docs</a>.</p>
 
