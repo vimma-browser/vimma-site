@@ -269,9 +269,12 @@ Cloudflare's Workers Builds (the `vimma-site` Worker) builds the repository and 
 
 - **Production** is `main`. Each push to it builds and deploys; the new version is live a minute
   or so later. A failed build leaves the previous version live. The build and deploy commands are
-  set in the Cloudflare dashboard (Workers → `vimma-site` → Settings → Build); the repository has
-  no `wrangler` config.
-- **Other branches** also get a Workers Builds run, which shows as a check on pull requests.
+  set in the Cloudflare dashboard (Workers → `vimma-site` → Settings → Build): `npm run build`,
+  then Wrangler, which reads `wrangler.jsonc`. That file states the Worker as it is (static assets
+  from `dist/`, the vimma.dev domain, workers.dev, logs), so keep it in line with the dashboard:
+  a deploy applies what it says.
+- **Other branches** get a Preview: Workers Builds runs `npx wrangler preview`, which needs the
+  empty `previews` block in `wrangler.jsonc`, and the pull request's check links to it.
 - **Access:** vimma.dev is public: no Cloudflare Access application or other login is in front
   of it.
 - **CI** (`.github/workflows/ci.yml`) runs `npm test` and `npm run wording`, builds, and runs
