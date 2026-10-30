@@ -53,6 +53,10 @@ What works today, each with the section that explains it:
   read a page's errors and show you a page. An agent asks you first, one answer lets it work
   through its task until it quits, and sending a form or paying asks every time, showing what is
   sent or the total the page states.
+- **[Vimma's own agent](#vimmas-own-agent)**: `ctrl+b i` opens a chat window where you write a
+  task and watch every step, with a local model (Ollama, LM Studio, llama.cpp) or a hosted one
+  by API key. It works in the agent workspace through the same tools and checkpoints, several
+  conversations can run at once, and conversations are kept, encrypted, without page text.
 
 ## Every key is yours
 
@@ -665,7 +669,8 @@ with `F11` keeps it. From the left:
 - `◇ agent` while a local AI agent is connected ([agent workspace](#agent-workspace)):
   `◇ agent 2?` when 2 of its requests wait for your answer, `◇ agent granted` while it may act
   without asking (`◇ agent 14m` for a grant of minutes with 14 left), and `◇ agent ·` for a
-  moment after a request ran;
+  moment after a request ran; `◇ built-in 14/100 · 212k tok` while a task of
+  [Vimma's own agent](#vimmas-own-agent) runs (steps and tokens), `◇ 2 agents` while several do;
 - `loading` while the page loads, then its **URL** without `https://`;
 - with the [toolbar hidden](#hiding-the-toolbar), `not secure` in red for a page Firefox's
   address bar would warn about (an `http:` page keeps its `http://`), `using camera, mic` (or
@@ -1120,6 +1125,10 @@ address bar moves to the start of the line, and `cmd+[` goes back from there.
 [bindings.md](bindings.md#on-macos) lists them, `ctrl+b ?` shows the ones in force, and a
 `[keys]` list in config.toml replaces them as it does any default.
 
+The same holds for an `alt` chord of your own on a letter, digit or symbol key: Option+j types `∆`, and Vimma matches the
+character ([Keyboard layouts](#keyboard-layouts)), so an `alt+j` binding never runs on a Mac, as
+in a Mac terminal by default. Bind such an action to a `ctrl` or `meta` (`cmd`) chord there.
+
 **Firefox's other macOS keys** use `cmd` where Linux has `ctrl` (`cmd+t`, `cmd+w`, written
 `meta+t` in config.toml), and it has tab keys of its own: `meta+{` and `meta+}` (cmd+shift+[ and
 cmd+shift+]), also with `ctrl` (`ctrl+meta+{`, `ctrl+meta+}`), and `alt+meta+left`,
@@ -1414,6 +1423,263 @@ ever reaches this workspace, and every request asks you first. To let one in, se
 - `about:vimma`'s **Agents (MCP)** section shows the switch, full control's state and the agent
   workspace's tab count.
 
+#### Vimma's own agent
+
+Vimma has an agent of its own: a chat window where you write a task in as many lines as it needs,
+watch every step it takes, add instructions or stop it, all from the keyboard. It needs no
+separate program and no `:mcp on`. It uses the same tools and the same questions as an MCP agent,
+so it works only in the agent workspace and stops at the same checkpoints, whatever model drives
+it.
+
+**Opening it.** `ctrl+b i` (or `:agent`) opens the window where the side panel opens, in any
+normal window, with its input focused. It stays open while you switch workspaces, and `q` closes
+it. A private window has no agent. With no model set up, the window says how to add one.
+
+**Choosing a model.** `Esc`, then `m`, opens the model picker:
+
+- the providers listed under `[agent]` in `config.toml`;
+- `add: Anthropic (Messages API)` and `add: OpenAI-compatible endpoint`: Vimma asks for the
+  endpoint (an `https://` address) and the model on the prompt line, then for the API key in a
+  masked field in the window. The key goes into Firefox's login storage, encrypted, and is never
+  shown again; `x` in the picker deletes it;
+- the models of local servers: only while the picker is open, Vimma asks `127.0.0.1` on the
+  ports of Ollama (11434), LM Studio (1234) and the llama.cpp server (8080) which models they
+  have. An Ollama model with less than 32,768 tokens of context gets a copy with that context,
+  which shares its weights, since a ten-item task needs about 19,000.
+
+A model you pick that `config.toml` does not list is added there (without its key), and the
+first one becomes `[agent] default`, which new conversations use. Choosing a model sends nothing. Each conversation keeps its own model, so one can run locally
+and another on a hosted model. `[agent] local_only = true` refuses every model that is not on
+this machine.
+
+**Where your data goes.** The window's first line names the model and where the data goes:
+`stays on this machine` for a local server's model you picked, or `page text sent to
+api.anthropic.com`. Before the first task to a model off this machine, the window says what is
+sent (page text the agent reads, field values it sees, screenshots and your messages) and sends
+nothing until you press `y`. The provider's own terms apply to what it receives. A local
+address you typed yourself says `local endpoint 127.0.0.1:8000`: that server's own settings
+decide whether it sends anything on.
+
+**Sending a task.** In the input:
+
+| Key           | What it does                                                                              |
+| ------------- | ----------------------------------------------------------------------------------------- |
+| `Enter`       | Sends, and lets this conversation act in the agent workspace without asking at each step. |
+| `ctrl+Enter`  | Sends, and asks you before every step.                                                    |
+| `shift+Enter` | Starts a new line.                                                                        |
+| `Esc`         | Normal mode in the window.                                                                |
+
+Sending with `Enter` is your grant: the window asks no separate question. The grant lasts until
+you stop the task (`s`, `:agent stop` or `ctrl+b shift+a`), `:mcp revoke`, the conversation is
+deleted or Vimma restarts. Sending a form, paying, showing you a page and the downloads that
+always ask still ask every time, in a bordered slot above the input that takes only `y` and `n`;
+nothing you type in the input and nothing the model writes answers it. A message sent while a
+task runs reaches the model at its next turn.
+
+**In normal mode** (after `Esc`): `j`/`k`, `ctrl+d`/`ctrl+u` and `gg`/`G` move through the
+transcript, `i` or `a` goes back to the input, `s` stops the running task, `m` opens the model
+picker, `n` starts a new conversation, `c` lists the conversations, `C` clears the context, `P`
+gives the selected tab to the agent, `y` copies the selected entry, and `q` closes the window.
+`:agent stop`, `new`, `model`, `list`, `clear`, `give` and `forget all` do the same from the
+command line.
+
+**What the transcript shows.** Your messages, the agent's replies as plain text under an
+`agent` label, one line for every step it takes with how it ran (`ran under grant`,
+`asked → yes`, `denied`), and each checkpoint and your answer. Page text appears only where the
+agent quotes it. While a task runs, the status bar shows `◇ built-in 14/100 · 212k tok` (steps
+and tokens), even with the window closed.
+
+**Giving it a page.** `P` (or `:agent give`) asks, then moves the selected tab to the agent
+workspace, where it is reopened with the agent workspace's cookies and without its history, and
+makes it the conversation's. The agent never reads a tab where it is in your own workspaces.
+
+**Several conversations.** Each conversation has its own tabs in the agent workspace (those it
+opened, those you gave it, and those its pages opened) and its own grant; it cannot see another
+conversation's tabs or an MCP agent's. Up to `[agent] max_running` (3) run at once. A task stops
+at `max_steps` (100) tool calls, `max_tokens` (2,000,000) tokens, or, for a provider with
+`price_in` and `price_out` set, `max_cost`, and the transcript names the limit.
+
+**What is kept.** Conversations survive a restart: your messages, the agent's replies, a short
+summary of each task (its outcome, steps, tokens and the sites it loaded), the provider and the
+model, encrypted with your system keyring when you have one (otherwise as Firefox's saved
+passwords are). Page text, element lists and screenshots are never stored. A reopened
+conversation starts without the pages it read before; `C` drops them from a running one.
+`d` in the list deletes one, `:agent forget all` deletes them all, and `[agent] keep_days`
+deletes those unused for that many days.
+
+**Which model to use.** [Choosing a model for the agent chat](#choosing-a-model-for-the-agent-chat)
+covers local servers, hosted APIs, what a model needs and how to measure your own.
+
+#### Choosing a model for the agent chat
+
+The chat window works with any model behind an OpenAI-compatible chat API that returns tool
+calls, and with Anthropic's Messages API. Pick one in the window (`Esc`, then `m`), or list it in
+`config.toml` as an `[[agent.providers]]` table: a name, a kind, an endpoint and a model, never a
+key (a `key` or `api_key` field is a config error). `[agent]` is new in config schema 2, so the
+file starts with `schema = 2`; without it the whole file is refused, and the status bar names the
+error. Each example below is a whole `config.toml`. To keep several providers, put their
+`[[agent.providers]]` tables in one file, under one `[agent]`.
+
+**Ollama** (port 11434). Its default context of 4096 tokens holds less than the agent's tool
+definitions. A model you pick in the window gets a copy with 32,768 tokens of context
+(`qwen3:14b-ctx32768`), which shares the original's weights, and the conversation uses the copy.
+For a model you list yourself, make the copy with `num_ctx` set, and list it by that name:
+
+```sh
+printf 'FROM qwen3:14b\nPARAMETER num_ctx 32768\n' > Modelfile
+ollama create qwen3:14b-ctx32768 -f Modelfile
+```
+
+```toml
+schema = 2
+
+[agent]
+default = "ollama"
+
+[[agent.providers]]
+name = "ollama"
+kind = "openai"             # "openai" (OpenAI-compatible) or "anthropic"
+endpoint = "http://127.0.0.1:11434/v1"
+model = "qwen3:14b-ctx32768"
+```
+
+**LM Studio** (port 1234). Start its server (`lms server start`, or its Developer tab) and load
+the model with the context it needs, in the model's load settings or with
+`lms load <model> --context-length 32768`. `model` is the identifier LM Studio lists for it.
+
+```toml
+schema = 2
+
+[agent]
+default = "lm-studio"
+
+[[agent.providers]]
+name = "lm-studio"
+kind = "openai"
+endpoint = "http://127.0.0.1:1234/v1"
+model = "qwen/qwen3-14b"
+```
+
+**llama.cpp** (`llama-server`, port 8080). The context is set when the server starts (`-c`), and
+`--jinja` applies the model's chat template, which tool calls need:
+`llama-server -m qwen3-14b.gguf --alias qwen3-14b -c 32768 --jinja`.
+
+```toml
+schema = 2
+
+[agent]
+default = "llama-cpp"
+
+[[agent.providers]]
+name = "llama-cpp"
+kind = "openai"
+endpoint = "http://127.0.0.1:8080/v1"
+model = "qwen3-14b"
+```
+
+**vLLM** (port 8000). The picker does not look for it, so list it. vLLM returns tool calls only
+when started with a tool-call parser that fits the model, and its context is `--max-model-len`:
+`vllm serve Qwen/Qwen3-14B --max-model-len 32768 --enable-auto-tool-choice --tool-call-parser hermes`.
+
+```toml
+schema = 2
+
+[agent]
+default = "vllm"
+
+[[agent.providers]]
+name = "vllm"
+kind = "openai"
+endpoint = "http://127.0.0.1:8000/v1"
+model = "Qwen/Qwen3-14B"
+```
+
+- **The GPU.** Whether a model runs on your GPU is the server's setting, not Vimma's. `ollama ps`
+  shows where a loaded model runs (`100% GPU`, or `100% CPU`). Some hardware needs a switch:
+  Ollama uses an integrated GPU only with `OLLAMA_IGPU_ENABLE=1` in the server's environment. For
+  drivers and offloading, see each server's own documentation: Ollama's GPU page, LM Studio's GPU
+  offload setting, llama.cpp's build options and `-ngl`, and vLLM's installation guide.
+- **Images.** Set `vision = true` on a provider whose model reads images, so that the agent gets
+  screenshots. For `kind = "openai"` it is off unless set.
+- **`[agent] local_only = true`** refuses every endpoint that is not on this machine
+  (`127.0.0.1`, `[::1]` or `localhost`): in `config.toml` as a config error, in the picker, and
+  for a kept conversation's provider. A server on another computer of your network counts as
+  hosted: it needs `https://`, and Vimma asks for a key for it. An SSH tunnel to a port on
+  `127.0.0.1` makes it local.
+- **Older results** (`[agent] keep_results`). The agent sends the latest tool results whole and
+  only the first line of older ones, in blocks. Unset, it keeps 20 for a provider on this
+  machine, where each block left out makes the server read the conversation again, and 6 for a
+  hosted one, where every token is paid for. A value you set applies to every provider; `0`
+  sends every result whole.
+
+**What a model needs.**
+
+- **Tool calls.** The agent acts only through tool calls that the server returns as such. A
+  model that writes them as text, or a server started without tool support (llama.cpp without
+  `--jinja`, vLLM without `--enable-auto-tool-choice`), gets nothing done.
+- **Context.** A ten-item shopping list needs about 19,000 tokens on the shortest path the
+  tools allow, so give a local model at least 32,768.
+- **Speed.** That shortest path takes 23 tool calls for ten items, and a model takes more. Each
+  call is a model turn that reads the whole conversation.
+
+The [model bench](agent-bench.md) is what Vimma knows about models, measured on one laptop CPU
+without a GPU. There, qwen2.5 at 1.5B and 7B completed no list, a 27B model reached the time
+limit at about 90 seconds a step, and a 35B mixture-of-experts model completed the ten-item list
+in a run of 35 steps and 17 minutes. The bench ran no model on a GPU and no hosted model,
+so it says nothing about them. To measure your own model on the same ten lists and local shop,
+run the bench from a checkout of the repository with a Vimma build and Xvfb
+([runbook](runbook.md#the-agent-model-bench-npm-run-agent-bench-spec-builtin-agent)), with the
+endpoint and model of your server:
+
+```sh
+npm run agent-bench -- --artifact --provider openai --endpoint http://127.0.0.1:8000/v1 \
+  --model Qwen/Qwen3-14B --runs 3 --max-steps 100 --out my-model.json
+```
+
+**Hosted APIs by key.** Anthropic's Messages API (`kind = "anthropic"`), or an OpenAI-compatible
+endpoint over `https://` (`kind = "openai"`). Add one with `add: Anthropic (Messages API)` or
+`add: OpenAI-compatible endpoint` in the picker, or list it:
+
+```toml
+schema = 2
+
+[agent]
+default = "anthropic"
+
+[[agent.providers]]
+name = "anthropic"
+kind = "anthropic"
+endpoint = "https://api.anthropic.com"
+model = "claude-sonnet-4-5"
+
+[[agent.providers]]
+name = "openai"
+kind = "openai"
+endpoint = "https://api.openai.com/v1"
+model = "gpt-4.1"
+```
+
+A listed provider without a key shows `no key · Enter adds one` in the picker, and its first
+task asks for the key before anything is sent. You paste it into a masked field in the window,
+which has no reveal button and gives up nothing to copy. The key is encrypted with your system
+keyring (without one, as Firefox's saved passwords are) and kept in Firefox's login storage for
+that provider and its endpoint's address: a provider whose endpoint changes in `config.toml` is
+not sent it, and a copied profile or a password export is of no use without your keyring. The
+picker then shows `key stored · ends …a1b2`; `x` there deletes it, and changing a key means
+deleting it and entering the new one. A hosted model is paid for: set `price_in` and `price_out`
+on the provider (per million tokens, from your provider's price list), and `[agent] max_cost`
+stops a task at that cost.
+
+**Switching.** `Esc`, then `m` (or `:agent model`), opens the picker, and the model you choose
+applies to the current conversation; choosing sends nothing. Each conversation keeps its
+provider and model, across restarts too, so one can run on a local model and another on a hosted
+one. New conversations start with `[agent] default`. A model you pick that `config.toml` does
+not list is added there, and becomes the default only when none was set; to change the default,
+edit `[agent] default`.
+
+**Claude Code and Codex** run as programs on your computer rather than as models Vimma calls,
+so they are not set up by endpoint: see [CLI providers](specs/builtin-agent-cli.md).
+
 #### Connecting an agent's tool
 
 `vimma-ctl mcp` is the MCP server your agent's tool starts. It speaks MCP over its standard input
@@ -1551,7 +1817,8 @@ with the rest of your computer.
   remove it.
 - is held by limits: 4 waiting requests per agent and 16 in all, 10 opens a minute, 30
   `vimma_keys` calls, 30 `vimma_elements` calls, 30 clicks and fills, 12 screenshots, 30 console reads and 6 `vimma_show` calls a minute, and a minute of silence after three noes
-  in a row. Its pages get no permission prompts, pop-ups or other
+  in a row. A call over one of these rates is refused with the limit it hit and the seconds
+  until the next call is allowed, so the agent waits for the rate, not for you. Its pages get no permission prompts, pop-ups or other
   apps, and its downloads ask and are kept apart
   ([Downloads from the agent workspace](#downloads-from-the-agent-workspace)).
 
@@ -1567,6 +1834,11 @@ with the rest of your computer.
   a count (`15a`) when you want it to lapse by itself, and answer `y` one at a time otherwise.
 - **The name is the agent's claim.** `claude-code` in the question is what the agent says it is.
   Grants belong to the connection, not the name, and `:mcp` shows the program that started it.
+  Only [Vimma's own agent](#vimmas-own-agent) is labelled `built-in`; an MCP agent that calls
+  itself that is shown with `(mcp)` after its name.
+- **Vimma's own agent sends what it reads to its model.** With a hosted model, page text, field
+  values, screenshots and your messages go to that provider. A page can still steer the model
+  (prompt injection), within the agent workspace and the checkpoints.
 - **The rest of your computer is the agent tool's matter.** An agent with a shell or file tools
   runs as you. It can read your files, Vimma's profile included (cookies, saved passwords, and
   the control socket's token in `vimma-control.json`), unless its tool stops it. With the token
@@ -1642,13 +1914,37 @@ focus and hint mode.
   a payment card field are listed as sensitive, with no value, so the agent can tell you what to
   type and where. Card fields are recognised by their `autocomplete` attribute and by the
   heuristics Firefox's form autofill uses, which also catch card forms without the attribute.
-- **Labels by the same rules as `f`.** They last two minutes on the page that listed them, and a
-  new list or `f` replaces them. `vimma_keys` with `f` and a label from the list follows a link,
+- **Labels that wait for a slow model.** They last as long as the page that listed them and
+  the element they name: a navigation, a new list or `f`, or the page removing the element ends
+  them, however long the agent took to choose. `vimma_keys` with `f` and a label from the list follows a link,
   as a load of its address; the label of a button or a field is refused, and so is a link the
   page has replaced since it was listed.
 - **A grant covers it:** each call then shows
   `claude-code listed the buttons and fields of "Sign up · Example" (grant, 12m left)`. The list
   holds no page text beyond the elements' own. At most 30 calls a minute; each is in `:mcp log`.
+- **With a step, in one call.** An agent can ask `vimma_open`, `vimma_activate` or `vimma_fill`
+  for the page's list too (`elements`), so it does not need a second call to see the page after
+  its step; `vimma_open` then waits until the page is ready. The list is made exactly as
+  `vimma_elements` makes it, with the same rules for secrets, and counts as one of its 30 calls
+  a minute. The step's question ends with `, then vimma_elements`, and its notice under a grant
+  with `and listed the buttons and fields after it`. A page still loading, or one that changed
+  while it was listed, is not listed; the agent is told so and lists it itself. A page that did
+  not load (Firefox showed its error page, for a server that was not found or a certificate it
+  does not trust) is an error the agent reads first, with Firefox's error code, so it stops
+  instead of opening the same address again; the built-in agent ends its task after the same
+  failing call three times in a row.
+- **Shorter lists on a site it has listed before.** A shop's header, search field and basket
+  button are the same on every page, so a list of a page on a site the agent has already listed
+  leaves out the lines that are exactly as in its last list of that site and names their labels
+  instead, which still work. How to read a list is in the tool's description, not repeated in
+  every result. A new conversation, a page on another site, or a conversation whose context you
+  cleared gets the whole list, and the agent can ask for it with `full: true`. On the bench's
+  ten-item shopping list this cuts the tokens of the whole task by about a fifth and the largest
+  request by about a quarter ([agent-bench.md](agent-bench.md)).
+- **Only what it is looking for.** `query` lists only the elements whose label, text, caption or
+  name holds every word of it (`"oat drink"`, ignoring case), and `kinds` only buttons, fields,
+  links and the like; both work with `elements` on a step too. A query never matches a field's
+  value.
 
 #### Clicking on a page
 
@@ -1658,12 +1954,15 @@ clickable element. The question names the tab and the element,
 `◇ claude-code wants vimma_activate: 2 "List · Example" example.com/list  sg button "Add to list"`,
 and on `y` the element is clicked in the background: the tab is not selected and nothing in it is
 focused. The agent gets the page after the click, whether a new page loaded, and any dialog the
-page opened. When no page loaded, it is told which parts of the page changed in place within
-about 2 seconds (the clicked element, other listed elements, the page's text, a dialog drawn by
-the page), or that nothing did, so that a button that updates a basket in place is not pressed
-twice. It gets no page text this way: it calls `vimma_elements` to see what changed. Only the
-frame of the clicked element is compared, so a button inside an embedded frame that updates the
-page around it reads as no change.
+page opened. When no page loaded, it is told which parts of the page changed in place (the
+clicked element, other listed elements, the page's text, a dialog drawn by the page), or that
+nothing did, so that a button that updates a basket in place is not pressed twice. The answer
+comes as soon as the page has settled: a quarter of a second after its last change and once the
+requests the click started have answered, a little over a second when nothing changed, at most
+2 seconds. A click that loads a page answers once that page's content is in, without waiting
+for its images; the result says it is still loading. It gets no page text this way: it calls
+`vimma_elements` to see what changed. Only the frame of the clicked element is compared, so a
+button inside an embedded frame that updates the page around it reads as no change.
 
 - **A plain click, no user activation.** The page gets the same click your `f` hints give it,
   never a mouse press from the system. It therefore cannot do what needs a real gesture of yours
@@ -1678,6 +1977,12 @@ page around it reads as no change.
   ([Checkpoints: sending a form and paying](#checkpoints-sending-a-form-and-paying)):
   `▲ claude-code wants to send a form: 2 "Sign up · Example" → POST example.com/api/signup  email "ada@example.com", password •••, + 1 hidden`.
   A `y` sends that one form; it never makes or ends a grant.
+- **A search is an open.** Vimma's instructions tell an agent to search a site by opening its
+  results page by URL (`https://shop.example/search?q=oat+drink`) rather than through the
+  search form, which takes the agent one step instead of three. Such a search is covered by a
+  grant like any other open and shows its notice and `:mcp log` row; a search the agent sends
+  through the form asks as a form submission. The instructions limit this to searches; any
+  other form still asks.
 - **A click that may pay asks every time** too: on a page that shows a payment card field, or
   on a button that says it pays (`Pay now`, `Place order`, `Vahvista tilaus` and the like),
   even when the button sends no form.
@@ -1705,7 +2010,8 @@ The question names the tab and every field with its value,
 and on `y` the fields are set in the background, in order, as Firefox's own form autofill sets
 them: the page gets its `input` and `change` events, nothing in it is focused, and no key is
 pressed. The agent learns how many fields were filled and which values the page put back (some
-pages react to key presses only, which Vimma never sends).
+pages react to key presses only, which Vimma never sends). A fill that sends nothing answers as
+soon as its last field is set.
 
 - **Never your secrets.** Password fields (also one a "show password" button turned into text),
   fields the page draws as dots, one-time codes and payment card fields (by their autocomplete
@@ -1736,9 +2042,11 @@ pages react to key presses only, which Vimma never sends).
 `vimma_screenshot` lets an agent see what an agent tab shows, to check the effect of a click or
 a fill. The question names the tab,
 `◇ claude-code wants vimma_screenshot: 2 "Sign up · Example" example.com/signup`, and on `y`
-the agent gets an image of the tab's viewport (what you would see with the tab selected), at
-most 1,280 pixels wide, taken in the background: the tab is not selected or shown, and your
-window keeps its workspace, tab and mode. With `labels`, the labels of the agent's last
+the agent gets an image of the tab's viewport (what you would see with the tab selected), taken
+in the background: the tab is not selected or shown, and your window keeps its workspace, tab and
+mode. The image is at most 1,024 pixels wide, as a PNG or a JPEG, whichever is smaller, which
+keeps the cost of a screenshot to the agent down; with `full`, it is at most 1,280 pixels wide
+and a PNG when that fits. With `labels`, the labels of the agent's last
 `vimma_elements` list of that page are drawn on it in your theme's hint colours, while the page
 has not scrolled since.
 
@@ -2703,7 +3011,12 @@ Refresh for the current state. It is an ordinary page, so `j` / `k` scroll it.
   theme's, or the built-in palette's, e.g. `vimma (built in)`), its appearance (`system`,
   `dark` or `light`, where that comes from and how to change it), and on Omarchy the theme
   directory, its `colors.toml` time and why the last theme file was rejected, if one was.
-- **Workspaces:** how many there are, and this window's with their tab and pane counts.
+- **Workspaces:** how many there are, and this window's with their tab and pane counts; the
+  window's open tabs beside the tabs its workspaces hold (`open tabs 11, in workspaces 11`,
+  marked `out of step` when they differ, which is when tab search and the side panel list fewer
+  tabs than the status bar counts); a session restore into the window still under way and for
+  how long; the last restore that never finished and when the workspaces were rebuilt after it;
+  and the last error from rebuilding them.
 - **Control socket:** on or off, and its port. The token is never shown.
 - **Agents (MCP):** on or off (and whether `config.toml` or `:mcp on` decides), and the
   [agent workspace](#agent-workspace) with its tab count; never its addresses or titles.
@@ -2811,7 +3124,7 @@ accent = "#ff9e64"
   Toolbar](#firefoxs-bookmarks-toolbar), hidden unless you show it); `[updates] check`
   (`true`, the default, or `false`: no [update check](#updates) at all).
 - **Schema:** `schema = 2` at the top enables `[panes]`, `[sites]`, `[[routes]]`, `[firefox]`,
-  `[bookmarks]`, `[private]`, `[mcp]`, `[search]`, `[ui]`, `[updates]`,
+  `[bookmarks]`, `[private]`, `[mcp]`, `[search]`, `[ui]`, `[updates]`, `[agent]`,
   `hint_chars`, `insert_editing`, `[theme] name` and `appearance`. Every key is in the template
   `:config` writes, with its default commented out (the same as
   [`defaults.toml`](../packages/vimma-core/defaults.toml) in the source).
