@@ -150,6 +150,8 @@ function github(overrides: Record<string, { status: number; text: string }> = {}
       assets: ASSETS.map((name) => ({ name })),
     }),
     [`${API}/commits/v0.1.2`]: ok({ sha: RELEASE.commit, commit: { committer: { date: "2026-10-17T04:10:00Z" } } }),
+    // asked for when the release has no .dmg, to find an older one: none here
+    [`${API}/releases?per_page=100`]: ok([]),
     [`${RAW}/surfer.json`]: ok({ version: { product: "firefox", version: "158.0" } }),
     [`${RAW}/docs/guide.md`]: ok("# Vimma user guide\n"),
     [`${RAW}/docs/limits.md`]: ok("# Known limits\n"),
@@ -284,10 +286,129 @@ test("release file: every field has its expected form", () => {
 test(
   "sync: the latest release older than the one the site shows is refused, unless asked for by tag",
   inTmp(async (dir) => {
-    writeFileSync(join(dir, "data/release.json"), JSON.stringify({ ...RELEASE, tag: "v0.2.0", version: "0.2.0" }));
+    const assets = { deb: "vimma_0.2.0_amd64.deb", appimage: "vimma-0.2.0-x86_64.AppImage", tarball: "vimma-0.2.0-linux-x86_64.tar.xz" };
+    writeFileSync(join(dir, "data/release.json"), JSON.stringify({ ...RELEASE, tag: "v0.2.0", version: "0.2.0", assets }));
     await assert.rejects(syncRelease({ root: dir, fetch: github().fetch, log: () => {} }), /older than v0\.2\.0/);
     const gh = github({ [`${API}/releases/tags/v0.1.2`]: { status: 200, text: (await github().fetch(`${API}/releases/latest`, "")).text } });
     await syncRelease({ root: dir, tag: "v0.1.2", fetch: gh.fetch, log: () => {} });
     assert.equal((json(dir, "data/release.json") as Release).tag, "v0.1.2");
   }),
 );
+
+// --- a release without a macOS build ------------------------------------------------------------
+
+// Vimma 0.1.3, built for Linux only. Its sync carries the .dmg of the newest older release that has
+// one, so the site follows the release and macOS still gets a working download.
+const LINUX_ONLY = ["vimma_0.1.3_amd64.deb", "vimma-0.1.3-x86_64.AppImage", "vimma-0.1.3-linux-x86_64.tar.xz", "SHA256SUMS"];
+const ghRelease = (tag: string, assets: string[], extra: Record<string, unknown> = {}): Record<string, unknown> => ({
+  tag_name: tag,
+  name: `Vimma ${tag.slice(1)} · Firefox 158.0`,
+  draft: false,
+  prerelease: false,
+  published_at: "2026-10-18T04:19:58Z",
+  html_url: `https://github.com/vimma-browser/vimma/releases/tag/${tag}`,
+  assets: assets.map((name) => ({ name })),
+  ...extra,
+});
+const dmgOf = (v: string): string => `vimma-${v}-macos-aarch64.dmg`;
+
+function linuxOnly(releases: Record<string, unknown>[]): Record<string, { status: number; text: string }> {
+  const ok = (v: unknown): { status: number; text: string } => ({ status: 200, text: JSON.stringify(v) });
+  const latest = ghRelease("v0.1.3", LINUX_ONLY);
+  return {
+    [`${API}/releases/latest`]: ok(latest),
+    [`${API}/commits/v0.1.3`]: ok({ sha: RELEASE.commit, commit: { committer: { date: "2026-10-18T04:10:00Z" } } }),
+    [`${API}/releases?per_page=100`]: ok([latest, ...releases]),
+  };
+}
+
+test(
+  "sync: a release without a macOS build carries the .dmg of the newest release that has one",
+  inTmp(async (dir) => {
+    const gh = github(
+      linuxOnly([
+        ghRelease("v0.1.4", [dmgOf("0.1.4")], { draft: true }),
+        ghRelease("v0.1.2", [...ASSETS, dmgOf("0.1.2")]),
+        ghRelease("v0.1.2-rc.1", [dmgOf("0.1.2-rc.1")], { prerelease: true }),
+        ghRelease("v0.1.1", [dmgOf("0.1.1")]),
+      ]),
+    );
+    await syncRelease({ root: dir, fetch: gh.fetch, log: () => {} });
+    const r = json(dir, "data/release.json") as Release;
+    assert.equal(r.tag, "v0.1.3");
+    assert.equal(r.assets.deb, "vimma_0.1.3_amd64.deb");
+    assert.equal(r.assets.dmg, "vimma-0.1.2-macos-aarch64.dmg");
+    assert.equal(r.dmg_from, "v0.1.2");
+  }),
+);
+
+test(
+  "sync: a release without a macOS build, and none before it with one, records no .dmg",
+  inTmp(async (dir) => {
+    const gh = github(linuxOnly([ghRelease("v0.1.2", ASSETS)]));
+    await syncRelease({ root: dir, fetch: gh.fetch, log: () => {} });
+    const r = json(dir, "data/release.json") as Release;
+    assert.equal(r.assets.dmg, undefined);
+    assert.equal(r.dmg_from, undefined);
+  }),
+);
+
+test(
+  "sync: a release with its own .dmg does not look at older releases",
+  inTmp(async (dir) => {
+    const mac = [...ASSETS, dmgOf("0.1.2")];
+    const gh = github({ [`${API}/releases/latest`]: { status: 200, text: JSON.stringify(ghRelease("v0.1.2", mac)) } });
+    await syncRelease({ root: dir, fetch: gh.fetch, log: () => {} });
+    const r = json(dir, "data/release.json") as Release;
+    assert.equal(r.assets.dmg, dmgOf("0.1.2"));
+    assert.equal(r.dmg_from, undefined);
+    assert.ok(!gh.urls.some((u) => u.includes("/releases?")), gh.urls.join("\n"));
+  }),
+);
+
+test(
+  "sync: an unchanged release written in another key order is left as it is",
+  inTmp(async (dir) => {
+    const reordered = JSON.stringify({ ...RELEASE, assets: { tarball: RELEASE.assets.tarball, deb: RELEASE.assets.deb, appimage: RELEASE.assets.appimage } });
+    writeFileSync(join(dir, "data/release.json"), reordered);
+    await syncRelease({ root: dir, fetch: github().fetch, log: () => {} });
+    assert.equal(readFileSync(join(dir, "data/release.json"), "utf8"), reordered);
+  }),
+);
+
+const CARRIED: Release = { ...RELEASE, tag: "v0.1.3", version: "0.1.3", url: "https://github.com/vimma-browser/vimma/releases/tag/v0.1.3", assets: { deb: "vimma_0.1.3_amd64.deb", appimage: "vimma-0.1.3-x86_64.AppImage", tarball: "vimma-0.1.3-linux-x86_64.tar.xz", dmg: dmgOf("0.1.2") }, dmg_from: "v0.1.2" };
+
+test("placeholders: a carried .dmg names its own release and says why", () => {
+  const vars = releaseVars(CARRIED);
+  assert.equal(fill("{{dmg}} {{dmg_version}} {{dmg_tag}}", vars, "t"), "vimma-0.1.2-macos-aarch64.dmg 0.1.2 v0.1.2");
+  assert.match(fill("{{dmg_note}}", vars, "t"), /Vimma 0\.1\.3 has no macOS build.*Vimma 0\.1\.2/s);
+});
+
+test("placeholders: the release's own .dmg is of its own version, with no note", () => {
+  const mac = { ...RELEASE, assets: { ...RELEASE.assets, dmg: dmgOf("0.1.2") } };
+  assert.equal(fill("{{dmg_version}} {{dmg_tag}}[{{dmg_note}}]", releaseVars(mac), "t"), "0.1.2 v0.1.2[]");
+});
+
+test("release file: a package of another version fails", () => {
+  const dir = mkdtempSync(join(tmpdir(), "vimma-site-"));
+  const bad: [string, unknown][] = [
+    ["deb", { ...RELEASE, assets: { ...RELEASE.assets, deb: "vimma_0.1.1_amd64.deb" } }],
+    ["dmg", { ...RELEASE, assets: { ...RELEASE.assets, dmg: dmgOf("0.1.1") } }],
+    ["dmg", { ...CARRIED, dmg_from: "v0.1.1" }],
+    ["dmg_from", { ...CARRIED, assets: { ...CARRIED.assets, dmg: dmgOf("0.1.3") }, dmg_from: "v0.1.3" }],
+    ["dmg_from", { ...CARRIED, assets: { ...CARRIED.assets, dmg: dmgOf("0.1.4") }, dmg_from: "v0.1.4" }],
+    ["dmg_from", { ...CARRIED, dmg_from: "0.1.2" }],
+    ["dmg_from", { ...RELEASE, dmg_from: "v0.1.1" }],
+  ];
+  try {
+    mkdirSync(join(dir, "data"));
+    writeFileSync(join(dir, "data/release.json"), JSON.stringify(CARRIED));
+    assert.deepEqual(readRelease(dir), CARRIED);
+    for (const [what, data] of bad) {
+      writeFileSync(join(dir, "data/release.json"), JSON.stringify(data));
+      assert.throws(() => readRelease(dir), new RegExp(what), JSON.stringify(data));
+    }
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});

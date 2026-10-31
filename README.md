@@ -86,9 +86,9 @@ npm run release:sync -- v0.1.2     # … of a given release tag
   `src/pages/*.html` are page bodies with a one-line JSON meta comment on top.
   `build.ts` fills `{{placeholders}}`; an unknown one fails the build. No page types a version:
   `{{version}}`, `{{firefox}}` (`158.0`), `{{firefox_major}}` (`158`), `{{release_tag}}`, `{{deb}}`,
-  `{{appimage}}`, `{{tarball}}` and `{{dmg}}` (the macOS `.dmg`, which a release may lack; using it
-  then fails the build) come from `data/release.json` (see [Keeping up with
-  releases](#keeping-up-with-releases)), and `{{arch_install}}` is the Arch Linux command
+  `{{appimage}}`, `{{tarball}}`, `{{rpm}}`, and `{{dmg}}` with `{{dmg_version}}`, `{{dmg_tag}}`
+  and `{{dmg_note}}` (the macOS `.dmg`, which can come from an older release; see below) come from
+  `data/release.json` (see [Keeping up with releases](#keeping-up-with-releases)), and `{{arch_install}}` is the Arch Linux command
   (`ARCH_INSTALL` in `scripts/release.ts`), so the install page and the docs show
   the same line.
 - `src/ts/site.ts` is the one browser script (an ES module): the keys (`j k d u gg G / ? [ ]
@@ -129,25 +129,48 @@ npm run release:sync -- v0.1.2     # … of a given release tag
 
 The site describes Vimma's latest published release, not its `main`: the version on every page,
 the package names, the docs and the keys all come from the commit the release's tag points to,
-so they match what a visitor downloads.
+so they match what a visitor downloads. It follows each release without a hand-made change:
+
+1. Publishing a release in Vimma starts its `site-dispatch.yml`, which sends this repository a
+   `repository_dispatch` of type `vimma-release`, authenticated as the organisation's GitHub App
+   `vimma-site-dispatch`.
+2. That starts `.github/workflows/release-sync.yml` here, which syncs the release into `data/`
+   and opens the pull request `release-sync/<tag>` with auto-merge on.
+3. The pull request merges itself once its required `build` check passes.
+4. Cloudflare's Workers Builds builds `main` and deploys it to vimma.dev (see
+   [Deploying](#deploying)), a minute or two after the merge.
+
+The workflow also runs every hour, so a missed dispatch costs at most an hour, and by hand.
+A sync that stops on this side is reported in an issue: see [When the sync is
+stuck](#when-the-sync-is-stuck). A dispatch that fails in Vimma turns its own run red, and the
+hourly run picks the release up.
 
 - `npm run release:sync` (`scripts/sync-release.ts`) reads the latest published release from
   GitHub (or the tag given), takes the Vimma and Firefox versions from its title (`Vimma 0.1.2 ·
   Firefox 158.0`; Firefox from `surfer.json` at the tag if the title has none), the `.deb`,
-  AppImage and tarball names (and the macOS `.dmg`, when there is one) from its assets, and copies `docs/guide.md`, `docs/limits.md` and
-  `docs/bindings.json` at the tag's commit. It writes `data/release.json`, `data/docs/` and
+  AppImage, tarball, `.rpm` and macOS `.dmg` names from its assets, and copies `docs/guide.md`,
+  `docs/limits.md` and `docs/bindings.json` at the tag's commit. It writes `data/release.json`, `data/docs/` and
   `data/bindings.json` with their source files, and only once everything is fetched and checked.
   It uses `GITHUB_TOKEN` when set, for the API's higher rate limit. Every value it records must
   have its expected form (a version number, a full commit hash, a release URL), since the pages
-  print them as they are. A scheduled run refuses a "latest" release older than the one the site
-  shows; going back takes the tag, by hand.
+  print them as they are, and each package name must be the one of its release's version. A
+  scheduled run refuses a "latest" release older than the one the site shows; going back takes
+  the tag, by hand.
+- **A release without a macOS build** still syncs, because macOS is built apart from Linux and a
+  release can come out without its `.dmg` (0.1.12 did). The sync records the `.dmg` of the newest
+  older release that has one, with that release's tag as `dmg_from`, and the install page's macOS
+  section then says which release a Mac gets and links that release, so macOS visitors keep a
+  working download while Linux visitors get the new release. This was chosen over a macOS
+  section that only says the release has no package, which would leave a Mac with no download
+  link. Only when no release has a `.dmg` does `{{dmg}}` fail the build. The Linux packages come
+  from one build, so a release that lacks one of them fails the sync instead.
+- A `data/release.json` that says the same as the release in another key order (one edited by
+  hand) is left as it is, so it does not count as a change.
 - The build reads only those committed files and never calls GitHub, so it works offline and
   Cloudflare's builders, which share GitHub's unauthenticated rate limit, cannot fail it. It
   fails if `data/release.json` is missing or malformed.
-- `.github/workflows/release-sync.yml` runs the sync when Vimma publishes a release (Vimma's
-  `site-dispatch.yml` sends a `repository_dispatch`, `vimma-release`, which needs its
-  `SITE_DISPATCH_TOKEN` secret), every hour as a fallback, and by hand (Actions → release-sync →
-  Run workflow, with an optional tag). When `data/` changes, a read-only job builds
+- `.github/workflows/release-sync.yml` runs the sync on Vimma's `vimma-release` dispatch, every
+  hour as a fallback, and by hand (Actions → release-sync → Run workflow, with an optional tag). When `data/` changes, a read-only job builds
   and checks the site, and a second job, which holds the write token and runs no npm code, opens
   or updates the pull request `release-sync/<tag>`. A push made with the
   workflow's own token starts no workflows, so it starts `ci.yml` on the branch itself
@@ -163,10 +186,33 @@ so they match what a visitor downloads.
   workflow's own commits that main has moved past (a fix merged to main, say) is instead rebuilt
   on main and force-pushed, so the fix reaches it and it does not conflict. A sync for an older
   release that never merged is closed when a newer one opens; its branch is kept, with any fix on
-  it. A `release-sync/<tag>` branch left without an open pull request stops the sync for that
-  tag, with an error saying so, until it is deleted.
+  it. Sync branches stay on the remote after they merge. A later sync of the same release meets
+  such a branch, and replaces it when it is still at the commit its merged pull request took. A
+  `release-sync/<tag>` branch with any other history and no open pull request stops the sync for
+  that tag, with an error saying so, until it is deleted.
 - It needs two repository settings: "Allow GitHub Actions to create and approve pull requests"
   (Settings → Actions → General) and "Allow auto-merge" (Settings → General).
+
+### When the sync is stuck
+
+The workflow's last job, `report`, runs after every run, whatever its trigger. It treats the
+sync as stuck when:
+
+- the `sync` or `publish` job failed (GitHub unreachable, a malformed release, a branch it may
+  not replace);
+- the site does not build with the new release, so its pull request is not set to merge;
+- an open `release-sync/<tag>` pull request has a failed check, or is still open two hours after
+  it opened (one that passes its checks merges within minutes).
+
+It then opens the issue "release-sync: the site is not following Vimma's releases" in this
+repository, or updates its description when it is already open, with the run's link and what is
+stuck; the run fails, and its summary links the issue. GitHub notifies the repository's watchers
+of the new issue. The first later run that finds nothing stuck
+closes the issue with a comment. The job runs no repository code and holds only `issues: write`
+and read access to pull requests, checks and statuses.
+
+To clear it: read the failed run's log or the pull request's checks, fix the cause (usually on
+the pull request's branch), and merge; the next hourly run closes the issue.
 
 ## The docs
 

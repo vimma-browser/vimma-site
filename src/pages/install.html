@@ -22,13 +22,14 @@
 <p>Next to them are <code>SHA256SUMS</code>, an SBOM and cosign signatures. <a href="https://github.com/vimma-browser/vimma/blob/{{release_tag}}/docs/guide.md#installing">Installing</a>, in the guide, explains how to check them.</p>
 
 <h2 id="macos">macOS</h2>
+{{dmg_note}}
 <p>For Macs with Apple Silicon. With <a href="https://brew.sh/">Homebrew</a>, install the cask from Vimma's own tap:</p>
 <div class="cmdbox">
   <pre class="code wrap" id="brew-cmd"><span class="p">$ </span>brew install --cask vimma-browser/tap/vimma</pre>
   <button type="button" class="copy" data-copy="brew-cmd" aria-live="polite" data-js-only hidden>copy</button>
 </div>
 <p>Homebrew checks the download against the checksum the cask pins, puts Vimma in Applications and <code>vimma</code> on your <code>PATH</code>. <code>brew upgrade --cask vimma</code> updates it, <code>brew uninstall --cask vimma</code> removes it and keeps your profile, and <code>brew uninstall --zap --cask vimma</code> removes your profiles, caches and preferences as well; your <code>~/.config/vimma/</code> stays.</p>
-<p>Without Homebrew, download <code>{{dmg}}</code> from the <a href="https://github.com/vimma-browser/vimma/releases/latest">latest release</a>, open it and drag Vimma into Applications. Its checksum is in <code>SHA256SUMS-macos</code>, signed like the Linux files.</p>
+<p>Without Homebrew, download <code>{{dmg}}</code> from the <a href="https://github.com/vimma-browser/vimma/releases/tag/{{dmg_tag}}">Vimma {{dmg_version}} release</a>, open it and drag Vimma into Applications. Its checksum is in <code>SHA256SUMS-macos</code>, signed like the Linux files.</p>
 <p>Vimma is signed with its Apple Developer ID and notarised by Apple, so it opens like any other app: the first time, macOS only asks whether to open an app downloaded from the internet.</p>
 <p>On a Mac, passkeys do not work yet, and your profile lives in <code>~/Library/Application Support/Vimma/</code>.</p>
 

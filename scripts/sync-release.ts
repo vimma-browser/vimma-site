@@ -19,13 +19,13 @@
 // .github/workflows/release-sync.yml runs it when Vimma publishes a release and hourly, and opens
 // a pull request when data/ changes.
 
-import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
 import type { BindingsSource } from "./bindings-types.js";
 import { validate as validateBindings } from "./gen-keys.js";
-import { RELEASE_FILE, type Release, compareVersions, parseTitle, pickAssets, readRelease, validateRelease } from "./release.js";
+import { RELEASE_FILE, type Release, compareVersions, isPackage, parseTitle, pickAssets, readRelease, validateRelease } from "./release.js";
 
 const OWNER_REPO = "vimma-browser/vimma";
 const REPO_URL = `https://github.com/${OWNER_REPO}`;
@@ -106,6 +106,27 @@ export async function syncRelease(opts: SyncOptions): Promise<Release> {
     firefox = surfer.version.version;
   }
 
+  const assets = pickAssets(gh.assets.map((a) => a.name), version);
+  // macOS is built apart from Linux, so a release can lack the .dmg. The site still follows the
+  // release, and offers the .dmg of the newest older release that has one (scripts/release.ts).
+  let dmgFrom: string | undefined;
+  if (!assets.dmg) {
+    const all = await getJson<GhRelease[]>(`${API}/releases?per_page=100`);
+    const older = all
+      .filter((o) => !o.draft && !o.prerelease && /^v\d+\.\d+\.\d+$/.test(o.tag_name))
+      .filter((o) => compareVersions(o.tag_name.slice(1), version) < 0)
+      .sort((x, y) => compareVersions(y.tag_name.slice(1), x.tag_name.slice(1)));
+    for (const o of older) {
+      const dmg = o.assets.map((a) => a.name).find((n) => isPackage("dmg", n, o.tag_name.slice(1)));
+      if (dmg) {
+        assets.dmg = dmg;
+        dmgFrom = o.tag_name;
+        log(`${tag} has no macOS build: the site offers the .dmg of ${o.tag_name}`);
+        break;
+      }
+    }
+  }
+
   const release = validateRelease({
     repo: REPO_URL,
     tag,
@@ -114,7 +135,8 @@ export async function syncRelease(opts: SyncOptions): Promise<Release> {
     commit: commit.sha,
     published: gh.published_at.slice(0, 10),
     url: gh.html_url,
-    assets: pickAssets(gh.assets.map((a) => a.name), version),
+    assets,
+    ...(dmgFrom ? { dmg_from: dmgFrom } : {}),
   } satisfies Release);
 
   const docs = await Promise.all(DOCS.map((f) => raw(`docs/${f}`)));
@@ -129,11 +151,22 @@ export async function syncRelease(opts: SyncOptions): Promise<Release> {
   write("data/bindings.json", asJson(bindings));
   const bindingsSource: BindingsSource = { repo: REPO_URL, path: "docs/bindings.json", commit: commit.sha, date: commitDate };
   write("data/bindings-source.json", asJson(bindingsSource));
-  write(RELEASE_FILE, asJson(release));
+  // A release.json that says the same in another key order (one edited by hand) is left as it is,
+  // so it is not a change for the sync workflow to open a pull request for.
+  const releaseFile = resolve(opts.root, RELEASE_FILE);
+  const same = existsSync(releaseFile) && canonical(JSON.parse(readFileSync(releaseFile, "utf8"))) === canonical(release);
+  if (!same) write(RELEASE_FILE, asJson(release));
 
   const n = bindings.groups.reduce((sum, g) => sum + g.actions.length, 0);
   log(`synced ${tag} (Vimma ${version}, Firefox ${firefox}) at ${commit.sha.slice(0, 7)}: ${DOCS.join(", ")} and ${n} bindings`);
   return release;
+}
+
+/** JSON with every object's keys sorted, to compare two values regardless of key order. */
+function canonical(v: unknown): string {
+  return JSON.stringify(v, (_, x: unknown) =>
+    x && typeof x === "object" && !Array.isArray(x) ? Object.fromEntries(Object.entries(x).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))) : x,
+  );
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

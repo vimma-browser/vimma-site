@@ -14,6 +14,9 @@
 # and its waiting check suite holds the merge; `publish` approves it. Needs
 # Settings → Actions → General → "Allow GitHub Actions to create and approve pull requests", and
 # Settings → General → "Allow auto-merge".
+#
+# `report` runs last, after every run: a stuck sync opens or updates an issue (README, "When the
+# sync is stuck").
 name: release-sync
 
 on:
@@ -188,13 +191,21 @@ jobs:
             old=${heads%%$'\t'*}
             open=$(gh pr list --repo "$REPO" --head "$BRANCH" --state open --json number --jq 'length')
             if [[ "$open" == "0" ]]; then
-              # Left over from a closed pull request: building on it would carry a stale diff, and
-              # deleting it could lose commits someone pushed to it.
-              echo "::error::$BRANCH exists without an open pull request; delete it to let the sync reopen one"
-              exit 1
+              # Merged sync branches stay on the remote (GitHub did not delete them on merge), and a
+              # later sync of the same release (a release.json edited by hand, say) meets one. A
+              # branch still at the commit a merged pull request took holds nothing main lacks, so
+              # it is replaced. Any other branch is left from a closed pull request: building on it
+              # would carry a stale diff, and deleting it could lose commits someone pushed to it.
+              merged=$(gh pr list --repo "$REPO" --head "$BRANCH" --state merged --json headRefOid \
+                --jq "map(select(.headRefOid == \"$old\")) | length")
+              if [[ "$merged" == "0" ]]; then
+                echo "::error::$BRANCH exists without an open pull request; delete it to let the sync reopen one"
+                exit 1
+              fi
+              echo "$BRANCH is left from a merged pull request; replacing it"
             fi
-            # `sync` rebuilt the open pull request's stale branch on main; replace it, unless it
-            # moved since that check.
+            # `sync` rebuilt the open pull request's stale branch on main, or the branch is left from
+            # a merged one; replace it, unless it moved since that check.
             echo "LEASE=$old" >> "$GITHUB_ENV"
             git switch --quiet -c "$BRANCH"
           elif [[ $? -eq 2 ]]; then
@@ -304,3 +315,95 @@ jobs:
             while read -r old; do
               gh pr close "$old" --repo "$REPO" --comment "Superseded by the sync for $TAG."
             done
+
+  # A stuck sync is never silent: a failed job, a release the site does not build with, or a sync
+  # pull request with a failed check or still open two hours after it opened, opens the issue
+  # named below (or updates it when it is open) and fails this job, so the run is red and its
+  # summary links the issue. The next run that finds nothing stuck closes it. It runs no
+  # repository code and holds only what it needs: issues to write, pull requests and checks to read.
+  report:
+    needs: [sync, publish]
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      issues: write # open, update or close the alert issue
+      pull-requests: read # find a stuck sync pull request
+      checks: read # its checks
+      statuses: read # and its commit statuses
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      EVENT: ${{ github.event_name }}
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      SYNC_RESULT: ${{ needs.sync.result }}
+      PUBLISH_RESULT: ${{ needs.publish.result }}
+      BUILD_OK: ${{ needs.sync.outputs.build_ok }}
+      TAG: ${{ needs.sync.outputs.tag }}
+    steps:
+      - name: Report a stuck sync
+        run: |
+          set -o pipefail
+          title="release-sync: the site is not following Vimma's releases"
+          problems=()
+          for job in sync publish; do
+            var="${job^^}_RESULT"
+            result=${!var}
+            [[ "$result" == "success" || "$result" == "skipped" ]] || problems+=("The \`$job\` job ended in $result.")
+          done
+          if [[ "$BUILD_OK" == "false" ]]; then
+            problems+=("The site does not build with $TAG, so its pull request is not set to merge.")
+          fi
+          # Open sync pull requests with a failed check, or open for more than two hours: one that
+          # passes its checks merges itself within minutes.
+          stuck=$(gh pr list --repo "$REPO" --state open --limit 100 \
+            --json number,headRefName,url,createdAt,statusCheckRollup --jq '
+              .[] | select(.headRefName | startswith("release-sync/"))
+              | ([.statusCheckRollup[]? | select((.conclusion // .state // "") as $c
+                  | ["FAILURE", "ERROR", "TIMED_OUT", "CANCELLED", "ACTION_REQUIRED", "STARTUP_FAILURE"]
+                  | index($c)) | (.name // .context)] | unique) as $failed
+              | ((now - (.createdAt | fromdateiso8601)) / 3600 | floor) as $hours
+              | select(($failed | length) > 0 or $hours >= 2)
+              | "\(.url) " + (if ($failed | length) > 0 then "has failed checks: \($failed | join(", "))."
+                               else "has been open for \($hours) hours without merging." end)')
+          while read -r line; do
+            if [[ -n "$line" ]]; then problems+=("The sync pull request $line"); fi
+          done <<< "$stuck"
+          issue=$(gh issue list --repo "$REPO" --state open --limit 100 --json number,title \
+            --jq "[.[] | select(.title == \"$title\") | .number][0] // empty")
+
+          if (( ${#problems[@]} == 0 )); then
+            if [[ -n "$issue" ]]; then
+              gh issue close "$issue" --repo "$REPO" \
+                --comment "The release-sync run $RUN_URL ($EVENT) found nothing stuck: the site follows Vimma's latest published release again."
+            fi
+            exit 0
+          fi
+
+          body="$RUNNER_TEMP/alert.md"
+          [[ -n "$RUNNER_TEMP" ]] || body=$(mktemp)
+          {
+            echo "vimma.dev did not follow Vimma's latest published release. The latest release-sync"
+            echo "run that found this: $RUN_URL ($EVENT, $(date -u '+%Y-%m-%d %H:%M UTC'))."
+            echo
+            for p in "${problems[@]}"; do echo "- $p"; done
+            echo
+            echo "The run's log says more. The README of this repository, \"Keeping up with releases\","
+            echo "describes the flow and what to do. This issue is updated by every run that finds the"
+            echo "sync stuck, and closed by the first run that does not."
+          } > "$body"
+          if [[ -z "$issue" ]]; then
+            url=$(gh issue create --repo "$REPO" --title "$title" --body-file "$body")
+          else
+            gh issue edit "$issue" --repo "$REPO" --body-file "$body" > /dev/null
+            url="https://github.com/$REPO/issues/$issue"
+          fi
+          {
+            echo "### The release sync is stuck"
+            echo
+            for p in "${problems[@]}"; do echo "- $p"; done
+            echo
+            echo "Reported in $url."
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "::error::the release sync is stuck; see $url"
+          exit 1
