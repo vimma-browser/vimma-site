@@ -100,6 +100,9 @@ the [user guide](guide.md); planned work is on the
 ## Agents (MCP)
 
 - Agents can list, read, open and close tabs of the agent workspace, and download through it.
+- Pages in the agent workspace open no pop-up, so a page loaded over HTTP there loses its
+  `Cross-Origin-Opener-Policy`, which Firefox refuses in such a tab. A page that also sends
+  `Cross-Origin-Embedder-Policy` is not cross-origin isolated there: it has no `SharedArrayBuffer`.
 - `vimma_fill` knows a one-time-code field by its `autocomplete="one-time-code"` only, and a
   password field by its type (or a past type, or dots drawn by the page): a text field merely
   labelled "Password" or "Code" is filled like any other, with its value shown in the question.
@@ -131,6 +134,42 @@ the [user guide](guide.md); planned work is on the
 - Each agent tool's own approvals, sandbox and timeouts are its own; Vimma neither reads nor
   changes them. What an agent does outside Vimma, with its shell and files, is up to that tool
   ([what Vimma protects](guide.md#what-vimma-protects-and-what-it-does-not)).
+
+## Vimma's own agent
+
+- The [model bench](agent-bench.md) is all Vimma says about models, and none of the local models
+  it ran on a laptop CPU completed its shopping tasks. Whether a local model calls tools well
+  depends on the model and the server running it.
+- A local address may itself forward to a hosted model: the window says `stays on this machine`
+  only for a local server's model picked in the window, and `local endpoint` for an address
+  typed by hand.
+- Token counts are the provider's; a server that reports none is estimated from the characters
+  sent. Cost is shown, and `max_cost` applies, only for a provider with `price_in` and
+  `price_out` in `config.toml`, in whatever currency those are.
+- Conversations share the agent workspace's cookies and logins with each other and with MCP
+  agents; only their tabs are apart.
+- A stored reply may quote page text, since the agent writes its replies from what it read.
+- Without a desktop keyring, stored conversations and API keys are protected as Firefox's saved
+  passwords are: by a primary password if one is set, otherwise readable by anything that can
+  read the profile.
+- The window does not open in a private window.
+- Claude Code is the one agent CLI the window runs so far (checked with Claude Code 2.1.303); Codex
+  follows.
+- An agent CLI keeps the shell, file and web tools its own settings allow. They are outside
+  Vimma's gate: Vimma shows each use but does not approve, refuse or confine it.
+- Vimma cannot see where an agent CLI sends the page text it reads, so `local_only` refuses
+  every agent CLI.
+- The cost an agent CLI reports is its own estimate, at list prices even on a plan, and
+  `max_cost` does not apply to it.
+- A shell command an agent CLI started may outlive a stop, since Vimma stops the CLI's own
+  process and not the commands it started.
+- An agent CLI runs in a folder in `$XDG_RUNTIME_DIR`, a small in-memory file system, so a CLI
+  that writes large files there can fill it. Where Vimma falls back to
+  `~/.cache/vimma-agent-cli`, the instruction files in your home folder apply to every run, as they do to the CLI in a terminal.
+- The models the picker lists for an agent CLI are Vimma's own list, not the CLI's: a model the
+  CLI no longer takes fails when a task starts, with the CLI's own error.
+- An agent CLI needs the `vimma-ctl` beside Vimma's binary, which every release has; a build
+  from source names its own in `vimma.agent.cli.vimmaCtl`.
 
 ## Compatibility and versions
 
