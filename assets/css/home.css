@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 /* The home page's bands, loaded by that page only; tokens and shared parts are in site.css.
-   An 80s synthwave poster and a retro tech brochure, in Vimma's mint and cyan on near-black: the
+   An 80s synthwave poster and a retro tech brochure, in Vimma's aqua and magenta on teal-black: the
    hero is a poster, a perspective grid running to a horizon with one lens flare, under faint
    scanlines; racing stripes divide the bands; the facts are an instrument strip, the video plays
    in a terminal window and the features are numbered spec panels, both in HUD corner brackets. Every effect is a CSS gradient, so nothing
@@ -19,7 +19,7 @@ main.bands {
   padding: var(--band) 0;
 }
 
-/* racing stripes over every band but the first: mint, then cyan, thinning out */
+/* racing stripes over every band but the first: aqua, then magenta, thinning out */
 .band + .band::before {
   content: "";
   position: absolute;
@@ -29,8 +29,8 @@ main.bands {
   height: 9px;
   transform: translateX(-50%);
   background: linear-gradient(180deg,
-    var(--mint) 0 3px, transparent 3px 5px,
-    color-mix(in srgb, var(--mint) 50%, var(--neon)) 5px 7px, transparent 7px 8px,
+    var(--aqua) 0 3px, transparent 3px 5px,
+    color-mix(in srgb, var(--aqua) 50%, var(--neon)) 5px 7px, transparent 7px 8px,
     var(--neon) 8px 9px);
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent);
@@ -141,7 +141,7 @@ main.bands {
   text-wrap: balance;
 }
 
-/* the one word in light: sunset colours, mint into cyan */
+/* the one word in light: sunset colours, aqua into magenta */
 .display .accent {
   background: linear-gradient(180deg, var(--accent) 30%, var(--neon));
   -webkit-background-clip: text;
@@ -185,7 +185,7 @@ main.bands {
 }
 
 .button.primary:hover {
-  box-shadow: 0 6px 24px -10px var(--mint);
+  box-shadow: 0 6px 24px -10px var(--aqua);
 }
 
 /* the scene fills the rest of the first screen: the sky with the horizon, then the floor */
@@ -203,7 +203,7 @@ main.bands {
   position: absolute;
   inset: 0 0 38%;
   overflow: hidden;
-  background: radial-gradient(ellipse 40% 90% at 50% 100%, color-mix(in srgb, var(--mint) 16%, transparent), transparent 70%),
+  background: radial-gradient(ellipse 40% 90% at 50% 100%, color-mix(in srgb, var(--aqua) 16%, transparent), transparent 70%),
     radial-gradient(1px 1px at 18% 30%, color-mix(in srgb, var(--fg-bright) 60%, transparent), transparent),
     radial-gradient(1px 1px at 30% 62%, color-mix(in srgb, var(--fg-bright) 40%, transparent), transparent),
     radial-gradient(1px 1px at 76% 24%, color-mix(in srgb, var(--fg-bright) 55%, transparent), transparent),
@@ -220,11 +220,11 @@ main.bands {
   bottom: 0;
   left: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent 5%, var(--neon) 30%, var(--mint) 50%, var(--neon) 70%, transparent 95%);
+  background: linear-gradient(90deg, transparent 5%, var(--neon) 30%, var(--aqua) 50%, var(--neon) 70%, transparent 95%);
 }
 
 /* a lens flare where the sun would be: a white core on the horizon (white in both palettes:
-   it is light, not text), drawn out sideways in mint */
+   it is light, not text), drawn out sideways in aqua */
 .sky::before {
   content: "";
   position: absolute;
@@ -234,8 +234,8 @@ main.bands {
   height: 30px;
   transform: translateX(-50%);
   background: radial-gradient(ellipse 8% 45% at 50% 50%, #fff, transparent 100%),
-    radial-gradient(ellipse 50% 40% at 50% 50%, color-mix(in srgb, var(--mint) 80%, transparent), transparent 100%),
-    radial-gradient(ellipse 18% 100% at 50% 50%, color-mix(in srgb, var(--mint) 45%, transparent), transparent 100%);
+    radial-gradient(ellipse 50% 40% at 50% 50%, color-mix(in srgb, var(--aqua) 80%, transparent), transparent 100%),
+    radial-gradient(ellipse 18% 100% at 50% 50%, color-mix(in srgb, var(--aqua) 45%, transparent), transparent 100%);
   filter: blur(1px);
 }
 
@@ -257,7 +257,7 @@ main.bands {
   transform-origin: top center;
   transform: perspective(300px) rotateX(64deg);
   background-image:
-    linear-gradient(90deg, color-mix(in srgb, var(--mint) 40%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--aqua) 40%, transparent) 1px, transparent 1px),
     linear-gradient(180deg, color-mix(in srgb, var(--neon) 30%, transparent) 1px, transparent 1px);
   background-size: 56px 56px;
   background-position: center top;
@@ -343,7 +343,7 @@ main.bands {
   }
 }
 
-/* --- HUD corner brackets: a short mint stroke each way at every corner, a little outside -- */
+/* --- HUD corner brackets: a short aqua stroke each way at every corner, a little outside -- */
 
 .hud {
   position: relative;
@@ -389,7 +389,7 @@ main.bands {
   border-radius: 14px;
   background: var(--bg-darker);
   box-shadow: 0 40px 100px -40px rgb(0 0 0 / 0.8),
-    0 0 0 1px color-mix(in srgb, var(--mint) 8%, transparent);
+    0 0 0 1px color-mix(in srgb, var(--aqua) 8%, transparent);
 }
 
 .window-bar {
@@ -417,7 +417,7 @@ main.bands {
 }
 
 .lights span:first-child {
-  background: var(--mint);
+  background: var(--aqua);
 }
 
 .lights span:nth-child(2) {
@@ -462,7 +462,7 @@ main.bands {
 }
 
 .specs li:hover {
-  background: color-mix(in srgb, var(--mint) 4%, var(--bg));
+  background: color-mix(in srgb, var(--aqua) 4%, var(--bg));
 }
 
 .specs .label {

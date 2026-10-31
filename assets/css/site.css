@@ -3,58 +3,58 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 /* vimma-site: the shared stylesheet (the home page adds home.css). A terminal in Vimma's own
-   colours, taken from its logo: the mint mark on its near-black tile, with an off-white wordmark.
-   A light variant serves light systems. Every text colour pair is checked for WCAG AA by
-   `npm run check`, which reads the two palette blocks below by their
-   marker comments. (The browser itself ships Tokyo Night; that is the browser's theme, not the
-   site's, see docs/theming.) */
+   colours, taken from its logo: the aqua mark on its teal-black tile, with an off-white wordmark,
+   and a hot magenta as the second neon (--neon). A light variant serves light systems. Every text colour pair is checked for WCAG AA by
+   `npm run check`, which reads the two palette blocks below by their marker comments. */
 
-/* palette:dark — sampled from the logo (vimma-mark.png, vimma-logo-wide.jpg): the tile #0a0f13,
-   the mint #1bf587, the wordmark #fcfbf7. --accent-2 is the logo's shaded mint #2ba564. */
+/* palette:dark — Vimma's "Aqua Split" palette, shared with the browser's built-in theme and the
+   logo: the tile #071011, the aqua #2cf5d2, the magenta #ff4fb8, the wordmark #f5fffd.
+   --accent-2 is a shaded aqua for visited links. */
 :root {
   color-scheme: dark light;
-  --bg: #0a0f12;
-  --bg-dark: #070b0d;
-  --bg-darker: #040708;
-  --bg-light: #111a1b;
-  --selection: #163327;
-  --border: #2a3d36;
-  --fg: #c4cec8;
-  --fg-muted: #849690;
-  --fg-bright: #fcfbf7;
-  --accent: #1bf587;
-  --accent-2: #2ba564;
-  --mint: #1bf587;
-  --green: #8eeeb8;
+  --bg: #071011;
+  --bg-dark: #050c0d;
+  --bg-darker: #030708;
+  --bg-light: #0e1b1c;
+  --selection: #123532;
+  --border: #234040;
+  --fg: #c2d6d3;
+  --fg-muted: #7f9a96;
+  --fg-bright: #f5fffd;
+  --accent: #2cf5d2;
+  --accent-2: #2fb8a3;
+  --aqua: #2cf5d2;
+  --green: #9af2e2;
   --yellow: #f2c94c;
   --red: #ff6b6b;
-  --badge-fg: #04120a;
+  --badge-fg: #03140f;
   --hint-fg: #1a1300;
-  --neon: #22e4f0;
+  --neon: #ff4fb8;
 }
 
-/* palette:light — the logo's off-white for ground. The mint is too pale for text on it, so text
-   and links take a deep green from the same hue; the bright mint stays for decoration only. */
+/* palette:light — an off-white for ground. The aqua is too pale for text on it, so text and links
+   take a deep teal from the same hue, and the magenta a deep berry; the bright aqua stays for
+   decoration only. */
 @media (prefers-color-scheme: light) {
   :root {
-    --bg: #f5f4ef;
-    --bg-dark: #eae9e2;
-    --bg-darker: #e1e0d8;
-    --bg-light: #fcfbf7;
-    --selection: #c6efd8;
-    --border: #a3b0a9;
-    --fg: #1d2924;
-    --fg-muted: #4b5a53;
-    --fg-bright: #0a0f12;
-    --accent: #056a39;
-    --accent-2: #0b5c4e;
-    --mint: #1bf587;
-    --green: #2a5a40;
+    --bg: #f3f6f4;
+    --bg-dark: #e7ecea;
+    --bg-darker: #dde3e1;
+    --bg-light: #fbfdfc;
+    --selection: #c3efe6;
+    --border: #a0b3af;
+    --fg: #1b2a28;
+    --fg-muted: #4a5b58;
+    --fg-bright: #071011;
+    --accent: #006b5e;
+    --accent-2: #0d5d63;
+    --aqua: #2cf5d2;
+    --green: #1f5a51;
     --yellow: #7a5200;
     --red: #a1232d;
     --badge-fg: #fcfbf7;
     --hint-fg: #fcfbf7;
-    --neon: #0e7490;
+    --neon: #b0226f;
   }
 }
 /* end palette */
@@ -114,11 +114,11 @@
   box-sizing: border-box;
 }
 
-/* a faint mint light at the top of every page, as if the logo lit it */
+/* a faint aqua light at the top of every page, as if the logo lit it */
 body {
   margin: 0;
   min-height: 100vh;
-  background: radial-gradient(ellipse 60% 32rem at 50% -8rem, color-mix(in srgb, var(--mint) 8%, transparent), transparent 70%) no-repeat,
+  background: radial-gradient(ellipse 60% 32rem at 50% -8rem, color-mix(in srgb, var(--aqua) 8%, transparent), transparent 70%) no-repeat,
     var(--bg);
 }
 
@@ -130,7 +130,7 @@ body {
 a {
   color: var(--accent);
   text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, var(--mint) 45%, transparent);
+  text-decoration-color: color-mix(in srgb, var(--aqua) 45%, transparent);
   text-underline-offset: 0.2em;
 }
 
@@ -143,10 +143,10 @@ a:hover {
   text-decoration-color: currentColor;
 }
 
-/* on the light ground the mint is decoration only: a full-strength underline under deep green */
+/* on the light ground the aqua is decoration only: a full-strength underline under deep teal */
 @media (prefers-color-scheme: light) {
   a:not(:hover) {
-    text-decoration-color: var(--mint);
+    text-decoration-color: var(--aqua);
     text-decoration-thickness: 2px;
   }
 }
@@ -376,8 +376,8 @@ li + li {
 }
 
 .tabs a[aria-current] {
-  border-color: color-mix(in srgb, var(--mint) 50%, transparent);
-  background: color-mix(in srgb, var(--mint) 14%, var(--bg));
+  border-color: color-mix(in srgb, var(--aqua) 50%, transparent);
+  background: color-mix(in srgb, var(--aqua) 14%, var(--bg));
   color: var(--fg-bright);
   font-weight: 600;
 }

@@ -33,7 +33,7 @@ for s in 16 32 48; do
   magick "$mark" -filter Lanczos -resize "${s}x${s}" -strip PNG32:"$out/favicon-$s.png"
 done
 magick "$mark" -filter Lanczos -resize 180x180 -strip -colors 128 PNG8:"$out/apple-touch-icon.png"
-# The mark in neon for the home page's horizon: only its mint strokes, on nothing. The source fills
+# The mark in neon for the home page's horizon: only its aqua strokes, on nothing. The source fills
 # the window with near-black; the green channel sets the opacity, so that fill and the dark outline
 # round the V drop out while the strokes' soft edges and brush texture stay.
 magick "$mark" -trim +repage -alpha off \( +clone -channel G -separate +channel -level 14%,70% \) \
