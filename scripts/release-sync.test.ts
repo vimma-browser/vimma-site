@@ -245,7 +245,7 @@ test("report: a failed sync job opens an issue and links it from the run summary
   assert.equal(r.status, 1, r.output);
   assert.ok(r.calls.some((c) => c.startsWith("gh issue create") && c.includes(ALERT)), r.calls.join("\n"));
   assert.match(r.body, /`sync` job.*failure/);
-  assert.ok(r.body.includes(RUN_URL), r.body);
+  assert.match(r.body, /\(?https:\/\/github\.com\/vimma-browser\/vimma-site\/actions\/runs\/123 \(/);
   assert.match(r.summary, /issues\/99/);
   // an issue someone else opened with the same title is not the alert
   assert.ok(r.calls.some((c) => c.startsWith("gh issue list") && c.includes("--author app/github-actions")), r.calls.join("\n"));
@@ -269,14 +269,14 @@ test("report: a release the site does not build with is reported", () => {
 test("report: a sync pull request with a failed check is reported", () => {
   const r = report({ prs: [syncPr([{ name: "build", conclusion: "FAILURE" }, { context: "Workers Builds", state: "SUCCESS" }])] });
   assert.equal(r.status, 1, r.output);
-  assert.ok(r.body.includes("https://github.com/vimma-browser/vimma-site/pull/48"), r.body);
+  assert.match(r.body, /^- The sync pull request https:\/\/github\.com\/vimma-browser\/vimma-site\/pull\/48 has failed checks/m);
   assert.match(r.body, /build/);
 });
 
 test("report: a sync pull request still open after two hours is reported", () => {
   const r = report({ prs: [syncPr([{ name: "build", conclusion: "SUCCESS" }], hoursAgo(3))] });
   assert.equal(r.status, 1, r.output);
-  assert.ok(r.body.includes("pull/48"), r.body);
+  assert.match(r.body, /pull\/48 has been open for 3 hours/);
 });
 
 test("report: other pull requests, and sync-named ones from forks, are not the sync's", () => {
@@ -291,5 +291,5 @@ test("report: a good run closes the open issue", () => {
   const r = report({ publish: "success", buildOk: "true", issues: [{ number: 7, title: ALERT }] });
   assert.equal(r.status, 0, r.output);
   assert.deepEqual(issueCalls(r).map((c) => c.split(" ").slice(0, 4).join(" ")), ["gh issue close 7"]);
-  assert.ok(r.body.includes(RUN_URL), r.body);
+  assert.match(r.body, /\(?https:\/\/github\.com\/vimma-browser\/vimma-site\/actions\/runs\/123 \(/);
 });
