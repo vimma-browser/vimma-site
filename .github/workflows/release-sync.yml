@@ -196,7 +196,7 @@ jobs:
               # branch still at the commit a merged pull request took holds nothing main lacks, so
               # it is replaced. Any other branch is left from a closed pull request: building on it
               # would carry a stale diff, and deleting it could lose commits someone pushed to it.
-              merged=$(gh pr list --repo "$REPO" --head "$BRANCH" --state merged --json headRefOid \
+              merged=$(gh pr list --repo "$REPO" --head "$BRANCH" --state merged --limit 100 --json headRefOid \
                 --jq "map(select(.headRefOid == \"$old\")) | length")
               if [[ "$merged" == "0" ]]; then
                 echo "::error::$BRANCH exists without an open pull request; delete it to let the sync reopen one"
@@ -351,14 +351,16 @@ jobs:
             result=${!var}
             [[ "$result" == "success" || "$result" == "skipped" ]] || problems+=("The \`$job\` job ended in $result.")
           done
+          # From the job that runs npm code: checked before it goes into the issue.
+          [[ -z "$TAG" || "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$ ]] || TAG="(an unexpected tag)"
           if [[ "$BUILD_OK" == "false" ]]; then
             problems+=("The site does not build with $TAG, so its pull request is not set to merge.")
           fi
           # Open sync pull requests with a failed check, or open for more than two hours: one that
           # passes its checks merges itself within minutes.
           stuck=$(gh pr list --repo "$REPO" --state open --limit 100 \
-            --json number,headRefName,url,createdAt,statusCheckRollup --jq '
-              .[] | select(.headRefName | startswith("release-sync/"))
+            --json number,headRefName,isCrossRepository,url,createdAt,statusCheckRollup --jq '
+              .[] | select((.isCrossRepository | not) and (.headRefName | startswith("release-sync/")))
               | ([.statusCheckRollup[]? | select((.conclusion // .state // "") as $c
                   | ["FAILURE", "ERROR", "TIMED_OUT", "CANCELLED", "ACTION_REQUIRED", "STARTUP_FAILURE"]
                   | index($c)) | (.name // .context)] | unique) as $failed
@@ -369,7 +371,8 @@ jobs:
           while read -r line; do
             if [[ -n "$line" ]]; then problems+=("The sync pull request $line"); fi
           done <<< "$stuck"
-          issue=$(gh issue list --repo "$REPO" --state open --limit 100 --json number,title \
+          # Only an issue this workflow opened: anyone can open one with the same title.
+          issue=$(gh issue list --repo "$REPO" --author app/github-actions --state open --limit 100 --json number,title \
             --jq "[.[] | select(.title == \"$title\") | .number][0] // empty")
 
           if (( ${#problems[@]} == 0 )); then

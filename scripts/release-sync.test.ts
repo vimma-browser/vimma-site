@@ -149,6 +149,7 @@ interface Pr {
   headRefName: string;
   url: string;
   createdAt: string;
+  isCrossRepository?: boolean;
   statusCheckRollup: { name?: string; context?: string; conclusion?: string | null; state?: string | null }[];
 }
 
@@ -246,6 +247,8 @@ test("report: a failed sync job opens an issue and links it from the run summary
   assert.match(r.body, /`sync` job.*failure/);
   assert.ok(r.body.includes(RUN_URL), r.body);
   assert.match(r.summary, /issues\/99/);
+  // an issue someone else opened with the same title is not the alert
+  assert.ok(r.calls.some((c) => c.startsWith("gh issue list") && c.includes("--author app/github-actions")), r.calls.join("\n"));
   assert.match(r.output, /::error::.*issues\/99/);
 });
 
@@ -276,9 +279,10 @@ test("report: a sync pull request still open after two hours is reported", () =>
   assert.ok(r.body.includes("pull/48"), r.body);
 });
 
-test("report: other pull requests are not the sync's", () => {
+test("report: other pull requests, and sync-named ones from forks, are not the sync's", () => {
   const other = { ...syncPr([{ name: "build", conclusion: "FAILURE" }], hoursAgo(30)), headRefName: "fix/something" };
-  const r = report({ prs: [other] });
+  const fork = { ...syncPr([{ name: "build", conclusion: "ACTION_REQUIRED" }], hoursAgo(30)), isCrossRepository: true };
+  const r = report({ prs: [other, fork] });
   assert.equal(r.status, 0, r.output);
   assert.deepEqual(issueCalls(r), []);
 });
