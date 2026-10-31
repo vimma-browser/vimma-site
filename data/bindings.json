@@ -2031,6 +2031,11 @@
           ]
         },
         {
+          "name": "follow_link_new_tab_fg",
+          "description": "Follow link in new tab and switch to it",
+          "keys": []
+        },
+        {
           "name": "focus_element",
           "description": "Focus a text block: v selects it, y copies it",
           "keys": [
@@ -3241,6 +3246,19 @@
     {
       "name": "Agents",
       "actions": [
+        {
+          "name": "agent_chat",
+          "description": "Built-in agent: open its chat window (:agent)",
+          "keys": [
+            {
+              "keys": "ctrl+b i",
+              "chords": [
+                "ctrl+b",
+                "i"
+              ]
+            }
+          ]
+        },
         {
           "name": "mcp_command",
           "description": "Agents (MCP): :mcp on, off or forget",
