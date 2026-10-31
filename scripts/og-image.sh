@@ -39,7 +39,7 @@ browser for people
 who live in Vim
 and tmux" \
   -font "$regular" -pointsize 26 -fill "$aqua" -annotate +540+520 'vimma.dev' \
-  -fill "$muted" -annotate +700+520 '· a Firefox fork for Linux' \
+  -fill "$muted" -annotate +700+520 '· for Linux and macOS' \
   -strip -define png:exclude-chunks=date,time,tIME \
   +dither -colors 64 -define png:compression-level=9 "PNG8:$out"
 ls -l "$out"
