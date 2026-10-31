@@ -8,9 +8,14 @@
 // so the build never calls GitHub: it works offline, and Cloudflare's builders, which share
 // GitHub's unauthenticated rate limit, cannot fail it. Pages say {{version}}, {{firefox}},
 // {{deb}} and so on instead of typing a version, so a sync updates every page at once.
-// {{dmg}} exists only when the release has a macOS build, and {{rpm}} only when it has an .rpm
-// (from 0.1.7): a page that names one then fails the build for a release without it, instead of
-// printing an empty file name.
+// {{rpm}} exists only when the release has an .rpm (from 0.1.7): a page that names it then fails
+// the build for a release without it, instead of printing an empty file name.
+//
+// macOS is built apart from Linux, so a release can come out without a .dmg (0.1.12 did). The
+// sync then records the .dmg of the newest older release that has one, with that release's tag
+// in `dmg_from`: the site still follows the release, macOS visitors still get a working download,
+// and {{dmg_version}}, {{dmg_tag}} and {{dmg_note}} say which release it is. Only when no release
+// has a .dmg does {{dmg}} fail the build.
 
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -34,6 +39,8 @@ export interface Release {
   url: string;
   /** The package file names in the release; `rpm` and `dmg` (macOS, Apple Silicon) only when it has them. */
   assets: { deb: string; appimage: string; tarball: string; rpm?: string; dmg?: string };
+  /** The tag of the older release `assets.dmg` comes from, when this release has no macOS build. */
+  dmg_from?: string;
 }
 
 /**
@@ -58,6 +65,11 @@ const PACKAGES: [keyof Release["assets"], string, (name: string, v: string) => b
   ["tarball", "tarball", (n, v) => /^vimma-(.+)-linux-x86_64\.tar\.(xz|gz|zst)$/.exec(n)?.[1] === v, true],
   ["dmg", "macOS .dmg", (n, v) => n === `vimma-${v}-macos-aarch64.dmg`, false],
 ];
+
+/** Whether `name` is the file name of package `key` of `version`. */
+export function isPackage(key: keyof Release["assets"], name: string, version: string): boolean {
+  return PACKAGES.some(([k, , match]) => k === key && match(name, version));
+}
 
 /** The .deb, AppImage, tarball and, if the release has them, .rpm and macOS .dmg of `version` among a release's asset names. */
 export function pickAssets(names: string[], version: string): Release["assets"] {
@@ -104,6 +116,19 @@ export function validateRelease(data: unknown): Release {
   if (a && ![a.deb, a.appimage, a.tarball, ...(a.rpm ? [a.rpm] : []), ...(a.dmg ? [a.dmg] : [])].every((n) => pkg.test(n))) {
     fail("an asset name has unexpected characters");
   }
+  // Each package is the release's own, except a .dmg carried from an older release (dmg_from).
+  const version = String(r?.version);
+  const from = r?.dmg_from;
+  if (from !== undefined) {
+    if (!isString(from) || !/^v\d+\.\d+\.\d+(-[\w.]+)?$/.test(from)) fail(`dmg_from "${String(from)}" is not a release tag`);
+    if (!a?.dmg) fail("dmg_from without assets.dmg");
+    if (compareVersions(String(from).slice(1), version) >= 0) fail(`dmg_from ${String(from)} is not older than ${String(r?.tag)}`);
+  }
+  for (const key of ["deb", "appimage", "tarball", "rpm", "dmg"] as const) {
+    const name = a?.[key];
+    const v = key === "dmg" && isString(from) ? from.slice(1) : version;
+    if (name !== undefined && !isPackage(key, name, v)) fail(`assets.${key} "${name}" is not the ${key} of ${v}`);
+  }
   return r as Release;
 }
 
@@ -132,8 +157,18 @@ export function releaseVars(r: Release): Record<string, string> {
     appimage: r.assets.appimage,
     tarball: r.assets.tarball,
     ...(r.assets.rpm ? { rpm: r.assets.rpm } : {}),
-    ...(r.assets.dmg ? { dmg: r.assets.dmg } : {}),
+    ...(r.assets.dmg ? dmgVars(r, r.assets.dmg) : {}),
   };
+}
+
+/** {{dmg}}, the release it comes from, and a note when that is not the release the site shows. */
+function dmgVars(r: Release, dmg: string): Record<string, string> {
+  const tag = r.dmg_from ?? r.tag;
+  const version = tag.slice(1);
+  const note = r.dmg_from
+    ? `<p class="note">Vimma ${r.version} has no macOS build, so on a Mac you install Vimma ${version}, the newest release with one.</p>`
+    : "";
+  return { dmg, dmg_tag: tag, dmg_version: version, dmg_note: note };
 }
 
 /** Replaces {{name}} with vars[name]; an unknown name is an error, not an empty string. */
