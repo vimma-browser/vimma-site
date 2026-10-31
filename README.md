@@ -1,8 +1,8 @@
 # vimma-site
 
 The website for Vimma, a keyboard-first Firefox fork with a Neovim-style modal layer and a
-tmux-style `ctrl+b` prefix. It is set in Vimma's own colours, the mint and near-black of its logo
-with cyan beside the mint, and a light variant for light systems: Space Grotesk for headings
+tmux-style `ctrl+b` prefix. It is set in Vimma's own colours, the aqua and teal-black of its logo
+with magenta beside the aqua, and a light variant for light systems: Space Grotesk for headings
 (served from `assets/fonts/`, SIL Open Font License), the system sans-serif for text and monospace
 for code and keys, a header with the logo, the pages centred in a rounded tray and the keys hint,
 and Vim keys on the site itself (press `?`).

@@ -24,7 +24,7 @@ export const OG_IMAGE = {
   path: "assets/img/og-image.png",
   width: 1200,
   height: 630,
-  alt: `The Vimma logo, a mint browser window with a V, next to the words "${TAGLINE}".`,
+  alt: `The Vimma logo, an aqua browser window with a V, next to the words "${TAGLINE}".`,
 };
 
 /**
