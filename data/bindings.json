@@ -3306,6 +3306,26 @@
           "keys": []
         }
       ]
+    },
+    {
+      "name": "Site",
+      "actions": [
+        {
+          "name": "site_permissions",
+          "description": "Site permissions picker: allow, block, reset (:site)",
+          "keys": []
+        }
+      ]
+    },
+    {
+      "name": "Pop-ups",
+      "actions": [
+        {
+          "name": "popup_picker",
+          "description": "Blocked pop-ups: open one, allow the site, settings",
+          "keys": []
+        }
+      ]
     }
   ]
 }

@@ -19,7 +19,7 @@ What works today, each with the section that explains it:
   with Vim motions and `y`; insert mode in text fields, `Esc` to leave; `:` a
   [command line](#the-command-line) with completion and history.
 - **tmux for the window** (prefix `ctrl+b`, [keys](#keys)): tabs (`c` new, `n`/`p`, `1..9`,
-  found and renamed with [tab search](#tab-search-and-tab-rename)); up to 4 split panes (`v`, `-`,
+  found and renamed with [tab search](#tab-search-and-tab-rename)); up to 8 split panes (`v`, `-`,
   `h/j/k/l`, `z` zoom, swap, resize); tiling [layouts](#layouts) (`enter` dwindle, `space`
   cycles tmux's presets); `ctrl+b ?` lists every binding, searchable.
 - **[Workspaces](#workspaces):** each one a container with its own logins and cookies, kept
@@ -45,7 +45,8 @@ What works today, each with the section that explains it:
   release is in place it asks once per session to restart, and `:restart` restarts into it.
 - **Firefox underneath** ([privacy defaults](#privacy-defaults)): the same user agent and
   [add-on](#add-ons) compatibility as Firefox; no studies, sponsored content or telemetry
-  uploads; Safe Browsing on.
+  uploads; Safe Browsing on; a site's permissions shown and changed from the keyboard with
+  [`:site`](#site-permissions).
 - **Scriptable** ([vimma-ctl](#scripting-with-vimma-ctl), shipped and updated with Vimma): a
   token-protected control socket; local AI agents reach one [agent workspace](#agent-workspace)
   through MCP, where they can read, open, scroll and search pages, follow their links, list and
@@ -407,7 +408,8 @@ text editors' frames) also enters insert.
 
 Each tab keeps its own mode. Settings (`about:preferences`) and the PDF viewer work the same
 way, but Settings focuses its search box when it opens, so it starts in insert: press `Esc`
-before `j`/`k`. Pages Vimma does not reach (extension pages, `data:` and `view-source:` pages)
+before `j`/`k`. A PDF takes your keys as soon as it opens, also when a site serves it as a
+download. Pages Vimma does not reach (extension pages, `data:` and `view-source:` pages)
 stay in insert, so their keys are untouched. With focus in the address bar or the find bar, keys
 belong to that field; only `ctrl+b` sequences are Vimma's there (and, in a `/` search,
 `Enter` and `Esc`).
@@ -530,10 +532,12 @@ the table are `[modal.element]`'s, and can be rebound there.
 
 ### Find
 
-Find works as it does in Vim. `/` opens Firefox's find bar at the foot of the page, empty, and
-searches as you type, in frames
-from other sites, inside web components and in the PDF viewer too. Matches are highlighted and
-counted as in Firefox. The search starts at the top of what you see (or at the selection, if it
+Find works as it does in Vim. `/` opens a search prompt that floats at the bottom centre of the
+page, above the status bar, because that is where Vim types a search and where the status bar
+shows it. It takes the style of Vimma's pickers and your theme, opens empty, and searches as you
+type, in frames from other sites, inside web components and in the PDF viewer too. Opening it
+does not move the page. Matches are highlighted as in Firefox, and the prompt counts them as `[2/5]`, as the status
+bar does. The search starts at the top of what you see (or at the selection, if it
 is on screen), as Vim's starts at the cursor.
 
 - **Case:** smart case. An all lower-case search ignores case (`word` finds `Word`); one capital
@@ -542,6 +546,10 @@ is on screen), as Vim's starts at the cursor.
   that found nothing goes back to where you were, and the status bar says `not found`.
 - **`Esc`** cancels: the bar closes, nothing stays selected and the page scrolls back to where
   it was when you pressed `/`.
+- **Back into the search:** a click on the page leaves the prompt open; only `Enter` and `Esc`
+  close it, because a search ends when you choose, as in Vim, not when a click happens to land
+  outside it. `/` (or `?`) then puts you back in the prompt with its text selected, so you can
+  type a new search or press `Enter` or `Esc`.
 - **`n` / `N`** jump to the next / previous match without opening the bar, wrapping at the ends.
   After a search that found nothing they do nothing.
 - **`?`** searches backward: it shows matches as you type, as `/` does, and `Enter` lands on the
@@ -551,7 +559,9 @@ is on screen), as Vim's starts at the cursor.
   next match. `i`, a click, or the page itself focusing the field puts you in it, in insert
   mode.
 
-`ctrl+f` still opens Firefox's own find bar, where `Enter` goes to the next match.
+`ctrl+f` is a second key for `/`. Firefox's own find bar, under the page with its buttons and
+its Highlight All, Match Case, Match Diacritics and Whole Words options, still opens from the
+Edit menu's Find in Page, and there `Enter` goes to the next match.
 
 ### Live grep
 
@@ -688,6 +698,9 @@ with `F11` keeps it. From the left:
   without asking (`◇ agent 14m` for a grant of minutes with 14 left), and `◇ agent ·` for a
   moment after a request ran; `◇ built-in 14/100 · 212k tok` while a task of
   [Vimma's own agent](#vimmas-own-agent) runs (steps and tokens), `◇ 2 agents` while several do;
+- `pop-up blocked · y allow · n block · Esc close` (yellow) while the page has Firefox's pop-up
+  blocked bar and [its keys](#blocked-pop-ups) count, and `pop-ups blocked · :popups to allow`
+  on a site whose pop-ups you blocked with `n`;
 - `loading` while the page loads, then its **URL** without `https://`;
 - with the [toolbar hidden](#hiding-the-toolbar), `not secure` in red for a page Firefox's
   address bar would warn about (an `http:` page keeps its `http://`), `using camera, mic` (or
@@ -768,6 +781,8 @@ yank), and the line starts with `Esc, then`: `Esc` leaves the mode, and then `y`
 the prompt. Vimma never moves focus onto the prompt. The same keys answer Firefox's
 other prompts in that panel, such as "Save password?" (`y` saves, `n` is Not now), and the "Add
 <name>?" prompt for installing an add-on, which Firefox opens with focus on the prompt itself.
+Firefox's pop-up blocked bar takes `y`, `n` and `Esc` with the same rules
+([Blocked pop-ups](#blocked-pop-ups)).
 
 A site whose login keeps you on the same page leaves focus in its password field, so the "Save
 password?" prompt opens with the `Esc, then` line. In the prompt's own username and password
@@ -779,8 +794,10 @@ everywhere inside the prompt.
 The status bar, the command line, the `ctrl+b ?` overlay, the pickers and prompts, link hints,
 notices, pane borders and the start page share one theme, and so do Firefox's toolbar, its
 address bar and suggestions, and the prompts and panels that hang from it. Out of the box it is Vimma's own,
-the palette of [vimma.dev](https://vimma.dev): near-black surfaces, grey-green text, and mint
-for the accent, the normal-mode badge and link hints. It has a dark and a light variant, and by
+the "Aqua Split" palette of [vimma.dev](https://vimma.dev): near-black surfaces, grey-aqua text,
+aqua for the accent and the normal-mode badge, and magenta for link hints, so the labels stand
+apart from the accent you see everywhere else. It has a dark and a light variant (the light one
+takes a deep teal and a deep berry in their place, which read on its off-white), and by
 default it follows your system's or Firefox's light or dark setting (`prefers-color-scheme`),
 switching the moment that changes, without a reload. Firefox's own focus rings follow the theme
 too: the address bar's focus ring and the 3 px border of the focused pane in a split are the
@@ -805,7 +822,8 @@ The Vimma logo on the start page and on `about:vimma` follows the theme too: the
 brushstroke V are the theme's accent colour, and the "imma" lettering is white with a dark theme
 and the theme's text colour with a light one. It changes with the rest of the theme, and with
 your system's high-contrast setting on it is drawn in the high-contrast text colour. The app
-icon and Firefox's About dialog keep the logo's own colours.
+icon and Firefox's About dialog keep the logo's own colours: the aqua mark and white lettering on
+teal-black.
 
 **Dark, light or the system's: `:theme`.** The start page says it too:
 
@@ -931,7 +949,7 @@ keys. A `[panel]` after a key means it works only in that mode.
 | `ctrl+b a`                                                                              | Bookmarks the page; type folders before its title: `work/docs/title` ([below](#bookmarks)).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | `ctrl+b shift+b`                                                                        | Opens or closes the bookmarks panel ([below](#bookmarks)).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | `ctrl+b e`                                                                              | Opens the add-on picker: popups, options, enable/disable, remove, updates ([below](#add-ons)).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `ctrl+b v` / `ctrl+b -`                                                                 | Splits the pane right / down. The new pane opens a new tab (the start page, address bar focused). At most 4 panes (`[panes] max`); a refused split says why.                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `ctrl+b v` / `ctrl+b -`                                                                 | Splits the pane right / down. The new pane opens a new tab (the start page, address bar focused). At most 8 panes by default (`[panes] max`); a refused split says why.                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | `ctrl+b h j k l`                                                                        | Focuses the pane left / below / above / right; when several touch, the one used last. `ctrl+w h j k l` in normal mode. The page of that pane gets focus, and the pane a 3 px border in the theme's focus colour.                                                                                                                                                                                                                                                                                                                                                                          |
 | `ctrl+b z`, `ctrl+w o`                                                                  | Zooms the pane to the whole window, or back. The other panes' pages pause. A pane focus key unzooms when it moves.                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | `ctrl+b x`                                                                              | Closes the pane; its tab stays open. With one pane it closes the tab, as `ctrl+b shift+x`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
@@ -1465,15 +1483,17 @@ it. A private window has no agent. With no model set up, the window says how to 
 - the models of local servers: only while the picker is open, Vimma asks `127.0.0.1` on the
   ports of Ollama (11434), LM Studio (1234) and the llama.cpp server (8080) which models they
   have. An Ollama model with less than 32,768 tokens of context gets a copy with that context,
-  which shares its weights, since a ten-item task needs about 19,000;
+  which shares its weights, since a ten-item task needs about 19,000. Once you pick an Ollama
+  model, Vimma loads it (with no prompt, so no text reaches it) and says where it runs and with
+  what context, such as `qwen3:14b-ctx32768 runs on the GPU, with 32,768 tokens of context`;
 - `add: agent CLI (Claude Code)`, and once one is set up, its models: Vimma runs the agent CLI
   you have, on its own login
   ([Using an agent CLI in the chat window](#using-an-agent-cli-in-the-chat-window)).
 
 A model you pick that `config.toml` does not list is added there (without its key), and the
-first one becomes `[agent] default`, which new conversations use. Choosing a model sends nothing. Each conversation keeps its own model, so one can run locally
-and another on a hosted model. `[agent] local_only = true` refuses every model that is not on
-this machine.
+first one becomes `[agent] default`, which new conversations use. Choosing a model sends none
+of your text or pages. Each conversation keeps its own model, so one can run locally and another
+on a hosted model. `[agent] local_only = true` refuses every model that is not on this machine.
 
 **Where your data goes.** The window's first line names the model and where the data goes:
 `stays on this machine` for a local server's model you picked, or `page text sent to
@@ -1492,9 +1512,11 @@ decide whether it sends anything on.
 | `shift+Enter` | Starts a new line.                                                                        |
 | `Esc`         | Normal mode in the window.                                                                |
 
-Sending with `Enter` is your grant: the window asks no separate question. The grant lasts until
-you stop the task (`s`, `:agent stop` or `ctrl+b shift+a`), `:mcp revoke`, the conversation is
-deleted or Vimma restarts. Sending a form, paying, showing you a page and the downloads that
+Sending with `Enter` is your grant: the window asks no separate question. The grant covers that
+one task and ends with it, whether it finishes, you stop it (`s`, `:agent stop` or
+`ctrl+b shift+a`), or it reaches its budget or an error; `:mcp revoke`, deleting the conversation
+and restarting Vimma end it too. The next task you send with `Enter` grants again, so
+`◇ agent granted` shows only while an agent works with your permission. Sending a form, paying, showing you a page and the downloads that
 always ask still ask every time, in a bordered slot above the input that takes only `y` and `n`;
 nothing you type in the input and nothing the model writes answers it. A message sent while a
 task runs reaches the model at its next turn.
@@ -1617,11 +1639,26 @@ endpoint = "http://127.0.0.1:8000/v1"
 model = "Qwen/Qwen3-14B"
 ```
 
-- **The GPU.** Whether a model runs on your GPU is the server's setting, not Vimma's. `ollama ps`
-  shows where a loaded model runs (`100% GPU`, or `100% CPU`). Some hardware needs a switch:
-  Ollama uses an integrated GPU only with `OLLAMA_IGPU_ENABLE=1` in the server's environment. For
-  drivers and offloading, see each server's own documentation: Ollama's GPU page, LM Studio's GPU
-  offload setting, llama.cpp's build options and `-ngl`, and vLLM's installation guide.
+- **The GPU.** Whether a model runs on your GPU is the server's setting, not Vimma's. A model on
+  the GPU reads and writes several times faster than on the CPU. `ollama ps` shows where a
+  loaded model runs (`100% GPU`, `100% CPU`, or a split), and the picker says the same when you
+  pick an Ollama model. Some hardware needs a switch: Ollama uses an integrated GPU (such as
+  AMD's Radeon 860M, through Vulkan) only with `OLLAMA_IGPU_ENABLE=1` in the server's
+  environment. With Ollama as a systemd service:
+
+  ```sh
+  sudo systemctl edit ollama    # add: [Service] and Environment="OLLAMA_IGPU_ENABLE=1"
+  sudo systemctl restart ollama
+  journalctl -u ollama -b --no-pager | grep -E 'inference compute|integrated GPU'
+  ```
+
+  The log then names the GPU (`library=Vulkan`) rather than `id=cpu`. An integrated GPU shares
+  the system's memory; when `ollama ps` shows only part of a model on it, a larger UMA frame
+  buffer in the firmware setup gives it more. For drivers and offloading, see each server's own
+  documentation: Ollama's GPU page, LM Studio's GPU offload setting, llama.cpp's build options
+  and `-ngl` (`llama-server -m <model.gguf> -ngl 99 --jinja -c 32768`), and vLLM's installation
+  guide.
+
 - **Images.** Set `vision = true` on a provider whose model reads images, so that the agent gets
   screenshots. For `kind = "openai"` it is off unless set.
 - **`[agent] local_only = true`** refuses every endpoint that is not on this machine
@@ -1642,8 +1679,11 @@ model = "Qwen/Qwen3-14B"
   `--jinja`, vLLM without `--enable-auto-tool-choice`), gets nothing done.
 - **Context.** A ten-item shopping list needs about 19,000 tokens on the shortest path the
   tools allow, so give a local model at least 32,768.
-- **Speed.** That shortest path takes 23 tool calls for ten items, and a model takes more. Each
-  call is a model turn that reads the whole conversation.
+- **Speed.** That shortest path takes 23 tool calls for ten items, and a model takes more. A
+  model turn reads the whole conversation, so Vimma's instructions tell the model to put steps
+  that do not depend on each other in one turn: every item's search, then every basket button.
+  The calls of a turn still run one at a time, each asked and limited on its own, and a question
+  in the middle of a turn holds back the calls after it until you answer.
 
 The [model bench](agent-bench.md) is what Vimma knows about models, measured on one laptop CPU
 without a GPU. There, qwen2.5 at 1.5B and 7B completed no list, a 27B model reached the time
@@ -1757,12 +1797,16 @@ and output, connects to Vimma as an agent (never with full control), and offers 
      { "mcpServers": { "vimma": { "command": "vimma-ctl", "args": ["mcp"] } } }
      ```
 
-   - **opencode** (1.19.0). `opencode mcp add` asks its questions interactively; or add this to
-     `opencode.json` in your project (or `~/.config/opencode/opencode.json` for every project):
+   - **opencode** (2.0.32). `opencode mcp add vimma -- vimma-ctl mcp` adds it to `opencode.json`
+     in your project (`--global` for every project); or add this to `opencode.json` yourself
+     (or `~/.config/opencode/opencode.json`):
 
      ```json
      { "mcp": { "vimma": { "type": "local", "command": ["vimma-ctl", "mcp"], "enabled": true } } }
      ```
+
+     Leave out its `timeout` setting: set, it also limits each tool call
+     ([Timeouts in agent tools](#timeouts-in-agent-tools)).
 
    For a profile other than your default one, the command is `vimma-ctl --profile DIR mcp`.
    `vimma-ctl mcp` takes no other option: it refuses `--timeout` and `--json`, since each call
@@ -1852,7 +1896,13 @@ messages mean.
 lists the providers. Pick `add: agent CLI (…)`, which names the CLIs Vimma supports: Vimma looks
 for each one's program on your `PATH` (only now, never in the background) and lists what it
 finds with its version and full path, for example
-`claude 2.1.303 · /home/you/.local/bin/claude`. `Enter` picks one, and the prompt line asks
+`claude 2.1.303 · /home/you/.local/bin/claude`. When `PATH` holds a version manager's shim (mise,
+asdf, volta, aqua and the like: a link named `claude` to a program that picks the tool by the
+name it is started as), the row says `agent CLI (mise shim)` and the notice line the whole of
+it, `claude 2.1.314 · /home/you/.local/share/mise/shims/claude · a mise shim (runs /usr/bin/mise as claude)`,
+and a copy of the CLI itself further along `PATH` is listed instead when there is one. A shim
+works: Vimma runs the path as `PATH` holds it, link included, so the shim sees the name `claude`,
+and an upgrade behind the link needs no new setup. `Enter` picks one, and the prompt line asks
 `agent model:` with the CLI's suggested model filled in: keep it, type another model the CLI
 takes, or clear it to leave the choice to the CLI's own default model. A model that starts with
 `-`, holds a tab or a line break, or is longer than 200 characters is refused there. The path is
@@ -1901,7 +1951,7 @@ provider is refused, because Vimma cannot see where a CLI sends what it reads.
   `~/.cache/vimma-agent-cli`), removed when the task ends, with no shell around it. Each task is
   a new run given the conversation so far; the CLI keeps no session of its own.
 - In the browser it has only Vimma's tools, on the conversation's own agent tabs. Sending with
-  `Enter` grants the conversation, so steps run without asking; sending a form, paying and
+  `Enter` grants the conversation for that task, so steps run without asking; sending a form, paying and
   `vimma_show` still ask. Each step is a line in the transcript, from Vimma's own record.
 - **Its own tools are outside Vimma's gate.** The CLI keeps the shell, file and web tools its own
   settings allow. Vimma does not approve, refuse or confine them: they act with your rights. The
@@ -1912,6 +1962,28 @@ provider is refused, because Vimma cannot see where a CLI sends what it reads.
 - A message you send while it works is added to the running task. `s` (or `:agent stop`,
   `ctrl+b shift+a`) stops it: its access to the browser ends first, then the CLI gets 3 s to exit
   before it is killed. A shell command it started may outlive the stop.
+
+**The CLI's own tools: web search and others.** Vimma runs the CLI without its terminal, in a
+mode where any tool of its own that was not allowed in advance is refused, since nobody is there
+to answer its question (for Claude Code, `--permission-mode dontAsk` with only Vimma's tools,
+`mcp__vimma`, allowed). A task that wants the CLI's own web search or page fetch then meets a
+refusal, unless the CLI's settings allow that tool.
+
+- **Search and read through Vimma.** Each task tells the CLI that web searches and reading pages
+  go through Vimma's tools in the agent workspace: it opens a search engine's results page with
+  `vimma_open` and reads it with `vimma_read_page`. That way the steps stay under Vimma's questions
+  and grants, show in the transcript, and use the agent workspace's cookies, never yours. Ask for
+  it in the task when it does not ("search the web in Vimma for …").
+- **Or allow the CLI's own tool, in the CLI's settings.** Vimma passes no setting of its own for
+  it; the CLI reads its usual settings, and the form for each is under
+  [Supported CLIs](#supported-clis). Such a setting applies to every session of that CLI, in a
+  terminal too.
+- **What that allows.** The CLI's own tools are outside Vimma's gate. A web search tool sends its
+  queries to a search service and, in live mode, can open a page the model names, so it can
+  carry what the model saw to any website. A fetch tool or a shell acts with your rights and can
+  send what you can read to any website or to the model's provider, and file tools can pass it
+  to the model's provider. A page that steers the model can make it use any tool you allowed, so
+  allow them only as you would in a terminal.
 
 **Budgets and cost.** `[agent] max_steps` counts the steps that reach the browser and
 `max_tokens` the tokens the CLI reports; `max_minutes` stops a task that runs too long. The cost
@@ -1942,19 +2014,34 @@ list finds it again` (the row reads `not available`): the program Vimma stored w
   given; check that the file runs (`vimma-ctl --version`).
 - **Its program is refused.** `<cli> at <path> is refused: <why>`, or
   `vimma-ctl at <path> is refused: <why>`, means the file fails one of the checks Vimma makes
-  before running it, because a file another user can replace would run their code as you:
-  - `its path is not absolute`, `it does not exist`, `it is not a regular file`,
-    `it is not executable`: the stored path no longer leads to the program.
+  before running it, because a file another user can replace would run their code as you. A
+  path that is a link is followed to its file, and every link on the way and every folder it
+  passes through is checked as the file's folders are:
+  - `it does not exist; add: agent CLI finds it again`: the stored path no longer leads to the
+    program, often because an upgrade removed the version it named. Pick `add: agent CLI (…)`
+    again.
+  - `it is mise, which runs claude only through a link named claude; add: agent CLI finds it
+again` (with your version manager's program and your CLI's name): Vimma 0.1.13 stored the
+    program a shim leads to, which cannot tell which tool to run when started under its own
+    name. Pick `add: agent CLI (…)` again; Vimma then keeps the shim itself.
+  - `its path is not absolute`, `it is not a regular file`, `it is not executable`: the stored
+    path no longer leads to the program.
   - `it is owned by another user` (only yours or root's are run), `other users can write it`
     (group or others have write permission: `chmod go-w <path>`).
   - `a folder it is in is owned by another user`,
     `a folder it is in can be written by other users`: a folder above the file, up to `/`, is
     another user's, or writable by others without being sticky as `/tmp` is. Install the CLI
-    under your home folder (`~/.local/bin`) or a system folder instead. The folders above the
+    under your home folder (`~/.local/bin`) or a system folder instead.
+  - `a link on its path is owned by another user`: a link on the way to the file is another
+    user's, who could point it elsewhere. The folders above the
     `vimma-ctl` next to Vimma's binary are not checked, since they hold Vimma itself; its own file
     is.
 - `stopped: <cli> exited (<code>): <its last error line>`: the CLI stopped with that error, for
   example when it is not logged in (see its entry under Supported CLIs).
+- `stopped: <cli> at <path> exited (<code>): <its last error line>`: the program exited before
+  it printed anything, so it most likely did not start as the CLI at all; the line names the
+  program that ran. Check that `<path>` is the CLI (`<path> --version`), or pick
+  `add: agent CLI (…)` again.
 - `an agent CLI may send page text off this machine ([agent] local_only)`: `[agent] local_only`
   is on; pick a local model or turn it off.
 - `agent: the model "…" is not a model name: it cannot start with "-"` (or
@@ -1971,7 +2058,17 @@ list finds it again` (the row reads `not available`): the program Vimma stored w
 - Models: setup suggests `sonnet`; the picker lists `sonnet`, `opus`, `haiku` (Claude Code's
   aliases for its newest model of each family) and Claude Code's own default model, and
   `other model…` takes a full model name such as `claude-opus-4-1`.
-- Its own tools follow `~/.claude/settings.json` and its permission rules.
+- Its own tools follow `~/.claude/settings.json` and its permission rules. To let it use its own
+  web search in Vimma's runs, add an allow rule to `~/.claude/settings.json`
+  (`$CLAUDE_CONFIG_DIR/settings.json` when that is set), which applies to all its sessions:
+
+  ```json
+  { "permissions": { "allow": ["WebSearch"] } }
+  ```
+
+  `WebFetch` (or `WebFetch(domain:example.com)` for one site) allows its page fetch the same way;
+  see "The CLI's own tools" above before you do.
+
 - It reports tokens and a cost, and a message sent during a task reaches it within that task.
 - Not logged in: `stopped: claude-code exited (1): Invalid API key · Please run /login`; run
   `claude` in a terminal and `/login`.
@@ -2015,6 +2112,9 @@ claude -p "Open https://example.com in Vimma's agent workspace and tell me its h
   the call is refused and the JSON's `permission_denials` lists it.
 - `--mcp-config vimma.json --strict-mcp-config` uses the server in `vimma.json` for this run and
   leaves out the servers of your other configuration.
+- Its own web search is refused in a headless run unless allowed: add `WebSearch` to
+  `--allowedTools` (`--allowedTools "mcp__vimma WebSearch"`) for one run, or to
+  `permissions.allow` in `~/.claude/settings.json` for all. Or ask it to search through Vimma.
 - `--output-format json` prints one object when the run ends: `result` is the answer.
   `--output-format stream-json --verbose` (it needs `--verbose`) prints a JSON line for each
   message as the run goes; a tool result is in a `user` message, with `"is_error": true` when
@@ -2038,6 +2138,10 @@ codex exec -c 'mcp_servers.vimma.default_tools_approval_mode="approve"' \
 never`) unless the server's `default_tools_approval_mode` is `"approve"`. `-c` sets it for this
   run; set under `[mcp_servers.vimma]` in `~/.codex/config.toml`, it applies to every session,
   and an interactive Codex then stops asking before Vimma does.
+- Its own web search needs no approval and is on by default (`web_search = "cached"`, results
+  from OpenAI's index); `-c web_search="live"` searches the live web and can open the pages the
+  model names, and `-c web_search="disabled"` removes it. A run with the sandbox off, as with
+  `--yolo`, searches live even when `"cached"` is set (checked with 0.163.0).
 - For a server not in your configuration, add `-c 'mcp_servers.vimma.command="vimma-ctl"'` and
   `-c 'mcp_servers.vimma.args=["mcp"]'`.
 - Codex gives up on a tool call after 60 s (`tool_timeout_sec`); if you raise `ask_timeout`, add
@@ -2059,6 +2163,8 @@ copilot -p "Open https://example.com in Vimma's agent workspace and tell me its 
   is refused. `--allow-all-tools` is not needed for Vimma's tools, and would also let the run use
   the shell and edit files without asking.
 - `--additional-mcp-config @vimma.json` adds the server in `vimma.json` for this run.
+- Its own page fetch asks for each address, so in `-p` it is refused unless allowed:
+  `--allow-url=example.com` allows one site, `--allow-all-urls` every one (checked with 1.0.105).
 - `-s` (`--silent`) prints only the answer; `--output-format json` prints one JSON object for
   each event instead.
 
@@ -2069,7 +2175,8 @@ opencode run "Open https://example.com in Vimma's agent workspace and tell me it
 ```
 
 - `opencode run` runs the prompt and exits. It reads the same `mcp` entry in `opencode.json` as
-  the interactive opencode.
+  the interactive opencode, and waits for your answer in Vimma as long as that entry sets no
+  `timeout`.
 - opencode allows MCP tools without asking unless a `permission` rule in `opencode.json` says
   `ask` or `deny`. Its tool names start with the server's name, so this allows Vimma's tools
   even where a broader rule asks:
@@ -2080,6 +2187,11 @@ opencode run "Open https://example.com in Vimma's agent workspace and tell me it
 
   `opencode run --auto` approves every request that is not denied, including the shell and file
   edits, so a rule for `vimma_*` is the narrower choice.
+
+- Its own `webfetch` and `websearch` tools run without asking, as most of its tools do, unless a
+  `permission` rule names them (`{ "permission": { "websearch": "deny" } }`). The first web
+  search asks once which search service to use, which `opencode run` cannot answer: the run
+  ends with an error until you pick one in an interactive opencode (checked with 2.0.32).
 
 - `--format json` prints opencode's events as JSON instead of formatted text.
 
@@ -2106,7 +2218,7 @@ A call waits for your answer up to `[mcp] ask_timeout` (50 s by default, 10 to 3
 | Claude Code | `MCP_TOOL_TIMEOUT` (about 28 hours unless set), or a server's `timeout` in `.mcp.json` (milliseconds); a stdio server that sends nothing for 30 minutes is cut off. A call still running after two minutes moves to a background task. | Nothing: Vimma answers first.                                                                                                |
 | Codex CLI   | `tool_timeout_sec`, 60 s by default.                                                                                                                                                                                                   | If you raise `ask_timeout` past about 55 s, set `tool_timeout_sec` under `[mcp_servers.vimma]` above it (for example `320`). |
 | Copilot CLI | `copilot mcp add` takes `--timeout MS`.                                                                                                                                                                                                | If calls end before you can answer, add the server again with `--timeout` above `ask_timeout` (in milliseconds).             |
-| opencode    | Its `timeout` setting (5000 ms) covers listing the tools, not tool calls.                                                                                                                                                              | Nothing.                                                                                                                     |
+| opencode    | 12 hours unless the server's `timeout` in `opencode.json` is set (milliseconds); set, it limits tool calls too. Starting the server and listing its tools have their own 30 s limit (checked with 2.0.32).                             | Nothing, unless you set `timeout`: then set it above `ask_timeout` (for example `320000`).                                   |
 
 When the agent tool gives up first, Vimma's question may still be on the line; answering it then
 does nothing the agent sees.
@@ -2134,7 +2246,8 @@ with the rest of your computer.
 - is held by limits: 4 waiting requests per agent and 16 in all, 10 opens a minute, 30
   `vimma_keys` calls, 30 `vimma_elements` calls, 30 clicks and fills, 12 screenshots, 30 console reads and 6 `vimma_show` calls a minute, and a minute of silence after three noes
   in a row. A call over one of these rates is refused with the limit it hit and the seconds
-  until the next call is allowed, so the agent waits for the rate, not for you. Its pages get no permission prompts, pop-ups or other
+  until the next call is allowed, so the agent waits for the rate, not for you; Vimma's own
+  agent waits it out by itself, and its step says `waiting 40 s (rate limit)`. Its pages get no permission prompts, pop-ups or other
   apps, and its downloads ask and are kept apart
   ([Downloads from the agent workspace](#downloads-from-the-agent-workspace)).
 
@@ -2299,6 +2412,9 @@ button inside an embedded frame that updates the page around it reads as no chan
   grant like any other open and shows its notice and `:mcp log` row; a search the agent sends
   through the form asks as a form submission. The instructions limit this to searches; any
   other form still asks.
+- **Several steps at once are still asked one by one.** The instructions also tell an agent to
+  send steps that do not depend on each other in one turn, such as each item's search in its own
+  tab. Each of those calls is asked, limited and logged as if it came alone.
 - **A click that may pay asks every time** too: on a page that shows a payment card field, or
   on a button that says it pays (`Pay now`, `Place order`, `Vahvista tilaus` and the like),
   even when the button sends no form.
@@ -2793,7 +2909,7 @@ preview at once: `ctrl+b b`, `space` on each of the three (`j` / `k` between the
 - **What changes.** Tabs that were in the old split and are not marked leave it and stay open as
   ordinary tabs. No page reloads: each keeps its scroll, what you typed and its history.
 - **Limits.** Without a split, one mark is just `Enter` on that row. With more marks than
-  `[panes] max` (4 by default), the panel says `Show together: at most 4 panes` and changes nothing; the panel stays open with your
+  `[panes] max` (8 by default), the panel says `Show together: at most 8 panes` and changes nothing; the panel stays open with your
   marks so you can drop some. A pinned row cannot be marked.
 - **Keys.** Rebind them under `[modal.panel]` with the actions `panel_mark` and
   `panel_visual`, e.g. `m = "panel_mark"`. If you give the leader (`space`) a binding, `space`
@@ -3093,7 +3209,7 @@ unless you press `d`.
 | `h`                     | Close the folder; inside one, go to its folder and close that.                            |
 | `Enter`                 | Open the bookmark in this tab and close the panel; on a folder, open or close it.         |
 | `t`                     | Open the bookmark in a new tab behind this one; the panel stays open for more.            |
-| `s` / `S`               | Open it in a new pane right / below (as `ctrl+b v` / `-`, at most 4 panes).               |
+| `s` / `S`               | Open it in a new pane right / below (as `ctrl+b v` / `-`, at most 8 panes).               |
 | `a`                     | Add this page in the highlighted folder, as a path. As in neo-tree, `a/b/` makes folders. |
 | `A`                     | Add a folder there.                                                                       |
 | `r`                     | Rename.                                                                                   |
@@ -3241,6 +3357,97 @@ Bitwarden), and `Tab` completes the name. To put an add-on on a key:
 - **Sidebar add-ons** (a `sidebar_action`) open in Firefox's own sidebar, through the add-on's
   button or the View menu, not in Vimma's side panel.
 
+## Site permissions
+
+See and change what the site in the selected tab may do (camera, microphone, location,
+notifications, pop-ups, autoplay and the rest) without the mouse. `:site` (or `:permissions`)
+opens a picker with every permission Firefox's Page Info lists, each with the state Firefox has
+for this site: `default` when the site has no setting of its own, `temporary` or
+`this session` when the setting lasts only that long, `set by policy` or `locked` when it cannot
+be changed here. A `●` marks the permissions the site has its own setting for. Like tab search,
+it takes every key while open.
+
+| Key            | What it does                                                     |
+| -------------- | ---------------------------------------------------------------- |
+| `j` / `k`, `/` | Move; filter by name (`Esc` back to the list).                   |
+| `a`            | Allows the permission for this site.                             |
+| `b`            | Blocks it.                                                       |
+| `r`            | Resets it to Firefox's default.                                  |
+| `Enter`        | Steps to its next state, in the order Firefox's own panels show. |
+| `Esc` / `q`    | Closes the picker.                                               |
+
+The picker stays open after a change and shows the new state. Changes are made through
+Firefox, as Page Info's Permissions tab makes them, and show in the site information panel
+(the padlock) too. A permission Firefox does not offer a state for (screen sharing cannot be
+allowed for good) says so, and a permission set by an enterprise policy or a locked pref is
+read only.
+
+Pop-ups are one of the rows. Firefox blocks them by default, so the row reads `Block · default`
+until you choose: `a` allows the site's pop-ups, `b` keeps a block for the site even though it is
+the default, and `r` takes the site's choice back. This also undoes a mistaken answer on the
+pop-up blocked bar.
+
+A change applies to this site in this workspace only, since
+[site permissions are per workspace](#workspaces); in the
+[private workspace](#private-workspace) it lasts until the private workspace closes. If the tab
+goes to another page while the picker is open, the next key closes it: run `:site` again for
+the new page. `:site` does nothing in the [agent workspace](#agent-workspace), so a permission
+is never given to a page an agent drives. It has no default key: bind `site_permissions` in
+[config.toml](#configtoml), as every key, the prefix and the leader can be remapped.
+
+## Blocked pop-ups
+
+When a page opens a pop-up on its own, Firefox blocks it and shows a bar over the page: "Vimma
+prevented this site from opening a pop-up window". You answer that bar from the keyboard as you
+answer a [permission prompt](#answering-a-permission-prompt):
+
+| Key   | What it does                                                                                               |
+| ----- | ---------------------------------------------------------------------------------------------------------- |
+| `y`   | Allows pop-ups for this site from now on, opens the ones it tried to open and closes the bar.              |
+| `n`   | Blocks pop-ups for this site (Firefox's settings list it as Block) and closes the bar.                     |
+| `Esc` | Closes the bar and changes nothing; pop-ups stay blocked as before, and the bar stays closed on that page. |
+
+The bar names its keys beside its Options button, `y allow · n block · Esc close`, as a
+permission prompt does, and the status bar says `pop-up blocked · y allow · n block · Esc close`;
+both show once the keys count. As with a permission prompt, they count only once the bar has been
+up for half a second with no key pressed in between, and any key you press meanwhile starts the
+wait again, so typing meant for the page never answers the bar. While you type in a page field, the address bar, a picker, the
+command line or a search, and in link hints, copy mode and element mode, the keys are theirs and
+the bar and the status bar say `Esc, then y allow · n block`. Vimma never moves focus onto the
+bar.
+
+### Undoing a block, and the bar's other options
+
+Pressed `n` by mistake? The status bar says `pop-ups blocked · :popups to allow` on that site, and
+`:popups` opens a picker over the site's pop-up permission and the bar's own options, with or
+without the bar:
+
+| Row                                              | What it does                                                                            |
+| ------------------------------------------------ | --------------------------------------------------------------------------------------- |
+| Allow pop-ups for _site_                         | Allows pop-ups for this site from now on and opens the ones it tried to open.           |
+| Reset pop-ups for _site_ to default              | On a blocked site: removes your choice, so the site follows Firefox's setting again.    |
+| Block pop-ups for _site_                         | On an allowed site: blocks its pop-ups again.                                           |
+| Go to _address_                                  | Follows the redirect the page was stopped from making, when there is one.               |
+| Open _address_                                   | Opens that one pop-up, once. There is a row for each pop-up the page tried to open.     |
+| Don't show this message when pop-ups are blocked | Turns the bar off for every site. Pop-ups stay blocked, and `:popups` still lists them. |
+| Pop-up settings                                  | Opens Firefox's settings at its pop-up exceptions.                                      |
+
+`j` / `k` move, `/` filters, `Enter` runs the row and `Esc` closes the picker. Vimma runs
+Firefox's own code for the bar's options and Firefox's site permissions for the rest. The keys,
+the picker and the status bar follow the selected tab, and in a split the focused pane. The
+[site permissions](#site-permissions) picker (`:site`) lists pop-ups too, and changes the same
+setting: a block from `n`, `:popups` or `:site` can be undone from either picker.
+
+With nothing blocked on the page and no choice made for the site, `:popups` says `no pop-ups
+blocked on this page`. When an administrator has locked pop-up blocking on, the Allow, Block and
+Reset rows are left out, as Firefox leaves them out, and `y` and `n` do nothing: the status bar
+says `pop-up blocked · Esc close`, and `Esc` still closes the bar. A row you choose runs only on
+the page you opened `:popups` on: if the tab has gone to another site meanwhile, it does nothing.
+In the [agent workspace](#agent-workspace),
+pages get no permissions: no key answers the bar there, and `:popups` says `pop-ups stay blocked
+in the agent workspace`. `:popups` has no default key; bind one in `config.toml`
+(`[keys] popup_picker`).
+
 ## The command line
 
 `:` in normal mode opens a Vim-style command line just above the status bar, for everything
@@ -3299,6 +3506,8 @@ type reaches the page, and `ctrl+b` sequences still work.
 | `:about`, `:vimma`                    | Opens [about:vimma](#aboutvimma) in a new tab.                                                                                                 |
 | `:addons`                             | Opens the [add-on picker](#add-ons), as `ctrl+b e`.                                                                                            |
 | `:addon name`                         | Opens that add-on's popup; `Tab` completes the name ([Add-ons](#add-ons)).                                                                     |
+| `:site`, `:permissions`               | Opens the [site permissions](#site-permissions) picker for the selected tab.                                                                   |
+| `:popups`                             | Opens the [blocked pop-ups picker](#blocked-pop-ups): allow, reset or block the site, open one.                                                |
 | `:bug`                                | Opens `about:vimma` and copies its redacted report to the clipboard, for a bug report.                                                         |
 | `:update`                             | Checks for a newer Vimma now; when there is one, opens `about:vimma`'s Updates section with the exact commands ([Updates](#updates)).          |
 | `:restart`                            | Restarts Vimma; tabs come back, and an installed update applies. Asks first while private tabs are open ([Updates](#updates)).                 |
@@ -3411,7 +3620,7 @@ accent = "#ff9e64"
   `3 errors: …`). The Browser Console (`ctrl+shift+j`) lists them all. Fix the file and the
   message goes away at the next check.
 - **What applies live:** `[keys]`, `[modal]` (leader, `timeout_ms`, per-mode keys, `hint_chars`)
-  and `[unbind]`; `[panes] max` (most panes in a workspace, 1 to 16, default 4; it limits new
+  and `[unbind]`; `[panes] max` (most panes in a workspace, 1 to 16, default 8; it limits new
   splits), `[panes] layout` (`"dwindle"` or `"manual"`: where `ctrl+b enter` puts a new pane) and
   `[panes] main_size` (the main-\* presets' main pane, 20 to 80%, default 60); `[sites."<host>"] insert` (`auto`, `never` or `always`: whether a text field on that
   site and its subdomains takes insert mode); `[theme]` `source` (`omarchy` or `file`, the
@@ -3725,6 +3934,11 @@ Vimma changes these Firefox defaults for workspaces; each one can be changed bac
   back (`browser.startup.page` = `3`; Firefox's default `1` opens the home page).
 - **Firefox Sync leaves two settings alone**: `browser.startup.page` and
   `privacy.userContext.enabled` (turning containers off deletes every workspace's data).
+- **A file Firefox opens in a tab of its own opens no downloads panel.** A PDF that a site
+  serves as a download opens in the PDF viewer ready for your keys, with focus in its tab rather
+  than in the downloads panel; the downloads button still shows the download. Other downloads open
+  the panel as in Firefox, and a profile's first download behaves as every later one
+  (`browser.download.panel.shown` = `true`).
 
 ## Accessibility
 
