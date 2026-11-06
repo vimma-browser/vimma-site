@@ -372,7 +372,7 @@ jobs:
             if [[ -n "$line" ]]; then problems+=("The sync pull request $line"); fi
           done <<< "$stuck"
           # Only an issue this workflow opened: anyone can open one with the same title.
-          issue=$(gh issue list --repo "$REPO" --author app/github-actions --state open --limit 100 --json number,title \
+          issue=$(gh issue list --repo "$REPO" --author "github-actions[bot]" --state open --limit 100 --json number,title \
             --jq "[.[] | select(.title == \"$title\") | .number][0] // empty")
 
           if (( ${#problems[@]} == 0 )); then
