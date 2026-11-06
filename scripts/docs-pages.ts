@@ -58,7 +58,7 @@ const AGENT_TOOL_SECTIONS = [
 /** limits.md sections shown on the Known limits page, in this order. */
 export const LIMIT_SECTIONS = [
   "Features",
-  "Find",
+  "PDF viewer",
   "Copy mode",
   "Tabs and window",
   "Workspaces (by design)",
@@ -150,7 +150,6 @@ export const DOC_PAGES: DocPage[] = [
       { guide: "Link hints" },
       { guide: "Find" },
       { keys: ["Navigation", "Page", "Hints", "Find"] },
-      { limits: ["Find"] },
     ],
   },
   {
@@ -266,6 +265,14 @@ export const DOC_PAGES: DocPage[] = [
     group: "Tabs, panes, workspaces",
     description: "A caret on the page, Vim motions, a selection and y to copy it.",
     blocks: [{ guide: "Copy mode" }, { keys: ["Copy mode"] }, { limits: ["Copy mode"] }],
+  },
+  {
+    slug: "pdf",
+    title: "PDF viewer",
+    headTitle: "The PDF viewer: zathura's keys in Firefox's pdf.js",
+    group: "Tabs, panes, workspaces",
+    description: "PDFs in Firefox's own viewer with zathura's keys: pages, zoom, an outline panel, marks and jumps.",
+    blocks: [{ guide: "PDF viewer" }, { keys: ["PDF viewer", "PDF outline"] }, { limits: ["PDF viewer"] }],
   },
   {
     slug: "config",
