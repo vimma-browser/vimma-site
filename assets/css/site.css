@@ -93,6 +93,8 @@
   --band: clamp(3rem, 2rem + 4vw, 6rem);
   --page: 1180px;
   --measure: 72ch;
+  /* Corners, square as in Vimma's chrome since 0.1.16; real circles keep 50%. */
+  --radius: 0;
   font-family: var(--font);
   font-size: 16px;
   line-height: 1.6;
@@ -175,7 +177,7 @@ kbd {
   padding: 0 0.55ch;
   border: 1px solid var(--border);
   border-bottom-width: 2px;
-  border-radius: 4px;
+  border-radius: var(--radius);
   background: var(--bg-light);
   color: var(--fg-bright);
   line-height: 1.35;
@@ -342,7 +344,7 @@ li + li {
   vertical-align: -0.4em;
 }
 
-/* the site's pages, in a rounded tray */
+/* the site's pages, in a tray */
 .tabs ul {
   display: flex;
   flex-wrap: wrap;
@@ -351,7 +353,7 @@ li + li {
   margin: 0;
   padding: 0.25rem;
   border: 1px solid var(--border);
-  border-radius: 999px;
+  border-radius: var(--radius);
   background: color-mix(in srgb, var(--bg-light) 60%, transparent);
   list-style: none;
 }
@@ -363,7 +365,7 @@ li + li {
 .tabs a {
   display: block;
   border: 1px solid transparent;
-  border-radius: 999px;
+  border-radius: var(--radius);
   color: var(--fg);
   text-decoration: none;
   padding: 0.25rem 0.95rem;
@@ -390,7 +392,7 @@ li + li {
 .keyhint {
   padding: 0.2rem 1.4ch;
   border: 1px solid var(--border);
-  border-radius: 999px;
+  border-radius: var(--radius);
   background: none;
   color: var(--fg-muted);
   cursor: pointer;
@@ -531,7 +533,7 @@ main > :first-child {
   margin: 0 0 var(--s2);
   overflow: hidden;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius);
   background: var(--bg-darker);
   box-shadow: inset 0 1px 0 color-mix(in srgb, var(--fg-bright) 6%, transparent);
 }
@@ -593,7 +595,7 @@ main > :first-child {
   min-width: 0;
   padding: 0.25rem 1ch;
   border: 1px solid var(--border);
-  border-radius: 3px;
+  border-radius: var(--radius);
   background: var(--bg-dark);
   color: var(--fg-bright);
 }
@@ -1293,7 +1295,7 @@ dialog input[type="checkbox"] {
 dialog button {
   padding: 0.1rem 1ch;
   border: 1px solid var(--border);
-  border-radius: 3px;
+  border-radius: var(--radius);
   background: none;
   color: var(--fg-bright);
   cursor: pointer;

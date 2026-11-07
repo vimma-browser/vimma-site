@@ -167,7 +167,7 @@ main.bands {
 .button {
   padding: 0.55rem 2.4ch;
   border: 1px solid var(--border);
-  border-radius: 999px;
+  border-radius: var(--radius);
   background: color-mix(in srgb, var(--bg) 80%, transparent);
   color: var(--fg-bright);
   font-weight: 700;
@@ -386,7 +386,7 @@ main.bands {
 .window {
   overflow: hidden;
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: var(--radius);
   background: var(--bg-darker);
   box-shadow: 0 40px 100px -40px rgb(0 0 0 / 0.8),
     0 0 0 1px color-mix(in srgb, var(--aqua) 8%, transparent);
@@ -449,7 +449,7 @@ main.bands {
   padding: 0;
   overflow: hidden;
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: var(--radius);
   background: var(--border);
   list-style: none;
 }
