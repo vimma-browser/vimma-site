@@ -8,6 +8,7 @@
 // are data, and the JSON-LD block is a data <script> the browser never runs.
 
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -17,7 +18,7 @@ import { VIMMA_REPO } from "./bindings-types.js";
 /** The production origin, with no trailing slash. Every canonical and sitemap URL starts with it. */
 export const SITE_URL = "https://vimma.dev";
 export const SITE_NAME = "Vimma";
-export const TAGLINE = "A keyboard-first browser for people who live in Vim and tmux";
+export const TAGLINE = "A keyboard-first browser for people who live in the terminal";
 
 /** The link-preview image: made by scripts/og-image.sh and committed, like the logo. */
 export const OG_IMAGE = {
@@ -26,6 +27,15 @@ export const OG_IMAGE = {
   height: 630,
   alt: `The Vimma logo, an aqua browser window with a V, next to the words "${TAGLINE}".`,
 };
+
+/**
+ * The link-preview image's address, with a short hash of its bytes as `?v=`. Chat apps and social
+ * sites cache a preview by the image URL, so a new image needs a new URL to replace the old one.
+ */
+export function ogImageUrl(root: string): string {
+  const hash = createHash("sha256").update(readFileSync(join(root, OG_IMAGE.path))).digest("hex");
+  return `${absolute(OG_IMAGE.path)}?v=${hash.slice(0, 8)}`;
+}
 
 /**
  * The promo video on the home page (src/pages/index.html), put in assets/video/ by
@@ -65,12 +75,13 @@ export interface HeadPage {
   type: "website" | "article";
   /** true: Open Graph video tags for the promo video (the home page). */
   video?: boolean;
+  /** The og:image address, from ogImageUrl. */
+  image: string;
 }
 
 /** The SEO and link-preview part of a page's <head>, indented to sit in layout.html. */
 export function headTags(p: HeadPage): string {
   const url = absolute(p.out);
-  const image = absolute(OG_IMAGE.path);
   const meta = (attr: "name" | "property", key: string, value: string): string =>
     `<meta ${attr}="${key}" content="${escapeHtml(value)}">`;
   const lines = [
@@ -81,7 +92,7 @@ export function headTags(p: HeadPage): string {
     meta("property", "og:title", p.title),
     meta("property", "og:description", p.description),
     ...(p.indexable ? [meta("property", "og:url", url)] : []),
-    meta("property", "og:image", image),
+    meta("property", "og:image", p.image),
     meta("property", "og:image:width", String(OG_IMAGE.width)),
     meta("property", "og:image:height", String(OG_IMAGE.height)),
     meta("property", "og:image:alt", OG_IMAGE.alt),

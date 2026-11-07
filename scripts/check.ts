@@ -433,7 +433,7 @@ for (const file of htmlFiles) {
     if (metaOf("og:url")[0] !== urlOf(file)) fail(where, "og:url is not the page's address");
   }
   for (const k of [...OG, "twitter:card"]) if (metaOf(k).length !== 1) fail(where, `${metaOf(k).length} ${k} tags`);
-  const image = metaOf("og:image")[0] ?? "";
+  const image = (metaOf("og:image")[0] ?? "").replace(/\?v=[0-9a-f]+$/, "");
   if (!image.startsWith(SITE) || !existsSync(join(DIST, image.slice(SITE.length)))) fail(where, `og:image ${image} is not a built file`);
   for (const v of metaOf("og:video")) {
     videoTags++;
