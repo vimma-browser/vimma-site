@@ -6,7 +6,9 @@
 //
 //   html       doctype, lang, one <title> and <h1>, viewport, CSP, balanced tags, unique ids,
 //              alt on every <img>, no inline scripts, styles or event handlers
-//   links      every internal href/src/srcset resolves to a file, and every #fragment to an id
+//   links      every internal href/src/srcset resolves to a file, and every #fragment to an id;
+//              so does every on-site target in _redirects, whose off-site targets are
+//              support.mozilla.org only
 //   external   nothing loads from another origin: no remote src/href on resource elements,
 //              no remote url()/@import in CSS, no network calls in JS
 //   contrast   every text colour pair in both palettes passes WCAG AA (4.5:1)
@@ -226,6 +228,32 @@ for (const { from, url, line } of linkRefs) {
     }
     if (!ids.has(decodeURIComponent(hash))) fail(where, `"${url}": no id "${hash}" in ${rel(file)}`);
   }
+}
+
+// _redirects (scripts/support.ts): each on-site target is a built page with its fragment, and the
+// one off-site target is Firefox's help, so the file can never send a reader anywhere else
+const redirects = join(DIST, "_redirects");
+if (!existsSync(redirects)) fail("_redirects", "missing");
+else {
+  readFileSync(redirects, "utf8")
+    .split("\n")
+    .forEach((l, i) => {
+      if (l === "" || l.startsWith("#")) return;
+      const where = `_redirects line ${i + 1}`;
+      const [from = "", to = "", status, ...rest] = l.split(/\s+/);
+      if (!from.startsWith("/support/") || status !== "302" || rest.length) fail(where, `unexpected rule: ${l}`);
+      if (/^https?:/.test(to)) {
+        if (!to.startsWith("https://support.mozilla.org/")) fail(where, `"${to}" leaves the site for another host`);
+        return;
+      }
+      const file = target(join(DIST, "index.html"), to);
+      if (!existsSync(file)) fail(where, `"${to}" is broken (no ${rel(file)})`);
+      const hash = to.split("#")[1];
+      if (hash && existsSync(file)) {
+        const ids = new Set(tags(readFileSync(file, "utf8")).flatMap((t) => t.attrs.get("id") ?? []));
+        if (!ids.has(hash)) fail(where, `"${to}": no id "${hash}" in ${rel(file)}`);
+      }
+    });
 }
 
 // --- CSS and JS: nothing remote ---------------------------------------------------------------
