@@ -69,10 +69,15 @@ test("an address without all three parts, or with more, is served as a file or n
   }
 });
 
-test("wrangler.jsonc runs the script for /support/* only, the rest is plain static assets", () => {
+test("wrangler.jsonc runs the script for /support/* only, the rest is plain static assets with a 404 page", () => {
   // strip the // comments that start a line: wrangler.jsonc is JSON with comments
   const text = readFileSync(join(ROOT, "wrangler.jsonc"), "utf8").replace(/^\s*\/\/.*$/gm, "");
   const config = JSON.parse(text) as { main?: string; assets?: Record<string, unknown> };
   assert.equal(config.main, "scripts/worker.ts");
-  assert.deepEqual(config.assets, { directory: "./dist", binding: "ASSETS", run_worker_first: ["/support/*"] });
+  assert.deepEqual(config.assets, {
+    directory: "./dist",
+    binding: "ASSETS",
+    run_worker_first: ["/support/*"],
+    not_found_handling: "404-page",
+  });
 });
