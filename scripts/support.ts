@@ -84,18 +84,22 @@ export function redirectsFile(): string {
  * when no rule matches, and the path is served as a file or as not found.
  */
 export function resolveSupport(path: string): string | null {
+  const segments = path.split("/");
   for (const [from, to] of rules()) {
-    const names: string[] = [];
-    const pattern = from.replace(/:([a-z]+)|[^:]+/g, (part, name: string | undefined) => {
-      if (name) {
-        names.push(name);
-        return "([^/]+)";
-      }
-      return part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const pattern = from.split("/");
+    if (pattern.length !== segments.length) continue;
+    const values = new Map<string, string>();
+    const matches = pattern.every((part, i) => {
+      const segment = segments[i] ?? "";
+      if (!part.startsWith(":")) return part === segment;
+      values.set(part, segment);
+      return segment !== "";
     });
-    const m = new RegExp(`^${pattern}$`).exec(path);
-    if (!m) continue;
-    return names.reduce((url, name, i) => url.replace(`:${name}`, m[i + 1] ?? ""), to);
+    if (!matches) continue;
+    return to
+      .split("/")
+      .map((part) => values.get(part) ?? part)
+      .join("/");
   }
   return null;
 }
