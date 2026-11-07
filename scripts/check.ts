@@ -7,8 +7,8 @@
 //   html       doctype, lang, one <title> and <h1>, viewport, CSP, balanced tags, unique ids,
 //              alt on every <img>, no inline scripts, styles or event handlers
 //   links      every internal href/src/srcset resolves to a file, and every #fragment to an id;
-//              so does every on-site target in _redirects, whose off-site targets are
-//              support.mozilla.org only
+//              so does every on-site target of the /support/ rules, whose off-site targets
+//              are support.mozilla.org only, and there is no _redirects file
 //   external   nothing loads from another origin: no remote src/href on resource elements,
 //              no remote url()/@import in CSS, no network calls in JS
 //   contrast   every text colour pair in both palettes passes WCAG AA (4.5:1)
@@ -23,6 +23,8 @@
 
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
+
+import { rules } from "./support.js";
 
 const ROOT = resolve(import.meta.dirname, "../..");
 const DIST = join(ROOT, "dist");
@@ -230,30 +232,24 @@ for (const { from, url, line } of linkRefs) {
   }
 }
 
-// _redirects (scripts/support.ts): each on-site target is a built page with its fragment, and the
-// one off-site target is Firefox's help, so the file can never send a reader anywhere else
-const redirects = join(DIST, "_redirects");
-if (!existsSync(redirects)) fail("_redirects", "missing");
-else {
-  readFileSync(redirects, "utf8")
-    .split("\n")
-    .forEach((l, i) => {
-      if (l === "" || l.startsWith("#")) return;
-      const where = `_redirects line ${i + 1}`;
-      const [from = "", to = "", status, ...rest] = l.split(/\s+/);
-      if (!from.startsWith("/support/") || status !== "302" || rest.length) fail(where, `unexpected rule: ${l}`);
-      if (/^https?:/.test(to)) {
-        if (!to.startsWith("https://support.mozilla.org/")) fail(where, `"${to}" leaves the site for another host`);
-        return;
-      }
-      const file = target(join(DIST, "index.html"), to);
-      if (!existsSync(file)) fail(where, `"${to}" is broken (no ${rel(file)})`);
-      const hash = to.split("#")[1];
-      if (hash && existsSync(file)) {
-        const ids = new Set(tags(readFileSync(file, "utf8")).flatMap((t) => t.attrs.get("id") ?? []));
-        if (!ids.has(hash)) fail(where, `"${to}": no id "${hash}" in ${rel(file)}`);
-      }
-    });
+// Firefox's help links (scripts/support.ts, answered by scripts/worker.ts): each on-site target is
+// a built page with its fragment, and the one off-site target is Firefox's help, so the script can
+// never send a reader anywhere else. A _redirects file would be applied too, so there is none.
+if (existsSync(join(DIST, "_redirects"))) fail("_redirects", "present: /support/ rules belong in scripts/support.ts");
+for (const [from, to] of rules()) {
+  const where = `support rule ${from}`;
+  if (!from.startsWith("/support/")) fail(where, `unexpected rule: ${from} ${to}`);
+  if (/^[a-z][a-z0-9+.-]*:|^\/\//i.test(to)) {
+    if (!to.startsWith("https://support.mozilla.org/")) fail(where, `"${to}" leaves the site for another host`);
+    continue;
+  }
+  const file = target(join(DIST, "index.html"), to);
+  if (!existsSync(file)) fail(where, `"${to}" is broken (no ${rel(file)})`);
+  const hash = to.split("#")[1];
+  if (hash && existsSync(file)) {
+    const ids = new Set(tags(readFileSync(file, "utf8")).flatMap((t) => t.attrs.get("id") ?? []));
+    if (!ids.has(hash)) fail(where, `"${to}": no id "${hash}" in ${rel(file)}`);
+  }
 }
 
 // --- CSS and JS: nothing remote ---------------------------------------------------------------

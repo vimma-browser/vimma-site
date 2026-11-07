@@ -28,7 +28,7 @@ import {
   robotsTxt,
   sitemapXml,
 } from "./scripts/seo.js";
-import { SUPPORT_TOPICS, redirectsFile } from "./scripts/support.js";
+import { SUPPORT_TOPICS } from "./scripts/support.js";
 import { escapeHtml } from "./src/ts/html.js";
 
 const ROOT = resolve(import.meta.dirname, "..");
@@ -209,8 +209,6 @@ function main(): void {
     if (f.endsWith(".js")) cpSync(at(".build/site", f), join(DIST, "assets/js", f));
   }
   cpSync(at("LICENSE"), join(DIST, "LICENSE.txt"));
-  // Firefox's help links (scripts/support.ts), applied by Cloudflare before it serves a file
-  writeFileSync(join(DIST, "_redirects"), redirectsFile());
   // static/: files served at the site's root as they are (search-engine verification files,
   // a _headers file); dotfiles such as .gitkeep stay behind
   for (const f of readdirSync(at("static"))) {
