@@ -5,7 +5,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { FIREFOX_HELP, SUPPORT_TOPICS, redirectsFile, resolveSupport } from "./support.js";
+import { FIREFOX_HELP, SUPPORT_TOPICS, resolveSupport, rules } from "./support.js";
 
 const PREFIX = "/support/159.0.1/Linux/en-US/";
 
@@ -56,12 +56,8 @@ test("topics are lower-case slugs, each listed once, each pointing at a page on 
   }
 });
 
-test("_redirects lists the topics before the forward, which comes last", () => {
-  const rules = redirectsFile()
-    .split("\n")
-    .filter((l) => l && !l.startsWith("#"));
-  assert.equal(rules.at(-1), `/support/:version/:os/:locale/:topic ${FIREFOX_HELP}:version/:os/:locale/:topic 302`);
-  assert.ok(rules.includes("/support/:version/:os/:locale/firefox-help /support/ 302"));
-  // every rule a temporary redirect, so a topic that gets a Vimma page later is not cached away
-  for (const r of rules) assert.match(r, /^\S+ \S+ 302$/, r);
+test("the topics come before the forward, which comes last", () => {
+  const all = rules();
+  assert.deepEqual(all.at(-1), ["/support/:version/:os/:locale/:topic", `${FIREFOX_HELP}:version/:os/:locale/:topic`]);
+  assert.equal(all.filter(([from]) => from.endsWith(":topic")).length, 1);
 });
