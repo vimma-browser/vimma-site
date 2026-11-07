@@ -24,6 +24,7 @@ import {
   homeJsonLd,
   lastChanged,
   llmsTxt,
+  ogImageUrl,
   robotsTxt,
   sitemapXml,
 } from "./scripts/seo.js";
@@ -132,6 +133,7 @@ function main(): void {
   const total = keys.sections.reduce((n, s) => n + s.rows.length, 0);
 
   const notFoundPage = (p: Page): boolean => p.meta.out === "404.html";
+  const ogImage = ogImageUrl(ROOT);
   for (const page of pages) {
     const root = rootFor(page.meta.out);
     const seo = [
@@ -142,6 +144,7 @@ function main(): void {
         indexable: !notFoundPage(page),
         type: page === home || notFoundPage(page) ? "website" : "article",
         video: page === home,
+        image: ogImage,
       }),
       ...(page === home ? [homeJsonLd(page.meta.description)] : []),
     ].join("\n    ");
