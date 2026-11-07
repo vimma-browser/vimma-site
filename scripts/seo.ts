@@ -37,11 +37,11 @@ export const PROMO_VIDEO = {
   type: "video/mp4",
   width: 1920,
   height: 1080,
-  duration: "PT1M20S",
-  uploadDate: "2026-10-16",
+  duration: "PT1M15S",
+  uploadDate: "2026-11-07",
   name: "Vimma in action",
   description:
-    "A real Vimma window, driven from the keyboard: scrolling and link hints, workspaces and the private workspace, split panes and tmux's layouts, tabs marked into panes, tab search across every workspace, and live grep through the text of open tabs.",
+    "A real Vimma window, driven from the keyboard: link hints and Vim's keys, tmux-style panes and layouts, workspaces with their own logins and the private workspace, tabs marked into panes, tab search across every workspace, live grep through the text of open tabs, Vimma's own agent filling a basket in its own workspace and asking before it pays, and colours changed in config.toml and applied on save.",
 };
 
 /**

@@ -95,17 +95,17 @@ npm run release:sync -- v0.1.2     # … of a given release tag
   g h g d g k g i g a`), the overlay, the keys filter,
   the docs search and the install command's copy button (hidden where the clipboard API is missing).
   Every page works without it.
-- **The promo video** (`assets/video/`): one 65-second 16:9 cut, no sound, H.264 with the
+- **The promo video** (`assets/video/`): one 75-second 16:9 cut (about 11 MB), no sound, H.264 with the
   `moov` atom first (`+faststart`), with a WebP poster. Every screen, phones included, gets the
   same `<video>`, scaled to the column's width. With `preload="none"` it downloads nothing until
-  it is played (the poster does, 45 KB). No autoplay. A caption under it lists what it shows, since the video has captions in the picture
+  it is played (the poster does, 58 KB). No autoplay. A caption under it lists what it shows, since the video has captions in the picture
   but no audio description. `og:video` and a `VideoObject` in the JSON-LD (`PROMO_VIDEO` in
-  `scripts/seo.ts`) name the 16:9 cut. About 8 MB of binaries in git; Workers static assets
+  `scripts/seo.ts`) name the 16:9 cut. About 11 MB of binaries in git; Workers static assets
   take files up to 25 MiB.
 
   To replace the cut (same name, same size), run `scripts/video.sh` on the new file. It copies
   it in with `+faststart` (a remux, no re-encode) and remakes the poster from a fixed frame
-  (`WIDE_AT`, in seconds; the current cut uses 61.8, the live grep preview); it needs ffmpeg with libwebp:
+  (`WIDE_AT`, in seconds; the current cut uses 54.5, the agent's payment question); it needs ffmpeg with libwebp:
 
   ```sh
   scripts/video.sh ~/Videos/vimma/v2/vimma-promo-1080p.mp4
