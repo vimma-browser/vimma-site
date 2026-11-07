@@ -28,6 +28,7 @@ import {
   robotsTxt,
   sitemapXml,
 } from "./scripts/seo.js";
+import { SUPPORT_TOPICS, redirectsFile } from "./scripts/support.js";
 import { escapeHtml } from "./src/ts/html.js";
 
 const ROOT = resolve(import.meta.dirname, "..");
@@ -63,6 +64,14 @@ function readPage(file: string): Page {
   if (!m?.[1]) throw new Error(`${file}: missing the <!--{…}--> meta line`);
   const sources = [`src/pages/${file}`, ...(file === "keys.html" ? ["data/bindings.json", "data/bindings-source.json"] : [])];
   return { meta: JSON.parse(m[1]) as PageMeta, body: src.slice(m[0].length), sources };
+}
+
+/** The help page's list of Firefox topics that open a Vimma page (the help page itself left out). */
+function supportTopics(root: string): string {
+  const items = SUPPORT_TOPICS.filter((t) => t.to !== "/support/").map(
+    (t) => `  <li><a href="${root}${t.to.slice(1)}">${escapeHtml(t.title)}</a></li>`,
+  );
+  return `<ul>\n${items.join("\n")}\n</ul>`;
 }
 
 // --- pages ------------------------------------------------------------------------------------
@@ -118,10 +127,17 @@ function main(): void {
     body: d.body,
     sources: d.sources,
   }));
-  const [home, keysPage, install, about, notFound] = ["index.html", "keys.html", "install.html", "about.html", "404.html"].map(readPage);
+  const [home, keysPage, install, about, notFound, support] = [
+    "index.html",
+    "keys.html",
+    "install.html",
+    "about.html",
+    "404.html",
+    "support.html",
+  ].map(readPage);
   const start = docPages[0];
-  if (!home || !keysPage || !install || !about || !notFound || !start) throw new Error("missing page");
-  const pages = [home, start, keysPage, install, about, notFound, ...docPages.slice(1)];
+  if (!home || !keysPage || !install || !about || !notFound || !support || !start) throw new Error("missing page");
+  const pages = [home, start, keysPage, install, about, notFound, support, ...docPages.slice(1)];
   const keys = readBindings(ROOT);
   const release = releaseVars(readRelease(ROOT));
   // The Arch command as shown in a page's command box. A narrow screen breaks lines at hyphens,
@@ -156,6 +172,7 @@ function main(): void {
       keys_total: String(total),
       keys_commit: escapeHtml(keys.commit),
       keys_commit_url: `${VIMMA_REPO}/commit/${escapeHtml(keys.commitFull)}`,
+      support_topics: supportTopics(root),
     };
     const content = fill(page.body, vars, page.meta.out || "index");
     // a page that names the release changes with it, for its date in the sitemap
@@ -192,6 +209,8 @@ function main(): void {
     if (f.endsWith(".js")) cpSync(at(".build/site", f), join(DIST, "assets/js", f));
   }
   cpSync(at("LICENSE"), join(DIST, "LICENSE.txt"));
+  // Firefox's help links (scripts/support.ts), applied by Cloudflare before it serves a file
+  writeFileSync(join(DIST, "_redirects"), redirectsFile());
   // static/: files served at the site's root as they are (search-engine verification files,
   // a _headers file); dotfiles such as .gitkeep stay behind
   for (const f of readdirSync(at("static"))) {
@@ -228,7 +247,7 @@ function main(): void {
       [
         ["Start", [link(home, "Vimma"), ...docsOf("Start"), link(install, "Install Vimma"), link(keysPage, "Key bindings")]],
         ["Docs", ["Get going", "Tabs, panes, workspaces", "Make it yours"].flatMap(docsOf)],
-        ["Optional", [...docsOf("Reference"), link(about, "About Vimma")]],
+        ["Optional", [...docsOf("Reference"), link(about, "About Vimma"), link(support, "Help")]],
       ],
     ),
   );

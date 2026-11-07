@@ -27,9 +27,10 @@ in a minute or two. See [Deploying](#deploying).
 | `/keys/`   | `src/pages/keys.html`    | Every default binding, filterable, from `data/bindings.json`       |
 | `/install/`| `src/pages/install.html` | Arch Linux command, release packages, build from source            |
 | `/about/`  | `src/pages/about.html`   | Why another browser, privacy defaults, Firefox base, licence, FAQ  |
+| `/support/`| `src/pages/support.html` | Help: where to start, Vimma's topics, Firefox's help, where to ask |
 | `404.html` | `src/pages/404.html`     | Not found (links are root-absolute: it assumes the site is at `/`) |
 
-The build also writes, for search engines and AI tools, `sitemap.xml`, `robots.txt`, `llms.txt`
+The build also writes `_redirects`, the rules for [Firefox's help links](#firefoxs-help-links), and, for search engines and AI tools, `sitemap.xml`, `robots.txt`, `llms.txt`
 and `llms-full.txt` at the root (see [Search engines and link previews](#search-engines-and-link-previews)),
 and copies whatever is in `static/` there as it is.
 
@@ -124,6 +125,29 @@ npm run release:sync -- v0.1.2     # … of a given release tag
   filter. The build writes the Vimma part as the data module `assets/js/vimma-keys.js`, which
   the overlay imports when it first opens. In the overlay, `q`, `?` and `Esc` close it, `/`
   filters, and `j k d u gg G` scroll it; in the filter, `Esc` clears it, then closes the overlay.
+
+## Firefox's help links
+
+Firefox builds every "Learn more" link, Help > Get Help and Settings' support button from the pref
+`app.support.baseURL` plus a topic name. Vimma sets that pref to
+`https://vimma.dev/support/%VERSION%/%OS%/%LOCALE%/`, so a link arrives as
+`/support/159.0.1/Linux/en-US/<topic>`. `scripts/support.ts` turns these into a `_redirects` file,
+which Cloudflare's static assets apply before serving a file, so no Worker script runs:
+
+- `firefox-help` and `preferences` (and the base with no topic) go to the help page, `/support/`.
+- A topic Vimma documents goes to its docs page (`SUPPORT_TOPICS`: data collection, add-ons,
+  containers, search engines, keyboard shortcuts).
+- Every other topic goes to `https://support.mozilla.org/1/firefox/<version>/<os>/<locale>/<topic>`,
+  the address Firefox itself would have opened, so the reader gets the same article. The rule is
+  a server redirect rather than a page with a link, because it lands the reader on the article in
+  one step and Vimma's interface still names only vimma.dev. Its host is fixed and the path keeps
+  the request's own percent-encoding, so it cannot send a reader to another site; `npm run check`
+  fails if a rule points anywhere but this site or support.mozilla.org.
+- Every rule is a 302, not a 301, because browsers keep a 301 for good and a topic that gets a
+  Vimma page later would still open Mozilla's article for anyone who followed it once.
+
+`npm run serve` serves files only and does not apply `_redirects`; to try the rules locally, run
+`npx wrangler dev` after `npm run build` (see [Deploying](#deploying)).
 
 ## Keeping up with releases
 
