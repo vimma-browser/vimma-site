@@ -269,9 +269,9 @@ export const DOC_PAGES: DocPage[] = [
   {
     slug: "pdf",
     title: "PDF viewer",
-    headTitle: "The PDF viewer: zathura's keys in Firefox's pdf.js",
+    headTitle: "The PDF viewer: Vimma's keys in Firefox's pdf.js",
     group: "Tabs, panes, workspaces",
-    description: "PDFs in Firefox's own viewer with zathura's keys: pages, zoom, an outline panel, marks and jumps.",
+    description: "PDFs in Firefox's own viewer with Vimma's keys: pages, zoom, an outline panel, marks and jumps.",
     blocks: [{ guide: "PDF viewer" }, { keys: ["PDF viewer", "PDF outline"] }, { limits: ["PDF viewer"] }],
   },
   {
