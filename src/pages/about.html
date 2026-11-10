@@ -19,7 +19,7 @@
   <dd>
     <p>Off by default: Mozilla's studies and rollouts (Normandy, Nimbus), sponsored new-tab content and suggestions, feature recommendations and Mozilla promos. The build has no crash reporter and no telemetry upload, so nothing is sent to Mozilla; a crash leaves only a local core dump.</p>
     <p>Kept as in Firefox: certificate revocation (CRLite), the add-on blocklist, Sync and add-ons from addons.mozilla.org. Google Safe Browsing is on in builds made with a Google API key. Each default can be changed in <code>about:config</code>.</p>
-    <p>Firefox's own updater is not built in, and system add-on updates are off, so Vimma never asks Mozilla's update server for a Firefox build. The one request it still makes there is for the OpenH264 and Widevine plugins, which video calls and DRM video need.</p>
+    <p>Vimma's update check asks its own server, <code>updates.vimma.dev</code>, and accepts only updates signed with Vimma's key. System add-on updates are off, so Vimma never asks Mozilla's update server for a Firefox build. The one request it still makes there is for the OpenH264 and Widevine plugins, which video calls and DRM video need.</p>
   </dd>
 
   <dt id="firefox">What is underneath?</dt>
@@ -53,7 +53,7 @@
         <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> Split panes and tiling layouts</li>
         <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> <code>config.toml</code>, theming and search engines</li>
         <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> Local AI agents through MCP, confined to the agent workspace</li>
-        <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> Update notices in the status bar, with the command to update; only the AppImage installs an update by itself</li>
+        <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> Update notices in the status bar, with the command to update; the AppImage and the tarball install an update by themselves</li>
         <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> macOS on Apple Silicon, signed and notarised, with a Homebrew cask and update notices</li>
         <li><span class="mark todo" aria-hidden="true">[ ]</span><span class="sr-only">To do:</span> Passkeys on macOS</li>
       </ul>
