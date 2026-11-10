@@ -19,7 +19,7 @@
   <dd>
     <p>Off by default: Mozilla's studies and rollouts (Normandy, Nimbus), sponsored new-tab content and suggestions, feature recommendations and Mozilla promos. The build has no crash reporter and no telemetry upload, so nothing is sent to Mozilla; a crash leaves only a local core dump.</p>
     <p>Kept as in Firefox: certificate revocation (CRLite), the add-on blocklist, Sync and add-ons from addons.mozilla.org. Google Safe Browsing is on in builds made with a Google API key. Each default can be changed in <code>about:config</code>.</p>
-    <p>Vimma's update check asks its own server, <code>updates.vimma.dev</code>, and accepts only updates signed with Vimma's key. System add-on updates are off, so Vimma never asks Mozilla's update server for a Firefox build. The one request it still makes there is for the OpenH264 and Widevine plugins, which video calls and DRM video need.</p>
+    <p>Updates come through Vimma's own server, <code>updates.vimma.dev</code>: Vimma's update check and Firefox's updater in the tarball ask it, not Mozilla, and Vimma installs only a release that matches what its own key signed. System add-on updates are off. The one request Vimma still makes to Mozilla's update server is for the OpenH264 and Widevine plugins, which video calls and DRM video need.</p>
   </dd>
 
   <dt id="firefox">What is underneath?</dt>
