@@ -12,6 +12,9 @@ the [user guide](guide.md); planned work is on the
   the prefix and chords such as `ctrl+t` still work.
 - Link hints label only real elements: canvas apps (Google Docs, Figma, maps, games) get no
   hints.
+- Cookie banners from TrustArc set their categories with a slider (required, functional,
+  advertising): `f` labels its handle, but a label picks no level. Press `Tab` until the handle
+  has focus, then the arrow keys move it, and `f` reaches "Submit Preferences".
 - Element focus follows the page's elements: a page that draws several paragraphs as one
   element with line breaks gets one label for all of them (focus it, then `v` and copy-mode
   motions narrow the selection), and text drawn on a canvas gets none. The PDF viewer gets no
@@ -30,11 +33,8 @@ the [user guide](guide.md); planned work is on the
 ## PDF viewer
 
 - Marks (`m`, `'`) and the jump list inside a PDF last until Vimma quits; they are not saved
-  across restarts as zathura saves them.
-- `ctrl+b` is Vimma's prefix in the PDF viewer too, so zathura's full-screen-up `ctrl+b` is not
-  there: `shift+space` scrolls a screen up.
-- Pages keep the document's colours: there is no recolouring for a dark theme, as zathura's
-  `ctrl+r` gives (`ctrl+r` reloads).
+  across restarts.
+- Pages keep the document's colours: there is no recolouring for a dark theme.
 - No SyncTeX: neither forward search from an editor nor `ctrl`+click back to the source.
 - pdf.js's sidebar does not show, so its page thumbnails and its attachments and layers views
   are not reachable; Vimma's outline (`Tab`) is the outline, and an attachment entry in it is not
@@ -111,15 +111,20 @@ the [user guide](guide.md); planned work is on the
 
 ## Privacy, security and services
 
-- Vimma's update check only notifies: it shows the new version and the command for your install,
-  and installs nothing itself.
+- Only the AppImage and the tarball (from 0.1.16) update themselves. The `.deb`, the `.rpm`, the
+  Arch package and macOS only notify: they show the new version and the command for your install.
+  The tarball's updater downloads complete updates only (no partial MARs).
 - No download reputation: Google's download lists and file checks are open only to Mozilla's own
   key, so "Block dangerous downloads" adds nothing beyond the Safe Browsing site lists.
 - No crash reporter: a crash leaves only the system's local core dump.
 
 ## Agents (MCP)
 
-- Agents can list, read, open and close tabs of the agent workspace, and download through it.
+- An MCP agent (`vimma-ctl mcp`) reaches only the agent workspace: it cannot see or act on tabs
+  in your other workspaces or in private windows. Full control (`:control on`) is a wider grant: a
+  program that can read Vimma's control token reaches every workspace, and while MCP is on Vimma
+  asks you before each such connection
+  ([security model](security.md#1-control-socket-ctlvimmacontrolsysmjs)).
 - Pages in the agent workspace open no pop-up, so a page loaded over HTTP there loses its
   `Cross-Origin-Opener-Policy`, which Firefox refuses in such a tab. A page that also sends
   `Cross-Origin-Embedder-Policy` is not cross-origin isolated there: it has no `SharedArrayBuffer`.
@@ -221,16 +226,21 @@ the [user guide](guide.md); planned work is on the
 - Add-ons see the browser name `Vimma` (`runtime.getBrowserInfo().name`), not `Firefox`.
 - A Firefox backup cannot be restored into Vimma: Firefox's backup service refuses a different
   app.
+- The import wizard's Firefox entry lists only Vimma's own other profiles, not Firefox's, so
+  Firefox's data comes over through Sync or exported files
+  ([Moving over](guide.md#moving-over-from-firefox-or-chrome)).
+- On Linux, the import wizard cannot decrypt the passwords of Chrome and other Chromium-based
+  browsers; export them to a CSV file and import that in `about:logins`.
 
 ## Platforms and packaging
 
-- Vimma is released for Linux x86_64, and for macOS on Apple Silicon once the macOS release jobs
-  are switched on. There is no Intel Mac, universal or Windows build.
-- A macOS release is signed with Vimma's Developer ID and notarised only once the release
-  workflow's signing is switched on; before that, and in every CI test build, the `.dmg` is ad
-  hoc signed and macOS asks once, under Privacy & Security, before it first opens. Passkeys
-  stored in macOS do not work in either (issue #544).
-  It has no update notices (no update manifest exists for macOS): install a newer `.dmg` by hand.
+- Vimma is released for Linux x86_64 and for macOS on Apple Silicon. There is no Intel Mac,
+  universal or Windows build.
+- On macOS, passkeys stored in macOS (iCloud Keychain) do not work (issue #544). Releases 0.1.10
+  and earlier, and every CI test build, are ad hoc signed rather than notarised: macOS asks
+  once, under Privacy & Security, before such a `.dmg` first opens. Vimma on macOS shows update
+  notices but does not update itself: run `brew upgrade --cask vimma` or install
+  the newer `.dmg` by hand.
 - Finder on recent macOS (checked on 27.0.1) opens the mounted `.dmg`'s window at the frame of
   the last Finder window and ignores the size the `.dmg` stores, as it does for Firefox's: a
   small last window can cut off the Applications link, and a large one shows blank space past
@@ -241,6 +251,14 @@ the [user guide](guide.md); planned work is on the
   window in full screen is never hidden, so from full screen the private workspace is a
   fullscreen Space of its own and switching moves between Spaces.
 - The AUR package `vimma-bin` is not published yet; use the release's `PKGBUILD`.
+- On the `.deb`, the `.rpm` and the Arch package, Settings' Make default button registers a desktop
+  entry of its own that skips `vimma-open`, so routing rules by app do not apply to links, and
+  Settings says Vimma is not the default browser even after `xdg-settings` made it one (issue
+  #855). Use `xdg-settings` ([Making Vimma your default browser](guide.md#making-vimma-your-default-browser)).
+- On Omarchy, `xdg-settings set default-web-browser` fails unless `BROWSER` and
+  `XDG_CURRENT_DESKTOP` are cleared for it, Settings always says Vimma is not the default, and a
+  link from another app may not raise Vimma's window, since Omarchy's launcher looks for a window
+  named after the command it ran (issue #855).
 - The Flatpak (`dev.vimma.browser`) is not on Flathub yet (issue #465). Once it is:
   - Links from other apps are not routed by app: its desktop entry runs `vimma` without
     `vimma-open`, whose look-up of the app that asked ends at Flatpak's own processes inside the
