@@ -18,8 +18,8 @@ What works today, each with the section that explains it:
   list item or code block with `y`; `/` find as you type, in frames and PDFs too; `v` copy mode
   with Vim motions and `y`; insert mode in text fields, `Esc` to leave; `:` a
   [command line](#the-command-line) with completion and history.
-- **[PDFs with zathura's keys](#pdf-viewer):** `J`/`K` and `12G` by page, zoom and fit (`+`,
-  `-`, `a`, `s`), two pages side by side, the outline beside the page with `Tab` and a filter,
+- **[PDFs with the same keys](#pdf-viewer):** `J`/`K` and `12G` by page, zoom and fit (`+`, `-`,
+  `a`, `s`), two pages side by side, the outline beside the page with `Tab` and a filter,
   marks, presentation with `:present`, `page 3/12` with the match count in the status bar, and
   the viewer in your theme. Vimma's own keys keep their meaning there.
 - **tmux for the window** (prefix `ctrl+b`, [keys](#keys)): tabs (`c` new, `n`/`p`, `1..9`,
@@ -125,8 +125,8 @@ The AppImage keeps its file name when it updates itself (it renames the new one 
 link keeps working.
 
 The `.deb`, the `.rpm` and the Arch Linux package add Vimma to your application menu and offer it for web links,
-but never make it your default browser on their own: `xdg-settings set default-web-browser
-vimma-vimma.desktop` does that. Next to the files are `SHA256SUMS`, a CycloneDX SBOM
+but never make it your default browser on their own
+([Making Vimma your default browser](#making-vimma-your-default-browser)). Next to the files are `SHA256SUMS`, a CycloneDX SBOM
 (`vimma-X.Y.Z.cdx.json`) and cosign signatures (`*.sigstore.json`); how to check them is in
 [runbook.md](runbook.md#release-packages-releaseyml-spec-m6-packaging) ("Verify a release").
 
@@ -259,7 +259,7 @@ file once the release is published.
 | Remove Vimma, keeping your profile             | `brew uninstall --cask vimma`       |
 | Remove Vimma and its profile, caches and prefs | `brew uninstall --zap --cask vimma` |
 
-Vimma does not update itself, so `brew upgrade` (or `brew upgrade --cask vimma`) is how a
+On a Mac, Vimma does not update itself, so `brew upgrade` (or `brew upgrade --cask vimma`) is how a
 Homebrew install gets a new release; after an upgrade to an ad hoc signed release, macOS may ask
 for **Open Anyway** again.
 When a newer release is out, Vimma's [update notice](#updates) says so, and `:update` shows that
@@ -332,18 +332,24 @@ shows that command. The same package goes to the AUR as `vimma-bin`, for AUR hel
 
 ### First launch, with its own profile
 
-Start Vimma from the checkout with `npm start`. It runs your build with a profile of its own,
-`~/.cache/vimma-dev-profile`, so your Firefox profile is never touched:
+Start Vimma as you start any other app:
 
-```sh
-npm start                   # the full build, or the artifact build if that is all there is
-npm start -- --fresh        # a throwaway profile, deleted when Vimma quits
-npm start -- --profile DIR  # another persistent profile
-```
+| Installed from             | Start Vimma                                                          |
+| -------------------------- | -------------------------------------------------------------------- |
+| `.deb`, `.rpm`, Arch Linux | Vimma in your application menu or launcher, or `vimma` in a terminal |
+| AppImage                   | run the `.AppImage` file                                             |
+| tarball                    | `vimma/vimma` in the folder you unpacked it into                     |
+| Flatpak (once on Flathub)  | Vimma in your application menu, or `flatpak run dev.vimma.browser`   |
+| macOS (`.dmg`, Homebrew)   | Vimma in Applications, or from Spotlight                             |
 
-It will not start a second Vimma on a profile that is already open; switch to that window
-instead. The profile's `user.js` gets one line Vimma needs when run from a source checkout
-(read access for web pages' sandbox to the checkout's `src/`); your own lines there are kept.
+Vimma runs on a profile of its own, apart from Firefox's: it never reads or changes your Firefox
+profile. Your bookmarks, passwords and add-ons come over when you bring them
+([Moving over from Firefox or Chrome](#moving-over-from-firefox-or-chrome)).
+
+You see a calm window: no tab strip, the navigation bar and address bar at the top, and Vimma's
+status bar at the bottom, telling you where you are. Press `ctrl+b`, then `?`, to see every
+binding. The keys are Vim- and tmux-style, and every key, the prefix and the leader can be
+remapped in [config.toml](#configtoml).
 
 Where Vimma keeps its files on Linux:
 
@@ -354,18 +360,53 @@ Where Vimma keeps its files on Linux:
 
 On macOS, `config.toml` is in the same place, and the profiles and `profiles.ini` are in
 `~/Library/Application Support/Vimma/`, where Firefox keeps them on a Mac; `XDG_CONFIG_HOME`
-does not move them there.
+does not move them there. The Flatpak keeps both under `~/.var/app/dev.vimma.browser/`
+([Flatpak](#flatpak-flathub)).
 
 On a profile's first launch, if `~/.config/vimma/config.toml` does not exist, Vimma creates it
 from the same commented template `:config` writes, so it changes nothing until you uncomment a
 line, and the status bar says `created ~/.config/vimma/config.toml` once. An existing file, even an
 empty one, and the rest of `~/.config/vimma/` (key files, the `vimma/` profiles folder) are left
-alone. A file you delete later stays deleted. The packaged builds do the same on their first
-launch. Nothing is created when `vimma.config.path` points Vimma at another file.
+alone. A file you delete later stays deleted. Nothing is created when `vimma.config.path` points
+Vimma at another file.
 
-On first launch you see a calm window: no tab strip, the navigation bar and address bar at the top,
-and Vimma's status bar at the bottom, telling you where you are. Press `ctrl+b`, then `?`, to see
-every binding.
+#### Making Vimma your default browser
+
+Vimma never makes itself your default browser; links from other apps open in it once you choose
+it. How depends on the install:
+
+| Installed from             | Make it the default                                                                                                       |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `.deb`, `.rpm`, Arch Linux | `xdg-settings set default-web-browser vimma-vimma.desktop`                                                                |
+| Omarchy (Arch package)     | `env -u BROWSER XDG_CURRENT_DESKTOP= xdg-settings set default-web-browser vimma-vimma.desktop`                            |
+| AppImage, tarball          | Settings → Account and sync → Make default (`:settings sync`); it records the file's path, so press it again after a move |
+| Flatpak                    | your desktop's default-apps settings                                                                                      |
+| macOS                      | Settings → Account and sync → Make default, or System Settings → Desktop & Dock → Default web browser                     |
+
+With the `xdg-settings` command, links from other apps go through `vimma-open`, so
+[routing rules](#routing-which-workspace-a-link-opens-in) by app apply to them. On the Linux
+packages, Settings' Make default button does not do the same yet: it registers a desktop entry of
+its own that skips `vimma-open`, and Settings goes on saying that Vimma is not your default
+browser after the command has made it one. On Omarchy, an AppImage or a tarball uses Settings'
+button as elsewhere, and Settings keeps saying that Vimma is not the default. These are issue
+[#855](https://github.com/vimma-browser/vimma/issues/855);
+[limits.md](limits.md#platforms-and-packaging) lists what else differs, Omarchy's case included.
+
+#### From a source checkout
+
+For developers working on Vimma: `npm start` runs your build from the checkout, with a profile
+of its own, `~/.cache/vimma-dev-profile`, apart from both Firefox's and an installed Vimma's:
+
+```sh
+npm start                   # the full build, or the artifact build if that is all there is
+npm start -- --fresh        # a throwaway profile, deleted when Vimma quits
+npm start -- --profile DIR  # another persistent profile
+```
+
+It will not start a second Vimma on a profile that is already open; switch to that window
+instead. The profile's `user.js` gets one line Vimma needs when run from a source checkout
+(read access for web pages' sandbox to the checkout's `src/`); your own lines there are kept.
+Building is in [CONTRIBUTING.md](../CONTRIBUTING.md#build-and-run).
 
 ### First-run setup
 
@@ -404,6 +445,67 @@ To change it back:
 - **New tabs:** set `vimma.startpage.newtab` to `false` in `about:config` (applies at once) for
   Firefox's new tab page. Settings' "New tabs" menu does not change Vimma's start page. An
   extension that sets its own new tab page takes precedence.
+
+### Moving over from Firefox or Chrome
+
+Vimma is Firefox underneath, with a profile of its own, so nothing comes over from another
+browser until you bring it. Bookmarks, passwords and recent history move in a few minutes; add-ons are
+installed again.
+
+**From Firefox, with Firefox Sync.** Sign in with the same Mozilla account in Firefox and in
+Vimma: Settings → Account and sync (`:settings sync`) → Sign in, then choose what to sync
+(bookmarks, history, open tabs, passwords, addresses, payment methods, add-ons, settings). Sync
+works in Vimma as in Firefox, and it leaves two settings alone: Vimma's session restore and
+containers ([Firefox behaviour Vimma changes](#firefox-behaviour-vimma-changes)).
+
+**From Chrome, Chromium, Brave, Edge, Opera or Vivaldi, with the import wizard.** Firefox's
+import wizard reads the other browser's profile on this computer and opens over Settings. Two
+ways to reach it from the keyboard:
+
+- `:firefox cmd_file_importFromAnotherBrowser` (`Tab` completes the name). To put it on a key,
+  bind that command line in [config.toml](#configtoml), as in
+  [Any Firefox command from a key](#firefoxs-keys-are-vimma-bindings).
+- `:settings`, type `import` in Settings' search box, then `Esc`, `f` and the hint on **Import
+  data** (Settings → Account and sync → Import browser data).
+
+The wizard picks a browser it found; `f` reaches its buttons, so `f` on **Import** brings over
+everything it lists, and the **+** next to "Import all available data" lets you choose. A hint
+does not open the browser list at the top yet: with more than one browser on the computer, click
+it to pick another one. Then choose **Done**.
+
+- **Passwords from a Chromium-based browser on Linux** do not come through the wizard: Firefox's
+  importer cannot decrypt them there, so it does not offer them. Export them from that browser
+  to a CSV file (in Chrome: Settings → Passwords and autofill → Google Password Manager →
+  Settings → Export passwords), then in Vimma open `about:logins`, its `…` menu → Import from a
+  File. The file holds every password in plain text: delete it once the import is done, and
+  empty the trash.
+- **Your Firefox profile is not in the wizard**: its Firefox entry looks for profiles in Vimma's
+  own folder, not Firefox's. From Firefox, use Sync, or files as below.
+
+**From Firefox, with files** (no Mozilla account):
+
+- **Bookmarks:** in Firefox, the Library (`ctrl+shift+o`) → Import and Backup → Export
+  Bookmarks to HTML; in Vimma, the Library's Import and Backup → Import Bookmarks from HTML.
+  Import from HTML adds to the bookmarks you have; Restore (Firefox's JSON backups) replaces
+  every one of them.
+- **Passwords:** in Firefox, `about:logins` → `…` → Export Passwords; in Vimma, `about:logins`
+  → `…` → Import from a File. Delete the exported file afterwards, as above.
+- History has no file to carry it. Sync brings recent history (about the last 60 days, up to
+  5000 pages); older Firefox history does not come over. A backup made by Firefox's
+  backup service cannot be restored into Vimma ([limits.md](limits.md#compatibility-and-versions)).
+
+**Where imported bookmarks go.** An import puts bookmarks in Firefox's own folders: a Chromium
+browser's bookmarks bar goes loose into the Bookmarks Toolbar and its other bookmarks into Other
+Bookmarks. The [bookmarks panel](#bookmarks) shows only the current workspace's folder, so set
+`[bookmarks] root = "toolbar"` in [config.toml](#configtoml) to see the bookmarks bar, or `"all"` to
+see Other Bookmarks too, and move
+what you want in a workspace with `m`.
+
+**Add-ons.** Install them again from [addons.mozilla.org](https://addons.mozilla.org)
+([Add-ons](#add-ons)); `ctrl+b e` lists what you have. With Sync's add-ons choice ticked, Sync
+installs the add-ons from addons.mozilla.org that you have in Firefox, without their own
+settings: bring those over with the add-on's own export or account (uBlock Origin's Backup to
+file, a password manager's sign-in).
 
 ## The two layers
 
@@ -563,6 +665,18 @@ In the [PDF viewer](#pdf-viewer) `f` labels the PDF's links, `c` copies a link's
 The labels are drawn by the browser, over the page, not inside it: the page cannot see them,
 restyle them or hide them. Apps that draw their own controls on a canvas (Google Docs, Figma,
 maps, games) have nothing to label.
+
+#### Cookie banners
+
+You can answer a site's cookie banner without the mouse. `f` labels its buttons (allow all,
+reject, necessary only, settings), also when the banner sits in a frame from another site or in a
+web component. In the settings layer, each category's switch gets its own label, and its save
+button too. `j`, `k`, `G` and `gg` scroll the list of categories inside the banner, not the page
+behind it, so `f` reaches the switches further down. A banner in a frame scrolls once a label in
+it has been used, which puts the keys in that frame. `Tab` moves through the banner's controls,
+and `F` labels its paragraphs so you can [copy them](#copying-a-paragraph-element-focus). One
+banner kind sets its categories with a slider instead of switches; [Known limits](limits.md)
+says how to move it.
 
 ### Copying a paragraph (element focus)
 
@@ -748,12 +862,11 @@ the field and use its own selection.
 
 ### PDF viewer
 
-PDFs open in Firefox's own viewer, pdf.js, Mozilla's PDF reader, and Vimma drives it with the
-keys of zathura, the keyboard-driven document viewer, so a paper or a manual reads the same in the
-browser as in your viewer. pdf.js keeps rendering, forms, printing and accessibility; Vimma adds
-the keys, a page count in the status bar and an outline panel, and gives the viewer's toolbar,
-menus and the space around the pages your theme's colours, light or dark. Pages are shown in the
-document's own colours.
+PDFs open in Firefox's own viewer, pdf.js, Mozilla's PDF reader, and Vimma drives it with the same
+keys as every other page, plus keys for pages, zoom and the outline. pdf.js keeps rendering, forms,
+printing and accessibility; Vimma adds the keys, a page count in the status bar and an outline
+panel, and gives the viewer's toolbar, menus and the space around the pages your theme's colours,
+light or dark. Pages are shown in the document's own colours.
 
 A PDF with an outline opens with it shown on the left, the entry for the page you are on
 selected as you move; your keys stay with the document, so `J` and `/` work at once. pdf.js's
@@ -761,11 +874,11 @@ own sidebar and its button do not show: Vimma's outline takes its place. To open
 the outline, put `[ui] pdf_outline = "hidden"` in [config.toml](#configtoml); `Tab` still opens
 it.
 
-Every Vimma key does in the PDF viewer what it does on any page, so your hands need not know
+Every Vimma key does in the PDF viewer what it does on any page (only `gg` and `G` with a count
+go to page N, as in `12G`), so your hands need not know
 which kind of page they are on: `d` scrolls half a screen, `r` and `F5` reload, `H` / `L` go back
-and forward, `P` opens the clipboard in a new tab, `F` is element focus and `ctrl+f` finds. The
-viewer adds zathura's keys only on the keys Vimma leaves free, and zathura's other keys are
-commands:
+and forward, `P` opens the clipboard in a new tab, `F` is element focus and `ctrl+f` finds. Vimma
+adds PDF keys only on the keys it leaves free; the other PDF actions are commands:
 
 - **Pages.** `J` / `K` go to the next / previous page, with a count (`3J`). `gg` goes to the first
   page and `G` to the last; with a count, to that page (`12G`, `12gg`), counted from 1 whatever
@@ -811,17 +924,15 @@ leaves it. `/` finds in the PDF with the match count in the status bar, and the 
 the page as `page 3/12`, or `page iv (4/120)` when the page has a label that is not its number.
 
 A PDF that a web page shows inside itself (in a frame, `<embed>` or `<object>`) keeps the page's
-keys; open it in its own tab for these. Some of zathura's keys stay Vimma's: `ctrl+b` is the prefix,
-not a screen up (`shift+space` scrolls up a screen); `t` opens a tab; `q` does not close the tab
-(`x` and `:q` do); and `alt+left` / `alt+right` go back and forward rather than a page. `ctrl+r`
-reloads rather than recolouring the pages, and `ctrl+n` does not hide the status bar. Marks and the
-jump list are not kept across restarts, `o` does not open a file (`:open` with a `file://` address
-does), and there is no SyncTeX.
+keys; open it in its own tab for these. In a PDF, as everywhere, `ctrl+b` is the prefix,
+`t` opens a tab, `x` and `:q` close it, and `alt+left` /
+`alt+right` go back and forward. Marks and the jump list are not kept across restarts, and
+`:open` with a `file://` address opens a local PDF.
 
 Every one of these keys can be changed in [config.toml](#configtoml): `[modal.pdf]` holds the
 PDF viewer's normal-mode keys, over `[modal.normal]`, and `[modal.index]` the outline's. `[unbind]
-pdf = ["D"]` takes `D` off in the PDF viewer only. To have zathura's `d`, `r`, `H`, `L`, `P`,
-`F`, `ctrl+f` and `F5` in the PDF viewer instead of Vimma's, uncomment the zathura block under
+pdf = ["D"]` takes `D` off in the PDF viewer only. To give `d`, `r`, `H`, `L`, `P`,
+`F`, `ctrl+f` and `F5` PDF actions in the PDF viewer instead of Vimma's, uncomment the block under
 `[modal.pdf]` in the file `:config` writes (or copy it from `defaults.toml`). `ctrl+b ?`
 lists them under `[pdf]` and `[index]`, and [bindings.md](bindings.md#pdf-viewer) has their
 config names.
@@ -4426,7 +4537,7 @@ name, then toggle or edit it).
 | Mozilla promos (VPN, Relay, Pin, mobile)            | `browser.vpn_promo.enabled`, `browser.promo.relay.enabled`, `browser.promo.pin.enabled`, `browser.preferences.moreFromMozilla`                                                                        |
 | Firefox's AI chatbot and link preview               | `browser.ml.chat.enabled`, `browser.ml.linkPreview.enabled`, `browser.preferences.aiControls` = `true`; the chatbot's sidebar tool: add `aichat` to `sidebar.main.tools`                              |
 | Firefox Relay email masks in login forms            | Settings → Privacy & Security → Passwords: tick the Firefox Relay box (`signon.firefoxRelay.feature` = `available`)                                                                                   |
-| The "make Vimma your default browser" prompt        | `browser.shell.checkDefaultBrowser` = `true` (Settings → General sets the default browser either way)                                                                                                 |
+| The "make Vimma your default browser" prompt        | `browser.shell.checkDefaultBrowser` = `true` (the prompt is off; [Making Vimma your default browser](#making-vimma-your-default-browser) sets the default either way)                                 |
 | Firefox's onboarding messages                       | `browser.newtabpage.activity-stream.asrouter.providers.onboarding`: change `"enabled":false` to `true` in its JSON value                                                                              |
 | Crash reporter                                      | Not built in. A crash leaves a local core dump (`coredumpctl list vimma`). Opt-in reporting to Vimma's own server is planned.                                                                         |
 | Page titles in a private window's title             | `privacy.exposeContentTitleInWindow.pbm` = `true` (Vimma's default is `false`: the window manager, its bar and screen sharing see only `Vimma Private Browsing`)                                      |
@@ -4434,9 +4545,9 @@ name, then toggle or edit it).
 
 Kept as in Firefox: Remote Settings (CRLite certificate revocation, intermediate certificates),
 the add-on blocklist, Firefox Sync, add-ons from addons.mozilla.org and their updates, and
-Google Safe Browsing (see below). Firefox's app updater is not built into Vimma, and system add-on
-updates are off, so neither asks Mozilla's update server for them; Vimma's own
-[update check](#updates) asks `updates.vimma.dev` only. The one request Vimma still sends to
+Google Safe Browsing (see below). Firefox's app updater is built into release builds, where the tarball
+uses it, and its address is `updates.vimma.dev`, not Mozilla's update server; system add-on
+updates are off. Vimma's own [update check](#updates) asks `updates.vimma.dev` only. The one request Vimma still sends to
 Mozilla's update server is for the OpenH264 and Widevine plugins, which video calls and DRM video
 need.
 
@@ -4507,30 +4618,39 @@ Vimma changes these Firefox defaults for workspaces; each one can be changed bac
   any other topic forwards you to the same article on Mozilla's support site, which still applies
   to the Firefox underneath. The link carries the Firefox version, your OS and your language, as
   Firefox's links do (`app.support.baseURL`; Firefox's value is
-  `https://support.mozilla.org/1/firefox/%VERSION%/%OS%/%LOCALE%/`). Settings > Sync's links to
+  `https://support.mozilla.org/1/firefox/%VERSION%/%OS%/%LOCALE%/`). Settings > Account and sync's links to
   Firefox for Android and iOS still open Mozilla's download pages, since those apps sync with
   Vimma.
 - **No Mozilla entry points in the menus.** The page, link and tab menus have no Send to
   Device, Tools has no Tab Overview (Firefox View), the Help menu (in the menu bar and in the app
   menu) has no Switching to a New Device or Report Broken Site, and customize mode offers no Send
   to Device or Tab Overview button. Help keeps Get Help, Share Ideas and Report Deceptive Site,
-  the account button stays, and Firefox Sync, sign-in included, works from Settings > Sync as in
+  the account button stays, and Firefox Sync, sign-in included, works from Settings > Account and sync as in
   Firefox. These are hidden by Vimma's style sheet, not by a pref.
 - **Settings shows only what works in Vimma, in Vimma's style.** Settings hides Labs, the
   data collection group (Vimma uploads no telemetry, so its switches changed nothing), the
   extension and feature recommendation switches (those recommendations are off), and the Share
-  Ideas link to Mozilla's idea board. While Vimma's start page opens in new tabs, Home also hides
-  the Start Page content group that set up Firefox Home; set `vimma.startpage.newtab` to false in
-  `about:config` and it comes back with Firefox Home. Settings has square corners and the theme's
-  font, as the status bar and the pickers do, and keeps Firefox Sync, the Vimma support link and
-  the About section.
+  Ideas link to Mozilla's idea board. It also hides the controls for what Vimma does its own way:
+  Firefox themes (Vimma's theme colours the window; `:theme` picks dark or light), the horizontal
+  or vertical tabs layout, tab groups and tab previews (Vimma shows no tab strip), Firefox's
+  `ctrl+tab` order (`ctrl+tab` is Vimma's next tab, unless `[firefox] enable` gives it back), the
+  `about:keyboard` links (every key, the prefix and the leader can be remapped in
+  [config.toml](#configtoml)), "Search for text when you start typing" (in normal mode it would
+  open the find bar on any key Vimma does not bind; `/` searches) and the Use Container Tabs
+  switch (workspaces are containers, and turning it off would turn them off). Their preferences
+  keep their values in `about:config`; "Search for text when you start typing", if you turned it
+  on before, is `accessibility.typeaheadfind` there. While Vimma's start page opens in new
+  tabs, Home also hides the Start Page content group that set up Firefox Home; set
+  `vimma.startpage.newtab` to false in `about:config` and it comes back with Firefox Home.
+  Settings has square corners and the theme's font, as the status bar and the pickers do, and
+  keeps Firefox Sync, the Vimma support link and the About section.
 - **Firefox's features keep their place under plain names.** Settings, menus and the address bar
   say Address Bar Suggestions, Start Page, Tab Overview, Labs, Translations and Screenshots where
   Firefox says Firefox Suggest, Firefox Home, Firefox View, Firefox Labs, Firefox Translations and
   Firefox Screenshots. Mozilla's own products, such as Relay, Monitor and Mozilla VPN, keep their
   names.
 - **No Firefox logo or mascot.** Settings' About Vimma section and the sidebar show Vimma's mark
-  in the theme's colours, the account group in Settings > Sync a plain account icon, and the
+  in the theme's colours, the account group in Settings > Account and sync a plain account icon, and the
   pages and panels that showed Firefox's Kit mascot (the account panel, `about:addons`,
   `about:restartrequired`, the sidebar's empty lists) show no picture. Error pages, such as
   "Server Not Found", show their text without Firefox's fox
@@ -4599,12 +4719,14 @@ default (see [Safe Browsing](#safe-browsing)). A build without a key fetches no 
 malware lists; Settings then shows "Block dangerous and deceptive content" unticked, and ticking
 it does not help. Mozilla's tracking-protection lists update either way.
 
-**Does Vimma update itself?** No. Install each new release yourself ([Installing](#installing));
-from 0.1.2 on, Vimma's update check tells you when one is out and how to install it
-([Updates](#updates)). Vimma 0.1.1 shows no notice: update it once by hand.
-Vimma notifies you and shows the command; it does not install updates itself.
-Firefox's updater is not built into Vimma, so it never asks Mozilla's update server
-(`aus5.mozilla.org`) for a Firefox build.
+**Does Vimma update itself?** The AppImage and the tarball do: the AppImage replaces its own
+file, and a tarball whose release lists `vimma-X.Y.Z-linux-x86_64.complete.mar` installs the
+update at its next start ([Updates](#updates)). The `.deb`, the `.rpm`, the Arch package and
+macOS only notify: from 0.1.2 on, the status bar tells you when a release is out and
+`:update` shows the command for your install ([Installing](#installing)). Vimma 0.1.1 shows no
+notice: update it once by hand. Every update is checked against a file signed with Vimma's own
+key from `updates.vimma.dev`; Vimma never asks Mozilla's update server (`aus5.mozilla.org`) for a
+Firefox build.
 
 **I want the tab strip back.** Set `vimma.ui.tabstrip.hidden` to `false` in `about:config`.
 
