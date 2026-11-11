@@ -8,7 +8,7 @@
   <li>Sponsored stories, shortcuts and URL bar suggestions.</li>
   <li>Feature and add-on recommendations, and Mozilla's promos (VPN, Relay, mobile).</li>
   <li>Page titles in a private window's title bar: the window manager, its bar and screen sharing see only <code>Vimma Private Browsing</code>.</li>
-  <li>Telemetry upload and the crash reporter: neither is built in, so Vimma sends nothing. A crash leaves only whatever local record your system keeps: a core dump on Linux (<code>coredumpctl list | grep vimma</code>, which also finds a tab's process), a <code>.ips</code> report on macOS.</li>
+  <li>Telemetry upload and the crash reporter: neither is built in, so Vimma sends nothing. A crash leaves whatever record your system keeps: a core dump where systemd-coredump keeps them (<code>coredumpctl list | grep vimma</code>, which also finds a tab's process), a <code>.ips</code> report on macOS.</li>
 </ul>
 
 <h2 id="kept-on">Kept as in Firefox</h2>
