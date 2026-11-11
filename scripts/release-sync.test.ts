@@ -247,8 +247,9 @@ test("report: a failed sync job opens an issue and links it from the run summary
   assert.match(r.body, /`sync` job.*failure/);
   assert.match(r.body, /\(?https:\/\/github\.com\/vimma-browser\/vimma-site\/actions\/runs\/123 \(/);
   assert.match(r.summary, /issues\/99/);
-  // an issue someone else opened with the same title is not the alert
-  assert.ok(r.calls.some((c) => c.startsWith("gh issue list") && c.includes("--author app/github-actions")), r.calls.join("\n"));
+  // an issue someone else opened with the same title is not the alert; the bot's login is
+  // github-actions[bot] (gh matches no issue for app/github-actions)
+  assert.ok(r.calls.some((c) => c.startsWith("gh issue list") && c.includes("--author github-actions[bot]")), r.calls.join("\n"));
   assert.match(r.output, /::error::.*issues\/99/);
 });
 
