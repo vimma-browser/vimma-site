@@ -36,8 +36,31 @@ test("Markdown never brings in raw HTML", () => {
 });
 
 test("text that looks like a placeholder stays text", () => {
-  const s = "" + "0 **`x`** 0";
-  const out = inline(s, opts);
-  assert.equal(out.match(/<code>/g)?.length, 1);
-  assert.ok(!out.includes("") && !out.includes(""), out);
+  const fake = "\uE0000\uE001";
+  assert.equal(
+    inline(`${fake} **\`x\`** \`${fake}\``, opts),
+    "&#57344;0&#57345; <strong><code>x</code></strong> <code>\uE0000\uE001</code>",
+  );
+});
+
+test("two bold code spans on one line", () => {
+  assert.equal(
+    inline("**`a`** and **`b`**", opts),
+    "<strong><code>a</code></strong> and <strong><code>b</code></strong>",
+  );
+});
+
+test("emphasis next to a code span or a link", () => {
+  assert.equal(inline("*a `x`*", opts), "<em>a <code>x</code></em>");
+  assert.equal(inline("`x`_y_", opts), "<code>x</code><em>y</em>");
+  assert.equal(inline("[a](b)_c_", opts), '<a href="b">a</a><em>c</em>');
+  assert.equal(inline("_y_`x`", opts), "<em>y</em><code>x</code>");
+});
+
+test("bold around a link that is not on this site", () => {
+  const none = { link: (): string | null => null };
+  assert.equal(
+    inline("**[guide](elsewhere.md)**", none),
+    '<strong><span class="ref" title="not on this site">guide</span></strong>',
+  );
 });

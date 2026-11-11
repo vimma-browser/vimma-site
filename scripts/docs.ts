@@ -277,12 +277,14 @@ function pager(all: NavEntry[], i: number, root: string): string {
 // --- search index -----------------------------------------------------------------------------
 
 const ENT: Record<string, string> = { "&amp;": "&", "&lt;": "<", "&gt;": ">", "&quot;": '"', "&#39;": "'" };
-const textOf = (html: string): string =>
+export const textOf = (html: string): string =>
   html
     .replace(/<[^>]+>/g, " ")
     .replace(/&(amp|lt|gt|quot|#39);/g, (e) => ENT[e] ?? e)
     .replace(/\s+/g, " ")
-    .replace(/ ([.,;:)])/g, "$1")
+    // A space before punctuation that ends a word goes; one before a word that starts with it
+    // (`:mcp log` after "matched.") stays.
+    .replace(/ ([.,;:)])(?=[\s.,;:)]|$)/g, "$1")
     .replace(/\( /g, "(")
     .trim();
 

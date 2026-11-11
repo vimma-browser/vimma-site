@@ -67,11 +67,12 @@ export interface RenderOptions {
   link: (href: string) => string | null;
 }
 
+/** Bold and emphasis; a held code span or link (\uE000…\uE001, below) is a word boundary. */
 function emphasis(escaped: string): string {
   return escaped
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-    .replace(/(^|[\s(“"])_([^_\s][^_]*?)_(?=[\s.,;:)!?”"]|$)/g, "$1<em>$2</em>")
-    .replace(/(^|[\s(])\*([^*\s][^*]*?)\*(?=[\s.,;:)!?]|$)/g, "$1<em>$2</em>");
+    .replace(/(^|[\s(“"\uE001])_([^_\s][^_]*?)_(?=[\s.,;:)!?”"\uE000]|$)/g, "$1<em>$2</em>")
+    .replace(/(^|[\s(\uE001])\*([^*\s][^*]*?)\*(?=[\s.,;:)!?\uE000]|$)/g, "$1<em>$2</em>");
 }
 
 const INLINE = /(`+)([\s\S]*?)\1|\[((?:[^\]`]|`[^`]*`)+)\]\(([^)\s]+)\)/g;
