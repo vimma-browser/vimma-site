@@ -76,24 +76,38 @@ function emphasis(escaped: string): string {
 
 const INLINE = /(`+)([\s\S]*?)\1|\[((?:[^\]`]|`[^`]*`)+)\]\(([^)\s]+)\)/g;
 
+// Code spans and links are rendered first and held as private-use placeholders, so that
+// **bold** and _em_ can wrap them (`**\`:mcp log\`**`) while their contents stay out of reach of
+// the emphasis rules. The placeholder characters in the source text become entities, so text can
+// never name a placeholder.
+const HOLD_OPEN = "\uE000";
+const HOLD_CLOSE = "\uE001";
+const HOLD = /\uE000(\d+)\uE001/g;
+const escapeText = (s: string): string =>
+  escapeHtml(s).replace(/[\uE000\uE001]/g, (c) => `&#${c.charCodeAt(0)};`);
+
 export function inline(text: string, opts: RenderOptions): string {
+  const held: string[] = [];
   let out = "";
   let last = 0;
   for (const m of text.matchAll(INLINE)) {
-    out += emphasis(escapeHtml(text.slice(last, m.index)));
+    out += escapeText(text.slice(last, m.index));
     if (m[1] !== undefined) {
-      out += `<code>${escapeHtml((m[2] ?? "").trim())}</code>`;
+      held.push(`<code>${escapeHtml((m[2] ?? "").trim())}</code>`);
     } else {
       const label = inline(m[3] ?? "", opts);
       const href = opts.link(m[4] ?? "");
-      out +=
+      held.push(
         href === null
           ? `<span class="ref" title="not on this site">${label}</span>`
-          : `<a href="${escapeHtml(href)}">${label}</a>`;
+          : `<a href="${escapeHtml(href)}">${label}</a>`,
+      );
     }
+    out += `${HOLD_OPEN}${held.length - 1}${HOLD_CLOSE}`;
     last = (m.index ?? 0) + m[0].length;
   }
-  return out + emphasis(escapeHtml(text.slice(last)));
+  out += escapeText(text.slice(last));
+  return emphasis(out).replace(HOLD, (_, n: string) => held[Number(n)] ?? "");
 }
 
 // --- blocks -----------------------------------------------------------------------------------
