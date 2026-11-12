@@ -203,25 +203,17 @@ export const DOC_PAGES: DocPage[] = [
   {
     slug: "config",
     title: "config.toml",
-    headTitle: "config.toml: options, key bindings and workspaces",
+    headTitle: "config.toml: options, key bindings, colours and Omarchy",
     group: "Make it yours",
-    description: "Options, key bindings and workspaces in one TOML file, reloaded as you save.",
+    description: "Options, key bindings, workspaces and colours in one TOML file, reloaded as you save; your Omarchy theme, followed live.",
     blocks: [
-      { guide: "Every key is yours" },
       { guide: "config.toml" },
+      { guide: "Colours and themes" },
       { guide: "Settings (about:config)" },
       { guide: "about:vimma" },
       { keys: ["Config"] },
       { limits: ["Features"] },
     ],
-  },
-  {
-    slug: "theming",
-    title: "Theming",
-    headTitle: "Theming and Omarchy colours",
-    group: "Make it yours",
-    description: "Vimma's own palette, dark or light, by default; your own colours in config.toml, or your Omarchy theme, live.",
-    blocks: [{ guide: "Colours and themes" }, { limits: ["Features"] }],
   },
   {
     slug: "firefox-shortcuts",

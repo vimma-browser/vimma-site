@@ -1,5 +1,5 @@
 <!-- Hand-written guide for the config page; the build adds the keys table and the details from guide.md. -->
-<p class="lead">Everything you can change about Vimma's keys and behaviour lives in one file: <code>~/.config/vimma/config.toml</code>. Until you change something in it, you get the defaults.</p>
+<p class="lead">Everything you can change about Vimma's keys, behaviour and colours lives in one file: <code>~/.config/vimma/config.toml</code>. Until you change something in it, you get the defaults.</p>
 
 <h2 id="edit-the-file">Edit the file</h2>
 
@@ -11,20 +11,26 @@
 
 <h2 id="remap-a-key">Remap a key</h2>
 
-<p>Bindings go under <code>[keys]</code>, by the action names in the <em>Name</em> column of the <a href="{{root}}keys/">keys page</a>. <code>prefix+</code> means after <kbd>ctrl+b</kbd>. A new binding replaces the default.</p>
+<p>The keys in these docs are defaults, not decisions: every binding, the <kbd>ctrl+b</kbd> prefix and the <kbd>space</kbd> leader can be remapped. Bindings go under <code>[keys]</code>, by the action names in the <em>Name</em> column of the <a href="{{root}}keys/">keys page</a>. <code>prefix+</code> means after the prefix, and <code>&lt;leader&gt;</code> after the leader, which has no default bindings: it is there for your own. A new binding replaces the default.</p>
 
 <pre class="code">schema = 2
 
 [keys]
-prefix = &quot;ctrl+a&quot;<span class="c">             # the prefix itself, as tmux users often remap it</span>
-new_tab = [&quot;prefix+t&quot;]<span class="c">        # ctrl+a t opens a tab, instead of the default</span></pre>
+prefix = &quot;ctrl+a&quot;<span class="c">                        # the prefix itself, as tmux users often remap it</span>
+new_tab = [&quot;prefix+t&quot;]<span class="c">                   # ctrl+a t opens a tab, instead of the default</span>
+toggle_sidebar = [&quot;prefix+b&quot;, &quot;&lt;leader&gt;n&quot;]<span class="c"> # the side panel: prefix b, and now also leader n</span>
+
+[modal]
+leader = &quot;,&quot;<span class="c">                             # the leader, space by default</span></pre>
+
+<p>Firefox's own keys, such as <kbd>ctrl+t</kbd> and <kbd>F5</kbd>, are bindings too and are remapped the same way (<a href="{{root}}docs/firefox-shortcuts/#firefox-keys-are-bindings">Firefox's keys are Vimma bindings</a>).</p>
 
 <h2 id="other-settings">Other things you can set</h2>
 
 <div class="table-wrap"><table class="plain"><thead><tr><th scope="col">Section</th><th scope="col">What it changes</th></tr></thead><tbody>
 <tr><td><code>[panes]</code></td><td><code>max</code>: how many panes a split can have (1 to 16, default 8); <code>layout</code>: what <kbd>ctrl+b</kbd> <kbd>enter</kbd> does; <code>main_size</code>: the main pane's share in the <code>main-*</code> layouts; <code>max_splits</code>: how many splits a workspace keeps (1 to 9, default 9).</td></tr>
 <tr><td><code>[sites."example.com"]</code></td><td><code>insert</code>: <code>auto</code>, <code>never</code> or <code>always</code>: whether text fields on that site put you in insert mode.</td></tr>
-<tr><td><code>[theme]</code></td><td><code>name</code>: the built-in palette, <code>"vimma"</code> or <code>"tokyo-night"</code>; <code>appearance</code>: dark, light or the system's; <code>source = "file"</code> for the built-in palette instead of your Omarchy theme; <code>[theme.colors]</code> to change single colours (<a href="{{root}}docs/theming/">theming</a>).</td></tr>
+<tr><td><code>[theme]</code></td><td><code>name</code>: the built-in palette, <code>"vimma"</code> or <code>"tokyo-night"</code>; <code>appearance</code>: dark, light or the system's; <code>source = "file"</code> for the built-in palette instead of your Omarchy theme; <code>[theme.colors]</code> to change single colours (<a href="#colours">colours</a>).</td></tr>
 <tr><td><code>[workspaces]</code></td><td>Workspaces that always exist (<a href="{{root}}docs/workspaces/">workspaces</a>).</td></tr>
 <tr><td><code>[[routes]]</code></td><td>Send a site, or every link an app opens, to a workspace (<a href="{{root}}docs/workspaces/#send-sites">routing</a>).</td></tr>
 <tr><td><code>[search]</code></td><td><code>default</code>: the default search engine; <code>[search.aliases]</code>: short <code>@aliases</code> such as <code>@gh</code>, for an installed engine or any search URL.</td></tr>
@@ -46,3 +52,37 @@ new_tab = [&quot;prefix+t&quot;]<span class="c">        # ctrl+a t opens a tab, 
 <h2 id="about-pages">about:config and about:vimma</h2>
 
 <p>A few switches live in <code>about:config</code> instead, such as <code>vimma.ui.tabstrip.hidden</code> to bring Firefox's tab strip back; they are listed under Details. <code>about:vimma</code> (or <code>:about</code>) shows what Vimma is doing: its version, your config and its errors, the theme, the workspaces, and the last keys it saw.</p>
+
+<h2 id="colours">Colours and Omarchy</h2>
+
+<p>Vimma's and Firefox's own parts of the window share one colour theme: Vimma's status bar, command line, pickers, link hints, pane borders and start page, and Firefox's toolbar, address bar, menus, dialogs and Settings pages. Out of the box it is Vimma's own palette, the aqua, magenta and teal-black of this site, in a dark and a light variant.</p>
+
+<div class="table-wrap"><table class="plain"><thead><tr><th scope="col">Source</th><th scope="col">What you get</th></tr></thead><tbody>
+<tr><td>Omarchy, if you use it</td><td>Your current <a href="https://omarchy.org/">Omarchy</a> theme, followed live. This is the default whenever Omarchy is installed.</td></tr>
+<tr><td>Built in</td><td>Vimma's palette, dark or light to match your system, or Tokyo Night. The default when Omarchy is not installed.</td></tr>
+<tr><td>Your config.toml</td><td>Single colours of your choice, on top of either one.</td></tr>
+</tbody></table></div>
+
+<h3 id="dark-or-light">Dark or light</h3>
+
+<p>The built-in palette follows your system's dark or light setting and switches the moment it changes. <code>:theme dark</code> or <code>:theme light</code> keeps it one way, <code>:theme system</code> follows the system again, and a bare <code>:theme</code> switches to the other one. Vimma remembers the choice across restarts. <code>appearance</code> under <code>[theme]</code> sets the same in the file, and then the file wins over <code>:theme</code>.</p>
+
+<h3 id="your-own-colours">Your own colours</h3>
+
+<p>Pick the built-in palette and change single colours under <code>[theme]</code>. Save, and every window recolours within two seconds:</p>
+
+<pre class="code">schema = 2
+
+[theme]
+name = &quot;tokyo-night&quot;<span class="c">  # the built-in palette: &quot;vimma&quot; (the default) or &quot;tokyo-night&quot;</span>
+source = &quot;file&quot;<span class="c">       # on Omarchy: the built-in palette instead of your Omarchy theme</span>
+[theme.colors]
+accent = &quot;#ff9e64&quot;</pre>
+
+<p>To use the built-in palette on Omarchy without a config file, set <code>vimma.theme.source</code> to <code>builtin</code> in <code>about:config</code>.</p>
+
+<h3 id="with-omarchy">With Omarchy</h3>
+
+<p>There is nothing to set up. Switch themes with <code>omarchy-theme-set</code> or the Omarchy menu, and every Vimma window follows, without a restart.</p>
+
+<p>So that it changes at the same moment as the rest of your desktop, Vimma installs a small hook, <code>vimma-theme-reload.sh</code>, in <code>~/.config/omarchy/hooks/theme-set.d/</code> the first time it starts. If you edit the hook, Vimma leaves it alone; if you delete it, Vimma does not recreate it. Without the hook, Vimma still notices a new theme within two seconds. Without Omarchy, Vimma looks for it once at startup and then reads nothing more.</p>
