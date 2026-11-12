@@ -119,3 +119,17 @@ test("a limits.md link to a guide heading the site renders stays on the site", (
   assert.equal(link("guide.md#private-workspace"), "../../docs/workspaces/#private-workspace");
   assert.equal(link("guide.md"), "https://github.com/vimma-browser/vimma/blob/v0/docs/guide.md");
 });
+
+test("a guide section named like its page gives its subsections a level of their own", () => {
+  // the page's own title replaces the section's heading, so the subsections move up to h3 and
+  // stay in the outline and the search
+  const ws = docs.pages.find((p) => p.slug === "workspaces")?.body ?? "";
+  assert.match(ws, /<span id="workspaces"><\/span>/);
+  assert.match(ws, /<h3 id="routing-which-workspace-a-link-opens-in">/);
+  assert.ok(docs.index.some((e) => e.u === "workspaces/#private-workspace"));
+  // no page's outline skips a level going down
+  for (const p of docs.pages) {
+    const levels = [...p.body.matchAll(/<h([1-6])[ >]/g)].map((m) => Number(m[1]));
+    levels.forEach((l, i) => assert.ok(i === 0 || l <= (levels[i - 1] ?? 1) + 1, `${p.slug}: h${levels[i - 1]} then h${l}`));
+  }
+});

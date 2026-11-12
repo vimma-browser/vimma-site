@@ -191,7 +191,7 @@ export const DOC_PAGES: DocPage[] = [
   {
     slug: "workspaces",
     title: "Workspaces",
-    headTitle: "Workspaces: Firefox containers, the private workspace and routing",
+    headTitle: "Workspaces, the private workspace and routing",
     group: "Organise tabs and windows",
     description: "Each workspace is a Firefox container: switch, pick, create, rename and delete them, move tabs between them, browse privately one key away, and send sites to the workspace they belong in.",
     blocks: [

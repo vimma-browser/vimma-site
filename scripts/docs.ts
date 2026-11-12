@@ -430,9 +430,11 @@ export function buildDocs(rootDir: string): {
           if ("guide" in b || "guideParas" in b) {
             if ("guide" in b) {
               const sec = need(guide, b.guide);
-              html = renderSection(sec, opts, level, b.exclude ?? [], !b.only);
-              // a section named like the page needs no second heading; keep its anchor
-              if (sec.title.toLowerCase() === page.title.toLowerCase()) {
+              // a section named like the page needs no second heading; keep its anchor, and
+              // render it a level up, so its subsections are h3 under Details, not h4
+              const named = sec.title.toLowerCase() === page.title.toLowerCase();
+              html = renderSection(sec, opts, named ? level - 1 : level, b.exclude ?? [], !b.only);
+              if (named) {
                 html = html.replace(/^<h(\d) id="([^"]+)">[\s\S]*?<\/h\1>/, '<span id="$2"></span>');
               }
             } else {

@@ -37,12 +37,12 @@
   <li>Site permissions (camera, microphone, location, notifications) are per workspace too, like logins.</li>
   <li>Each workspace has its own <a href="{{root}}docs/bookmarks/">bookmarks folder</a>.</li>
   <li>Two workspaces are special: the <a href="#private">private workspace</a> (<kbd>ctrl+b</kbd> <kbd>shift+p</kbd>), Firefox's private browsing, and the <a href="{{root}}docs/agent-workspace/">agent workspace</a>, the only one local AI agents can reach. <kbd>ctrl+b</kbd> <kbd>(</kbd> and <kbd>)</kbd> skip both; the picker lists them last.</li>
-  <li>You can declare workspaces in <a href="{{root}}docs/config/">config.toml</a>, and send sites or apps to one automatically: see <a href="#send-sites">below</a>.</li>
+  <li>You can declare workspaces in <a href="{{root}}docs/config/">config.toml</a>, and send sites or apps to one automatically: see <a href="#send-sites">Send sites to a workspace</a>.</li>
 </ul>
 
 <h2 id="private">The private workspace</h2>
 
-<p>The private workspace is Firefox's private browsing, reached like any other workspace. Because it is a real Firefox private window, the history, cookies, site storage, cache, form history and download records it collects are discarded when you close it.</p>
+<p>The private workspace is Firefox's private browsing, reached with one key, like any other workspace. Because it is a real Firefox private window, the history, cookies, site storage, cache, form history and download records it collects are discarded when you close it.</p>
 
 <ol class="steps-list">
   <li>Press <kbd>ctrl+b</kbd> <kbd>shift+p</kbd> (or <kbd>ctrl+shift+p</kbd>, or <code>:private</code>). The private workspace opens, and the status bar says <code>◆ private</code>.</li>
@@ -51,7 +51,7 @@
   <li>When you are done, <kbd>ctrl+b</kbd> <kbd>shift+d</kbd> in it (or <code>:private close</code> anywhere) asks for confirmation (<kbd>y</kbd>/<kbd>N</kbd>), then closes it and discards its data.</li>
 </ol>
 
-<h3 id="private-good-to-know">Good to know</h3>
+<h3 id="private-good-to-know">Private workspace: good to know</h3>
 
 <ul>
   <li><strong>Reached by its own key only.</strong> <kbd>ctrl+b</kbd> <kbd>(</kbd> / <kbd>)</kbd>, <kbd>]w</kbd> / <kbd>[w</kbd> and <kbd>ctrl+^</kbd> never land in it by accident; from inside it, they take you out.</li>
@@ -70,7 +70,7 @@
 
 <ol class="steps-list">
   <li>Go to a site that belongs in a workspace, such as <code>github.com</code>.</li>
-  <li>Type <code>:route add work</code> and press <kbd>Enter</kbd>. Vimma appends a rule for the site to <code>config.toml</code>.</li>
+  <li>Type <code>:route add work</code> and press <kbd>Enter</kbd>. Vimma appends a rule for the site to <code>config.toml</code> (which needs <code>schema = 2</code> and no errors).</li>
   <li>From now on, an address you type, a bookmark or a link from another app on that site opens in <code>work</code>.</li>
 </ol>
 
@@ -86,7 +86,7 @@ workspace = &quot;work&quot;
 app = &quot;slack&quot;<span class="c">           # every link Slack opens</span>
 workspace = &quot;work&quot;</pre>
 
-<h3 id="route-commands">Commands</h3>
+<h3 id="route-commands">Route commands</h3>
 
 <div class="table-wrap"><table class="plain"><thead><tr><th scope="col">To</th><th scope="col">Type</th></tr></thead><tbody>
 <tr><td>See every rule, and which one matches this tab</td><td><code>:route</code></td></tr>
@@ -94,10 +94,10 @@ workspace = &quot;work&quot;</pre>
 <tr><td>Move this tab to the workspace its rule names</td><td><code>:route move</code></td></tr>
 </tbody></table></div>
 
-<h3 id="routing-good-to-know">Good to know</h3>
+<h3 id="routing-good-to-know">Routing: good to know</h3>
 
 <ul>
   <li>Rules apply to what you open yourself: an address you type, <code>:open</code>, a bookmark or a link from another app. A link that a page opens stays in that page's workspace, so no site can open another site with your other logins. The status bar names the workspace the rule would choose, and <code>:route move</code> takes the tab there.</li>
-  <li>Routing by app works through <code>vimma-open</code>, which Vimma's packages register as the system's browser command. A link from an app Vimma cannot identify, a Flatpak for example, follows only the <code>domain</code> and <code>url</code> rules.</li>
+  <li>On Linux, routing by app works through <code>vimma-open</code>: Vimma's packages make it the command their desktop entry runs, so it sees links while Vimma is your default browser, and command-line tools need <code>BROWSER=vimma-open</code>. A link from an app Vimma cannot identify, a Flatpak for example, follows only the <code>domain</code> and <code>url</code> rules. On macOS, app rules do not apply yet.</li>
   <li>Private windows are never routed.</li>
 </ul>
