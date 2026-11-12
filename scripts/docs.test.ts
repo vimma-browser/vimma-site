@@ -160,3 +160,10 @@ test("config.toml holds the colours and Omarchy, and the search engines' anchor"
   assert.match(config, /leader/);
   assert.equal(docs.pages.find((p) => p.slug === "theming"), undefined);
 });
+
+test("Split panes renders several splits, and every link to it stays on the site", () => {
+  const panes = docs.pages.find((p) => p.slug === "panes")?.body ?? "";
+  assert.match(panes, /<h3 id="several-splits">/);
+  assert.match(panes, /href="#several-splits"/);
+  for (const p of docs.pages) assert.doesNotMatch(p.body, /guide\.md#several-splits/, p.slug);
+});

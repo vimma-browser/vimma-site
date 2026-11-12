@@ -171,7 +171,7 @@ export const DOC_PAGES: DocPage[] = [
     title: "Split panes",
     headTitle: "Split panes and tmux layouts",
     group: "Organise tabs and windows",
-    description: "Split, move between, zoom, swap and resize panes, as in tmux.",
+    description: "Split, move between, zoom, swap and resize panes, as in tmux, and keep several splits in a workspace.",
     blocks: [
       { guideParas: { section: "Keys", startsWith: ["Clicking into a pane"] }, title: "Panes and tabs", id: "panes-and-tabs" },
       {
@@ -182,6 +182,7 @@ export const DOC_PAGES: DocPage[] = [
         title: "Picking a tab during a split",
         id: "picking-a-tab-during-a-split",
       },
+      { guide: "Several splits" },
       { guide: "Resize mode" },
       { guide: "Layouts" },
       { keys: ["Panes"] },
