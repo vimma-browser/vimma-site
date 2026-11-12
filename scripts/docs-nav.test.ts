@@ -14,7 +14,7 @@ const docs = buildDocs(ROOT);
 /** The docs sidebar: a group for each task, its pages in reading order. */
 const SIDEBAR: [string, string[]][] = [
   ["Get started", ["Start here", "Why Vimma", "Install and first launch"]],
-  ["Browse with the keyboard", ["Modes", "Moving around", "Copy mode", "Bookmarks", "PDF viewer"]],
+  ["Browse with the keyboard", ["Modes and moving", "Bookmarks", "PDF viewer"]],
   ["Organise tabs and windows", ["Prefix and tabs", "Side panel", "Split panes", "Workspaces", "Private workspace", "Routing"]],
   ["Make it yours", ["config.toml", "Theming", "Firefox shortcuts", "Add-ons"]],
   ["Use it with AI agents", ["Agent workspace", "Agent tools", "vimma-ctl"]],

@@ -23,6 +23,9 @@ export const REDIRECTS: Redirects = {
   "/docs/accessibility/": "/about/#accessibility",
   // the first checks and the guide's FAQ are on the help page
   "/docs/troubleshooting/": "/support/#first-checks",
+  // moving around and copy mode are sections of "Modes and moving"
+  "/docs/moving/": "/docs/modes/#moving",
+  "/docs/copy-mode/": "/docs/modes/#copy-some-text",
 };
 
 /** The address a request path is redirected to, or null when it is not a retired page. */

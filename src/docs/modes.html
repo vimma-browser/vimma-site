@@ -1,5 +1,5 @@
-<!-- Hand-written guide for the modes page; the build adds the keys table and the details from guide.md. -->
-<p class="lead">Vimma's keys depend on the mode, as in Vim. Most of the time you are in <strong>normal</strong> mode, where letters are commands: <kbd>j</kbd> scrolls, <kbd>f</kbd> shows link hints. Click into a text field and you are in <strong>insert</strong> mode, where letters type. The badge at the left of the status bar always says which mode you are in, and <kbd>Esc</kbd> takes you back to normal.</p>
+<!-- Hand-written guide for the modes and moving page; the build adds the keys table and the details from guide.md. -->
+<p class="lead">Vimma's keys depend on the mode, as in Vim. Most of the time you are in <strong>normal</strong> mode, where letters are commands: <kbd>j</kbd> scrolls, <kbd>f</kbd> shows link hints. Click into a text field and you are in <strong>insert</strong> mode, where letters type. The badge at the left of the status bar always says which mode you are in, and <kbd>Esc</kbd> takes you back to normal. Below the modes: moving around a page, following links, finding and copying text, and the <kbd>:</kbd> line.</p>
 
 <h2 id="the-modes">The modes at a glance</h2>
 
@@ -7,8 +7,8 @@
 <tr><td><code>NORMAL</code></td><td>On every page, by default. Letters are Vimma's commands; the page does not see them.</td><td>You are there.</td></tr>
 <tr><td><code>INSERT</code></td><td>While a text field has focus, or after <kbd>i</kbd>. Keys type into the page.</td><td><kbd>Esc</kbd></td></tr>
 <tr><td><code>HINT</code></td><td>After <kbd>f</kbd> or <kbd>gF</kbd>: labels on everything you can click.</td><td>Type a label, or <kbd>Esc</kbd></td></tr>
-<tr><td><code>ELEMENT</code></td><td>After <kbd>F</kbd> and a label: a block of text is outlined, ready to copy (<a href="{{root}}docs/copy-mode/#copy-a-paragraph">Copy mode</a>).</td><td><kbd>y</kbd> copies and leaves, or <kbd>Esc</kbd></td></tr>
-<tr><td><code>VISUAL</code></td><td>Copy mode, after <kbd>v</kbd>: a caret and a selection (<a href="{{root}}docs/copy-mode/">Copy mode</a>).</td><td><kbd>y</kbd> copies and leaves, or <kbd>Esc</kbd></td></tr>
+<tr><td><code>ELEMENT</code></td><td>After <kbd>F</kbd> and a label: a block of text is outlined, ready to copy (<a href="#copy-a-paragraph">Copy a paragraph</a>).</td><td><kbd>y</kbd> copies and leaves, or <kbd>Esc</kbd></td></tr>
+<tr><td><code>VISUAL</code></td><td>Copy mode, after <kbd>v</kbd>: a caret and a selection (<a href="#copy-some-text">Copy text</a>).</td><td><kbd>y</kbd> copies and leaves, or <kbd>Esc</kbd></td></tr>
 <tr><td><code>COMMAND</code></td><td>While you type a <kbd>:</kbd> command or a <kbd>/</kbd> search, at the bottom of the window.</td><td><kbd>Enter</kbd> runs it, <kbd>Esc</kbd> cancels</td></tr>
 <tr><td><code>HELP</code></td><td>While the <kbd>ctrl+b</kbd> <kbd>?</kbd> key list or <kbd>ctrl+b</kbd> <kbd>g</kbd> tab search is open.</td><td><kbd>Esc</kbd> (or <kbd>q</kbd> in the key list)</td></tr>
 <tr><td><code>RESIZE</code></td><td>After <kbd>ctrl+b</kbd> <kbd>r</kbd>, to resize <a href="{{root}}docs/panes/">panes</a>.</td><td><kbd>Esc</kbd></td></tr>
@@ -21,7 +21,7 @@
   <li><strong><kbd>ctrl+b</kbd> keys</strong> work in every mode, even while you type in a field or the URL bar, because <kbd>ctrl+b</kbd> never types anything. Press <kbd>ctrl+b</kbd>, let go, then press the next key. The status bar shows <code>prefix</code> while it waits; <kbd>Esc</kbd> cancels.</li>
 </ul>
 
-<p>Keys Vimma does not use reach the page as usual: a site's own shortcut on <kbd>s</kbd> or <kbd>m</kbd> still works in normal mode.</p>
+<p><strong>Who gets a key.</strong> In normal mode a page never sees Vimma's bare keys (<kbd>j</kbd>, <kbd>f</kbd>, <kbd>/</kbd>); keys Vimma does not bind, such as a site's own <kbd>s</kbd> or <kbd>m</kbd>, still reach it. Firefox's shortcuts that a page may use, such as <kbd>ctrl+s</kbd> in an editor, and <kbd>Esc</kbd> in normal mode, go to the page first, as in Firefox, unless the site's Override keyboard shortcuts permission is Block. Firefox's reserved keys, such as <kbd>ctrl+t</kbd>, <kbd>ctrl+shift+w</kbd> and <kbd>ctrl+q</kbd>, stay the browser's: no page gets them first.</p>
 
 <h2 id="typing-in-a-page">Typing in a page</h2>
 
@@ -32,6 +32,65 @@
   <li>While you type, Vim's editing keys work: <kbd>ctrl+w</kbd> deletes a word, <kbd>ctrl+u</kbd> the line before the caret, <kbd>ctrl+h</kbd> a character. They work in the URL bar and the <kbd>:</kbd> line too.</li>
   <li><kbd>I</kbd> jumps to the URL bar from normal mode, its address selected, ready to type over. <kbd>Esc</kbd> brings you back to the page.</li>
 </ul>
+
+<h2 id="moving">Move around a page</h2>
+
+<p>In normal mode you move with single keys: no mouse, no modifiers. They work on web pages, <code>about:</code> pages and in the PDF viewer. Every key is in <a href="#default-keys">All the keys for this page</a>.</p>
+
+<h3 id="scroll">Scroll</h3>
+
+<div class="table-wrap"><table class="plain"><thead><tr><th scope="col">To</th><th scope="col">Press</th></tr></thead><tbody>
+<tr><td>Scroll down / up, left / right</td><td><kbd>j</kbd> <kbd>k</kbd>, <kbd>h</kbd> <kbd>l</kbd></td></tr>
+<tr><td>Half a page down / up</td><td><kbd>d</kbd> or <kbd>u</kbd></td></tr>
+<tr><td>Top / bottom of the page</td><td><kbd>gg</kbd> or <kbd>G</kbd></td></tr>
+</tbody></table></div>
+
+<p>A number before a key repeats it: <kbd>5j</kbd> scrolls five steps.</p>
+
+<h3 id="follow-a-link">Follow a link</h3>
+
+<ol class="steps-list">
+  <li>Press <kbd>f</kbd>. A label, one or two letters, appears on every link, button and field you can see.</li>
+  <li>Type a label's letters. A link is followed, a button pressed, a text field focused.</li>
+</ol>
+
+<p><kbd>gF</kbd> does the same for links only, and opens the one you pick in a new background tab, so you can pick several in turn. While labels show, <kbd>Backspace</kbd> undoes a letter and <kbd>Esc</kbd> cancels. Things you cannot see (off screen, or under a cookie banner) get no label: scroll first.</p>
+
+<h3 id="find-text">Find text</h3>
+
+<ol class="steps-list">
+  <li>Press <kbd>/</kbd> and type. Matches light up as you type, and the status bar counts them.</li>
+  <li>Press <kbd>Enter</kbd> to stay on the match, or <kbd>Esc</kbd> to go back to where you were.</li>
+  <li><kbd>n</kbd> and <kbd>N</kbd> go to the next and the previous match.</li>
+</ol>
+
+<p>A search typed in lower case ignores case; a single capital letter makes the whole search case-sensitive. <kbd>?</kbd> searches backwards.</p>
+
+<h3 id="back-forward-reload">Back, forward, reload, addresses</h3>
+
+<div class="table-wrap"><table class="plain"><thead><tr><th scope="col">To</th><th scope="col">Press</th></tr></thead><tbody>
+<tr><td>Back / forward</td><td><kbd>H</kbd> or <kbd>L</kbd> (Firefox's <kbd>alt+left</kbd> / <kbd>alt+right</kbd> work too, <kbd>cmd+left</kbd> / <kbd>cmd+right</kbd> on macOS)</td></tr>
+<tr><td>Reload</td><td><kbd>r</kbd></td></tr>
+<tr><td>Copy this page's address</td><td><kbd>yy</kbd></td></tr>
+<tr><td>Open the address (or search the text) on the clipboard, here / in a new tab</td><td><kbd>p</kbd> or <kbd>P</kbd></td></tr>
+</tbody></table></div>
+
+<h2 id="copy-some-text">Copy text</h2>
+
+<p>Copy mode selects and copies text from a page with Vim's motions.</p>
+
+<ol class="steps-list">
+  <li>Press <kbd>v</kbd>. A caret appears at the first text you can see, and the badge says <code>VISUAL</code>.</li>
+  <li>Move the caret to where your text starts: <kbd>j</kbd> and <kbd>k</kbd> by line, <kbd>w</kbd> and <kbd>b</kbd> by word, or <kbd>f</kbd> and a character to jump to it on the line.</li>
+  <li>Press <kbd>v</kbd> to start the selection (<kbd>V</kbd> for whole lines), then move to extend it.</li>
+  <li>Press <kbd>y</kbd>. The text is on the clipboard, and you are back in normal mode.</li>
+</ol>
+
+<p><kbd>Esc</kbd> leaves without copying. Selecting with the mouse works too: drag or double-click, then press <kbd>y</kbd> to copy, or use the motions to extend the selection. Text inside a text field is not reachable from copy mode: click the field and select there as usual.</p>
+
+<h3 id="copy-a-paragraph">Copy a paragraph</h3>
+
+<p>For a whole paragraph, heading, list item or code block, press <kbd>F</kbd>: a label appears on each block of text you can see. Type one, and the block is outlined (the badge says <code>ELEMENT</code>). <kbd>y</kbd> copies its text, <kbd>v</kbd> selects it in copy mode so you can adjust the selection first, and <kbd>j</kbd> / <kbd>k</kbd> move to the next or previous block. <kbd>Esc</kbd> leaves.</p>
 
 <h2 id="command-line">The command line</h2>
 
