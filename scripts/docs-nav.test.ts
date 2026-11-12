@@ -27,7 +27,8 @@ function sidebarOf(body: string): [string, string[]][] {
   const nav = /<details class="docs-pages"[\s\S]*?<\/details>/.exec(body)?.[0] ?? "";
   return [...nav.matchAll(/<p class="group"[^>]*>([^<]*)<\/p>\s*<ul>([\s\S]*?)<\/ul>/g)].map((g) => [
     g[1] ?? "",
-    [...(g[2] ?? "").matchAll(/<a [^>]*>([\s\S]*?)<\/a>/g)].map((a) => (a[1] ?? "").replace(/<[^>]+>/g, "").trim()),
+    // a link's text only: a link with markup inside (such as a page number) does not match
+    [...(g[2] ?? "").matchAll(/<a [^>]*>([^<]*)<\/a>/g)].map((a) => (a[1] ?? "").trim()),
   ]);
 }
 
