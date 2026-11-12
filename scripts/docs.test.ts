@@ -107,5 +107,15 @@ test("the guide's downloads, site permissions, pop-ups and hidden toolbar link t
   for (const id of ["downloads", "site-permissions", "blocked-pop-ups", "hiding-the-toolbar"]) {
     assert.match(tabs, new RegExp(`href="https://github\\.com/vimma-browser/vimma/blob/[^"]+/docs/guide\\.md#${id}"`), id);
   }
-  assert.doesNotMatch(tabs, /title="not on this site">(Downloads|Blocked pop-ups|hiding the toolbar)/i);
+});
+
+test("no page leaves a guide link as plain text", () => {
+  for (const p of docs.pages) assert.doesNotMatch(p.body, /title="not on this site"/, p.slug);
+  assert.doesNotMatch(docs.faq, /title="not on this site"/);
+});
+
+test("a limits.md link to a guide heading the site renders stays on the site", () => {
+  const link = linker(new Map([["private-workspace", "workspaces"]]), "limits", "../../", "v0", new Set(["private-workspace"]));
+  assert.equal(link("guide.md#private-workspace"), "../../docs/workspaces/#private-workspace");
+  assert.equal(link("guide.md"), "https://github.com/vimma-browser/vimma/blob/v0/docs/guide.md");
 });

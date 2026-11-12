@@ -154,7 +154,7 @@ export const DOC_PAGES: DocPage[] = [
   {
     slug: "tabs",
     title: "Tabs and the window",
-    headTitle: "Tabs and the window: the ctrl+b prefix, tab search, the side panel and the status bar",
+    headTitle: "Tabs, the side panel and the status bar",
     group: "Organise tabs and windows",
     description: "The ctrl+b prefix, the tab keys, tab search and names, the side panel, the bindings overlay and what the status bar shows.",
     blocks: [

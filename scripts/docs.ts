@@ -102,7 +102,8 @@ export function linker(ids: IdMap, here: string, root: string, ref: string, guid
   return (href) => {
     if (/^https?:\/\//.test(href)) return href;
     const [path = "", hash = ""] = href.split("#");
-    if (path === "") {
+    // limits.md links the guide's headings as guide.md#…, and they go where the site renders them
+    if (path === "" || (path === "guide.md" && hash !== "")) {
       const page = ids.get(hash);
       if (page === undefined) {
         return guideIds.has(hash) ? `${VIMMA_REPO}/blob/${encodeURIComponent(ref)}/docs/guide.md#${hash}` : null;
@@ -391,7 +392,7 @@ export function buildDocs(rootDir: string): {
   const ids: IdMap = new Map();
   for (const p of DOC_PAGES) for (const b of p.blocks) for (const id of idsOf(b, guide)) if (!ids.has(id)) ids.set(id, p.slug);
   // every guide heading, so a link to one no page renders goes to the guide on GitHub
-  const guideIds = new Set(sectionIds(guide));
+  const guideIds = new Set(sectionIds(guide).filter(Boolean));
   // the guide's FAQ is on the help page (src/pages/support.html, {{faq}}), one level down
   const faqSection = need(guide, FAQ);
   for (const id of sectionIds(faqSection)) ids.set(id, HELP);
