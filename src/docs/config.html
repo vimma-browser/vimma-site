@@ -17,7 +17,7 @@
 
 [keys]
 prefix = &quot;ctrl+a&quot;<span class="c">                        # the prefix itself, as tmux users often remap it</span>
-new_tab = [&quot;prefix+t&quot;]<span class="c">                   # ctrl+a t opens a tab, instead of the default</span>
+new_tab = [&quot;prefix+t&quot;]<span class="c">                   # ctrl+a t opens a tab, instead of ctrl+a c and ctrl+t</span>
 toggle_sidebar = [&quot;prefix+b&quot;, &quot;&lt;leader&gt;n&quot;]<span class="c"> # the side panel: prefix b, and now also leader n</span>
 
 [modal]
@@ -65,11 +65,11 @@ leader = &quot;,&quot;<span class="c">                             # the leader,
 
 <h3 id="dark-or-light">Dark or light</h3>
 
-<p>The built-in palette follows your system's dark or light setting and switches the moment it changes. <code>:theme dark</code> or <code>:theme light</code> keeps it one way, <code>:theme system</code> follows the system again, and a bare <code>:theme</code> switches to the other one. Vimma remembers the choice across restarts. <code>appearance</code> under <code>[theme]</code> sets the same in the file, and then the file wins over <code>:theme</code>.</p>
+<p>The built-in palette follows your system's dark or light setting and switches the moment it changes. <code>:theme dark</code> or <code>:theme light</code> keeps it one way, <code>:theme system</code> follows the system again, and a bare <code>:theme</code> switches to the other one. Vimma remembers the choice across restarts. On Omarchy, your Omarchy theme decides, and <code>:theme</code> applies only to the built-in palette. <code>appearance</code> under <code>[theme]</code> sets the same in the file, and then the file wins over <code>:theme</code>.</p>
 
 <h3 id="your-own-colours">Your own colours</h3>
 
-<p>Pick the built-in palette and change single colours under <code>[theme]</code>. Save, and every window recolours within two seconds:</p>
+<p>Choose the built-in palette, or change single colours of either one, under <code>[theme]</code>. Save, and every window recolours within two seconds:</p>
 
 <pre class="code">schema = 2
 
