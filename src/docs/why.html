@@ -1,10 +1,11 @@
-<!-- Hand-written: the whole page. Why a browser and not an extension; the home page's closing band links here. -->
+<!-- Hand-written: the whole page. Why a browser and not an extension, then Vimma next to the keyboard browsers and extensions people already use; the home page's closing band links here. Every claim about another project comes from its own site, docs or repository (listed under Sources, with the date they were checked). -->
 <p class="lead"><strong>Extensions get as far as the page. Vimma starts where they stop.</strong></p>
 <p>Vimium and Tridactyl bring Vim keys to the page, and they do it well; Vimma builds on their ideas. An extension, though, works within the limits of the extension API, and some things sit outside those limits by design.</p>
 
+<h2 id="browser">A browser, not an extension</h2>
 <ul>
-  <li><strong>Your keys work on every page.</strong> Extensions do not run on the browser's own pages, such as <code>about:</code> pages, the new tab page and the add-ons store, so a Vim extension's keys stop there. Vimma's keymap is part of the browser, so <kbd>j</kbd>, <kbd>f</kbd> and <kbd>ctrl+b</kbd> work on those pages too.</li>
-  <li><strong>Sites cannot take your keys.</strong> Gmail, GitHub and Google Docs claim keys for themselves, and an extension has to compete with them for each one. Vimma sees every key before the page does and decides who gets it, so <kbd>f</kbd> shows link hints even on GitHub. When you type in a text field, insert mode passes everything through except <kbd>ctrl+b</kbd> and <kbd>Esc</kbd>.</li>
+  <li><strong>Your keys work on the browser's own pages too.</strong> Extensions do not run on the browser's own pages, such as <code>about:</code> pages, the new tab page and the add-ons store, so a Vim extension's keys stop there. Vimma's keymap is part of the browser, so <kbd>j</kbd>, <kbd>f</kbd> and <kbd>ctrl+b</kbd> work on those pages too (all but extension, <code>data:</code> and <code>blob:</code> pages).</li>
+  <li><strong>Sites cannot take your keys.</strong> Gmail, GitHub and Google Docs claim keys for themselves, and an extension has to compete with them for each one. Vimma sees every key before the page does and decides who gets it, so <kbd>f</kbd> shows link hints even on GitHub. When you type in a text field, insert mode passes every key to the page except <kbd>ctrl+b</kbd>, <kbd>Esc</kbd> and Firefox's reserved keys.</li>
   <li><strong>One keymap for the whole browser.</strong> A tab strip from one extension, containers from another and a Vim layer from a third give you three keymaps that know nothing of each other, on top of Firefox's own shortcuts. Vimma has one keymap: tabs, split panes, workspaces, bookmarks and the URL bar all answer to <kbd>ctrl+b</kbd> and Vim motions, and none of <a href="{{root}}docs/firefox-shortcuts/">Firefox's default shortcuts</a> collides with it.</li>
   <li><strong>Things an extension is not meant to do.</strong> Tiling <a href="{{root}}docs/panes/">panes</a> with tmux layouts, and a status bar that always shows the mode, change the browser window itself, which is outside what the extension API offers.</li>
   <li><strong>One file for every key.</strong> Your whole keymap lives in a single <code>config.toml</code> that reloads when you save. Rebind any key, including the prefix. On Omarchy, Vimma also follows your desktop theme live.</li>
@@ -13,4 +14,42 @@
 
 <p>Firefox is still underneath, with the same engine, add-ons and protections, and Vimma is rebased onto each Firefox security release and tested automatically within hours.</p>
 
-<p>To see Vimma side by side with Vimium, Tridactyl, qutebrowser and Zen Browser, see <a href="{{root}}docs/compared/">Vimma compared</a>.</p>
+<h2 id="compared">Vimma compared</h2>
+<p>Here is Vimma beside the keyboard browsers and extensions people already use, with a short guide to choosing. If one of them already fits the way you work, keep it. Vimma is built with Surfer, the Firefox build toolchain Zen maintains, and is grateful for it.</p>
+
+<div class="table-wrap" tabindex="0" role="region" aria-labelledby="compared">
+<table class="plain compare">
+<thead>
+<tr><th scope="col"><span class="sr-only">Dimension</span></th><th scope="col">Vimma</th><th scope="col">Vimium</th><th scope="col">Tridactyl</th><th scope="col">qutebrowser</th><th scope="col">Zen Browser</th></tr>
+</thead>
+<tbody>
+<tr><th scope="row">What it is</th><td>A Firefox fork</td><td>An extension</td><td>An extension</td><td>A browser of its own, in Python and Qt</td><td>A Firefox fork</td></tr>
+<tr><th scope="row">Engine</th><td>Firefox (Gecko), release channel</td><td>The browser's: Chrome, Edge or Firefox</td><td>Firefox's (Firefox only)</td><td>Chromium, through Qt WebEngine</td><td>Firefox (Gecko)</td></tr>
+<tr><th scope="row">Modal keys</th><td>Normal, insert, visual (copy mode), hints and a <code>:</code> command line, plus a tmux-style <kbd>ctrl+b</kbd> prefix</td><td>Normal, insert, visual, link hints and find; the Vomnibar opens addresses, history, bookmarks and tabs</td><td>Normal, insert, visual, hints, ignore, and a <code>:</code> line for every command</td><td>Normal, insert, hints, caret, passthrough and a <code>:</code> command line</td><td>No modal keys; shortcuts you can rebind in <code>about:keyboard</code>, and a command palette</td></tr>
+<tr><th scope="row">Where the keys work</th><td>Web pages, <code>about:</code> pages, Settings, the PDF viewer, page source and the add-ons site; not on extension, <code>data:</code> or <code>blob:</code> pages</td><td>Web pages; browsers switch extensions off on their own pages, the extension store, the PDF viewer and view-source; on the new tab page through Vimium's companion new tab extension</td><td>Web pages; not on <code>about:</code>, <code>data:</code>, <code>view-source:</code>, some <code>file:</code> pages or addons.mozilla.org</td><td>Everywhere in the browser: the browser handles the keys</td><td>The browser's own shortcuts</td></tr>
+<tr><th scope="row">Tabs, splits, workspaces</th><td>Tabs, tiling split panes with tmux layouts, workspaces that are Firefox containers</td><td>Keys for the browser's tabs</td><td>Keys for Firefox's tabs and containers, and tab groups of its own</td><td>Tabs (also vertical) and windows</td><td>Vertical tabs, split view of up to four tabs, Spaces (workspaces) with containers</td></tr>
+<tr><th scope="row">Config</th><td>One <code>config.toml</code>, applied as you save</td><td>An options page, with <code>map</code> and <code>unmap</code> lines</td><td><code>:bind</code> and <code>:set</code>, and a <code>tridactylrc</code> file</td><td><code>config.py</code>, or <code>:set</code> saved to <code>autoconfig.yml</code></td><td>Settings, <code>about:config</code> and <code>userChrome.css</code></td></tr>
+<tr><th scope="row">Theming</th><td>A built-in palette, your own colours in <code>config.toml</code>, or your Omarchy theme, live</td><td>Your own CSS for its hints and bars</td><td>Colour schemes (<code>:colourscheme</code>), built-in or your own</td><td>Over a hundred <code>colors.*</code> settings and user stylesheets</td><td>Mods from its Mods Registry and <code>userChrome.css</code></td></tr>
+<tr><th scope="row">Platforms</th><td>Linux x86_64 and macOS on Apple Silicon: pre-alpha, release packages, an Arch Linux <code>PKGBUILD</code> and a Homebrew cask</td><td>Wherever desktop Chrome, Edge or Firefox runs</td><td>Wherever desktop Firefox runs</td><td>Linux, macOS, Windows</td><td>Linux, macOS, Windows</td></tr>
+<tr><th scope="row">Extensions</th><td>Firefox add-ons, driven from the keyboard</td><td>It is one, and runs alongside your others</td><td>It is one, and runs alongside your others</td><td>No official WebExtensions support; Greasemonkey user scripts and a built-in ad blocker</td><td>Firefox add-ons; not Firefox themes</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>Who gets a key.</strong> In normal mode a page never sees Vimma's bare keys (<kbd>j</kbd>, <kbd>f</kbd>, <kbd>/</kbd>); keys Vimma does not bind still reach it. Firefox's shortcuts that a page may use, such as <kbd>ctrl+s</kbd> in an editor, and <kbd>Esc</kbd> in normal mode, go to the page first, as in Firefox, unless the site's Override keyboard shortcuts permission is Block. Reserved keys such as <kbd>ctrl+t</kbd> and <kbd>ctrl+w</kbd> stay the browser's.</p>
+
+<h2 id="pick">Which one?</h2>
+<ul>
+  <li>You want Vim keys in the browser you already use, on any desktop system: <strong>Vimium</strong>, or <strong>Tridactyl</strong> in Firefox.</li>
+  <li>You want a mature keyboard browser and can do without Firefox's add-ons: <strong>qutebrowser</strong>.</li>
+  <li>You want a polished Firefox with workspaces and split view, on Linux, macOS or Windows: <strong>Zen</strong>.</li>
+  <li>You live in the terminal on Linux or a Mac, want your Vim and tmux habits across the whole browser, want to keep Firefox's add-ons, and accept pre-alpha software: <strong>Vimma</strong>. Next: <a href="{{root}}docs/install/">install it</a>.</li>
+</ul>
+
+<h2 id="sources">Sources</h2>
+<p>Checked on 12 November 2026, from each project's own site, documentation and repository, against Vimium 2.4.2, Tridactyl 1.25.1, qutebrowser 3.7.0 and Zen 1.24.1b. Projects change: if something here is out of date, <a href="https://github.com/vimma-browser/vimma-site/issues">open an issue</a>. Vimma's side comes from its <a href="https://github.com/vimma-browser/vimma/blob/main/docs/guide.md">user guide</a> and <a href="{{root}}docs/limits/">known limits</a>.</p>
+<ul class="sources">
+  <li>Vimium: <a href="https://github.com/philc/vimium">README</a>, <a href="https://github.com/philc/vimium/wiki/FAQ">FAQ</a>, <a href="https://addons.mozilla.org/en-US/firefox/addon/vimium-ff/">Firefox add-on</a>, <a href="https://github.com/philc/vimium/blob/master/CHANGELOG.md">changelog</a></li>
+  <li>Tridactyl: <a href="https://github.com/tridactyl/tridactyl">README</a>, <a href="https://addons.mozilla.org/en-US/firefox/addon/tridactyl-vim/">Firefox add-on</a>, <a href="https://github.com/tridactyl/tridactyl/blob/master/CHANGELOG.md">changelog</a></li>
+  <li>qutebrowser: <a href="https://qutebrowser.org/">qutebrowser.org</a>, <a href="https://qutebrowser.org/doc/faq.html">FAQ</a>, <a href="https://qutebrowser.org/doc/help/commands.html">commands</a>, <a href="https://qutebrowser.org/doc/help/configuring.html">configuring</a>, <a href="https://qutebrowser.org/doc/install.html">install</a>, <a href="https://qutebrowser.org/doc/changelog.html">changelog</a>, <a href="https://github.com/qutebrowser/qutebrowser/issues/30">extension support issue</a></li>
+  <li>Zen Browser: <a href="https://zen-browser.app/">zen-browser.app</a>, <a href="https://docs.zen-browser.app/user-manual/shortcuts">shortcuts</a>, <a href="https://docs.zen-browser.app/user-manual/workspaces">workspaces</a>, <a href="https://docs.zen-browser.app/user-manual/split-view">split view</a>, <a href="https://docs.zen-browser.app/user-manual/extensions">extensions</a>, <a href="https://docs.zen-browser.app/themes-store/themes-marketplace">mods</a>, release notes for <a href="https://github.com/zen-browser/desktop/releases/tag/1.23.2b">1.23.2b</a> and <a href="https://github.com/zen-browser/desktop/releases/tag/1.24b">1.24b</a>, <a href="https://zen-browser.app/download/">download</a>, <a href="https://github.com/zen-browser/desktop">repository</a>, <a href="https://github.com/zen-browser/surfer">Surfer</a></li>
+</ul>
