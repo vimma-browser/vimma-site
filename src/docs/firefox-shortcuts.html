@@ -1,5 +1,17 @@
-<!-- Hand-written guide for the firefox-shortcuts page; the build adds the details from guide.md. -->
-<p class="lead">A key in Vimma means one thing. Where Firefox had a shortcut on a key Vim uses, such as <kbd>ctrl+w</kbd> or <kbd>ctrl+d</kbd>, Vimma switches Firefox's off, so you never close a tab when you meant to delete a word.</p>
+<!-- Hand-written guide for the firefox-shortcuts page; the build adds the keys table and the details from guide.md. -->
+<p class="lead">Vimma is Firefox underneath, so your bookmarks, passwords and add-ons come along. A key in Vimma means one thing: where Firefox had a shortcut on a key Vim uses, such as <kbd>ctrl+w</kbd> or <kbd>ctrl+d</kbd>, Vimma switches Firefox's off, so you never close a tab when you meant to delete a word.</p>
+
+<h2 id="import">Bring your bookmarks and passwords</h2>
+
+<p>Vimma has a profile of its own, so nothing comes over from another browser until you bring it. Bookmarks, passwords and recent history move in a few minutes; add-ons are installed again.</p>
+
+<ul>
+  <li><strong>From Firefox, with Sync.</strong> Sign in with the same Mozilla account in Firefox and in Vimma (<code>:settings sync</code>, then Sign in), and choose what to sync. Sync brings recent history, about the last 60 days.</li>
+  <li><strong>From Firefox, with files.</strong> Bookmarks: export them to HTML from Firefox's Library (<kbd>ctrl+shift+o</kbd>, Import and Backup) and import the file from Vimma's. Passwords: <code>about:logins</code>, its <code>…</code> menu, Export Passwords in Firefox and Import from a File in Vimma. The exported file holds every password in plain text, so delete it afterwards.</li>
+  <li><strong>From Chrome, Chromium, Brave, Edge, Opera or Vivaldi.</strong> <code>:firefox cmd_file_importFromAnotherBrowser</code> opens Firefox's import wizard; <kbd>f</kbd> on <strong>Import</strong> brings over everything it lists. On Linux the wizard cannot read those browsers' passwords: export them to a CSV file there and import it in <code>about:logins</code>.</li>
+</ul>
+
+<p>Imported bookmarks land in Firefox's own folders, and the <a href="{{root}}docs/bookmarks/">bookmarks panel</a> shows only the current workspace's folder: set <code>root = &quot;toolbar&quot;</code> (or <code>&quot;all&quot;</code>) under <code>[bookmarks]</code> in <code>config.toml</code> to see them. Every step, and what does not come over, is in <a href="#moving-over-from-firefox-or-chrome">Moving over from Firefox or Chrome</a> under Details.</p>
 
 <h2 id="what-moved">What moved where</h2>
 
@@ -37,3 +49,30 @@ enable = [&quot;ctrl+w&quot;]<span class="c">        # ctrl+w closes the tab aga
 <span class="c"># enable = [&quot;ctrl+t&quot;, &quot;ctrl+l&quot;]</span></pre>
 
 <p><code>about:vimma</code> lists every Firefox shortcut that is off right now.</p>
+
+<h2 id="your-add-ons">Your add-ons</h2>
+
+<p>Add-ons work as in Firefox, and now they answer to the keyboard too: open your password manager's vault, an add-on's options or its updates without reaching for the toolbar. Install them from <a href="https://addons.mozilla.org/">addons.mozilla.org</a>, the add-on's page and its Add button, as in Firefox; Vimma never installs anything by itself.</p>
+
+<ol class="steps-list">
+  <li>Press <kbd>ctrl+b</kbd> <kbd>e</kbd> (or type <code>:addons</code>). Every add-on you installed is listed, with its version and whether it is on.</li>
+  <li>Move with <kbd>j</kbd> and <kbd>k</kbd>, or press <kbd>/</kbd> and type a few letters of its name.</li>
+  <li>Press <kbd>Enter</kbd>: its popup opens with keyboard focus inside, so you can type at once. <kbd>Esc</kbd> closes it.</li>
+</ol>
+
+<p>In the list, <kbd>o</kbd> opens its options, <kbd>x</kbd> turns it on or off, <kbd>d</kbd> removes it (after asking), <kbd>u</kbd> checks for an update and <kbd>P</kbd> allows it in private windows or not. <code>:addon bw</code> opens Bitwarden's popup from a few letters of its name, and <kbd>Tab</kbd> completes the name.</p>
+
+<p>You will not need Vimium, Tridactyl or Surfingkeys: hints, scrolling, find and the command line are built in, and a second set of bindings would compete for the same keys. Container add-ons work, but <a href="{{root}}docs/workspaces/">workspaces</a> are containers already, and a tab such an add-on opens in a container of its own belongs to no workspace.</p>
+
+<h2 id="what-vimma-changes">What else Vimma changes</h2>
+
+<p>A few Firefox defaults change for workspaces, and each can be changed back in <code>about:config</code>:</p>
+
+<ul>
+  <li>A restart restores your tabs, workspaces, pane layouts and scroll positions.</li>
+  <li>Closing the last tab keeps the window and opens a new tab.</li>
+  <li>A download opens no downloads panel: the status bar shows it and <kbd>ctrl+b</kbd> <kbd>d</kbd> lists it.</li>
+  <li>Help links open vimma.dev, which forwards any topic Vimma does not document to Mozilla's article.</li>
+</ul>
+
+<p>Settings hides what does nothing in Vimma, such as Firefox themes, the tab layout and the data collection switches, and menus drop Mozilla's promotions. The full list, with each preference, is in <a href="#firefox-behaviour-vimma-changes">Firefox behaviour Vimma changes</a> under Details. What Vimma turns off for privacy is on <a href="{{root}}docs/privacy/">Privacy defaults</a>.</p>

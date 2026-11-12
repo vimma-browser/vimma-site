@@ -24,7 +24,7 @@ test("Start here opens with what a reader wants to do, each a link", () => {
   const list = /<h2 id="i-want-to">[\s\S]*?<\/ul>/.exec(start)?.[0] ?? "";
   const links = [...list.matchAll(/<li><a href="([^"]+)">([^<]+)<\/a><\/li>/g)].map((m) => [m[2], m[1]]);
   assert.deepEqual(links, [
-    ["Switch from Firefox", "../docs/firefox-shortcuts/"],
+    ["Switch from Firefox", "../docs/firefox-shortcuts/#import"],
     ["Learn the basic keys", "#first-five-minutes"],
     ["Split the window", "../docs/panes/"],
     ["Keep work and personal apart", "../docs/workspaces/"],

@@ -46,7 +46,7 @@ export const SUPPORT_TOPICS: SupportTopic[] = [
     to: "/docs/privacy/#turned-off",
     title: "Data collection, crash reports and recommendations",
   },
-  { slugs: ["addons-help"], to: "/docs/add-ons/", title: "Add-ons" },
+  { slugs: ["addons-help"], to: "/docs/firefox-shortcuts/#your-add-ons", title: "Add-ons" },
   { slugs: ["containers"], to: "/docs/workspaces/", title: "Containers, which are Vimma's workspaces" },
   { slugs: ["prefs-search"], to: "/docs/config/#search-engines", title: "Search engines" },
   {

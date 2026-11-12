@@ -133,3 +133,19 @@ test("a guide section named like its page gives its subsections a level of their
     levels.forEach((l, i) => assert.ok(i === 0 || l <= (levels[i - 1] ?? 1) + 1, `${p.slug}: h${levels[i - 1]} then h${l}`));
   }
 });
+
+test("Coming from Firefox holds the import, the shortcuts, the add-ons and what Vimma changes", () => {
+  const body = (slug: string) => docs.pages.find((p) => p.slug === slug)?.body ?? "";
+  const ff = body("firefox-shortcuts");
+  // Firefox's keyboard-shortcuts help topic opens this address, so it stays
+  assert.match(ff, /<h1[^>]*>Coming from Firefox<\/h1>/);
+  for (const id of ["import", "what-moved", "your-add-ons", "what-vimma-changes", "moving-over-from-firefox-or-chrome", "firefoxs-own-shortcuts", "add-ons", "firefox-behaviour-vimma-changes", "keys-add-ons"]) {
+    assert.match(ff, new RegExp(`id="${id}"`), id);
+  }
+  assert.equal(docs.pages.find((p) => p.slug === "add-ons"), undefined);
+  // Privacy keeps what it turns off (a help topic's anchor), and leaves Firefox's other changes
+  const privacy = body("privacy");
+  assert.match(privacy, /<h2 id="turned-off">/);
+  assert.doesNotMatch(privacy, /id="firefox-behaviour-vimma-changes"/);
+  assert.match(privacy, /href="\.\.\/\.\.\/docs\/firefox-shortcuts\/#what-vimma-changes"/);
+});

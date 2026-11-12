@@ -26,7 +26,7 @@ test("every topic Vimma documents opens its page, not Mozilla's article", async 
   const pages: [string, string][] = [
     ["prefs-search", "/docs/config/#search-engines"],
     ["technical-and-interaction-data", "/docs/privacy/#turned-off"],
-    ["addons-help", "/docs/add-ons/"],
+    ["addons-help", "/docs/firefox-shortcuts/#your-add-ons"],
     ["containers", "/docs/workspaces/"],
     ["firefox-help", "/support/"],
     ["preferences", "/support/"],
