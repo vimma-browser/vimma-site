@@ -16,7 +16,10 @@
 /** Retired page → its new home, both root-relative with the trailing slash. */
 export type Redirects = Readonly<Record<string, string>>;
 
-export const REDIRECTS: Redirects = {};
+export const REDIRECTS: Redirects = {
+  // "Vimma compared" is the second half of "Why Vimma"
+  "/docs/compared/": "/docs/why/#compared",
+};
 
 /** The address a request path is redirected to, or null when it is not a retired page. */
 export function resolveRedirect(path: string, redirects: Redirects = REDIRECTS): string | null {
