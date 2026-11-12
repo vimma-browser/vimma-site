@@ -45,6 +45,13 @@ test("every docs page has the same sidebar, and the pages follow it", () => {
   );
 });
 
+test("the sidebar's help group links the help page and the keys page", () => {
+  for (const p of docs.pages) {
+    const root = p.slug === "" ? "../" : "../../";
+    assert.match(p.body, new RegExp(`<li><a href="${root}support/">Help</a></li>\\n<li><a href="${root}keys/">Every key</a></li>`), p.slug);
+  }
+});
+
 test("the sidebar has no page numbers", () => {
   for (const p of docs.pages) {
     const nav = /<nav class="docs-nav"[\s\S]*?<\/nav>/.exec(p.body)?.[0] ?? "";

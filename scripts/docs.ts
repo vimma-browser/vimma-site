@@ -80,7 +80,7 @@ interface Source {
 const START = { slug: "", title: "Start here", nav: "Start here", group: "Get started" };
 
 /** Where an id from guide.md ended up: page slug ("" for Start here). */
-type IdMap = Map<string, string>;
+export type IdMap = Map<string, string>;
 
 /** A docs page's path under the site root; a slug that starts with "/" is a site path (the help page). */
 const pageUrl = (s: string): string => (s.startsWith("/") ? s.slice(1) : s === "" ? "docs/" : `docs/${s}/`);
@@ -95,7 +95,7 @@ function need(guide: MdSection, title: string): MdSection {
 }
 
 /** Link targets in guide.md and limits.md, rewritten for the site. */
-function linker(ids: IdMap, here: string, root: string, ref: string): RenderOptions["link"] {
+export function linker(ids: IdMap, here: string, root: string, ref: string): RenderOptions["link"] {
   return (href) => {
     if (/^https?:\/\//.test(href)) return href;
     const [path = "", hash = ""] = href.split("#");
@@ -388,7 +388,8 @@ export function buildDocs(rootDir: string): {
   // the guide's FAQ is on the help page (src/pages/support.html, {{faq}}), one level down
   const faqSection = need(guide, FAQ);
   for (const id of sectionIds(faqSection)) ids.set(id, HELP);
-  const faq = renderSection(faqSection, { link: linker(ids, HELP, "../", source.ref) }, 2);
+  const faq = `${renderSection(faqSection, { link: linker(ids, HELP, "../", source.ref) }, 2)}
+<p class="source">The FAQ is built from Vimma's <code>docs/guide.md</code> at <a href="${VIMMA_REPO}/commit/${escapeHtml(source.commit)}"><code>${escapeHtml(source.commit)}</code></a> (${escapeHtml(source.date)}).</p>`;
 
   const pages: BuiltDoc[] = [];
   const index: SearchEntry[] = [];
@@ -482,9 +483,12 @@ ${pager(nav, i, root)}
   // the help, install and about pages, so a search for "update", "uninstall" or "bug" finds them;
   // their paths are relative to docs/, where the search's links start
   for (const [file, title] of SITE_PAGES) {
-    const html = read(`src/pages/${file}`).replace(/^<!--\{.*?\}-->\n/s, "");
+    const src = read(`src/pages/${file}`);
+    const meta = JSON.parse(/^<!--(\{.*?\})-->\n/s.exec(src)?.[1] ?? fail(`src/pages/${file}: no meta line`)) as { out: string };
+    // the eyebrow repeats the headings below it, and would start every snippet
+    const html = src.replace(/^<!--\{.*?\}-->\n/s, "").replace(/<p class="eyebrow">[\s\S]*?<\/p>\n?/, "");
     const filled = fill(html, { ...vars, root: "../", faq, support_topics: topicList("../") }, `docs index: ${file}`);
-    index.push(...indexPage(title, `../${file === "support.html" ? "support" : file.replace(/\.html$/, "")}/`, filled));
+    index.push(...indexPage(title, `../${meta.out}`, filled));
   }
 
   return { pages, index, source, markdown: fullMarkdown(guideMd, limitsMd, ids, source), faq };

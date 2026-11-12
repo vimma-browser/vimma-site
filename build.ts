@@ -170,6 +170,8 @@ function main(): void {
     const content = fill(page.body, vars, page.meta.out || "index");
     // a page that names the release changes with it, for its date in the sitemap
     if (Object.keys(release).some((k) => page.body.includes(`{{${k}}}`))) page.sources.push(RELEASE_FILE);
+    // the help page's FAQ is the synced guide's
+    if (page.body.includes("{{faq}}")) page.sources.push("data/docs/guide.md");
     const html = fill(
       layout,
       {
@@ -241,7 +243,7 @@ function main(): void {
           "Docs",
           ["Browse with the keyboard", "Organise tabs and windows", "Make it yours", "Use it with AI agents", "Trust and limits"].flatMap(docsOf),
         ],
-        ["Optional", [...docsOf("Get help"), link(about, "About Vimma"), link(support, "Help")]],
+        ["Optional", [link(about, "About Vimma"), link(support, "Help")]],
       ],
     ),
   );
