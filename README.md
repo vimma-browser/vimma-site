@@ -73,7 +73,9 @@ npm run release:sync -- v0.1.2     # … of a given release tag
   leaves out common words (a stop list) and verb forms nearly every section has, words already in
   a section's page title, heading or snippet, and words inside a longer word of the same section
   (the search matches substrings), and names each page's title and path once; if it outgrows its
-  budget, slim it the same way.
+  budget, slim it the same way. It also leaves out each page's key tables and its "Known limits"
+  links, which repeat the keys page and the known limits page, and has the release's facts
+  filled in, as the pages do.
 - **seo**: one `<link rel="canonical">` per page with its `https://vimma.dev/` address (none, and
   `noindex`, on the 404 page), the Open Graph and `twitter:card` tags, titles and descriptions
   unique across pages, JSON-LD that parses, each `VideoObject` in it with a name, description,
@@ -95,7 +97,9 @@ npm run release:sync -- v0.1.2     # … of a given release tag
 - `src/ts/site.ts` is the one browser script (an ES module): the keys (`j k d u gg G / ? [ ]
   g h g d g k g i g a`), the overlay, the keys filter,
   the docs search and the install command's copy button (hidden where the clipboard API is missing).
-  Every page works without it.
+  Every page works without it. The docs search's scoring is `src/ts/search.ts`, loaded with the
+  index on the first search, so the build's tests (`scripts/docs.test.ts`) rank results with the
+  same code.
 - **The promo video** (`assets/video/`): one 75-second 16:9 cut (about 11 MB), no sound, H.264 with the
   `moov` atom first (`+faststart`), with a WebP poster. Every screen, phones included, gets the
   same `<video>`, scaled to the column's width. With `preload="none"` it downloads nothing until
