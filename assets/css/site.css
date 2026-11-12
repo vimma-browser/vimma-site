@@ -964,18 +964,10 @@ table.plain th {
   background: var(--selection);
 }
 
-.docs-nav .n {
-  color: var(--fg-muted);
-}
-
 .docs-nav a[aria-current="page"] {
   background: var(--selection);
   color: var(--fg-bright);
   font-weight: 700;
-}
-
-.docs-nav a[aria-current="page"] .n {
-  color: inherit;
 }
 
 .docs-nav .group {
