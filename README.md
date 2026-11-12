@@ -26,7 +26,7 @@ in a minute or two. See [Deploying](#deploying).
 | `/docs/`   | `src/docs/`, `data/docs/`| Start here, Why Vimma, then pages from the guide                   |
 | `/keys/`   | `src/pages/keys.html`    | Every default binding, filterable, from `data/bindings.json`       |
 | `/install/`| `src/pages/install.html` | Arch Linux command, release packages, build from source            |
-| `/about/`  | `src/pages/about.html`   | Why another browser, privacy defaults, Firefox base, licence, FAQ  |
+| `/about/`  | `src/pages/about.html`   | Name, Firefox base, maker, licence, source, site privacy, accessibility, links, thanks |
 | `/support/`| `src/pages/support.html` | Help: where to start, Vimma's topics, Firefox's help, reporting a bug, where to ask |
 | `404.html` | `src/pages/404.html`     | Not found (links are root-absolute: it assumes the site is at `/`) |
 
@@ -165,7 +165,7 @@ forward to support.mozilla.org, while `wrangler dev` applied the same file top t
 
 ### Retired pages
 
-When a docs page is merged into another, its address keeps working: `REDIRECTS` in
+When a docs page is merged into another page, its address keeps working: `REDIRECTS` in
 `scripts/redirects.ts` maps it to the page (and heading) that now holds its content, and the same
 Worker script answers it with a 301, the query string going along. `wrangler.jsonc` runs the
 script first for each retired page's address, with and without the trailing slash and with

@@ -1,25 +1,12 @@
-<!--{"title": "About Vimma: why, privacy, Firefox and licence", "short": "about", "out": "about/", "description": "Why Vimma exists, its privacy defaults, the Firefox underneath, its licence, who makes it and where the source is."}-->
-<p class="eyebrow">Why · privacy · Firefox · licence</p>
+<!--{"title": "About Vimma: the name, Firefox, the maker and the licence", "short": "about", "out": "about/", "description": "What Vimma's name means, the Firefox underneath, who makes it, its licence and source, what this site keeps about you, and accessibility."}-->
+<p class="eyebrow">Name · Firefox · maker · licence · accessibility</p>
 <h1>About</h1>
-<p>Vimma is a keyboard-first browser for people who live in the terminal, so that browsing keeps the flow of the rest of your work. <strong>Vim</strong> brings the modal layer: <kbd>j</kbd> <kbd>k</kbd> scroll, <kbd>f</kbd> shows link hints, <kbd>/</kbd> finds, <kbd>:</kbd> runs commands. <strong>tmux</strong> brings the prefix: after <kbd>ctrl+b</kbd>, <kbd>c</kbd> opens a tab, <kbd>v</kbd> splits and <kbd>w</kbd> switches workspace. Every key, and the prefix, can be remapped in <code>config.toml</code>.</p>
+<p>Vimma is a keyboard-first browser built on Firefox, for people who live in the terminal: Vim's modes on every page, and tmux's <kbd>ctrl+b</kbd> prefix for tabs, panes and workspaces. Every key, and the prefix, can be remapped in <code>config.toml</code>.</p>
 
 <dl class="faq">
-  <dt id="why">Why another browser, and not an extension?</dt>
-  <dd>
-    <p>Extensions such as Tridactyl and Vimium come close, but an extension cannot reach every key. Vimma's dispatcher sees each key before Firefox does, including in the URL bar, on <code>about:</code> pages and in the PDF viewer.</p>
-    <p>Splits, workspaces and a status bar belong to the window, and no extension owns the window. In Vimma they are built in. The long version: <a href="{{root}}docs/why/">Why Vimma</a>.</p>
-  </dd>
-
   <dt id="name">What does the name mean?</dt>
   <dd>
     <p><em>Vimma</em> is Finnish for a burst of eager, focused energy. You hear it in <em>työvimma</em>: a spell of work where everything flows and the hours slip by. It also happens to start with <em>Vim</em>.</p>
-  </dd>
-
-  <dt id="privacy">What are the privacy defaults?</dt>
-  <dd>
-    <p>Off by default: Mozilla's studies and rollouts (Normandy, Nimbus), sponsored new-tab content and suggestions, feature recommendations and Mozilla promos. The build has no crash reporter and no telemetry upload, so nothing is sent to Mozilla; a crash leaves whatever record your system keeps.</p>
-    <p>Kept as in Firefox: certificate revocation (CRLite), the add-on blocklist, Sync and add-ons from addons.mozilla.org. Google Safe Browsing is on in builds made with a Google API key. Each default can be changed in <code>about:config</code>.</p>
-    <p>Updates come through Vimma's own server, <code>updates.vimma.dev</code>: Vimma's update check and Firefox's updater in the tarball ask it, not Mozilla, and Vimma installs only a release that matches what its own key signed. System add-on updates are off. The one request Vimma still makes to Mozilla's update server is for the OpenH264 and Widevine plugins, which video calls and DRM video need.</p>
   </dd>
 
   <dt id="firefox">What is underneath?</dt>
@@ -27,53 +14,16 @@
     <p>Firefox {{firefox_major}}, on the release channel, so you get Mozilla's engine and its add-on ecosystem. Vimma is built with <a href="https://github.com/zen-browser/surfer">Surfer</a>, the toolchain behind Zen Browser. Vimma's code lives in its own files, with small patches to Firefox. Sites see Firefox's user agent byte for byte, and add-ons see Firefox's version number, so the web treats Vimma as Firefox.</p>
   </dd>
 
-  <dt id="workspaces">How private are workspaces?</dt>
-  <dd>
-    <p>Each workspace is a Firefox container: cookies, logins, site storage and site permissions are separate. History and form history are shared by all workspaces, as they are between Firefox containers, and so are bookmarks, with a folder for each workspace. For browsing that leaves nothing on disk, use the <a href="{{root}}docs/private-workspace/">private workspace</a>, Firefox's private browsing one key away.</p>
-  </dd>
-
-  <dt id="agents">Can AI agents use Vimma?</dt>
-  <dd>
-    <p>Only if you let them. Turn agents on with <code>:mcp on</code>, and a local agent such as Claude Code or Codex can open, read and close tabs, follow links, click buttons and fill fields through <code>vimma-ctl mcp</code>, in the agent workspace only, with its own logins. Vimma asks you first, one answer lets the agent work until it quits, and paying or sending a form with text or personal details asks every time. See <a href="{{root}}docs/agent-workspace/">The agent workspace</a>.</p>
-  </dd>
-
-  <dt id="omarchy">Do I need Omarchy?</dt>
-  <dd>
-    <p>No. On <a href="https://omarchy.org/">Omarchy</a>, Vimma follows your theme and recolours when you change it. Elsewhere it uses its built-in palette, the aqua, magenta and teal-black of this site, in a dark or light variant to match your system. You can also set your own colours in <code>config.toml</code>.</p>
-  </dd>
-
-  <dt id="status">What works today?</dt>
-  <dd>
-    <p>Vimma is pre-alpha. Version <code>{{version}}</code>, on Firefox {{firefox}}, is released for Linux x86_64 and for macOS on Apple Silicon; ticked items work in it.</p>
-      <ul class="checklist">
-        <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> The fork, its build pipeline, the control socket and end-to-end tests</li>
-        <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> The modal page layer: scrolling, hints, find, copy mode, back, forward and reload</li>
-        <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> Tab keys, the status bar and tab search</li>
-        <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> Workspaces, the side panel and the private workspace</li>
-        <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> Split panes and tiling layouts</li>
-        <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> <code>config.toml</code>, theming and search engines</li>
-        <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> Local AI agents through MCP, confined to the agent workspace</li>
-        <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> Update notices in the status bar, with the command to update; the AppImage and the tarball install an update by themselves</li>
-        <li><span class="mark" aria-hidden="true">[x]</span><span class="sr-only">Done:</span> macOS on Apple Silicon, signed and notarised, with a Homebrew cask and update notices</li>
-        <li><span class="mark todo" aria-hidden="true">[ ]</span><span class="sr-only">To do:</span> Passkeys on macOS</li>
-      </ul>
-  </dd>
-
-  <dt id="platforms">Which platforms?</dt>
-  <dd>
-    <p>Linux x86_64, and macOS on Apple Silicon (M1 or later), through Homebrew or a <code>.dmg</code>. There is no build for Intel Macs or Windows. See <a href="{{root}}install/">install</a>.</p>
-  </dd>
-
-  <dt id="licence">What is the licence?</dt>
-  <dd>
-    <p><a href="https://www.mozilla.org/MPL/2.0/">MPL-2.0</a>, like Firefox. This website is MPL-2.0 too, its text and the logo included.</p>
-  </dd>
-
   <dt id="maker">Who makes Vimma?</dt>
   <dd>
     <p>Juuso Ranne, a solution architect in software and technology and a doctoral researcher at the University of Turku. My research is on open source adoption and AI-driven development: how organisations take open source software into use, and how AI coding agents change the way software is designed, built and maintained.</p>
     <p>Vimma is built that way. I set the direction, the specifications and the review rules, and AI coding agents write most of the code under them. Every change goes through tests, CI and review before it merges, and the rules they follow are public in the repository (<a href="https://github.com/vimma-browser/vimma/blob/main/AGENTS.md"><code>AGENTS.md</code></a>).</p>
     <p>Find me on <a href="https://github.com/JRanne">GitHub</a> and <a href="https://www.linkedin.com/in/juusoranne">LinkedIn</a>.</p>
+  </dd>
+
+  <dt id="licence">What is the licence?</dt>
+  <dd>
+    <p><a href="https://www.mozilla.org/MPL/2.0/">MPL-2.0</a>, like Firefox. This website is MPL-2.0 too, its text and the logo included.</p>
   </dd>
 
   <dt id="source">Where is the source?</dt>
@@ -86,6 +36,20 @@
     <p>No. It sets no cookies, runs no analytics and loads no fonts, scripts or images from other servers. The site's own keys (press <kbd>?</kbd>) store one setting in your browser's local storage: whether they are on.</p>
   </dd>
 </dl>
+
+<h2 id="accessibility">Accessibility</h2>
+<p>Vimma's own parts, from the status bar and the <kbd>ctrl+b</kbd> <kbd>?</kbd> overlay to the pickers, panels and command line, work with a screen reader (Orca on Linux) on top of Firefox's own support. Each overlay, picker, panel and prompt takes focus when it opens and gives it back when it closes. The status bar never announces titles or URLs as they change, all text Vimma draws reaches WCAG AA contrast in the built-in themes, nothing in Vimma's UI animates, and any chord can be remapped to a single key in <a href="{{root}}docs/config/">config.toml</a>. The user guide's <a href="https://github.com/vimma-browser/vimma/blob/{{release_tag}}/docs/guide.md#accessibility">Accessibility</a> section says what each part tells a screen reader.</p>
+
+<h2 id="elsewhere">Answered elsewhere</h2>
+<ul>
+  <li id="why">Why a browser, and not an extension: <a href="{{root}}docs/why/">Why Vimma</a>.</li>
+  <li id="privacy">What Vimma turns off, keeps and asks Mozilla for: <a href="{{root}}docs/privacy/">Privacy defaults</a>.</li>
+  <li id="workspaces">What each workspace keeps apart, and the private workspace: <a href="{{root}}docs/workspaces/">Workspaces</a>.</li>
+  <li id="agents">AI agents, only when you let them, in a workspace of their own: <a href="{{root}}docs/agent-workspace/">The agent workspace</a>.</li>
+  <li id="omarchy">Colours with or without Omarchy: <a href="{{root}}docs/theming/">Theming</a>.</li>
+  <li id="status">Version <code>{{version}}</code>, on Firefox {{firefox}}, is pre-alpha: <a href="{{root}}docs/">Start here</a> for what works, <a href="{{root}}docs/limits/">Known limits</a> for what does not yet.</li>
+  <li id="platforms">Linux x86_64 and macOS on Apple Silicon: <a href="{{root}}install/">Install</a>.</li>
+</ul>
 
 <h2 id="thanks">Thanks</h2>
 <ul>
