@@ -1,5 +1,5 @@
 <!--{"title": "About Vimma: the name, Firefox, the maker and the licence", "short": "about", "out": "about/", "description": "What Vimma's name means, the Firefox underneath, who makes it, its licence and source, what this site keeps about you, and accessibility."}-->
-<p class="eyebrow">Name · Firefox · maker · licence</p>
+<p class="eyebrow">Name · Firefox · maker · licence · accessibility</p>
 <h1>About</h1>
 <p>Vimma is a keyboard-first browser built on Firefox, for people who live in the terminal: Vim's modes on every page, and tmux's <kbd>ctrl+b</kbd> prefix for tabs, panes and workspaces. Every key, and the prefix, can be remapped in <code>config.toml</code>.</p>
 
@@ -38,7 +38,7 @@
 </dl>
 
 <h2 id="accessibility">Accessibility</h2>
-<p>Vimma's own parts, from the status bar and the <kbd>ctrl+b</kbd> <kbd>?</kbd> overlay to the pickers, panels and command line, work with a screen reader (Orca on Linux) on top of Firefox's own support. They take focus when they open and give it back when they close, the status bar never announces titles or URLs as they change, all text reaches WCAG AA contrast in the built-in themes, nothing animates, and any chord can be remapped to a single key. The user guide's <a href="https://github.com/vimma-browser/vimma/blob/{{release_tag}}/docs/guide.md#accessibility">Accessibility</a> section says what each part tells a screen reader.</p>
+<p>Vimma's own parts, from the status bar and the <kbd>ctrl+b</kbd> <kbd>?</kbd> overlay to the pickers, panels and command line, work with a screen reader (Orca on Linux) on top of Firefox's own support. Each overlay, picker, panel and prompt takes focus when it opens and gives it back when it closes. The status bar never announces titles or URLs as they change, all text Vimma draws reaches WCAG AA contrast in the built-in themes, nothing in Vimma's UI animates, and any chord can be remapped to a single key in <a href="{{root}}docs/config/">config.toml</a>. The user guide's <a href="https://github.com/vimma-browser/vimma/blob/{{release_tag}}/docs/guide.md#accessibility">Accessibility</a> section says what each part tells a screen reader.</p>
 
 <h2 id="elsewhere">Answered elsewhere</h2>
 <ul>
@@ -47,7 +47,7 @@
   <li id="workspaces">What each workspace keeps apart, and the private workspace: <a href="{{root}}docs/workspaces/">Workspaces</a>.</li>
   <li id="agents">AI agents, only when you let them, in a workspace of their own: <a href="{{root}}docs/agent-workspace/">The agent workspace</a>.</li>
   <li id="omarchy">Colours with or without Omarchy: <a href="{{root}}docs/theming/">Theming</a>.</li>
-  <li id="status">What works in pre-alpha version <code>{{version}}</code>, on Firefox {{firefox}}: the <a href="{{root}}docs/">docs</a>; what does not yet: <a href="{{root}}docs/limits/">Known limits</a>.</li>
+  <li id="status">Version <code>{{version}}</code>, on Firefox {{firefox}}, is pre-alpha: <a href="{{root}}docs/">Start here</a> for what works, <a href="{{root}}docs/limits/">Known limits</a> for what does not yet.</li>
   <li id="platforms">Linux x86_64 and macOS on Apple Silicon: <a href="{{root}}install/">Install</a>.</li>
 </ul>
 
