@@ -121,6 +121,24 @@ export function linker(ids: IdMap, here: string, root: string, ref: string, guid
   };
 }
 
+/** The guide on GitHub at the release tag, as a hand-written page links it (build.ts fills the tag). */
+const GUIDE_AT_TAG = `${VIMMA_REPO}/blob/{{release_tag}}/docs/guide.md#`;
+
+/**
+ * Fails the build when a hand-written page links a guide heading on GitHub that the guide no
+ * longer has: a renamed heading would otherwise leave the link landing at the top of the guide.
+ */
+export function checkGuideLinks(html: string, guideIds: ReadonlySet<string>, where: string): void {
+  for (const m of html.matchAll(/href="([^"]*)"/g)) {
+    const href = m[1] ?? "";
+    if (!href.startsWith(GUIDE_AT_TAG)) continue;
+    const id = href.slice(GUIDE_AT_TAG.length);
+    if (!guideIds.has(id)) {
+      throw new Error(`docs: ${where} links the guide's #${id}, a heading guide.md no longer has: point the link at the heading's new id`);
+    }
+  }
+}
+
 function idsOf(block: Block, guide: MdSection): string[] {
   if ("guide" in block) return sectionIds(need(guide, block.guide), block.exclude ?? [], !block.only);
   if ("guideParas" in block) return [block.id];
@@ -393,6 +411,14 @@ export function buildDocs(rootDir: string): {
   for (const p of DOC_PAGES) for (const b of p.blocks) for (const id of idsOf(b, guide)) if (!ids.has(id)) ids.set(id, p.slug);
   // every guide heading, so a link to one no page renders goes to the guide on GitHub
   const guideIds = new Set(sectionIds(guide).filter(Boolean));
+  // headings a hand-written guide sums up under the same id (anchors in docs-pages.ts)
+  for (const p of DOC_PAGES) {
+    for (const id of p.anchors ?? []) {
+      if (!guideIds.has(id)) fail(`${p.slug}: anchors names #${id}, a heading guide.md does not have`);
+      if (!read(`src/docs/${p.slug}.html`).includes(`id="${id}"`)) fail(`${p.slug}: anchors names #${id}, which src/docs/${p.slug}.html has no id for`);
+      if (!ids.has(id)) ids.set(id, p.slug);
+    }
+  }
   // the guide's FAQ is on the help page (src/pages/support.html, {{faq}}), one level down
   const faqSection = need(guide, FAQ);
   for (const id of sectionIds(faqSection)) ids.set(id, HELP);
@@ -411,6 +437,7 @@ export function buildDocs(rootDir: string): {
     const intro = read(introFile)
       .replace(/^<!--[\s\S]*?-->\n?/, "")
       .replace(/\{\{root\}\}/g, root);
+    checkGuideLinks(intro, guideIds, introFile);
 
     let sections = "";
     if (!page) {
@@ -497,6 +524,7 @@ ${pager(nav, i, root)}
     const meta = JSON.parse(/^<!--(\{.*?\})-->\n/s.exec(src)?.[1] ?? fail(`src/pages/${file}: no meta line`)) as { out: string };
     // the eyebrow repeats the headings below it, and would start every snippet
     const html = src.replace(/^<!--\{.*?\}-->\n/s, "").replace(/<p class="eyebrow">[\s\S]*?<\/p>\n?/, "");
+    checkGuideLinks(html, guideIds, `src/pages/${file}`);
     const filled = fill(html, { ...vars, root: "../", faq, support_topics: topicList("../") }, `docs index: ${file}`);
     index.push(...indexPage(title, `../${meta.out}`, filled));
   }

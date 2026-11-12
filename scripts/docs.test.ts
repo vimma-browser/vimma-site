@@ -8,7 +8,7 @@ import { resolve } from "node:path";
 import { test } from "node:test";
 
 import { rank } from "../src/ts/search.js";
-import { type IdMap, buildDocs, linker, packIndex, textOf } from "./docs.js";
+import { type IdMap, buildDocs, checkGuideLinks, linker, packIndex, textOf } from "./docs.js";
 
 const ROOT = resolve(import.meta.dirname, "../..");
 const docs = buildDocs(ROOT);
@@ -166,4 +166,52 @@ test("Split panes renders several splits, and every link to it stays on the site
   assert.match(panes, /<h3 id="several-splits">/);
   assert.match(panes, /href="#several-splits"/);
   for (const p of docs.pages) assert.doesNotMatch(p.body, /guide\.md#several-splits/, p.slug);
+});
+
+test("Agents and vimma-ctl is one page, with what keeps an agent in check", () => {
+  const agents = docs.pages.find((p) => p.slug === "agent-workspace")?.body ?? "";
+  assert.match(agents, /<h1[^>]*>Agents and vimma-ctl<\/h1>/);
+  for (const id of [
+    "vimmas-own-agent",
+    "connecting-an-agents-tool",
+    "answering-an-agent",
+    "checkpoints-sending-a-form-and-paying",
+    "what-agents-can-do",
+    "ending-an-agents-access",
+    "scripting-with-vimma-ctl",
+    "more-in-the-guide",
+    "what-a-grant-covers",
+    "what-vimma-protects-and-what-it-does-not",
+  ]) {
+    assert.match(agents, new RegExp(`id="${id}"`), id);
+  }
+  // the seven page tools, one row each
+  const tools = /<h2 id="what-agents-can-do">[\s\S]*?<\/table>/.exec(agents)?.[0] ?? "";
+  assert.equal([...tools.matchAll(/<tr><td>[\s\S]*?<code>vimma_[a-z]+<\/code><\/td><\/tr>/g)].length, 7);
+  for (const slug of ["agent-tools", "vimma-ctl"]) assert.equal(docs.pages.find((p) => p.slug === slug), undefined, slug);
+});
+
+test("the agent page stays short: the deep material is linked in the guide", () => {
+  const agents = docs.pages.find((p) => p.slug === "agent-workspace")?.body ?? "";
+  const article = /<article[\s\S]*<\/article>/.exec(agents)?.[0] ?? "";
+  const words = textOf(article).split(/\s+/).filter(Boolean).length;
+  assert.ok(words <= 4500, `${words} words`);
+  for (const id of ["choosing-a-model-for-the-agent-chat", "using-an-agent-cli-in-the-chat-window", "running-an-agent-cli-headless", "when-to-use-playwright-instead", "timeouts-in-agent-tools", "downloads-from-the-agent-workspace", "virus-scanning-with-clamav", "moving-around-a-page"]) {
+    assert.match(agents, new RegExp(`href="https://github\\.com/vimma-browser/vimma/blob/[^"]+/docs/guide\\.md#${id}"`), id);
+  }
+});
+
+test("a guide link from another page to a heading the agent page sums up lands there", () => {
+  const install = docs.pages.find((p) => p.slug === "install")?.body ?? "";
+  assert.doesNotMatch(install, /guide\.md#scripting-with-vimma-ctl/);
+  const all = docs.pages.map((p) => p.body).join("\n");
+  assert.match(all, /href="(\.\.\/\.\.\/docs\/agent-workspace\/)?#vimmas-own-agent"/);
+  assert.doesNotMatch(all, /guide\.md#vimmas-own-agent/);
+});
+
+test("a hand-written link into the guide fails the build when the heading is gone", () => {
+  const ids = new Set(["downloads"]);
+  const base = "https://github.com/vimma-browser/vimma/blob/{{release_tag}}/docs/guide.md";
+  assert.doesNotThrow(() => checkGuideLinks(`<a href="${base}#downloads">x</a>`, ids, "tabs"));
+  assert.throws(() => checkGuideLinks(`<a href="${base}#downloadz">x</a>`, ids, "tabs"), /tabs.*#downloadz/);
 });

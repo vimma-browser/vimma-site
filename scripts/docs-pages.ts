@@ -35,23 +35,13 @@ export interface DocPage {
   blocks: Block[];
   /** Written for this site only, nothing from guide.md: no "built from" source line. */
   handWritten?: boolean;
+  /**
+   * Guide headings that the hand-written guide sums up under the same id, so the guide's links to
+   * them land there rather than on GitHub. Each must be a guide heading and an id in the page's
+   * src/docs/<slug>.html, or the build fails.
+   */
+  anchors?: string[];
 }
-
-/**
- * The agent workspace's tool subsections, on a page of their own: with them, the agent workspace
- * page is over the page-weight budget, and the tools are a reference an agent's user looks up
- * apart from setting the workspace up.
- */
-const AGENT_TOOL_SECTIONS = [
-  "Moving around a page",
-  "Listing a page's buttons and fields",
-  "Clicking on a page",
-  "Filling in a form",
-  "Seeing a page",
-  "Reading a page's errors",
-  "Showing you a page",
-  "Timeouts in agent tools",
-];
 
 /** limits.md sections shown on the Known limits page, in this order. */
 export const LIMIT_SECTIONS = [
@@ -234,29 +224,24 @@ export const DOC_PAGES: DocPage[] = [
   },
   {
     slug: "agent-workspace",
-    title: "The agent workspace",
-    nav: "Agent workspace",
-    headTitle: "The agent workspace: local AI agents through MCP, with your consent",
+    title: "Agents and vimma-ctl",
+    headTitle: "Agents and vimma-ctl: local AI agents in a workspace of their own, with your consent",
     group: "Use it with AI agents",
-    description: "Let a local AI agent use one workspace of its own through vimma-ctl mcp; Vimma asks you before each request.",
-    blocks: [{ guide: "Agent workspace", exclude: AGENT_TOOL_SECTIONS }, { keys: ["Agents"] }],
-  },
-  {
-    slug: "agent-tools",
-    title: "What agents can do on a page",
-    nav: "Agent tools",
-    headTitle: "Agent tools: move around, click, fill in and see pages in the agent workspace",
-    group: "Use it with AI agents",
-    description: "The tools an agent uses in its workspace: move around a page, list and click its controls, fill in forms, and see the page and its errors.",
-    blocks: AGENT_TOOL_SECTIONS.map((guide) => ({ guide })),
-  },
-  {
-    slug: "vimma-ctl",
-    title: "Scripting with vimma-ctl",
-    nav: "vimma-ctl",
-    group: "Use it with AI agents",
-    description: "Drive a running Vimma from a shell or a window-manager binding, over a local socket.",
-    blocks: [{ guide: "Scripting with vimma-ctl" }],
+    description: "Let Vimma's own agent or a local AI agent through MCP use one workspace of its own, asking you first and again before it pays or sends a form; and script Vimma with vimma-ctl.",
+    blocks: [
+      { guide: "Agent workspace", only: true },
+      { guide: "What a grant covers" },
+      { guide: "What Vimma protects, and what it does not" },
+      { keys: ["Agents"] },
+    ],
+    anchors: [
+      "vimmas-own-agent",
+      "connecting-an-agents-tool",
+      "answering-an-agent",
+      "checkpoints-sending-a-form-and-paying",
+      "ending-an-agents-access",
+      "scripting-with-vimma-ctl",
+    ],
   },
   {
     slug: "privacy",
