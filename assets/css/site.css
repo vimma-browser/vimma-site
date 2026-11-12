@@ -104,7 +104,7 @@
   text-size-adjust: 100%;
 }
 
-@media (max-width: 520px) {
+@media (max-width: 480px) {
   :root {
     font-size: 14px;
   }
@@ -262,7 +262,7 @@ li + li {
   padding: 0 2rem;
 }
 
-@media (max-width: 520px) {
+@media (max-width: 480px) {
   .wrap {
     padding: 0 1.15rem;
   }
