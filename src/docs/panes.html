@@ -1,5 +1,5 @@
 <!-- Hand-written guide for the panes page; the build adds the keys table and the details from guide.md. -->
-<p class="lead">Split the window to see up to four pages side by side. Each page in the split is a <strong>pane</strong>, and tmux's keys after <kbd>ctrl+b</kbd> move between them.</p>
+<p class="lead">Split the window to see several pages side by side, up to eight by default. Each page in the split is a <strong>pane</strong>, and tmux's keys after <kbd>ctrl+b</kbd> move between them.</p>
 
 <h2 id="split-keys">Pane keys</h2>
 
@@ -20,7 +20,7 @@
   <li>A new pane opens the start page with the URL bar focused: type the address it should show.</li>
   <li>The focused pane has a coloured border, and the status bar says <code>pane 2/2</code>. Page keys such as <kbd>j</kbd>, <kbd>H</kbd> and <kbd>r</kbd> act on it. Clicking a pane focuses it too.</li>
   <li>Closing a pane keeps its tab: it is still in the workspace, and <kbd>ctrl+b</kbd> <kbd>g</kbd> finds it.</li>
-  <li>Four panes at most, by default. Change the limit with <code>max</code> under <code>[panes]</code> in <code>config.toml</code>.</li>
+  <li>Eight panes at most, by default. Change the limit with <code>max</code> under <code>[panes]</code> in <code>config.toml</code>.</li>
   <li>Each <a href="{{root}}docs/workspaces/">workspace</a> keeps its own split, and a restart brings it back as you left it.</li>
 </ul>
 
