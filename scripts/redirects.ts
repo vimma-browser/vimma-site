@@ -19,6 +19,8 @@ export type Redirects = Readonly<Record<string, string>>;
 export const REDIRECTS: Redirects = {
   // "Vimma compared" is the second half of "Why Vimma"
   "/docs/compared/": "/docs/why/#compared",
+  // Accessibility is a section of About, with a link to the guide's full section
+  "/docs/accessibility/": "/about/#accessibility",
 };
 
 /** The address a request path is redirected to, or null when it is not a retired page. */

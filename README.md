@@ -26,7 +26,7 @@ in a minute or two. See [Deploying](#deploying).
 | `/docs/`   | `src/docs/`, `data/docs/`| Start here, Why Vimma, then pages from the guide                   |
 | `/keys/`   | `src/pages/keys.html`    | Every default binding, filterable, from `data/bindings.json`       |
 | `/install/`| `src/pages/install.html` | Arch Linux command, release packages, build from source            |
-| `/about/`  | `src/pages/about.html`   | Why another browser, privacy defaults, Firefox base, licence, FAQ  |
+| `/about/`  | `src/pages/about.html`   | The name, Firefox base, maker, licence, source, accessibility, thanks |
 | `/support/`| `src/pages/support.html` | Help: where to start, Vimma's topics, Firefox's help, reporting a bug, where to ask |
 | `404.html` | `src/pages/404.html`     | Not found (links are root-absolute: it assumes the site is at `/`) |
 

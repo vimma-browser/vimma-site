@@ -325,14 +325,6 @@ export const DOC_PAGES: DocPage[] = [
     ],
   },
   {
-    slug: "accessibility",
-    title: "Accessibility",
-    headTitle: "Accessibility of Vimma's own UI",
-    group: "Trust and limits",
-    description: "Screen readers, focus, announcements, contrast and motion in Vimma's own UI.",
-    blocks: [{ guide: "Accessibility" }],
-  },
-  {
     slug: "limits",
     title: "Known limits",
     headTitle: "Known limits of pre-alpha Vimma",
