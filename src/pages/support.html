@@ -1,5 +1,5 @@
-<!--{"title": "Help · Vimma", "short": "help", "out": "support/", "description": "Help with Vimma: the docs, the keys, known limits, how to report a bug, where to ask, and Firefox's own help for the parts Vimma keeps as Firefox has them."}-->
-<p class="eyebrow">Help · docs · bugs</p>
+<!--{"title": "Help · Vimma", "short": "help", "out": "support/", "description": "Help with Vimma: first checks, the FAQ, known limits, how to report a bug, where to ask, and Firefox's own help for the parts Vimma keeps as Firefox has them."}-->
+<p class="eyebrow">Help · FAQ · bugs</p>
 <h1>Help</h1>
 <p>Vimma's help links open here: Help &gt; Get Help, the support button in Settings, and the "Learn more" links beside Firefox's settings. Most answers about the keys, panes and workspaces are in the docs.</p>
 
@@ -7,9 +7,18 @@
 <ul>
   <li><a href="{{root}}docs/">Start here</a>: the modes, the <kbd>ctrl+b</kbd> prefix and the first keys.</li>
   <li><a href="{{root}}keys/">Keys</a>: every default binding, with a filter. Every key, the prefix and the leader can be remapped in <code>config.toml</code>.</li>
-  <li><a href="{{root}}docs/troubleshooting/">FAQ and troubleshooting</a>: profiles, updates, the tab strip, <kbd>ctrl+b</kbd> and crash reports.</li>
+  <li><a href="#faq-and-troubleshooting">FAQ and troubleshooting</a>, below: profiles, updates, the tab strip, <kbd>ctrl+b</kbd> and crash reports.</li>
   <li><a href="{{root}}docs/limits/">Known limits</a>: what does not work yet.</li>
 </ul>
+
+<h2 id="first-checks">First checks</h2>
+<ul>
+  <li><strong>Keys type instead of doing something?</strong> A text field has focus (the badge says <code>INSERT</code>). Press <kbd>Esc</kbd>.</li>
+  <li><strong>Not sure what a key does?</strong> <kbd>ctrl+b</kbd> <kbd>?</kbd> lists them all; <kbd>/</kbd> filters.</li>
+  <li><strong>Your <code>config.toml</code> change did nothing?</strong> Look at the right of the status bar for a red error, or open <code>about:vimma</code>.</li>
+</ul>
+
+{{faq}}
 
 <h2 id="topics">Firefox topics with a Vimma page</h2>
 <p>Some of Firefox's "Learn more" links are about something Vimma does its own way. Those open Vimma's page:</p>

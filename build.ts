@@ -11,7 +11,7 @@ import { dirname, join, resolve } from "node:path";
 
 import { VIMMA_REPO } from "./scripts/bindings-types.js";
 import { minifyCss } from "./scripts/css.js";
-import { buildDocs, packIndex } from "./scripts/docs.js";
+import { buildDocs, packIndex, topicList } from "./scripts/docs.js";
 import { readBindings } from "./scripts/gen-keys.js";
 import { keysTables } from "./scripts/keys-html.js";
 import { ARCH_INSTALL, RELEASE_FILE, fill, readRelease, releaseVars } from "./scripts/release.js";
@@ -28,7 +28,6 @@ import {
   robotsTxt,
   sitemapXml,
 } from "./scripts/seo.js";
-import { SUPPORT_TOPICS } from "./scripts/support.js";
 import { escapeHtml } from "./src/ts/html.js";
 
 const ROOT = resolve(import.meta.dirname, "..");
@@ -64,14 +63,6 @@ function readPage(file: string): Page {
   if (!m?.[1]) throw new Error(`${file}: missing the <!--{…}--> meta line`);
   const sources = [`src/pages/${file}`, ...(file === "keys.html" ? ["data/bindings.json", "data/bindings-source.json"] : [])];
   return { meta: JSON.parse(m[1]) as PageMeta, body: src.slice(m[0].length), sources };
-}
-
-/** The help page's list of Firefox topics that open a Vimma page (the help page itself left out). */
-function supportTopics(root: string): string {
-  const items = SUPPORT_TOPICS.filter((t) => t.to !== "/support/").map(
-    (t) => `  <li><a href="${root}${t.to.slice(1)}">${escapeHtml(t.title)}</a></li>`,
-  );
-  return `<ul>\n${items.join("\n")}\n</ul>`;
 }
 
 // --- pages ------------------------------------------------------------------------------------
@@ -173,11 +164,14 @@ function main(): void {
       keys_total: String(total),
       keys_commit: escapeHtml(keys.commit),
       keys_commit_url: `${VIMMA_REPO}/commit/${escapeHtml(keys.commitFull)}`,
-      support_topics: supportTopics(root),
+      support_topics: topicList(root),
+      faq: docs.faq,
     };
     const content = fill(page.body, vars, page.meta.out || "index");
     // a page that names the release changes with it, for its date in the sitemap
     if (Object.keys(release).some((k) => page.body.includes(`{{${k}}}`))) page.sources.push(RELEASE_FILE);
+    // the help page's FAQ is the synced guide's
+    if (page.body.includes("{{faq}}")) page.sources.push("data/docs/guide.md");
     const html = fill(
       layout,
       {
@@ -249,7 +243,7 @@ function main(): void {
           "Docs",
           ["Browse with the keyboard", "Organise tabs and windows", "Make it yours", "Use it with AI agents", "Trust and limits"].flatMap(docsOf),
         ],
-        ["Optional", [...docsOf("Get help"), link(about, "About Vimma"), link(support, "Help")]],
+        ["Optional", [link(about, "About Vimma"), link(support, "Help")]],
       ],
     ),
   );

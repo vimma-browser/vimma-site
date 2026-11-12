@@ -19,7 +19,7 @@ const SIDEBAR: [string, string[]][] = [
   ["Make it yours", ["config.toml", "Theming", "Firefox shortcuts", "Add-ons"]],
   ["Use it with AI agents", ["Agent workspace", "Agent tools", "vimma-ctl"]],
   ["Trust and limits", ["Privacy defaults", "Known limits"]],
-  ["Get help", ["Troubleshooting"]],
+  ["Get help", ["Help", "Every key"]],
 ];
 
 /** The sidebar as a page renders it: each group's name and its links' text. */
@@ -40,8 +40,16 @@ test("every docs page has the same sidebar, and the pages follow it", () => {
   for (const p of docs.pages) assert.deepEqual(sidebarOf(p.body), SIDEBAR, p.slug);
   assert.deepEqual(
     docs.pages.map((p) => p.group),
-    SIDEBAR.flatMap(([g, pages]) => pages.map(() => g)),
+    // the help group links pages outside the docs
+    SIDEBAR.filter(([g]) => g !== "Get help").flatMap(([g, pages]) => pages.map(() => g)),
   );
+});
+
+test("the sidebar's help group links the help page and the keys page", () => {
+  for (const p of docs.pages) {
+    const root = p.slug === "" ? "../" : "../../";
+    assert.match(p.body, new RegExp(`<li><a href="${root}support/">Help</a></li>\\n<li><a href="${root}keys/">Every key</a></li>`), p.slug);
+  }
 });
 
 test("the sidebar has no page numbers", () => {

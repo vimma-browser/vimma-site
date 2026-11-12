@@ -27,7 +27,7 @@ in a minute or two. See [Deploying](#deploying).
 | `/keys/`   | `src/pages/keys.html`    | Every default binding, filterable, from `data/bindings.json`       |
 | `/install/`| `src/pages/install.html` | Arch Linux command, release packages, build from source            |
 | `/about/`  | `src/pages/about.html`   | Name, Firefox base, maker, licence, source, site privacy, accessibility, links, thanks |
-| `/support/`| `src/pages/support.html` | Help: where to start, Vimma's topics, Firefox's help, reporting a bug, where to ask |
+| `/support/`| `src/pages/support.html` | Help: where to start, first checks, the guide's FAQ, Vimma's topics, Firefox's help, reporting a bug, where to ask |
 | `404.html` | `src/pages/404.html`     | Not found (links are root-absolute: it assumes the site is at `/`) |
 
 The build also writes, for search engines and AI tools, `sitemap.xml`, `robots.txt`, `llms.txt`
@@ -310,7 +310,11 @@ Keep the tone fair: no project is put down.
 - The known-limits page leaves out the `limits.md` lines the same commit's guide contradicts
   (listed in `STALE_LIMITS`, reported at build time), so they disappear when upstream fixes them.
 - Search: the build writes `assets/js/docs-index.js` (each section's heading, a snippet and its
-  distinct words; no full URLs, only paths under `docs/`), which the docs pages import on first use. No server, no third party.
+  distinct words; no full URLs, only paths under `docs/`), which the docs pages import on first
+  use. It covers the help, install and about pages too (`SITE_PAGES` in `scripts/docs.ts`), so a
+  search for "update", "uninstall" or "bug" finds them. No server, no third party.
+- The help page (`/support/`) shows the guide's "FAQ and troubleshooting" section in full
+  (`{{faq}}`), and a guide link to it points there.
 - `assets/img/` holds the logo (with its tagline) as AVIF, WebP and PNG at 256 and 512 px, and
   the window+V mark as 16/32/48 px favicons and the 180 px apple-touch-icon, made by
   `scripts/optimize-logo.sh` (ImageMagick, avifenc) from the main repository's

@@ -8,7 +8,7 @@ import { resolve } from "node:path";
 import { test } from "node:test";
 
 import { rank } from "../src/ts/search.js";
-import { buildDocs, packIndex, textOf } from "./docs.js";
+import { type IdMap, buildDocs, linker, packIndex, textOf } from "./docs.js";
 
 const ROOT = resolve(import.meta.dirname, "../..");
 const docs = buildDocs(ROOT);
@@ -58,4 +58,40 @@ test("the site's script loads its modules relative to itself, not to the page", 
   for (const m of site.matchAll(/import\((\w+)\)/g)) {
     assert.match(site, new RegExp(`const ${m[1]} = "\\./[\\w-]+\\.js";`), `import(${m[1]})`);
   }
+});
+
+test("the help page, the install page and About are in the search index", () => {
+  // among the first five results, so the reader sees it without scrolling the list
+  const near = (q: string, page: RegExp): void => {
+    const hits = search(q).slice(0, 5);
+    assert.ok(hits.some((e) => page.test(e.u)), `${q}: ${hits.map((e) => e.u).join(" ")}`);
+  };
+  near("update", /^\.\.\/install\/#updating$/);
+  near("uninstall", /^\.\.\/install\/#macos$/);
+  near("bug", /^\.\.\/support\/#report$/);
+  near("crash", /^\.\.\/support\/#faq-and-troubleshooting$/);
+  near("licence", /^\.\.\/about\//);
+  near("orca", /^\.\.\/about\/#accessibility$/);
+  for (const e of docs.index) assert.doesNotMatch(e.u, /\{\{|^troubleshooting/, e.u);
+});
+
+test("the help page carries the guide's FAQ, its links pointing at the docs pages", () => {
+  assert.match(docs.faq, /^<h2 id="faq-and-troubleshooting">/);
+  assert.match(docs.faq, /coredumpctl/);
+  // the help page sits one level down, so a docs link starts with ../docs/
+  assert.match(docs.faq, /href="\.\.\/docs\/tabs\/#tab-search-and-tab-rename"/);
+  assert.doesNotMatch(docs.faq, /href="#(?!faq)/);
+});
+
+test("a guide link to the FAQ points at the help page, from a docs page, the help page and llms-full.txt", () => {
+  const ids: IdMap = new Map([["faq-and-troubleshooting", "/support/"]]);
+  const href = "#faq-and-troubleshooting";
+  assert.equal(linker(ids, "tabs", "../../", "v0")(href), "../../support/#faq-and-troubleshooting");
+  assert.equal(linker(ids, "/support/", "../", "v0")(href), "#faq-and-troubleshooting");
+  assert.equal(linker(ids, "\0", "https://vimma.dev/", "v0")(href), "https://vimma.dev/support/#faq-and-troubleshooting");
+  assert.doesNotMatch(docs.markdown, /docs\/troubleshooting/);
+});
+
+test("the search snippets of the help, install and about pages do not start with their eyebrow", () => {
+  for (const e of docs.index.filter((x) => x.u.startsWith("../"))) assert.doesNotMatch(e.s, /·/, e.u);
 });
