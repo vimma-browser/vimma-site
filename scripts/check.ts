@@ -268,6 +268,10 @@ for (const [from, to] of Object.entries(REDIRECTS)) {
   const where = `redirect ${from}`;
   if (existsSync(join(DIST, from, "index.html"))) fail(where, `${from} is still built: drop the page or the redirect`);
   const file = target(join(DIST, "index.html"), to);
+  if (!file.startsWith(DIST)) {
+    fail(where, `"${to}" points outside dist/`);
+    continue;
+  }
   if (!existsSync(file)) {
     fail(where, `"${to}" is broken (no ${rel(file)})`);
     continue;

@@ -139,10 +139,10 @@ Firefox builds every "Learn more" link, Help > Get Help and Settings' support bu
 `app.support.baseURL` plus a topic name. Vimma sets that pref to
 `https://vimma.dev/support/%VERSION%/%OS%/%LOCALE%/`, so a link arrives as
 `/support/159.0.1/Linux/en-US/<topic>`. The rules live in `scripts/support.ts`, and a small Worker
-script, `scripts/worker.ts`, answers them. `wrangler.jsonc` runs it first for `/support/*` (and
-the [retired pages](#retired-pages)) only (`run_worker_first`); every other address is served from `dist/` by Cloudflare's static assets
-without it, and an address under `/support/` that no rule matches (the help page itself, or a link
-with a part missing) goes to the assets too:
+script, `scripts/worker.ts`, answers them. `wrangler.jsonc` runs it first for `/support/*` and
+the [retired pages](#retired-pages) only (`run_worker_first`); every other address is served from
+`dist/` by Cloudflare's static assets without it, and an address under `/support/` that no rule
+matches (the help page itself, or a link with a part missing) goes to the assets too:
 
 - `firefox-help` and `preferences` (and the base with no topic) go to the help page, `/support/`.
 - A topic Vimma documents goes to its docs page (`SUPPORT_TOPICS`: data collection, add-ons,
@@ -377,8 +377,8 @@ Cloudflare's Workers Builds (the `vimma-site` Worker) builds the repository and 
   or so later. A failed build leaves the previous version live. The build and deploy commands are
   set in the Cloudflare dashboard (Workers → `vimma-site` → Settings → Build): `npm run build`,
   then Wrangler, which reads `wrangler.jsonc`. That file states the Worker as it is (static assets
-  from `dist/`, the script for `/support/*` and the retired pages, the vimma.dev domain, workers.dev, logs), so keep it
-  in line with the dashboard: a deploy applies what it says.
+  from `dist/`, the script for `/support/*` and the retired pages, the vimma.dev domain,
+  workers.dev, logs), so keep it in line with the dashboard: a deploy applies what it says.
 - **Other branches** get a Preview: Workers Builds runs `npx wrangler preview`, which needs the
   empty `previews` block in `wrangler.jsonc`, and the pull request's check links to it.
 - **Access:** vimma.dev is public: no Cloudflare Access application or other login is in front

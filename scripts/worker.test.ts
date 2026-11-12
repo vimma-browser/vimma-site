@@ -8,7 +8,8 @@ import { join, resolve } from "node:path";
 import { test } from "node:test";
 
 import { REDIRECTS, workerFirstPaths } from "./redirects.js";
-import worker, { respond } from "./worker.js";
+import { respond } from "./respond.js";
+import worker from "./worker.js";
 
 const ROOT = resolve(import.meta.dirname, "../..");
 const PREFIX = "https://vimma.dev/support/159.0.1/Linux/en-US/";
@@ -103,7 +104,8 @@ test("a retired page's query goes along, before the target's fragment", async ()
 
 test("a target without a fragment leaves the browser's own fragment to it", async () => {
   // a browser never sends the fragment, and keeps it across a redirect whose Location has none,
-  // so /docs/old/#a-heading lands on /docs/new/#a-heading
+  // so /docs/old/#a-heading lands on /docs/new/#a-heading (the exact Location is pinned above;
+  // this names the reason)
   const response = await sample("https://vimma.dev/docs/old/");
   assert.doesNotMatch(response.headers.get("Location") ?? "", /#/);
 });
@@ -124,7 +126,7 @@ test("the help links still answer 302 beside the redirects", async () => {
 
 test("every retired page of the site redirects with a 301 to its target", async () => {
   for (const [from, to] of Object.entries(REDIRECTS)) {
-    for (const path of [from, from.slice(0, -1)]) {
+    for (const path of [from, from.slice(0, -1), `${from}index.html`]) {
       const response = await get(`https://vimma.dev${path}`);
       assert.equal(response.status, 301, path);
       assert.equal(response.headers.get("Location"), to, path);
