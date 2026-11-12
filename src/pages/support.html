@@ -1,5 +1,5 @@
-<!--{"title": "Help · Vimma", "short": "help", "out": "support/", "description": "Help with Vimma: the docs, the keys, known limits, where to ask, and Firefox's own help for the parts Vimma keeps as Firefox has them.", "nav": false}-->
-<p class="eyebrow">Help · docs · questions</p>
+<!--{"title": "Help · Vimma", "short": "help", "out": "support/", "description": "Help with Vimma: the docs, the keys, known limits, how to report a bug, where to ask, and Firefox's own help for the parts Vimma keeps as Firefox has them."}-->
+<p class="eyebrow">Help · docs · bugs</p>
 <h1>Help</h1>
 <p>Vimma's help links open here: Help &gt; Get Help, the support button in Settings, and the "Learn more" links beside Firefox's settings. Most answers about the keys, panes and workspaces are in the docs.</p>
 
@@ -18,12 +18,19 @@
 <h2 id="firefox">Everything else is Firefox</h2>
 <p>Vimma is built on Firefox {{firefox_major}} and keeps most of it as Firefox has it: Sync, passwords, certificates, tracking protection, and add-ons from addons.mozilla.org. A help link about one of these opens the matching article in <a href="https://support.mozilla.org/products/firefox">Mozilla's Firefox help</a>, which describes Vimma too. Where an article names a Firefox shortcut, <a href="{{root}}docs/firefox-shortcuts/">Firefox's shortcuts</a> says where Vimma puts it.</p>
 
-<h2 id="ask">Ask or report</h2>
+<h2 id="report">Report a bug</h2>
+<p>In Vimma, type <code>:bug</code>. It opens <code>about:vimma</code> and copies its redacted report to the clipboard: the version, the Firefox release under it and the build, how Vimma was installed, your <code>config.toml</code>'s errors and the keys it changes, the last keys Vimma saw, and the state of the workspaces, the theme and the agent tools. Every address in it is replaced by <code>&lt;url&gt;</code> and your home directory by <code>~</code>, and it holds no page titles. Letters typed into a text field show as <code>·</code>. Read it before you paste it.</p>
+<p>Then search the <a href="https://github.com/vimma-browser/vimma/issues">open issues</a>; if one matches, add to it. If none does, <a href="https://github.com/vimma-browser/vimma/issues/new/choose">open a bug report</a> and include:</p>
 <ul>
-  <li>Questions and ideas: <a href="https://github.com/vimma-browser/vimma/discussions">GitHub Discussions</a>.</li>
-  <li>Bugs: <a href="https://github.com/vimma-browser/vimma/issues">GitHub issues</a>, with the version from <code>vimma --version</code> or <code>about:vimma</code>.</li>
-  <li>Security problems: privately, as the <a href="https://github.com/vimma-browser/vimma/security/policy">security policy</a> describes, not in a public issue.</li>
+  <li>the version: the report has it, or run <code>vimma --version</code>;</li>
+  <li>how you installed Vimma: the Arch Linux command, a <code>.deb</code> or <code>.rpm</code>, the AppImage, the tarball, Homebrew or the <code>.dmg</code>, or a build from source;</li>
+  <li>your system: the Linux distribution and desktop, or macOS;</li>
+  <li>the steps that show the bug, from a fresh start where you can, with the keys you pressed, and what you expected instead.</li>
 </ul>
+<p>A security problem is reported privately, never in a public issue: use <a href="https://github.com/vimma-browser/vimma/security/advisories/new">Report a vulnerability</a> on the repository's Security tab, as the <a href="https://github.com/vimma-browser/vimma/security/policy">security policy</a> describes.</p>
+
+<h2 id="ask">Ask a question</h2>
+<p>Questions and ideas go to <a href="https://github.com/vimma-browser/vimma/discussions">GitHub Discussions</a>.</p>
 
 <h2 id="privacy">What a help link sends</h2>
 <p>A help link carries the Firefox version, your operating system and your language in its address, as Firefox's own help links do. This site sets no cookies and has no analytics.</p>

@@ -137,7 +137,8 @@ function main(): void {
   ].map(readPage);
   const start = docPages[0];
   if (!home || !keysPage || !install || !about || !notFound || !support || !start) throw new Error("missing page");
-  const pages = [home, start, keysPage, install, about, notFound, support, ...docPages.slice(1)];
+  // the header's tabs follow this order (scripts/check.ts checks it)
+  const pages = [home, start, keysPage, install, support, about, notFound, ...docPages.slice(1)];
   const keys = readBindings(ROOT);
   const release = releaseVars(readRelease(ROOT));
   // The Arch command as shown in a page's command box. A narrow screen breaks lines at hyphens,

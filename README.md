@@ -27,7 +27,7 @@ in a minute or two. See [Deploying](#deploying).
 | `/keys/`   | `src/pages/keys.html`    | Every default binding, filterable, from `data/bindings.json`       |
 | `/install/`| `src/pages/install.html` | Arch Linux command, release packages, build from source            |
 | `/about/`  | `src/pages/about.html`   | Why another browser, privacy defaults, Firefox base, licence, FAQ  |
-| `/support/`| `src/pages/support.html` | Help: where to start, Vimma's topics, Firefox's help, where to ask |
+| `/support/`| `src/pages/support.html` | Help (in the tabs): where to start, Vimma's topics, Firefox's help, reporting a bug, where to ask |
 | `404.html` | `src/pages/404.html`     | Not found (links are root-absolute: it assumes the site is at `/`) |
 
 The build also writes, for search engines and AI tools, `sitemap.xml`, `robots.txt`, `llms.txt`
@@ -54,7 +54,8 @@ npm run release:sync -- v0.1.2     # … of a given release tag
 - **html**: doctype, `lang`, one `<title>`, `<h1>` and `<main>`, viewport and CSP metas, balanced
   tags, unique ids, `alt` on images, no inline scripts, styles or handlers, no frames, objects
   or audio; a `<video>` only with `controls`, `muted`, `playsinline`, a poster, width and height,
-  `preload` `none` or `metadata`, and no `autoplay`. No HTML validator is
+  `preload` `none` or `metadata`, and no `autoplay`; the header's tabs, in order: Home, Docs,
+  Keys, Install, Help, About, GitHub. No HTML validator is
   installed on the dev machine or in CI, so this is a structural subset, not full validation.
 - **links**: every internal `href`, `src` and `srcset` resolves to a file, and each `#fragment`
   to an id.

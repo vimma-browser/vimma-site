@@ -436,6 +436,18 @@ html.js .nojs-keys {
   }
 }
 
+/* on a phone the seven tabs do not fit on one line at that width: they close up, then wrap */
+@media (max-width: 480px) {
+  .tabs ul {
+    flex-wrap: wrap;
+    gap: 0;
+  }
+
+  .tabs a {
+    padding: 0.25rem 0.4rem;
+  }
+}
+
 /* --- page body -------------------------------------------------------------------------- */
 
 main.wrap {
