@@ -19,13 +19,13 @@
 <p>Vimma is built on Firefox {{firefox_major}} and keeps most of it as Firefox has it: Sync, passwords, certificates, tracking protection, and add-ons from addons.mozilla.org. A help link about one of these opens the matching article in <a href="https://support.mozilla.org/products/firefox">Mozilla's Firefox help</a>, which describes Vimma too. Where an article names a Firefox shortcut, <a href="{{root}}docs/firefox-shortcuts/">Firefox's shortcuts</a> says where Vimma puts it.</p>
 
 <h2 id="report">Report a bug</h2>
-<p>In Vimma, type <code>:bug</code>. It opens <code>about:vimma</code> and copies its redacted report to the clipboard: the version, the Firefox release under it and the build, how Vimma was installed, your <code>config.toml</code>'s errors and the keys it changes, the last keys Vimma saw, and the state of the workspaces, the theme and the agent tools. Every address in it is replaced by <code>&lt;url&gt;</code> and your home directory by <code>~</code>, and it holds no page titles. Letters typed into a text field show as <code>·</code>. Read it before you paste it.</p>
+<p>In Vimma, type <code>:bug</code>. It opens <code>about:vimma</code> and copies its redacted report to the clipboard: the version, the Firefox release under it and the build, how Vimma was installed, your <code>config.toml</code>'s errors and the keys it changes, the last keys Vimma saw, and the state of the workspaces, the theme and the agent tools. Every URL in it (anything with <code>://</code>) is replaced by <code>&lt;url&gt;</code> and your home directory by <code>~</code>, and it holds no page titles. Keys typed into a text field or on the command line show as <code>·</code>. Your workspace names and any config error lines are kept as they are, so read it before you paste it.</p>
 <p>Then search the <a href="https://github.com/vimma-browser/vimma/issues">open issues</a>; if one matches, add to it. If none does, <a href="https://github.com/vimma-browser/vimma/issues/new/choose">open a bug report</a> and include:</p>
 <ul>
   <li>the version: the report has it, or run <code>vimma --version</code>;</li>
   <li>how you installed Vimma: the Arch Linux command, a <code>.deb</code> or <code>.rpm</code>, the AppImage, the tarball, Homebrew or the <code>.dmg</code>, or a build from source;</li>
-  <li>your system: the Linux distribution and desktop, or macOS;</li>
-  <li>the steps that show the bug, from a fresh start where you can, with the keys you pressed, and what you expected instead.</li>
+  <li>your system: the Linux distribution and desktop, or the macOS version;</li>
+  <li>what happened, with any message in the status bar or the Browser Console, the steps that show it, from a fresh start where you can, with the keys you pressed, and what you expected instead.</li>
 </ul>
 <p>A security problem is reported privately, never in a public issue: use <a href="https://github.com/vimma-browser/vimma/security/advisories/new">Report a vulnerability</a> on the repository's Security tab, as the <a href="https://github.com/vimma-browser/vimma/security/policy">security policy</a> describes.</p>
 

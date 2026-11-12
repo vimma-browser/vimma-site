@@ -27,7 +27,7 @@ in a minute or two. See [Deploying](#deploying).
 | `/keys/`   | `src/pages/keys.html`    | Every default binding, filterable, from `data/bindings.json`       |
 | `/install/`| `src/pages/install.html` | Arch Linux command, release packages, build from source            |
 | `/about/`  | `src/pages/about.html`   | Why another browser, privacy defaults, Firefox base, licence, FAQ  |
-| `/support/`| `src/pages/support.html` | Help (in the tabs): where to start, Vimma's topics, Firefox's help, reporting a bug, where to ask |
+| `/support/`| `src/pages/support.html` | Help: where to start, Vimma's topics, Firefox's help, reporting a bug, where to ask |
 | `404.html` | `src/pages/404.html`     | Not found (links are root-absolute: it assumes the site is at `/`) |
 
 The build also writes, for search engines and AI tools, `sitemap.xml`, `robots.txt`, `llms.txt`

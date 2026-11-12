@@ -104,7 +104,7 @@
   text-size-adjust: 100%;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 520px) {
   :root {
     font-size: 14px;
   }
@@ -262,7 +262,7 @@ li + li {
   padding: 0 2rem;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 520px) {
   .wrap {
     padding: 0 1.15rem;
   }
@@ -425,7 +425,7 @@ html.js .nojs-keys {
   }
 
   .tabs ul {
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     width: max-content;
     max-width: 100%;
     margin: 0 auto;
@@ -436,10 +436,9 @@ html.js .nojs-keys {
   }
 }
 
-/* on a phone the seven tabs do not fit on one line at that width: they close up, then wrap */
-@media (max-width: 480px) {
+/* below 520px the seven tabs close up, and wrap onto a second line only when they still do not fit */
+@media (max-width: 520px) {
   .tabs ul {
-    flex-wrap: wrap;
     gap: 0;
   }
 
