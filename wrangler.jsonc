@@ -35,7 +35,13 @@
       "/docs/copy-mode/index.html",
       "/docs/side-panel",
       "/docs/side-panel/",
-      "/docs/side-panel/index.html"
+      "/docs/side-panel/index.html",
+      "/docs/private-workspace",
+      "/docs/private-workspace/",
+      "/docs/private-workspace/index.html",
+      "/docs/routing",
+      "/docs/routing/",
+      "/docs/routing/index.html"
     ],
     // Without it a missing address gets an empty 404; with it, dist/404.html.
     "not_found_handling": "404-page"
