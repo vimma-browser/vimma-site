@@ -1,4 +1,4 @@
-<!-- Hand-written guide for the tabs page; the build adds the keys table and the details from guide.md. -->
+<!-- Hand-written guide for the tabs and the window page; the build adds the keys table and the details from guide.md. -->
 <p class="lead">Tabs, panes and workspaces are driven by <kbd>ctrl+b</kbd>, tmux's prefix: press <kbd>ctrl+b</kbd>, let go, then press one more key. Firefox's tab strip is hidden; the status bar shows where you are (<code>tab 2/5</code>), and <kbd>ctrl+b</kbd> <kbd>g</kbd> searches every tab when you need to find one.</p>
 
 <h2 id="the-prefix">How the prefix works</h2>
@@ -17,11 +17,9 @@
 <tr><td>Next / previous tab</td><td><kbd>ctrl+b</kbd> <kbd>n</kbd> / <kbd>ctrl+b</kbd> <kbd>p</kbd>, or <kbd>gt</kbd> / <kbd>gT</kbd></td></tr>
 <tr><td>Go to tab 1 to 9</td><td><kbd>ctrl+b</kbd> <kbd>1</kbd> … <kbd>ctrl+b</kbd> <kbd>9</kbd>, or <kbd>3gt</kbd> for tab 3</td></tr>
 <tr><td>Close the tab</td><td><kbd>ctrl+b</kbd> <kbd>shift+x</kbd> or <kbd>x</kbd></td></tr>
-<tr><td>Rename the tab</td><td><kbd>ctrl+b</kbd> <kbd>shift+t</kbd></td></tr>
-<tr><td>Search every tab</td><td><kbd>ctrl+b</kbd> <kbd>g</kbd>, <kbd>ctrl+shift+a</kbd> or <kbd>b</kbd></td></tr>
 </tbody></table></div>
 
-<p><kbd>t</kbd>, <kbd>gt</kbd>, <kbd>x</kbd> and <kbd>b</kbd> are the normal-mode shortcuts; the <kbd>ctrl+b</kbd> forms work everywhere. Tab numbers and next / previous stay within the current workspace.</p>
+<p><kbd>t</kbd>, <kbd>gt</kbd> and <kbd>x</kbd> are the normal-mode shortcuts; the <kbd>ctrl+b</kbd> forms work everywhere. Tab numbers and next / previous stay within the current workspace.</p>
 
 <h2 id="find-a-tab">Find a tab</h2>
 
@@ -30,6 +28,45 @@
 <h2 id="rename-a-tab">Rename a tab</h2>
 
 <p><kbd>ctrl+b</kbd> <kbd>shift+t</kbd> asks for a name at the bottom of the window. The name replaces the page title in the status bar and tab search, and survives a restart. An empty name brings the title back.</p>
+
+<h2 id="the-side-panel">The side panel</h2>
+
+<p>The side panel lists the current workspace's tabs down the left of the window, so you can see what is open and tidy it up with a few keys. It is closed until you ask for it, and closes again when you pick a tab.</p>
+
+<div class="table-wrap"><table class="plain"><thead><tr><th scope="col">To</th><th scope="col">Press</th></tr></thead><tbody>
+<tr><td>Open it</td><td><kbd>ctrl+b</kbd> <kbd>b</kbd></td></tr>
+<tr><td>Move down / up, go to the highlighted tab</td><td><kbd>j</kbd> / <kbd>k</kbd>, <kbd>Enter</kbd></td></tr>
+<tr><td>Close the highlighted tab (the panel stays open: <kbd>x</kbd> <kbd>x</kbd> <kbd>x</kbd> closes three)</td><td><kbd>x</kbd></td></tr>
+<tr><td>Mark or unmark the highlighted tab</td><td><kbd>space</kbd></td></tr>
+<tr><td>Move the highlighted tab to another workspace (asks first)</td><td><kbd>m</kbd></td></tr>
+<tr><td>Close it (with marks, the first <kbd>Esc</kbd> clears them)</td><td><kbd>Esc</kbd></td></tr>
+</tbody></table></div>
+
+<p>While the panel is open, plain keys are the panel's; <kbd>ctrl+b</kbd> keys and <kbd>:</kbd> commands still work. A tab playing sound shows ♪. The rest of its keys are in the table below.</p>
+
+<h3 id="show-tabs-together">Show tabs together</h3>
+
+<ol class="steps-list">
+  <li>Open the panel with <kbd>ctrl+b</kbd> <kbd>b</kbd>.</li>
+  <li>Press <kbd>space</kbd> on each tab you want to see side by side, for example your editor, the docs and a preview. Marked rows show <code>●</code>.</li>
+  <li>Press <kbd>Enter</kbd>. The marked tabs become the workspace's panes, in its layout, and no page reloads.</li>
+</ol>
+
+<p>With a split already open, the panel opens with its tabs marked: unmark one and press <kbd>Enter</kbd> to take it out of the split, or mark another to add it.</p>
+
+<h2 id="the-status-bar">The status bar</h2>
+
+<p>The window's last line is always there, except while a page such as a video is in fullscreen. From the left it shows the mode badge, any keys you have started (<code>prefix</code> after <kbd>ctrl+b</kbd>), the workspace (<code>● 2:work</code>), the tab (<code>tab 2/5</code>) and in a split the pane (<code>pane 2/3</code>), then the page title or your name for the tab. On the right: a search in the page (<code>/word [2/5]</code>), a connected agent (<code>◇ agent</code>), a blocked pop-up, a running download (<code>↓ 42%</code>), and the page's address. A narrow window drops the least important parts first; the mode badge always stays. Every part is listed under <a href="#status-bar">Details</a>.</p>
+
+<h2 id="more-in-the-guide">More in the user guide</h2>
+
+<p>These parts of the window work from the keyboard too, and are described in Vimma's user guide on GitHub:</p>
+<ul>
+  <li><a href="https://github.com/vimma-browser/vimma/blob/{{release_tag}}/docs/guide.md#downloads">Downloads</a>: <kbd>ctrl+b</kbd> <kbd>d</kbd> (or <code>:downloads</code>) opens the downloads picker, newest first.</li>
+  <li><a href="https://github.com/vimma-browser/vimma/blob/{{release_tag}}/docs/guide.md#site-permissions">Site permissions</a>: <code>:site</code> lists what the site in this tab may do (camera, microphone, location, notifications and the rest) and changes it.</li>
+  <li><a href="https://github.com/vimma-browser/vimma/blob/{{release_tag}}/docs/guide.md#blocked-pop-ups">Blocked pop-ups</a>: answer Firefox's pop-up bar with <kbd>y</kbd> to allow the site's pop-ups or <kbd>n</kbd> to block them.</li>
+  <li><a href="https://github.com/vimma-browser/vimma/blob/{{release_tag}}/docs/guide.md#hiding-the-toolbar">Hiding the toolbar</a>: <kbd>ctrl+b</kbd> <kbd>u</kbd> hides Firefox's toolbar, so the status bar is the address line; and answering a permission prompt from the keyboard.</li>
+</ul>
 
 <h2 id="see-every-key">See every key</h2>
 

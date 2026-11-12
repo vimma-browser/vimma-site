@@ -94,14 +94,19 @@ function need(guide: MdSection, title: string): MdSection {
   return findSection(guide, title) ?? fail(`guide.md has no section "${title}"`);
 }
 
-/** Link targets in guide.md and limits.md, rewritten for the site. */
-export function linker(ids: IdMap, here: string, root: string, ref: string): RenderOptions["link"] {
+/**
+ * Link targets in guide.md and limits.md, rewritten for the site. A guide heading that no page
+ * renders (`guideIds` holds every one) is linked in the guide on GitHub, at the release tag.
+ */
+export function linker(ids: IdMap, here: string, root: string, ref: string, guideIds: ReadonlySet<string> = new Set()): RenderOptions["link"] {
   return (href) => {
     if (/^https?:\/\//.test(href)) return href;
     const [path = "", hash = ""] = href.split("#");
     if (path === "") {
       const page = ids.get(hash);
-      if (page === undefined) return null;
+      if (page === undefined) {
+        return guideIds.has(hash) ? `${VIMMA_REPO}/blob/${encodeURIComponent(ref)}/docs/guide.md#${hash}` : null;
+      }
       return page === here ? `#${hash}` : `${root}${pageUrl(page)}#${hash}`;
     }
     if (path === "bindings.md") return `${root}keys/`;
@@ -385,10 +390,12 @@ export function buildDocs(rootDir: string): {
   // which page renders which guide heading, so #links can cross pages
   const ids: IdMap = new Map();
   for (const p of DOC_PAGES) for (const b of p.blocks) for (const id of idsOf(b, guide)) if (!ids.has(id)) ids.set(id, p.slug);
+  // every guide heading, so a link to one no page renders goes to the guide on GitHub
+  const guideIds = new Set(sectionIds(guide));
   // the guide's FAQ is on the help page (src/pages/support.html, {{faq}}), one level down
   const faqSection = need(guide, FAQ);
   for (const id of sectionIds(faqSection)) ids.set(id, HELP);
-  const faq = `${renderSection(faqSection, { link: linker(ids, HELP, "../", source.ref) }, 2)}
+  const faq = `${renderSection(faqSection, { link: linker(ids, HELP, "../", source.ref, guideIds) }, 2)}
 <p class="source">The FAQ is built from Vimma's <code>docs/guide.md</code> at <a href="${VIMMA_REPO}/commit/${escapeHtml(source.commit)}"><code>${escapeHtml(source.commit)}</code></a> (${escapeHtml(source.date)}).</p>`;
 
   const pages: BuiltDoc[] = [];
@@ -398,7 +405,7 @@ export function buildDocs(rootDir: string): {
     const page: DocPage | undefined = DOC_PAGES.find((p) => p.slug === entry.slug);
     const depth = entry.slug === "" ? 1 : 2;
     const root = "../".repeat(depth);
-    const opts: RenderOptions = { link: linker(ids, entry.slug, root, source.ref) };
+    const opts: RenderOptions = { link: linker(ids, entry.slug, root, source.ref, guideIds) };
     const introFile = `src/docs/${entry.slug || "start-here"}.html`;
     const intro = read(introFile)
       .replace(/^<!--[\s\S]*?-->\n?/, "")
@@ -491,7 +498,7 @@ ${pager(nav, i, root)}
     index.push(...indexPage(title, `../${meta.out}`, filled));
   }
 
-  return { pages, index, source, markdown: fullMarkdown(guideMd, limitsMd, ids, source), faq };
+  return { pages, index, source, markdown: fullMarkdown(guideMd, limitsMd, ids, source, guideIds), faq };
 }
 
 /**
@@ -499,8 +506,8 @@ ${pager(nav, i, root)}
  * the docs pages and every link made absolute: to the docs page that renders the heading, or to
  * the file on GitHub.
  */
-function fullMarkdown(guideMd: string, limitsMd: string, ids: IdMap, source: Source): string {
-  const link = linker(ids, "\0", "https://vimma.dev/", source.ref);
+function fullMarkdown(guideMd: string, limitsMd: string, ids: IdMap, source: Source, guideIds: ReadonlySet<string>): string {
+  const link = linker(ids, "\0", "https://vimma.dev/", source.ref, guideIds);
   const fix = (md: string, file: string): string =>
     md.replace(/\]\(([^)\s]+)\)/g, (all, href: string) => {
       const to = link(href.startsWith("#") && file === "limits.md" ? `limits.md${href}` : href);
