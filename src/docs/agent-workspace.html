@@ -3,7 +3,7 @@
 
 <section class="box note" aria-labelledby="off-by-default">
 <h2 class="box-title" id="off-by-default">Your other workspaces stay out of reach</h2>
-<p>An agent never sees your other workspaces, the private workspace or your logins there. MCP agents cannot reach Vimma until you type <code>:mcp on</code> and answer <kbd>y</kbd>, and <code>:mcp off</code> disconnects them at once. Vimma's own agent needs no <code>:mcp on</code>, but it uses the same workspace, tools and questions.</p>
+<p>In the browser, an agent never sees your other workspaces, the private workspace or your logins there. MCP agents cannot reach Vimma until you type <code>:mcp on</code> and answer <kbd>y</kbd>, and <code>:mcp off</code> disconnects them at once. Vimma's own agent needs no <code>:mcp on</code>, but it uses the same workspace, tools and questions.</p>
 </section>
 
 <h2 id="vimmas-own-agent">Vimma's own agent</h2>
@@ -12,7 +12,7 @@
 
 <ol class="steps-list">
   <li>Press <kbd>ctrl+b</kbd> <kbd>i</kbd> (or type <code>:agent</code>). The window opens where the side panel opens, with its input focused. A private window has no agent.</li>
-  <li>Press <kbd>Esc</kbd>, then <kbd>m</kbd>, to pick a model: one on a local server (Ollama, LM Studio or the llama.cpp server, which Vimma finds on <code>127.0.0.1</code> while the picker is open), Anthropic's API or an OpenAI-compatible endpoint with your key, or an agent CLI you already use (Claude Code, Codex or Gemini CLI) on its own login, with no API key. A key goes into Firefox's login storage, encrypted as your saved passwords are, and is never shown again.</li>
+  <li>Press <kbd>Esc</kbd>, then <kbd>m</kbd>, to pick a model: one on a local server (Ollama, LM Studio or the llama.cpp server, which Vimma finds on <code>127.0.0.1</code> while the picker is open), Anthropic's API or an OpenAI-compatible endpoint with your key, or an agent CLI you already use (Claude Code, Codex or Gemini CLI) on its own login, with no API key. A key goes into Firefox's login storage, encrypted with your system keyring when you have one, otherwise as Firefox's saved passwords are (readable from a copy of your profile if you set no primary password), and is never shown again.</li>
   <li>Type the task and press <kbd>Enter</kbd>. That lets this conversation act in the agent workspace without asking at each step, for this one task. <kbd>ctrl+Enter</kbd> sends it and asks you before every step instead; <kbd>shift+Enter</kbd> starts a new line.</li>
 </ol>
 
@@ -119,7 +119,7 @@
 </ol>
 
 <pre class="code">vimma-ctl state<span class="c">                    # mode, pending keys, workspace, tabs</span>
-vimma-ctl state --json<span class="c">             # the same, as JSON</span>
+vimma-ctl state --json<span class="c">             # as JSON, with the splits and the update check</span>
 vimma-ctl send-keys &quot;ctrl+b ?&quot;<span class="c">     # as if typed: opens the key list</span>
 vimma-ctl open https://example.com<span class="c"> # in a new tab</span></pre>
 
