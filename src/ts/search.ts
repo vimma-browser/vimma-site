@@ -39,3 +39,13 @@ export function score(e: SearchEntry, terms: string[]): number {
   }
   return n;
 }
+
+/** The entries that hold every term, best first, at most `limit` of them. */
+export function rank(index: SearchEntry[], terms: string[], limit = 12): SearchEntry[] {
+  return index
+    .map((e) => [e, score(e, terms)] as const)
+    .filter(([, n]) => n > 0)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, limit)
+    .map(([e]) => e);
+}

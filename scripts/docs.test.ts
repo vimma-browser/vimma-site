@@ -7,20 +7,14 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { test } from "node:test";
 
-import { score } from "../src/ts/search.js";
+import { rank } from "../src/ts/search.js";
 import { buildDocs, packIndex, textOf } from "./docs.js";
 
 const ROOT = resolve(import.meta.dirname, "../..");
 const docs = buildDocs(ROOT);
 
-/** The docs search as site.ts runs it: every entry scored, best first, the top twelve. */
-const search = (q: string): typeof docs.index =>
-  docs.index
-    .map((e) => [e, score(e, q.toLowerCase().split(/\s+/).filter(Boolean))] as const)
-    .filter(([, n]) => n > 0)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 12)
-    .map(([e]) => e);
+/** The docs search as site.ts runs it: the top twelve entries, best first. */
+const search = (q: string): typeof docs.index => rank(docs.index, q.toLowerCase().split(/\s+/).filter(Boolean));
 
 test("a search entry's text keeps punctuation on its word", () => {
   assert.equal(textOf("<p>a <code>b</code> , c ( d ) .</p>"), "a b, c (d).");
@@ -53,5 +47,15 @@ test("the per-page known limits links and key tables are not in the index", () =
   for (const e of docs.index) {
     assert.notEqual(e.h, "Known limits", `${e.u}`);
     assert.notEqual(e.h, "All the keys for this page", `${e.u}`);
+  }
+});
+
+test("the site's script loads its modules relative to itself, not to the page", () => {
+  // import() resolves against the module's URL (assets/js/), so a page-relative ROOT prefix
+  // breaks on pages at another depth, such as /docs/
+  const site = readFileSync(resolve(ROOT, "src/ts/site.ts"), "utf8");
+  assert.doesNotMatch(site, /import\(`/);
+  for (const m of site.matchAll(/import\((\w+)\)/g)) {
+    assert.match(site, new RegExp(`const ${m[1]} = "\\./[\\w-]+\\.js";`), `import(${m[1]})`);
   }
 });

@@ -66,8 +66,9 @@ npm run release:sync -- v0.1.2     # … of a given release tag
   pages do not load them. The build ships the stylesheets without comments or the whitespace
   around braces (`scripts/css.ts`). If a sync pushes a page over, slim the page or split it, not
   the budget. Two scripts load only on first use, on any page, and so have budgets of their own:
-  the docs search index (`assets/js/docs-index.js`, 112 KB, about 74 KB today), imported on the
-  first search, and the `?` overlay's list of Vimma keys (`assets/js/vimma-keys.js`, 32 KB, about
+  the docs search index (`assets/js/docs-index.js`, 112 KB, about 85 KB today), imported on the
+  first search with the search's scoring (`assets/js/search.js`, about 1 KB), and the `?`
+  overlay's list of Vimma keys (`assets/js/vimma-keys.js`, 32 KB, about
   23 KB today). The index used to count against every docs page, so each new guide section pushed
   all of them toward 150 KB at once and left about 40 KB for a page's own content. The index
   leaves out common words (a stop list) and verb forms nearly every section has, words already in
@@ -94,12 +95,13 @@ npm run release:sync -- v0.1.2     # … of a given release tag
   `data/release.json` (see [Keeping up with releases](#keeping-up-with-releases)), and `{{arch_install}}` is the Arch Linux command
   (`ARCH_INSTALL` in `scripts/release.ts`), so the install page and the docs show
   the same line.
-- `src/ts/site.ts` is the one browser script (an ES module): the keys (`j k d u gg G / ? [ ]
+- `src/ts/site.ts` is the one script every page loads (an ES module): the keys (`j k d u gg G / ? [ ]
   g h g d g k g i g a`), the overlay, the keys filter,
   the docs search and the install command's copy button (hidden where the clipboard API is missing).
-  Every page works without it. The docs search's scoring is `src/ts/search.ts`, loaded with the
-  index on the first search, so the build's tests (`scripts/docs.test.ts`) rank results with the
-  same code.
+  Every page works without it. The docs search's scoring and ranking are `src/ts/search.ts`, loaded
+  with the index on the first search, so the build's tests (`scripts/docs.test.ts`) rank results
+  with the same code. Both load by paths relative to `assets/js/`, since `import()` resolves
+  against the script's address, not the page's.
 - **The promo video** (`assets/video/`): one 75-second 16:9 cut (about 11 MB), no sound, H.264 with the
   `moov` atom first (`+faststart`), with a WebP poster. Every screen, phones included, gets the
   same `<video>`, scaled to the column's width. With `preload="none"` it downloads nothing until
