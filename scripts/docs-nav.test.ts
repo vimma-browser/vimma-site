@@ -17,7 +17,7 @@ const SIDEBAR: [string, string[]][] = [
   ["Browse with the keyboard", ["Modes and moving", "Bookmarks", "PDF viewer"]],
   ["Organise tabs and windows", ["Tabs and the window", "Split panes", "Workspaces"]],
   ["Make it yours", ["config.toml", "Coming from Firefox"]],
-  ["Use it with AI agents", ["Agent workspace", "Agent tools", "vimma-ctl"]],
+  ["Use it with AI agents", ["Agents and vimma-ctl"]],
   ["Trust and limits", ["Privacy defaults", "Known limits"]],
   ["Get help", ["Help", "Every key"]],
 ];

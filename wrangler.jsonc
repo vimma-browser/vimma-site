@@ -47,7 +47,13 @@
       "/docs/add-ons/index.html",
       "/docs/theming",
       "/docs/theming/",
-      "/docs/theming/index.html"
+      "/docs/theming/index.html",
+      "/docs/agent-tools",
+      "/docs/agent-tools/",
+      "/docs/agent-tools/index.html",
+      "/docs/vimma-ctl",
+      "/docs/vimma-ctl/",
+      "/docs/vimma-ctl/index.html"
     ],
     // Without it a missing address gets an empty 404; with it, dist/404.html.
     "not_found_handling": "404-page"

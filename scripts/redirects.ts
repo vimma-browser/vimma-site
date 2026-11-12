@@ -35,6 +35,9 @@ export const REDIRECTS: Redirects = {
   "/docs/add-ons/": "/docs/firefox-shortcuts/#your-add-ons",
   // theming is the "Colours and Omarchy" section of config.toml
   "/docs/theming/": "/docs/config/#colours",
+  // the agent tools and vimma-ctl are sections of "Agents and vimma-ctl"
+  "/docs/agent-tools/": "/docs/agent-workspace/#what-agents-can-do",
+  "/docs/vimma-ctl/": "/docs/agent-workspace/#scripting-with-vimma-ctl",
 };
 
 /** The address a request path is redirected to, or null when it is not a retired page. */
