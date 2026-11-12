@@ -17,8 +17,9 @@ test("Firefox's general help links open the help page", () => {
 
 test("a topic Vimma documents opens Vimma's page, whatever the version, system and language", () => {
   assert.equal(resolveSupport(`${PREFIX}technical-and-interaction-data`), "/docs/privacy/#turned-off");
-  assert.equal(resolveSupport("/support/160.0/Darwin/fi/addons-help"), "/docs/add-ons/");
+  assert.equal(resolveSupport("/support/160.0/Darwin/fi/addons-help"), "/docs/firefox-shortcuts/#your-add-ons");
   assert.equal(resolveSupport("/support/x/y/z/containers"), "/docs/workspaces/");
+  assert.equal(resolveSupport(`${PREFIX}keyboard-shortcuts-perform-firefox-tasks-quickly`), "/docs/firefox-shortcuts/#what-moved");
 });
 
 test("any other topic goes to the same article in Firefox's help, on support.mozilla.org", () => {

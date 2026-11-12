@@ -31,6 +31,8 @@ export const REDIRECTS: Redirects = {
   // the private workspace and routing are sections of "Workspaces"
   "/docs/private-workspace/": "/docs/workspaces/#private",
   "/docs/routing/": "/docs/workspaces/#send-sites",
+  // add-ons are a section of "Coming from Firefox"
+  "/docs/add-ons/": "/docs/firefox-shortcuts/#your-add-ons",
 };
 
 /** The address a request path is redirected to, or null when it is not a retired page. */
