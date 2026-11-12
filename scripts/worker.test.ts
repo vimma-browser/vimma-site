@@ -30,7 +30,7 @@ test("every topic Vimma documents opens its page, not Mozilla's article", async 
     ["containers", "/docs/workspaces/"],
     ["firefox-help", "/support/"],
     ["preferences", "/support/"],
-    ["keyboard-shortcuts-perform-firefox-tasks-quickly", "/docs/firefox-shortcuts/"],
+    ["keyboard-shortcuts-perform-firefox-tasks-quickly", "/docs/firefox-shortcuts/#what-moved"],
     ["", "/support/"],
   ];
   for (const [topic, page] of pages) {

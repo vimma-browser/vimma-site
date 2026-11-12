@@ -1,5 +1,5 @@
 <!-- Hand-written guide for the firefox-shortcuts page; the build adds the keys table and the details from guide.md. -->
-<p class="lead">Vimma is Firefox underneath, so your bookmarks, passwords and add-ons come along. A key in Vimma means one thing: where Firefox had a shortcut on a key Vim uses, such as <kbd>ctrl+w</kbd> or <kbd>ctrl+d</kbd>, Vimma switches Firefox's off, so you never close a tab when you meant to delete a word.</p>
+<p class="lead">Vimma is Firefox underneath, so your bookmarks, passwords and add-ons work as they do in Firefox, once you bring them over. A key in Vimma means one thing: where Firefox had a shortcut on a key Vim uses, such as <kbd>ctrl+w</kbd> or <kbd>ctrl+d</kbd>, Vimma switches Firefox's off, so you never close a tab when you meant to delete a word.</p>
 
 <h2 id="import">Bring your bookmarks and passwords</h2>
 
@@ -8,7 +8,7 @@
 <ul>
   <li><strong>From Firefox, with Sync.</strong> Sign in with the same Mozilla account in Firefox and in Vimma (<code>:settings sync</code>, then Sign in), and choose what to sync. Sync brings recent history, about the last 60 days.</li>
   <li><strong>From Firefox, with files.</strong> Bookmarks: export them to HTML from Firefox's Library (<kbd>ctrl+shift+o</kbd>, Import and Backup) and import the file from Vimma's. Passwords: <code>about:logins</code>, its <code>…</code> menu, Export Passwords in Firefox and Import from a File in Vimma. The exported file holds every password in plain text, so delete it afterwards.</li>
-  <li><strong>From Chrome, Chromium, Brave, Edge, Opera or Vivaldi.</strong> <code>:firefox cmd_file_importFromAnotherBrowser</code> opens Firefox's import wizard; <kbd>f</kbd> on <strong>Import</strong> brings over everything it lists. On Linux the wizard cannot read those browsers' passwords: export them to a CSV file there and import it in <code>about:logins</code>.</li>
+  <li><strong>From Chrome, Chromium, Brave, Edge, Opera or Vivaldi.</strong> <code>:firefox cmd_file_importFromAnotherBrowser</code> opens Firefox's import wizard; <kbd>f</kbd> on <strong>Import</strong> brings over everything it lists. On Linux the wizard cannot read those browsers' passwords: export them to a CSV file there and import it in <code>about:logins</code>; delete the file afterwards, as above.</li>
 </ul>
 
 <p>Imported bookmarks land in Firefox's own folders, and the <a href="{{root}}docs/bookmarks/">bookmarks panel</a> shows only the current workspace's folder: set <code>root = &quot;toolbar&quot;</code> (or <code>&quot;all&quot;</code>) under <code>[bookmarks]</code> in <code>config.toml</code> to see them. Every step, and what does not come over, is in <a href="#moving-over-from-firefox-or-chrome">Moving over from Firefox or Chrome</a> under Details.</p>
@@ -75,4 +75,4 @@ enable = [&quot;ctrl+w&quot;]<span class="c">        # ctrl+w closes the tab aga
   <li>Help links open vimma.dev, which forwards any topic Vimma does not document to Mozilla's article.</li>
 </ul>
 
-<p>Settings hides what does nothing in Vimma, such as Firefox themes, the tab layout and the data collection switches, and menus drop Mozilla's promotions. The full list, with each preference, is in <a href="#firefox-behaviour-vimma-changes">Firefox behaviour Vimma changes</a> under Details. What Vimma turns off for privacy is on <a href="{{root}}docs/privacy/">Privacy defaults</a>.</p>
+<p>Settings hides the controls for what Vimma does its own way or turns off, such as Firefox themes, the tab layout and the data collection switches, and menus drop Mozilla's promotions. The full list, with each preference, is in <a href="#firefox-behaviour-vimma-changes">Firefox behaviour Vimma changes</a> under Details. What Vimma turns off for privacy is on <a href="{{root}}docs/privacy/">Privacy defaults</a>.</p>

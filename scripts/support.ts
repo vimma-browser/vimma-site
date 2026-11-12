@@ -51,7 +51,7 @@ export const SUPPORT_TOPICS: SupportTopic[] = [
   { slugs: ["prefs-search"], to: "/docs/config/#search-engines", title: "Search engines" },
   {
     slugs: ["keyboard-shortcuts-perform-firefox-tasks-quickly"],
-    to: "/docs/firefox-shortcuts/",
+    to: "/docs/firefox-shortcuts/#what-moved",
     title: "Keyboard shortcuts",
   },
 ];
