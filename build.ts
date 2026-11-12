@@ -243,9 +243,12 @@ function main(): void {
       `${TAGLINE}. Vimma is a Firefox fork for Linux and macOS: Vim modes on every page, a tmux-style ctrl+b prefix for tabs, split panes and workspaces, and one config.toml for every key.`,
       `Vimma is pre-alpha and open source (MPL-2.0): releases for Linux x86_64 and macOS (Apple Silicon) are on GitHub; on Arch Linux it installs with one command, and on a Mac with Homebrew (brew install --cask vimma-browser/tap/vimma). Source: ${VIMMA_REPO}. The whole user guide as one Markdown file: https://vimma.dev/llms-full.txt`,
       [
-        ["Start", [link(home, "Vimma"), ...docsOf("Start"), link(install, "Install Vimma"), link(keysPage, "Key bindings")]],
-        ["Docs", ["Get going", "Tabs, panes, workspaces", "Make it yours"].flatMap(docsOf)],
-        ["Optional", [...docsOf("Reference"), link(about, "About Vimma"), link(support, "Help")]],
+        ["Start", [link(home, "Vimma"), ...docsOf("Get started"), link(install, "Install Vimma"), link(keysPage, "Key bindings")]],
+        [
+          "Docs",
+          ["Browse with the keyboard", "Organise tabs and windows", "Make it yours", "Use it with AI agents", "Trust and limits"].flatMap(docsOf),
+        ],
+        ["Optional", [...docsOf("Get help"), link(about, "About Vimma"), link(support, "Help")]],
       ],
     ),
   );

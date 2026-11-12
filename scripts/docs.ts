@@ -33,7 +33,7 @@ export interface BuiltDoc {
   /** Output path under dist/. */
   out: string;
   title: string;
-  /** The sidebar group ("Start", "Get going", …). */
+  /** The sidebar group, a task ("Get started", "Make it yours", …). */
   group: string;
   /** The <title> text: the heading, or more when the heading alone says too little. */
   headTitle: string;
@@ -77,7 +77,7 @@ interface Source {
   date: string;
 }
 
-const START = { slug: "", title: "Start here", nav: "Start here", group: "Start" };
+const START = { slug: "", title: "Start here", nav: "Start here", group: "Get started" };
 
 /** Where an id from guide.md ended up: page slug ("" for Start here). */
 type IdMap = Map<string, string>;
@@ -207,15 +207,13 @@ interface NavEntry {
 function sidebar(all: NavEntry[], here: string, root: string): string {
   const groups: string[] = [];
   for (const e of all) if (!groups.includes(e.group)) groups.push(e.group);
-  let n = 0;
   const lists = groups
     .map((g) => {
       const items = all
         .filter((e) => e.group === g)
         .map((e) => {
           const cur = e.slug === here ? ' aria-current="page"' : "";
-          const num = String(n++).padStart(2, "0");
-          return `<li><a href="${root}${pageUrl(e.slug)}"${cur}><span class="n" aria-hidden="true">${num}</span> ${escapeHtml(e.nav)}</a></li>`;
+          return `<li><a href="${root}${pageUrl(e.slug)}"${cur}>${escapeHtml(e.nav)}</a></li>`;
         })
         .join("\n");
       return `<p class="group" aria-hidden="true">${escapeHtml(g)}</p>\n<ul>\n${items}\n</ul>`;
@@ -459,7 +457,7 @@ function fullMarkdown(guideMd: string, limitsMd: string, ids: IdMap, source: Sou
 
 function docsList(pages: DocPage[], root: string): string {
   const items = pages
-    .filter((p) => p.group !== "Reference")
+    .filter((p) => p.slug !== "limits" && p.group !== "Get help")
     .map((p) => `<li><a href="${root}${pageUrl(p.slug)}">${escapeHtml(p.title)}</a>: ${inline(p.description, { link: () => null })}</li>`)
     .join("\n");
   return `<ol class="walk">\n${items}\n</ol>`;

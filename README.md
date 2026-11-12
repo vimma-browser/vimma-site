@@ -257,7 +257,10 @@ the pull request's branch), and merge; the next hourly run closes the issue.
 ## The docs
 
 `/docs/` is modelled on a classic docs site: a sidebar of pages, an "on this page" list, a search
-box, previous/next links (`[` and `]`). Each page has two tiers:
+box, previous/next links (`[` and `]`). The sidebar groups the pages by what a reader wants to do
+("Get started", "Browse with the keyboard", "Organise tabs and windows", "Make it yours", "Use it
+with AI agents", "Trust and limits", "Get help"), in the order of `DOC_PAGES` in
+`scripts/docs-pages.ts`; `scripts/docs-nav.test.ts` holds it to that list. Each page has two tiers:
 
 1. **A hand-written guide** (`src/docs/<slug>.html`, and "Start here" in `src/docs/start-here.html`):
    task first ("to do X, press Y"), plain words, the common keys only. Keep its keys and facts in
