@@ -267,8 +267,8 @@ browser and not an extension, the long version of the home page's block. Its cla
 by hand against Vimma's guide and source, like the other hand-written text.
 
 "Vimma compared" (`src/docs/compared.html`, `handWritten` too) sets Vimma beside Vimium,
-Tridactyl, qutebrowser and Zen Browser (and Nyxt and Vieb briefly): one table row per dimension,
-then what each does well and where Vimma differs. Every claim about another project comes from
+Tridactyl, qutebrowser and Zen Browser: one table row per dimension, a note on who gets a key,
+and a short guide to choosing. Every claim about another project comes from
 its own site, docs or repository, listed at the foot of the page with the date they were
 checked; recheck them and update that date when you edit the page. Keep the tone fair: no
 project is put down.
