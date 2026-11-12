@@ -1,5 +1,5 @@
 {
-  // Browser side: the site's one script.
+  // Browser side: the site's one script, and the docs search's scoring it loads with the index.
   "compilerOptions": {
     "target": "es2020",
     "lib": ["es2022", "dom", "dom.iterable"],
@@ -12,5 +12,5 @@
     "rootDir": ".",
     "outDir": "../../.build/site"
   },
-  "include": ["site.ts"]
+  "include": ["site.ts", "search.ts"]
 }

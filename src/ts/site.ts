@@ -8,7 +8,10 @@
 // the docs search and the copy buttons. There is no status bar of its own:
 // viewed in Vimma, a second one at the foot of the window would be confusing.
 
-// It imports nothing; this keeps it a module, so its top-level names stay out of the global scope.
+// It imports nothing on load (the docs search's scoring, search.js, comes with the search
+// index); the export keeps it a module, so its top-level names stay out of the global scope.
+import type { SearchEntry } from "./search.js";
+
 export {};
 
 const root = document.documentElement;
@@ -393,14 +396,6 @@ if (window.matchMedia("(max-width: 900px)").matches) {
   if (tocBox) tocBox.open = false;
 }
 
-interface SearchEntry {
-  p: string;
-  h: string;
-  u: string;
-  s: string;
-  w: string;
-}
-
 /** docs-index.js as docs.ts packs it: each page's title and path once, each entry an array. */
 interface PackedIndex {
   pages: [string, string][];
@@ -415,45 +410,40 @@ if (search && results && status) {
   let index: SearchEntry[] | null = null;
   let loading: Promise<void> | null = null;
 
-  const load = (): Promise<void> =>
-    (loading ??= import(`${ROOT}assets/js/docs-index.js`).then((m: { default: PackedIndex }) => {
-      const { pages, entries } = m.default;
-      index = entries.map(([i, h, hash, s, w]) => {
-        const [p, path] = pages[i] ?? ["", ""];
-        return { p, h, u: path + hash, s, w };
-      });
-    }));
+  let rank: typeof import("./search.js").rank | null = null;
 
-  const score = (e: SearchEntry, terms: string[]): number => {
-    let n = 0;
-    // the index leaves the title's, heading's and snippet's words out of w (docs.ts), so they
-    // are matched here; the snippet is split into words as docs.ts splits it
-    const snippet = e.s.replace(/…$/, "").toLowerCase().split(/[\s,;()"“”'’!?]+|\.(?=\s|$)/).join(" ");
-    const head = `${e.p} ${e.h}`.toLowerCase();
-    for (const t of terms) {
-      const inHead = head.includes(t);
-      if (!inHead && !e.w.includes(t) && !snippet.includes(t)) return 0;
-      n += 1;
-      if (inHead) n += 4;
-      if (` ${e.w} ${snippet} ${head} `.includes(` ${t} `)) n += 1;
-    }
-    return n;
+  const load = (): Promise<void> => {
+    // relative to this module (assets/js/), not to the page
+    const indexUrl = "./docs-index.js";
+    const searchUrl = "./search.js";
+    return (loading ??= Promise.all([
+      import(indexUrl) as Promise<{ default: PackedIndex }>,
+      import(searchUrl) as Promise<typeof import("./search.js")>,
+    ])
+      .then(([m, scoring]) => {
+        const { pages, entries } = m.default;
+        index = entries.map(([i, h, hash, s, w]) => {
+          const [p, path] = pages[i] ?? ["", ""];
+          return { p, h, u: path + hash, s, w };
+        });
+        rank = scoring.rank;
+      })
+      .catch(() => {
+        loading = null; // try again on the next keystroke; run() says it failed
+      }));
   };
 
   const run = (): void => {
     const terms = search.value.toLowerCase().split(/\s+/).filter(Boolean);
     results.replaceChildren();
-    if (!terms.length || !index) {
+    if (!terms.length || !index || !rank) {
       results.hidden = true;
-      status.textContent = "";
+      // run() follows load(), so terms with no index mean the index did not load
+      status.textContent = terms.length ? "could not load the search" : "";
       return;
     }
-    const hits = index
-      .map((e) => [e, score(e, terms)] as const)
-      .filter(([, n]) => n > 0)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 12);
-    for (const [e] of hits) {
+    const hits = rank(index, terms);
+    for (const e of hits) {
       const li = document.createElement("li");
       const a = document.createElement("a");
       a.href = `${ROOT}docs/${e.u}`;
