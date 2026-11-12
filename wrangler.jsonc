@@ -3,8 +3,9 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 // The vimma-site Worker as Workers Builds deploys it: static assets from dist/, and a script that
-// runs first for /support/* only (Firefox's help links, scripts/worker.ts), so every other request
-// is served from dist/ without it. It states what the dashboard already had (the domain,
+// runs first for /support/* (Firefox's help links, scripts/worker.ts) and for the retired pages'
+// addresses (scripts/redirects.ts, workerFirstPaths; a test holds the list to it), so every other
+// request is served from dist/ without it. It states what the dashboard already had (the domain,
 // workers.dev, logs), so a deploy from main changes nothing else; the empty `previews` block is what `wrangler preview`, the deploy
 // command for other branches, needs to build a Preview of a pull request.
 {

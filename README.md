@@ -139,8 +139,8 @@ Firefox builds every "Learn more" link, Help > Get Help and Settings' support bu
 `app.support.baseURL` plus a topic name. Vimma sets that pref to
 `https://vimma.dev/support/%VERSION%/%OS%/%LOCALE%/`, so a link arrives as
 `/support/159.0.1/Linux/en-US/<topic>`. The rules live in `scripts/support.ts`, and a small Worker
-script, `scripts/worker.ts`, answers them. `wrangler.jsonc` runs it first for `/support/*` only
-(`run_worker_first`); every other address is served from `dist/` by Cloudflare's static assets
+script, `scripts/worker.ts`, answers them. `wrangler.jsonc` runs it first for `/support/*` (and
+the [retired pages](#retired-pages)) only (`run_worker_first`); every other address is served from `dist/` by Cloudflare's static assets
 without it, and an address under `/support/` that no rule matches (the help page itself, or a link
 with a part missing) goes to the assets too:
 
@@ -162,6 +162,22 @@ apply the file's placeholder rules in the file's order, as its documentation des
 (<https://developers.cloudflare.com/workers/static-assets/redirects/>): every topic went to the
 forward to support.mozilla.org, while `wrangler dev` applied the same file top to bottom.
 `npm run check` fails if a `_redirects` file appears in `dist/`.
+
+### Retired pages
+
+When a docs page is merged into another, its address keeps working: `REDIRECTS` in
+`scripts/redirects.ts` maps it to the page (and heading) that now holds its content, and the same
+Worker script answers it with a 301, the query string going along. `wrangler.jsonc` runs the
+script first for each retired page's address, with and without the trailing slash and with
+`index.html` (`workerFirstPaths`; `scripts/worker.test.ts` holds `run_worker_first` to that
+list). A 301, unlike the help links' 302, because a retired address does not come back, and
+browsers and search engines should move to the new one. A target with no fragment leaves the
+reader's own: a browser carries `#heading` across a redirect whose `Location` has none, so a link
+to a heading lands on it when the new page keeps the heading's id.
+
+`npm run check` fails if a target is not a built page with its fragment, or if a retired page is
+still built (the Worker runs first for it, so its file would never be served). Add the entry in
+the same change that removes the page, so no deployed state redirects to a missing page.
 
 `npm run serve` serves files only and does not run the script; to try the links locally, run
 `npx wrangler dev` after `npm run build` (see [Deploying](#deploying)).
@@ -361,7 +377,7 @@ Cloudflare's Workers Builds (the `vimma-site` Worker) builds the repository and 
   or so later. A failed build leaves the previous version live. The build and deploy commands are
   set in the Cloudflare dashboard (Workers → `vimma-site` → Settings → Build): `npm run build`,
   then Wrangler, which reads `wrangler.jsonc`. That file states the Worker as it is (static assets
-  from `dist/`, the script for `/support/*`, the vimma.dev domain, workers.dev, logs), so keep it
+  from `dist/`, the script for `/support/*` and the retired pages, the vimma.dev domain, workers.dev, logs), so keep it
   in line with the dashboard: a deploy applies what it says.
 - **Other branches** get a Preview: Workers Builds runs `npx wrangler preview`, which needs the
   empty `previews` block in `wrangler.jsonc`, and the pull request's check links to it.

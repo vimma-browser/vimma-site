@@ -8,7 +8,8 @@
 //              alt on every <img>, no inline scripts, styles or event handlers
 //   links      every internal href/src/srcset resolves to a file, and every #fragment to an id;
 //              so does every on-site target of the /support/ rules, whose off-site targets
-//              are support.mozilla.org only, and there is no _redirects file
+//              are support.mozilla.org only, and there is no _redirects file; every retired
+//              page's target is a built page with its fragment, and no retired page is built
 //   external   nothing loads from another origin: no remote src/href on resource elements,
 //              no remote url()/@import in CSS, no network calls in JS
 //   contrast   every text colour pair in both palettes passes WCAG AA (4.5:1)
@@ -24,6 +25,7 @@
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 
+import { REDIRECTS } from "./redirects.js";
 import { rules } from "./support.js";
 
 const ROOT = resolve(import.meta.dirname, "../..");
@@ -256,6 +258,23 @@ for (const [from, to] of rules()) {
   if (hash && existsSync(file)) {
     const ids = new Set(tags(readFileSync(file, "utf8")).flatMap((t) => t.attrs.get("id") ?? []));
     if (!ids.has(hash)) fail(where, `"${to}": no id "${hash}" in ${rel(file)}`);
+  }
+}
+
+// Retired pages (scripts/redirects.ts, answered by scripts/worker.ts with a 301): each target is a
+// built page with its fragment, and the retired page itself is no longer built, since the Worker
+// runs first for its address and its file would never be served.
+for (const [from, to] of Object.entries(REDIRECTS)) {
+  const where = `redirect ${from}`;
+  if (existsSync(join(DIST, from, "index.html"))) fail(where, `${from} is still built: drop the page or the redirect`);
+  const file = target(join(DIST, "index.html"), to);
+  if (!existsSync(file)) {
+    fail(where, `"${to}" is broken (no ${rel(file)})`);
+    continue;
+  }
+  const hash = to.split("#")[1];
+  if (hash && !tags(readFileSync(file, "utf8")).some((t) => t.attrs.get("id") === hash)) {
+    fail(where, `"${to}": no id "${hash}" in ${rel(file)}`);
   }
 }
 
