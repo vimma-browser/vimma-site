@@ -33,8 +33,6 @@ export interface DocPage {
    * table; then the guide.md blocks under one "Details" heading; then the limits links.
    */
   blocks: Block[];
-  /** Render the guide.md blocks as the page's main content, not as "Details" (the FAQ). */
-  noDetails?: boolean;
   /** Written for this site only, nothing from guide.md: no "built from" source line. */
   handWritten?: boolean;
 }
@@ -331,14 +329,5 @@ export const DOC_PAGES: DocPage[] = [
     group: "Trust and limits",
     description: "Every known gap in Vimma today, one line each: features, panes, add-ons, privacy, compatibility and platforms.",
     blocks: [],
-  },
-  {
-    slug: "troubleshooting",
-    title: "FAQ and troubleshooting",
-    nav: "Troubleshooting",
-    group: "Get help",
-    description: "Answers to the questions people run into first: profiles, updates, the tab strip, window controls, ctrl+b and crash reports.",
-    blocks: [{ guide: "FAQ and troubleshooting" }],
-    noDetails: true,
   },
 ];

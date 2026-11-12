@@ -26,6 +26,7 @@ import {
   renderSection,
   sectionIds,
 } from "./md.js";
+import { SUPPORT_TOPICS } from "./support.js";
 
 export interface BuiltDoc {
   slug: string;
@@ -81,7 +82,8 @@ const START = { slug: "", title: "Start here", nav: "Start here", group: "Get st
 /** Where an id from guide.md ended up: page slug ("" for Start here). */
 type IdMap = Map<string, string>;
 
-const pageUrl = (s: string): string => (s === "" ? "docs/" : `docs/${s}/`);
+/** A docs page's path under the site root; a slug that starts with "/" is a site path (the help page). */
+const pageUrl = (s: string): string => (s.startsWith("/") ? s.slice(1) : s === "" ? "docs/" : `docs/${s}/`);
 const LIMIT_ID = (title: string): string => `limit-${slug(title.replace(/\s*\(.*\)$/, ""))}`;
 
 function fail(msg: string): never {
@@ -203,6 +205,12 @@ interface NavEntry {
   group: string;
 }
 
+/** The sidebar's last group: pages outside the docs, so they are not in the previous/next order. */
+const SIDEBAR_HELP: [string, string][] = [
+  ["Help", "support/"],
+  ["Every key", "keys/"],
+];
+
 function sidebar(all: NavEntry[], here: string, root: string): string {
   const groups: string[] = [];
   for (const e of all) if (!groups.includes(e.group)) groups.push(e.group);
@@ -218,6 +226,7 @@ function sidebar(all: NavEntry[], here: string, root: string): string {
       return `<p class="group" aria-hidden="true">${escapeHtml(g)}</p>\n<ul>\n${items}\n</ul>`;
     })
     .join("\n");
+  const help = SIDEBAR_HELP.map(([text, path]) => `<li><a href="${root}${path}">${escapeHtml(text)}</a></li>`).join("\n");
   return `<nav class="docs-nav" aria-label="Docs">
 <div class="docs-search" data-js-only hidden>
 <label for="docsearch"><span aria-hidden="true">/</span><span class="sr-only">Search the docs</span></label>
@@ -228,6 +237,10 @@ function sidebar(all: NavEntry[], here: string, root: string): string {
 <details class="docs-pages" open>
 <summary>pages</summary>
 ${lists}
+<p class="group" aria-hidden="true">Get help</p>
+<ul>
+${help}
+</ul>
 </details>
 </nav>`;
 }
@@ -294,7 +307,8 @@ const WEAK = new Set(
   "shows opens keeps closes stays lists takes says leaves changes runs moves asks gets puts adds uses starts follows sees goes makes comes gives brings sets works needs turns".split(" "),
 );
 
-function indexPage(title: string, slugName: string, body: string): SearchEntry[] {
+/** A page's search entries; `url` is its path from the docs root (docs/), as the index stores it. */
+function indexPage(title: string, url: string, body: string): SearchEntry[] {
   const parts = body.split(/(?=<h[23] id=")/);
   return parts.flatMap((part, i) => {
     const m = /^<h[23] id="([^"]+)">([\s\S]*?)<\/h[23]>/.exec(part);
@@ -322,13 +336,39 @@ function indexPage(title: string, slugName: string, body: string): SearchEntry[]
       .filter((w) => !longer.some((o) => o !== w && o.includes(w)))
       .filter((w) => !WEAK.has(w))
       .join(" ");
-    return [{ p: title, h: heading, u: `${pageUrl(slugName).slice("docs/".length)}${m ? `#${m[1]}` : ""}`, s, w: words }];
+    return [{ p: title, h: heading, u: `${url}${m ? `#${m[1]}` : ""}`, s, w: words }];
   });
 }
 
 // --- build ------------------------------------------------------------------------------------
 
-export function buildDocs(rootDir: string): { pages: BuiltDoc[]; index: SearchEntry[]; source: Source; markdown: string } {
+/** The guide section the help page shows as its FAQ, and the help page's path as an IdMap entry. */
+const FAQ = "FAQ and troubleshooting";
+const HELP = "/support/";
+
+/** The site's pages the docs search covers besides the docs: the file in src/pages/, its title. */
+const SITE_PAGES: [string, string][] = [
+  ["support.html", "Help"],
+  ["install.html", "Install"],
+  ["about.html", "About"],
+];
+
+/** The help page's list of Firefox topics that open a Vimma page (the help page itself left out). */
+export function topicList(root: string): string {
+  const items = SUPPORT_TOPICS.filter((t) => t.to !== HELP).map(
+    (t) => `  <li><a href="${root}${t.to.slice(1)}">${escapeHtml(t.title)}</a></li>`,
+  );
+  return `<ul>\n${items.join("\n")}\n</ul>`;
+}
+
+export function buildDocs(rootDir: string): {
+  pages: BuiltDoc[];
+  index: SearchEntry[];
+  source: Source;
+  markdown: string;
+  /** The guide's FAQ, rendered for the help page ({{faq}} in src/pages/support.html). */
+  faq: string;
+} {
   const read = (p: string): string => readFileSync(join(rootDir, p), "utf8");
   const guideMd = rewriteGuide(read("data/docs/guide.md"));
   const limitsMd = read("data/docs/limits.md");
@@ -345,6 +385,10 @@ export function buildDocs(rootDir: string): { pages: BuiltDoc[]; index: SearchEn
   // which page renders which guide heading, so #links can cross pages
   const ids: IdMap = new Map();
   for (const p of DOC_PAGES) for (const b of p.blocks) for (const id of idsOf(b, guide)) if (!ids.has(id)) ids.set(id, p.slug);
+  // the guide's FAQ is on the help page (src/pages/support.html, {{faq}}), one level down
+  const faqSection = need(guide, FAQ);
+  for (const id of sectionIds(faqSection)) ids.set(id, HELP);
+  const faq = renderSection(faqSection, { link: linker(ids, HELP, "../", source.ref) }, 2);
 
   const pages: BuiltDoc[] = [];
   const index: SearchEntry[] = [];
@@ -365,8 +409,8 @@ export function buildDocs(rootDir: string): { pages: BuiltDoc[]; index: SearchEn
     } else if (page.slug === "limits") {
       sections = limitsPage(limits, opts);
     } else {
-      // the guide.md blocks sit under one "Details" heading, a level down, unless they are the page
-      const level = page.noDetails ? 2 : 3;
+      // the guide.md blocks sit under one "Details" heading, a level down
+      const level = 3;
       let detailsOpen = false;
       // keys first, then the guide.md text, then the limits links
       const rank = (b: Block): number => ("keys" in b ? 0 : "limits" in b ? 2 : 1);
@@ -385,7 +429,7 @@ export function buildDocs(rootDir: string): { pages: BuiltDoc[]; index: SearchEn
             } else {
               html = guideParas(guide, b, opts, level);
             }
-            if (!page.noDetails && !detailsOpen) {
+            if (!detailsOpen) {
               detailsOpen = true;
               html = `<h2 id="details" class="details-head">Details</h2>
 <p class="details-note">Everything below is Vimma's own user guide for this topic, in full: every edge case and exception. You do not need it to get started.</p>
@@ -432,10 +476,18 @@ ${pager(nav, i, root)}
       body,
     });
     const indexed = page ? content : sections.replace(/^[\s\S]*?(?=<h1)/, "");
-    index.push(...indexPage(title, entry.slug, fill(indexed, vars, `docs index: ${entry.slug || "start-here"}`)));
+    index.push(...indexPage(title, pageUrl(entry.slug).slice("docs/".length), fill(indexed, vars, `docs index: ${entry.slug || "start-here"}`)));
   });
 
-  return { pages, index, source, markdown: fullMarkdown(guideMd, limitsMd, ids, source) };
+  // the help, install and about pages, so a search for "update", "uninstall" or "bug" finds them;
+  // their paths are relative to docs/, where the search's links start
+  for (const [file, title] of SITE_PAGES) {
+    const html = read(`src/pages/${file}`).replace(/^<!--\{.*?\}-->\n/s, "");
+    const filled = fill(html, { ...vars, root: "../", faq, support_topics: topicList("../") }, `docs index: ${file}`);
+    index.push(...indexPage(title, `../${file === "support.html" ? "support" : file.replace(/\.html$/, "")}/`, filled));
+  }
+
+  return { pages, index, source, markdown: fullMarkdown(guideMd, limitsMd, ids, source), faq };
 }
 
 /**

@@ -21,6 +21,8 @@ export const REDIRECTS: Redirects = {
   "/docs/compared/": "/docs/why/#compared",
   // Accessibility is a section of About, with a link to the guide's full section
   "/docs/accessibility/": "/about/#accessibility",
+  // the first checks and the guide's FAQ are on the help page
+  "/docs/troubleshooting/": "/support/#first-checks",
 };
 
 /** The address a request path is redirected to, or null when it is not a retired page. */

@@ -33,7 +33,7 @@
 <p>Vimma is signed with its Apple Developer ID and notarised by Apple, so it opens like any other app: the first time, macOS only asks whether to open an app downloaded from the internet.</p>
 <p>On a Mac, passkeys do not work yet, and your profile lives in <code>~/Library/Application Support/Vimma/</code>.</p>
 
-<h2 id="updating">Updating</h2>
+<h2 id="updating">Updates</h2>
 <p>Since 0.1.2, Vimma checks for a new release every 12 hours, or at once with <code>:update</code>. When one is out, the status bar shows <code>⇡</code> and its version (in red for a security release), and <code>:update</code> shows the command for how you installed Vimma; each update file is checked with SHA-512. The AppImage and the tarball update themselves: the AppImage replaces its own file with the new release, the tarball installs it through Firefox's updater, and either runs the new version from the next start. The other packages only tell you, so run that command: on Arch Linux, the command above again; otherwise, install the newer <code>.deb</code> or <code>.rpm</code> over the old one (there is no Vimma repository for apt, dnf or zypper, so a system upgrade does not update it). A 0.1.1 install has no update check, so update it this way by hand once.</p>
 <p>On a Mac, the notice and <code>:update</code> work the same way: run <code>brew upgrade --cask vimma</code>, or install the newer <code>.dmg</code> over the old one.</p>
 

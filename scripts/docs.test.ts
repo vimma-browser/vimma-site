@@ -59,3 +59,29 @@ test("the site's script loads its modules relative to itself, not to the page", 
     assert.match(site, new RegExp(`const ${m[1]} = "\\./[\\w-]+\\.js";`), `import(${m[1]})`);
   }
 });
+
+test("the help page, the install page and About are in the search index", () => {
+  // among the first five results, so the reader sees it without scrolling the list
+  const near = (q: string, page: RegExp): void => {
+    const hits = search(q).slice(0, 5);
+    assert.ok(hits.some((e) => page.test(e.u)), `${q}: ${hits.map((e) => e.u).join(" ")}`);
+  };
+  near("update", /^\.\.\/install\/#updating$/);
+  near("uninstall", /^\.\.\/install\/#macos$/);
+  near("bug", /^\.\.\/support\/#report$/);
+  near("crash", /^\.\.\/support\/#faq-and-troubleshooting$/);
+  near("licence", /^\.\.\/about\//);
+  for (const e of docs.index) assert.doesNotMatch(e.u, /\{\{|^troubleshooting/, e.u);
+});
+
+test("the help page carries the guide's FAQ, its links pointing at the docs pages", () => {
+  assert.match(docs.faq, /^<h2 id="faq-and-troubleshooting">/);
+  assert.match(docs.faq, /coredumpctl/);
+  // the help page sits one level down, so a docs link starts with ../docs/
+  assert.match(docs.faq, /href="\.\.\/docs\/tabs\/#tab-search-and-tab-rename"/);
+  assert.doesNotMatch(docs.faq, /href="#(?!faq)/);
+});
+
+test("a guide link to the FAQ points at the help page", () => {
+  assert.doesNotMatch(docs.markdown, /docs\/troubleshooting/);
+});
