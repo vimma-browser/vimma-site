@@ -1,5 +1,5 @@
 <!-- Hand-written guide for the modes and moving page; the build adds the keys table and the details from guide.md. -->
-<p class="lead">Vimma's keys depend on the mode, as in Vim. Most of the time you are in <strong>normal</strong> mode, where letters are commands: <kbd>j</kbd> scrolls, <kbd>f</kbd> shows link hints. Click into a text field and you are in <strong>insert</strong> mode, where letters type. The badge at the left of the status bar always says which mode you are in, and <kbd>Esc</kbd> takes you back to normal.</p>
+<p class="lead">Vimma's keys depend on the mode, as in Vim. Most of the time you are in <strong>normal</strong> mode, where letters are commands: <kbd>j</kbd> scrolls, <kbd>f</kbd> shows link hints. Click into a text field and you are in <strong>insert</strong> mode, where letters type. The badge at the left of the status bar always says which mode you are in, and <kbd>Esc</kbd> takes you back to normal. Below the modes: moving around a page, following links, finding and copying text, and the <kbd>:</kbd> line.</p>
 
 <h2 id="the-modes">The modes at a glance</h2>
 
@@ -21,9 +21,7 @@
   <li><strong><kbd>ctrl+b</kbd> keys</strong> work in every mode, even while you type in a field or the URL bar, because <kbd>ctrl+b</kbd> never types anything. Press <kbd>ctrl+b</kbd>, let go, then press the next key. The status bar shows <code>prefix</code> while it waits; <kbd>Esc</kbd> cancels.</li>
 </ul>
 
-<p>Keys Vimma does not use reach the page as usual: a site's own shortcut on <kbd>s</kbd> or <kbd>m</kbd> still works in normal mode.</p>
-
-<p><strong>Who gets a key.</strong> In normal mode a page never sees Vimma's bare keys (<kbd>j</kbd>, <kbd>f</kbd>, <kbd>/</kbd>); keys Vimma does not bind still reach it. Firefox's shortcuts that a page may use, such as <kbd>ctrl+s</kbd> in an editor, and <kbd>Esc</kbd> in normal mode, go to the page first, as in Firefox, unless the site's Override keyboard shortcuts permission is Block. Reserved keys such as <kbd>ctrl+t</kbd> and <kbd>ctrl+w</kbd> stay the browser's.</p>
+<p><strong>Who gets a key.</strong> In normal mode a page never sees Vimma's bare keys (<kbd>j</kbd>, <kbd>f</kbd>, <kbd>/</kbd>); keys Vimma does not bind, such as a site's own <kbd>s</kbd> or <kbd>m</kbd>, still reach it. Firefox's shortcuts that a page may use, such as <kbd>ctrl+s</kbd> in an editor, and <kbd>Esc</kbd> in normal mode, go to the page first, as in Firefox, unless the site's Override keyboard shortcuts permission is Block. Firefox's reserved keys, such as <kbd>ctrl+t</kbd>, <kbd>ctrl+shift+w</kbd> and <kbd>ctrl+q</kbd>, stay the browser's: no page gets them first.</p>
 
 <h2 id="typing-in-a-page">Typing in a page</h2>
 
@@ -71,7 +69,7 @@
 <h3 id="back-forward-reload">Back, forward, reload, addresses</h3>
 
 <div class="table-wrap"><table class="plain"><thead><tr><th scope="col">To</th><th scope="col">Press</th></tr></thead><tbody>
-<tr><td>Back / forward</td><td><kbd>H</kbd> or <kbd>L</kbd></td></tr>
+<tr><td>Back / forward</td><td><kbd>H</kbd> or <kbd>L</kbd> (Firefox's <kbd>alt+left</kbd> / <kbd>alt+right</kbd> work too, <kbd>cmd+left</kbd> / <kbd>cmd+right</kbd> on macOS)</td></tr>
 <tr><td>Reload</td><td><kbd>r</kbd></td></tr>
 <tr><td>Copy this page's address</td><td><kbd>yy</kbd></td></tr>
 <tr><td>Open the address (or search the text) on the clipboard, here / in a new tab</td><td><kbd>p</kbd> or <kbd>P</kbd></td></tr>

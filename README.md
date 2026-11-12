@@ -291,7 +291,7 @@ with AI agents", "Trust and limits", "Get help"), in the order of `DOC_PAGES` in
 "Why Vimma" (`src/docs/why.html`, `handWritten` in `docs-pages.ts`) has only the first tier: why a
 browser and not an extension, the long version of the home page's block, then "Vimma compared",
 which sets Vimma beside Vimium, Tridactyl, qutebrowser and Zen Browser: one table row per
-dimension, and a short guide to choosing (who gets a key is on Modes and moving). Its claims about Vimma are
+dimension, and a short guide to choosing. Its claims about Vimma are
 checked by hand against Vimma's guide and source, like the other hand-written text. Every claim
 about another project comes from its own site, docs or repository, listed at the foot of the page
 with the date they were checked; recheck them and update that date when you edit the comparison.
