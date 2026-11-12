@@ -12,7 +12,9 @@ const ROOT = resolve(import.meta.dirname, "../..");
 const docs = buildDocs(ROOT);
 const page = (slug: string): string => {
   const body = docs.pages.find((p) => p.slug === slug)?.body ?? "";
-  return /<article class="docs-body"[\s\S]*<\/article>/.exec(body)?.[0] ?? "";
+  const article = /<article class="docs-body"[\s\S]*<\/article>/.exec(body)?.[0];
+  assert.ok(article, `no docs page "${slug}"`);
+  return article;
 };
 
 test("Start here opens with what a reader wants to do, each a link", () => {

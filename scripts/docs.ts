@@ -426,7 +426,7 @@ ${pager(nav, i, root)}
       out: pageUrl(entry.slug),
       title,
       group: entry.group,
-      headTitle: page ? (page.headTitle ?? title) : "Start here: a tour of Vimma",
+      headTitle: page ? (page.headTitle ?? title) : "Start here: your first five minutes in Vimma",
       description: page?.description ?? "Start here: what you see first, your first five minutes, and where to go for what you want to do.",
       sources: [introFile, ...fromGuide, ...(hasKeys ? ["data/bindings.json"] : [])],
       body,
