@@ -425,7 +425,7 @@ html.js .nojs-keys {
   }
 
   .tabs ul {
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     width: max-content;
     max-width: 100%;
     margin: 0 auto;
@@ -433,6 +433,17 @@ html.js .nojs-keys {
 
   .tabs a {
     padding: 0.25rem 0.55rem;
+  }
+}
+
+/* below 520px the seven tabs close up, and wrap onto a second line only when they still do not fit */
+@media (max-width: 520px) {
+  .tabs ul {
+    gap: 0;
+  }
+
+  .tabs a {
+    padding: 0.25rem 0.4rem;
   }
 }
 

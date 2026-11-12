@@ -40,6 +40,9 @@ const OVERLAY_BUDGET = 32 * 1024;
 const DOCS_INDEX = "assets/js/docs-index.js";
 const DOCS_INDEX_BUDGET = 112 * 1024;
 
+/** The header's tabs, in order, on every page: Help is there so a bug report is a click away. */
+const SITE_TABS = ["Home", "Docs", "Keys", "Install", "Help", "About", "GitHub"];
+
 const errors: string[] = [];
 const fail = (where: string, msg: string): void => {
   errors.push(`${where}: ${msg}`);
@@ -122,6 +125,10 @@ for (const file of htmlFiles) {
   if (!csp?.attrs.get("content")?.includes("default-src 'none'")) {
     fail(where, "no Content-Security-Policy meta with default-src 'none'");
   }
+
+  const tabs = /<nav class="tabs" aria-label="Site">([\s\S]*?)<\/nav>/.exec(html)?.[1] ?? "";
+  const tabNames = [...tabs.matchAll(/<a [^>]*>([^<]*)<\/a>/g)].map((m) => m[1]);
+  if (tabNames.join(" · ") !== SITE_TABS.join(" · ")) fail(where, `header tabs are "${tabNames.join(" · ")}", not "${SITE_TABS.join(" · ")}"`);
 
   // balanced tags
   const stack: Tag[] = [];
