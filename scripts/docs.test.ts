@@ -149,3 +149,14 @@ test("Coming from Firefox holds the import, the shortcuts, the add-ons and what 
   assert.doesNotMatch(privacy, /id="firefox-behaviour-vimma-changes"/);
   assert.match(privacy, /href="\.\.\/\.\.\/docs\/firefox-shortcuts\/#what-vimma-changes"/);
 });
+
+test("config.toml holds the colours and Omarchy, and the search engines' anchor", () => {
+  const config = docs.pages.find((p) => p.slug === "config")?.body ?? "";
+  for (const id of ["colours", "dark-or-light", "with-omarchy", "colours-and-themes", "search-engines", "configtoml"]) {
+    assert.match(config, new RegExp(`id="${id}"`), id);
+  }
+  // the hand-written "Remap a key" says it, leader included
+  assert.doesNotMatch(config, /id="every-key-is-yours"/);
+  assert.match(config, /leader/);
+  assert.equal(docs.pages.find((p) => p.slug === "theming"), undefined);
+});

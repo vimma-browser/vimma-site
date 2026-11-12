@@ -33,6 +33,8 @@ export const REDIRECTS: Redirects = {
   "/docs/routing/": "/docs/workspaces/#send-sites",
   // add-ons are a section of "Coming from Firefox"
   "/docs/add-ons/": "/docs/firefox-shortcuts/#your-add-ons",
+  // theming is the "Colours and Omarchy" section of config.toml
+  "/docs/theming/": "/docs/config/#colours",
 };
 
 /** The address a request path is redirected to, or null when it is not a retired page. */

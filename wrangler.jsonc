@@ -44,7 +44,10 @@
       "/docs/routing/index.html",
       "/docs/add-ons",
       "/docs/add-ons/",
-      "/docs/add-ons/index.html"
+      "/docs/add-ons/index.html",
+      "/docs/theming",
+      "/docs/theming/",
+      "/docs/theming/index.html"
     ],
     // Without it a missing address gets an empty 404; with it, dist/404.html.
     "not_found_handling": "404-page"
