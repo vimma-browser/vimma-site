@@ -106,7 +106,7 @@ export const DOC_PAGES: DocPage[] = [
     title: "Vimma compared",
     headTitle: "Vimma compared with Vimium, Tridactyl, qutebrowser and Zen Browser",
     group: "Start",
-    description: "Vimium, Tridactyl, qutebrowser and Zen Browser side by side with Vimma: what each does well, and where Vimma differs.",
+    description: "Vimium, Tridactyl, qutebrowser and Zen Browser side by side with Vimma, and a short guide to choosing.",
     blocks: [],
     handWritten: true,
   },
