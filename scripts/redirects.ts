@@ -26,6 +26,8 @@ export const REDIRECTS: Redirects = {
   // moving around and copy mode are sections of "Modes and moving"
   "/docs/moving/": "/docs/modes/#moving",
   "/docs/copy-mode/": "/docs/modes/#copy-some-text",
+  // the side panel is a section of "Tabs and the window"
+  "/docs/side-panel/": "/docs/tabs/#the-side-panel",
 };
 
 /** The address a request path is redirected to, or null when it is not a retired page. */

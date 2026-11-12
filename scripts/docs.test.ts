@@ -95,3 +95,27 @@ test("a guide link to the FAQ points at the help page, from a docs page, the hel
 test("the search snippets of the help, install and about pages do not start with their eyebrow", () => {
   for (const e of docs.index.filter((x) => x.u.startsWith("../"))) assert.doesNotMatch(e.s, /·/, e.u);
 });
+
+test("a guide link to a heading no page shows goes to the guide on GitHub, at the release tag", () => {
+  const link = linker(new Map(), "tabs", "../../", "v0.1.18", new Set(["downloads"]));
+  assert.equal(link("#downloads"), "https://github.com/vimma-browser/vimma/blob/v0.1.18/docs/guide.md#downloads");
+  assert.equal(link("#no-such-heading"), null);
+});
+
+test("the guide's downloads, site permissions, pop-ups and hidden toolbar link to GitHub from the site", () => {
+  const tabs = docs.pages.find((p) => p.slug === "tabs")?.body ?? "";
+  for (const id of ["downloads", "site-permissions", "blocked-pop-ups", "hiding-the-toolbar"]) {
+    assert.match(tabs, new RegExp(`href="https://github\\.com/vimma-browser/vimma/blob/[^"]+/docs/guide\\.md#${id}"`), id);
+  }
+});
+
+test("no page leaves a guide link as plain text", () => {
+  for (const p of docs.pages) assert.doesNotMatch(p.body, /title="not on this site"/, p.slug);
+  assert.doesNotMatch(docs.faq, /title="not on this site"/);
+});
+
+test("a limits.md link to a guide heading the site renders stays on the site", () => {
+  const link = linker(new Map([["private-workspace", "workspaces"]]), "limits", "../../", "v0", new Set(["private-workspace"]));
+  assert.equal(link("guide.md#private-workspace"), "../../docs/workspaces/#private-workspace");
+  assert.equal(link("guide.md"), "https://github.com/vimma-browser/vimma/blob/v0/docs/guide.md");
+});

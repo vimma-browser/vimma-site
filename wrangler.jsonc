@@ -32,7 +32,10 @@
       "/docs/moving/index.html",
       "/docs/copy-mode",
       "/docs/copy-mode/",
-      "/docs/copy-mode/index.html"
+      "/docs/copy-mode/index.html",
+      "/docs/side-panel",
+      "/docs/side-panel/",
+      "/docs/side-panel/index.html"
     ],
     // Without it a missing address gets an empty 404; with it, dist/404.html.
     "not_found_handling": "404-page"
