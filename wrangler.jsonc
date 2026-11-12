@@ -26,7 +26,13 @@
       "/docs/accessibility/index.html",
       "/docs/troubleshooting",
       "/docs/troubleshooting/",
-      "/docs/troubleshooting/index.html"
+      "/docs/troubleshooting/index.html",
+      "/docs/moving",
+      "/docs/moving/",
+      "/docs/moving/index.html",
+      "/docs/copy-mode",
+      "/docs/copy-mode/",
+      "/docs/copy-mode/index.html"
     ],
     // Without it a missing address gets an empty 404; with it, dist/404.html.
     "not_found_handling": "404-page"
