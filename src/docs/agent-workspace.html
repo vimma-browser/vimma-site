@@ -8,20 +8,21 @@
 
 <h2 id="vimmas-own-agent">Vimma's own agent</h2>
 
-<p>A chat window where you write a task, watch every step it takes, add instructions or stop it, all from the keyboard. It needs no separate program. It works only in the agent workspace and stops at the same checkpoints as any agent, whatever model drives it.</p>
+<p>A chat window where you write a task, watch every step it takes, add instructions or stop it, all from the keyboard. It needs no separate program. In the browser it works only in the agent workspace and stops at the same checkpoints as any agent, whatever model drives it.</p>
 
 <ol class="steps-list">
   <li>Press <kbd>ctrl+b</kbd> <kbd>i</kbd> (or type <code>:agent</code>). The window opens where the side panel opens, with its input focused. A private window has no agent.</li>
-  <li>Press <kbd>Esc</kbd>, then <kbd>m</kbd>, to pick a model: one on a local server (Ollama, LM Studio or the llama.cpp server, which Vimma finds on <code>127.0.0.1</code> while the picker is open), Anthropic's API or an OpenAI-compatible endpoint with your key, or an agent CLI you already use (Claude Code, Codex or Gemini CLI) on its own login, with no API key. A key goes into Firefox's login storage, encrypted, and is never shown again.</li>
+  <li>Press <kbd>Esc</kbd>, then <kbd>m</kbd>, to pick a model: one on a local server (Ollama, LM Studio or the llama.cpp server, which Vimma finds on <code>127.0.0.1</code> while the picker is open), Anthropic's API or an OpenAI-compatible endpoint with your key, or an agent CLI you already use (Claude Code, Codex or Gemini CLI) on its own login, with no API key. A key goes into Firefox's login storage, encrypted as your saved passwords are, and is never shown again.</li>
   <li>Type the task and press <kbd>Enter</kbd>. That lets this conversation act in the agent workspace without asking at each step, for this one task. <kbd>ctrl+Enter</kbd> sends it and asks you before every step instead; <kbd>shift+Enter</kbd> starts a new line.</li>
 </ol>
 
 <ul>
-  <li><strong>Where your data goes.</strong> The window's first line names the model and where the data goes, such as <code>stays on this machine</code> or <code>page text sent to api.anthropic.com</code>. Before the first task to a model off this machine, the window says what is sent (page text the agent reads, field values it sees, screenshots and your messages) and sends nothing until you press <kbd>y</kbd>. <code>local_only = true</code> under <code>[agent]</code> refuses every model that is not on this machine.</li>
+  <li><strong>Where your data goes.</strong> The window's first line names the model and where the data goes, such as <code>stays on this machine</code> or <code>page text sent to api.anthropic.com</code>. Before the first task to a model off this machine, the window says what is sent (page text the agent reads, field values it sees, screenshots and your messages) and sends nothing until you press <kbd>y</kbd>. The provider's own terms apply to what it receives; for a local address you typed yourself, that server's settings decide whether it sends anything on. <code>local_only = true</code> under <code>[agent]</code> refuses every model that is not on this machine.</li>
+  <li><strong>An agent CLI keeps its own tools.</strong> Claude Code, Codex or Gemini CLI run from the window still have the shell, file and web tools their own settings allow, outside Vimma's questions and with your rights, and a page can steer the model into using them. Allow them only what you would allow in a terminal. A shell command it started may outlive a stop.</li>
   <li><strong>Checkpoints still ask.</strong> Sending a form, paying, showing you a page and the downloads that always ask still ask every time, in a bordered slot above the input that takes only <kbd>y</kbd> and <kbd>n</kbd>. Nothing you type in the input and nothing the model writes answers it.</li>
   <li><strong>Stop it</strong> with <kbd>s</kbd> after <kbd>Esc</kbd>, <code>:agent stop</code> or <kbd>ctrl+b</kbd> <kbd>shift+a</kbd>; the task's grant ends with it. <kbd>q</kbd> closes the window.</li>
   <li><strong>Give it a page</strong> with <kbd>P</kbd> (or <code>:agent give</code>): after a question, the tab moves to the agent workspace and is reopened with that workspace's cookies, never yours.</li>
-  <li><strong>What is kept.</strong> Conversations survive a restart: your messages, the agent's replies and a short summary of each task, encrypted with your system keyring when you have one. Page text, element lists and screenshots are never stored. <code>:agent forget all</code> deletes every conversation.</li>
+  <li><strong>What is kept.</strong> Conversations survive a restart: your messages, the agent's replies and a short summary of each task, encrypted with your system keyring when you have one, otherwise as Firefox's saved passwords are. Page text, element lists and screenshots are never stored. <code>:agent forget all</code> deletes every conversation.</li>
 </ul>
 
 <h2 id="connecting-an-agents-tool">Connect an agent's tool</h2>
@@ -55,6 +56,7 @@
   <li><strong>It never interrupts your typing.</strong> While you type, or with focus in a text field, it waits, and the status bar says <code>◇ agent 1?</code>. When Vimma is not in front, its window is marked urgent and a desktop notification names the agent and the kind of request, never an address or a title.</li>
   <li><strong>No answer is a no.</strong> A request nobody answers within 50 seconds (<code>ask_timeout</code> under <code>[mcp]</code>) is denied, and three noes in a row from one agent ignore it for a minute.</li>
   <li><strong>Grants show.</strong> The status bar says <code>◇ agent granted</code> while an agent may act without asking, every request a grant lets through shows a notice, and <code>:mcp log</code> lists the last 100 requests. A grant is never written to disk.</li>
+  <li>Every rule is in <a href="https://github.com/vimma-browser/vimma/blob/{{release_tag}}/docs/guide.md#answering-an-agent">Answering an agent</a> in the user guide.</li>
 </ul>
 
 <h2 id="checkpoints-sending-a-form-and-paying">What always asks</h2>
@@ -62,13 +64,13 @@
 <p>A grant lets an agent use every tool without asking: read, open, press keys, click, fill, take screenshots and download. These still ask every time, also under a grant, and your yes allows that one step without making or ending a grant:</p>
 
 <ul>
-  <li><strong>Paying</strong>: a click, a fill or a followed link when the page shows a payment card field, or when the button says it pays (<code>pay</code>, <code>buy</code>, <code>place order</code> and the like, in several languages). The question shows the button, the site and the total the page states; the amount is the page's claim, and your statement is what counts.</li>
-  <li><strong>Sending a form with text or personal details</strong>: a message, a name, an email or street address, a password, a payment card or one-time code, or a file. The question shows where the form goes and each field it sends; a password, card or one-time-code field shows as <code>•••</code>, never its value. A form that sends only the page's own values, such as a basket button with a quantity, runs under the grant. For a button that keeps asking, <kbd>a</kbd> (<code>a always here</code>) lets the same button on the same site send its form until the grant ends, unless it is a payment or sends a password, card, one-time-code or file field.</li>
+  <li><strong>Paying</strong>: a click, a fill that sends a form, or a key that loads a page (a followed link, <kbd>H</kbd>, <kbd>L</kbd>) when the page shows a payment card field, or when the button says it pays (<code>pay</code>, <code>buy</code>, <code>place order</code> and the like, in several languages). The question shows the button, the site and the total the page states; the amount is the page's claim, and your statement is what counts.</li>
+  <li><strong>Sending a form with text or personal details</strong>: free text such as a message or a search, a name, an email or street address, a phone number, a username, a password, a payment card or one-time code, or a file; also a form when Vimma cannot tell what it sends, and every fill that sends a form. The question shows where the form goes and each field it sends; a password, card or one-time-code field shows as <code>•••</code>, never its value. These are the form's own fields: a page's script can still add data to the request as it is sent. A form that sends only the page's own values, such as a basket button with a quantity, runs under the grant. For a button that keeps asking, <kbd>a</kbd> (<code>a always here</code>) lets the same button on the same site send its form until the grant ends, unless it is a payment or sends a password, card, one-time-code or file field.</li>
   <li><strong>Showing you a page</strong>, since it changes what you see.</li>
-  <li><strong>A dangerous or unscanned download</strong>, and a download a page started by itself.</li>
+  <li><strong>A dangerous or unscanned download</strong>, and a download a page started by itself. A program, script, package or archive Vimma cannot look inside asks with <code>⚠</code>, and only <kbd>!</kbd> keeps it: <kbd>y</kbd> and grants do nothing there.</li>
 </ul>
 
-<p>A checkpoint starts with <code>▲</code> in your theme's warning colour. <kbd>y</kbd> runs that one step; <kbd>n</kbd>, <kbd>Esc</kbd>, <kbd>Enter</kbd> or <kbd>x</kbd> stops it. Password, payment card and one-time-code fields are never filled: the agent asks you to type them. A page that hides its checkout (no card field on screen, a button worded otherwise) is not recognised as a payment, so keep grants short on sites where you have a saved card, and read <code>:mcp log</code> after a task.</p>
+<p>A payment or form checkpoint starts with <code>▲</code> in your theme's warning colour. <kbd>y</kbd> runs that one step; <kbd>n</kbd>, <kbd>Esc</kbd>, <kbd>Enter</kbd> or <kbd>x</kbd> stops it. Password, payment card and one-time-code fields are never filled: the agent asks you to type them. A page that hides its checkout (no card field on screen, a button worded otherwise) is not recognised as a payment, so keep grants short on sites where you have a saved card, and read <code>:mcp log</code> after a task. Every rule is in <a href="https://github.com/vimma-browser/vimma/blob/{{release_tag}}/docs/guide.md#checkpoints-sending-a-form-and-paying">Checkpoints: sending a form and paying</a> in the user guide.</p>
 
 <h2 id="what-agents-can-do">What an agent can do</h2>
 
@@ -86,7 +88,7 @@
 
 <ul>
   <li><strong>Pages there get less than yours:</strong> no permission prompts, no pop-ups, and links to other apps open nothing.</li>
-  <li><strong>Downloads ask and are kept apart</strong>, in <code>~/Downloads/vimma-agent/</code> only, readable by you alone. Vimma never opens them, refuses one over plain <code>http</code>, and scans each with ClamAV if your system has it.</li>
+  <li><strong>Downloads ask and are kept apart.</strong> A grant lets the agent's own downloads through, but not dangerous or unscanned ones or those a page started. They are saved in <code>~/Downloads/vimma-agent/</code> only, readable by you alone. Vimma never opens them, refuses one over plain <code>http</code>, and scans each with ClamAV if your system has it.</li>
   <li><strong>To share a page of yours</strong>, move its tab to the agent workspace (<kbd>m</kbd> in the <kbd>ctrl+b</kbd> <kbd>w</kbd> picker). It is reopened with the agent workspace's cookies, never yours.</li>
 </ul>
 
@@ -95,7 +97,7 @@
 <ul>
   <li><kbd>ctrl+b</kbd> <kbd>shift+a</kbd> with nothing waiting, or <code>:mcp revoke</code>: ends every grant now. The agents stay connected, and their next requests ask.</li>
   <li><kbd>x</kbd> on a question: denies everything that agent asked and ignores it until it reconnects.</li>
-  <li><code>:mcp off</code>: disconnects every agent and ends their grants.</li>
+  <li><code>:mcp off</code>: disconnects every MCP agent and ends their grants. It does not stop Vimma's own agent: stop that with <kbd>s</kbd> in its window, <code>:agent stop</code> or <kbd>ctrl+b</kbd> <kbd>shift+a</kbd>.</li>
   <li><code>:mcp forget</code>: deletes the agent workspace's cookies and site data, so any login an agent used there is gone.</li>
   <li>Removing the server from your tool (<code>claude mcp remove vimma</code>, <code>codex mcp remove vimma</code>, <code>copilot mcp remove vimma</code>) stops it from starting.</li>
 </ul>
@@ -104,11 +106,11 @@
 
 <h2 id="scripting-with-vimma-ctl">Scripting with vimma-ctl</h2>
 
-<p><code>vimma-ctl</code> also drives a running Vimma from a shell or a window-manager binding: it sends keys, reads the state and opens URLs, over a local control socket that is off until you turn it on.</p>
+<p><code>vimma-ctl</code> also drives a running Vimma from a shell or a window-manager binding: it sends keys, reads the state and opens URLs, over a local control socket. Its full control is off until you turn it on; the socket also starts when agents are on, but that side is for agents only.</p>
 
 <section class="box note" aria-labelledby="before-you-turn-it-on">
 <h3 class="box-title" id="before-you-turn-it-on">Before you turn it on</h3>
-<p>The control socket gives full control of the browser to any program that has its token, which anything running as your user can read: such a program can type into your logged-in sites, change any setting and open local files. Leave it off unless you script Vimma. AI agents do not need it. While agents are on, each new full-control connection asks you first in Vimma, with a code that <code>vimma-ctl</code> prints in your terminal: answer <kbd>y</kbd> only if the codes match. <code>:control on 15</code> turns full control on for 15 minutes, then off again.</p>
+<p>The control socket gives full control of the browser to any program that has its token, which anything running as your user can read: such a program can type into your logged-in sites, change any setting and open local files. Leave it off unless you script Vimma. AI agents do not need it. While agents are on, each new full-control connection asks you first in Vimma, with a code that <code>vimma-ctl</code> prints in your terminal: answer <kbd>y</kbd> only if the codes match. <code>:control on 15</code> turns full control on for 15 minutes, then off again. An agent that asks you to turn full control on, or to run <code>vimma-ctl send-keys</code>, is asking for keys in every workspace: say no.</p>
 </section>
 
 <ol class="steps-list">
@@ -116,7 +118,7 @@
   <li>Use the <code>vimma-ctl</code> that came with Vimma. <code>vimma-ctl --version</code> names the Vimma version it came with.</li>
 </ol>
 
-<pre class="code">vimma-ctl state<span class="c">                    # mode, workspace, tabs, and whether each is loading</span>
+<pre class="code">vimma-ctl state<span class="c">                    # mode, pending keys, workspace, tabs</span>
 vimma-ctl state --json<span class="c">             # the same, as JSON</span>
 vimma-ctl send-keys &quot;ctrl+b ?&quot;<span class="c">     # as if typed: opens the key list</span>
 vimma-ctl open https://example.com<span class="c"> # in a new tab</span></pre>

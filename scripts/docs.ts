@@ -133,7 +133,9 @@ export function checkGuideLinks(html: string, guideIds: ReadonlySet<string>, whe
     const href = m[1] ?? "";
     if (!href.startsWith(GUIDE_AT_TAG)) continue;
     const id = href.slice(GUIDE_AT_TAG.length);
-    if (!guideIds.has(id)) fail(`${where} links the guide's #${id}, a heading guide.md no longer has`);
+    if (!guideIds.has(id)) {
+      throw new Error(`docs: ${where} links the guide's #${id}, a heading guide.md no longer has: point the link at the heading's new id`);
+    }
   }
 }
 
@@ -522,6 +524,7 @@ ${pager(nav, i, root)}
     const meta = JSON.parse(/^<!--(\{.*?\})-->\n/s.exec(src)?.[1] ?? fail(`src/pages/${file}: no meta line`)) as { out: string };
     // the eyebrow repeats the headings below it, and would start every snippet
     const html = src.replace(/^<!--\{.*?\}-->\n/s, "").replace(/<p class="eyebrow">[\s\S]*?<\/p>\n?/, "");
+    checkGuideLinks(html, guideIds, `src/pages/${file}`);
     const filled = fill(html, { ...vars, root: "../", faq, support_topics: topicList("../") }, `docs index: ${file}`);
     index.push(...indexPage(title, `../${meta.out}`, filled));
   }
