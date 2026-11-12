@@ -1,16 +1,43 @@
-<!-- Hand-written. {{docs_list}} is the generated walk through the pages. -->
+<!-- Hand-written. -->
 <h1>Start here</h1>
-<p class="lead">Vimma is a browser for the way you already work. Bare keys drive the page, as in Vim. <kbd>ctrl+b</kbd>, tmux's default prefix, drives tabs, panes and workspaces. Your hands stay on the keys, so reading, searching and switching context keep the same flow as your editor and terminal. These pages take you through Vimma in the order you will meet its features.</p>
-<ul class="cta">
-  <li><a href="{{root}}docs/install/">Install and first launch</a></li>
-  <li><a href="{{root}}docs/modes/">Learn the modes</a></li>
-  <li><a href="{{root}}keys/">Every key</a></li>
+<p class="lead">Vimma is a browser for the way you already work. Bare keys drive the page, as in Vim. <kbd>ctrl+b</kbd>, tmux's default prefix, drives tabs, panes and workspaces. Your hands stay on the keys, so reading, searching and switching context keep the same flow as your editor and terminal.</p>
+
+<h2 id="i-want-to">I want to…</h2>
+<ul>
+  <li><a href="{{root}}docs/firefox-shortcuts/">Switch from Firefox</a></li>
+  <li><a href="#first-five-minutes">Learn the basic keys</a></li>
+  <li><a href="{{root}}docs/panes/">Split the window</a></li>
+  <li><a href="{{root}}docs/workspaces/">Keep work and personal apart</a></li>
+  <li><a href="{{root}}docs/config/">Change a key</a></li>
+  <li><a href="{{root}}docs/agent-workspace/">Let an AI agent browse</a></li>
+  <li><a href="{{root}}support/#report">Report a bug</a></li>
 </ul>
 
 <section class="box note" aria-labelledby="pre-alpha">
 <h2 class="box-title" id="pre-alpha">Pre-alpha</h2>
 <p>Vimma <code>{{version}}</code> is released for Linux x86_64 and for macOS on Apple Silicon: the <a href="{{root}}install/">install page</a> has the one command for Arch Linux, the packages for other distributions and the Homebrew command for a Mac. Everything described here works in that release. What does not work yet is on the <a href="{{root}}docs/limits/">known limits</a> page, and each topic links to its own limits.</p>
 </section>
+
+<h2 id="what-you-see">What you see first</h2>
+
+<ul>
+  <li><strong>No tab strip.</strong> Vimma hides it. The <strong>status bar</strong>, the line at the bottom of the window, shows the mode, the workspace and which tab you are on (<code>tab 1/1</code>).</li>
+  <li><strong>The start page</strong>, with the keys to start from: <kbd>ctrl+b</kbd> <kbd>?</kbd> for every key, <kbd>:</kbd> for commands, <kbd>f</kbd> for link hints and <kbd>ctrl+b</kbd> <kbd>shift+b</kbd> for <a href="{{root}}docs/bookmarks/">bookmarks</a>.</li>
+  <li><strong>The URL bar is focused</strong>, so you can type an address straight away and press <kbd>Enter</kbd>.</li>
+</ul>
+
+<h2 id="first-five-minutes">Your first five minutes</h2>
+
+<ol class="steps-list">
+  <li>Type an address in the URL bar and press <kbd>Enter</kbd>.</li>
+  <li>Scroll with <kbd>j</kbd> and <kbd>k</kbd>. <kbd>d</kbd> and <kbd>u</kbd> move half a page; <kbd>gg</kbd> and <kbd>G</kbd> go to the top and the bottom.</li>
+  <li>Press <kbd>f</kbd>: a label appears on every link. Type a label's letters to follow that link. <kbd>H</kbd> goes back.</li>
+  <li>Press <kbd>ctrl+b</kbd>, let go, then press <kbd>c</kbd>: a new tab. <kbd>ctrl+b</kbd> <kbd>n</kbd> and <kbd>ctrl+b</kbd> <kbd>p</kbd> move between tabs.</li>
+  <li>Click a search box and type: you are in insert mode, and keys type as usual. <kbd>Esc</kbd> leaves the box, and the keys are Vimma's again.</li>
+  <li>Lost? <kbd>ctrl+b</kbd> <kbd>?</kbd> lists every key; press <kbd>/</kbd> to filter the list and <kbd>Esc</kbd> to close it.</li>
+</ol>
+
+<p>Next: <a href="{{root}}docs/modes/">Modes</a> explains when a key is a command and when it types.</p>
 
 <h2 id="pick-your-path">Pick your path</h2>
 <ul class="grid paths">
@@ -28,19 +55,12 @@
   </li>
 </ul>
 
-<h2 id="the-walk">The walk</h2>
-<p>Each page builds on the one before. The details come from Vimma's own user guide, at the same commit as the keys, so the two always agree.</p>
-{{docs_list}}
-
 <h2 id="how-keys-are-written">How keys are written</h2>
 <ul>
   <li><kbd>ctrl+b</kbd> <kbd>v</kbd>: press <kbd>ctrl+b</kbd>, let go, then press <kbd>v</kbd>. The status bar shows <code>prefix</code> while it waits.</li>
   <li><kbd>gg</kbd>: two presses of <kbd>g</kbd>. <kbd>G</kbd> is <kbd>shift+g</kbd>.</li>
   <li>A count before a key repeats it, as in Vim: <kbd>3j</kbd> scrolls three steps.</li>
 </ul>
-
-<h2 id="every-key-is-yours">Every key is yours</h2>
-<p>The defaults follow Vim and tmux, but they are a starting point. Every binding, and the <kbd>ctrl+b</kbd> prefix itself, can be remapped in <code>~/.config/vimma/config.toml</code> using the action names on the <a href="{{root}}keys/">keys page</a> (<a href="{{root}}keys/#remap">an example</a>). On its first launch Vimma writes a fully commented file. It picks up every save, and keeps your last working setup if a save contains a mistake. The whole format is on the <a href="{{root}}docs/config/">config.toml</a> page.</p>
 
 <h2 id="these-pages">Getting around these pages</h2>
 <p>This site has a few keys of its own. Press <kbd>?</kbd> for the list. In the docs, <kbd>]</kbd> and <kbd>[</kbd> go to the next and previous page, and <kbd>/</kbd> searches every page.</p>

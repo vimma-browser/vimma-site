@@ -20,7 +20,6 @@ import {
   type MdSection,
   type RenderOptions,
   findSection,
-  inline,
   parseSections,
   rawBlocks,
   renderBlocks,
@@ -362,7 +361,7 @@ export function buildDocs(rootDir: string): { pages: BuiltDoc[]; index: SearchEn
 
     let sections = "";
     if (!page) {
-      sections = intro.replace("{{docs_list}}", docsList(DOC_PAGES, root));
+      sections = intro;
     } else if (page.slug === "limits") {
       sections = limitsPage(limits, opts);
     } else {
@@ -428,7 +427,7 @@ ${pager(nav, i, root)}
       title,
       group: entry.group,
       headTitle: page ? (page.headTitle ?? title) : "Start here: a tour of Vimma",
-      description: page?.description ?? "Start here: a walk through Vimma's features, in the order you will meet them.",
+      description: page?.description ?? "Start here: what you see first, your first five minutes, and where to go for what you want to do.",
       sources: [introFile, ...fromGuide, ...(hasKeys ? ["data/bindings.json"] : [])],
       body,
     });
@@ -453,12 +452,4 @@ function fullMarkdown(guideMd: string, limitsMd: string, ids: IdMap, source: Sou
     });
   const note = `<!-- Vimma's user guide and known limits, from ${VIMMA_REPO} at ${source.commit} (${source.date}). The site's docs at https://vimma.dev/docs/ are built from the same text. -->`;
   return `${note}\n\n${fix(guideMd, "guide.md").trim()}\n\n${fix(limitsMd, "limits.md").trim()}\n`;
-}
-
-function docsList(pages: DocPage[], root: string): string {
-  const items = pages
-    .filter((p) => p.slug !== "limits" && p.group !== "Get help")
-    .map((p) => `<li><a href="${root}${pageUrl(p.slug)}">${escapeHtml(p.title)}</a>: ${inline(p.description, { link: () => null })}</li>`)
-    .join("\n");
-  return `<ol class="walk">\n${items}\n</ol>`;
 }
