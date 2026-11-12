@@ -28,6 +28,9 @@ export const REDIRECTS: Redirects = {
   "/docs/copy-mode/": "/docs/modes/#copy-some-text",
   // the side panel is a section of "Tabs and the window"
   "/docs/side-panel/": "/docs/tabs/#the-side-panel",
+  // the private workspace and routing are sections of "Workspaces"
+  "/docs/private-workspace/": "/docs/workspaces/#private",
+  "/docs/routing/": "/docs/workspaces/#send-sites",
 };
 
 /** The address a request path is redirected to, or null when it is not a retired page. */
