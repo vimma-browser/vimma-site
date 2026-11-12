@@ -10,10 +10,12 @@ import { readFileSync } from "node:fs";
 import { join, posix } from "node:path";
 
 import { escapeHtml } from "../src/ts/html.js";
+import { type SearchEntry, WORD_SPLIT } from "../src/ts/search.js";
 import { VIMMA_REPO } from "./bindings-types.js";
 import { readBindings } from "./gen-keys.js";
 import { type Block, DOC_PAGES, type DocPage, GUIDE_REWRITES, LIMIT_SECTIONS, STALE_LIMITS, STALE_PREFIXES } from "./docs-pages.js";
 import { keysTables, slug } from "./keys-html.js";
+import { ARCH_INSTALL, fill, readRelease, releaseVars } from "./release.js";
 import {
   type MdSection,
   type RenderOptions,
@@ -42,20 +44,6 @@ export interface BuiltDoc {
   body: string;
 }
 
-export interface SearchEntry {
-  /** page title */
-  p: string;
-  /** section heading ("" for the page itself) */
-  h: string;
-  /** URL from the docs root (docs/), to keep the index small */
-  u: string;
-  /** a short snippet */
-  s: string;
-  /** the section's distinct words, lower case, space-separated, minus those in p, h and s and
-   * those inside a longer word of the list */
-  w: string;
-}
-
 /**
  * The index as the docs pages load it: each page's title and path once, and each entry as an
  * array with only its fragment, so the module repeats no keys, titles or paths. site.ts unpacks
@@ -67,6 +55,8 @@ export interface PackedIndex {
   /** [index into pages, h, the fragment of u ("" or "#id"), s, w] */
   entries: [number, string, string, string, string][];
 }
+
+export type { SearchEntry };
 
 export function packIndex(index: SearchEntry[]): PackedIndex {
   const pages: [string, string][] = [];
@@ -307,16 +297,15 @@ const WEAK = new Set(
   "shows opens keeps closes stays lists takes says leaves changes runs moves asks gets puts adds uses starts follows sees goes makes comes gives brings sets works needs turns".split(" "),
 );
 
-/** How the index splits text into words; site.ts splits the snippet the same way. */
-const WORD_SPLIT = /[\s,;()"“”'’!?]+|\.(?=\s|$)/;
-
 function indexPage(title: string, slugName: string, body: string): SearchEntry[] {
   const parts = body.split(/(?=<h[23] id=")/);
   return parts.flatMap((part, i) => {
     const m = /^<h[23] id="([^"]+)">([\s\S]*?)<\/h[23]>/.exec(part);
     if (i > 0 && !m) return [];
-    // the per-page key tables repeat the keys page, which has its own filter
-    if (m && (m[1] === "default-keys" || m[1]?.startsWith("keys-"))) return [];
+    // the per-page key tables repeat the keys page, which has its own filter, and the per-page
+    // known limits links repeat the known limits page's headings: a search for "limits" would
+    // list every page before the known limits page itself
+    if (m && (m[1] === "default-keys" || m[1] === "known-limits" || m[1]?.startsWith("keys-"))) return [];
     const heading = m ? textOf(m[2] ?? "").replace(/\s*\(\d+\)$/, "") : "";
     // no scheme-qualified URLs in the shipped index: it is data, and `npm run check` keeps the
     // site's JS free of URLs; `example.com` still finds them
@@ -350,6 +339,9 @@ export function buildDocs(rootDir: string): { pages: BuiltDoc[]; index: SearchEn
   const limits = parseSections(limitsMd);
   const keys = readBindings(rootDir);
   const source = JSON.parse(read("data/docs/source.json")) as Source;
+  // the release's facts ({{version}}, {{arch_install}}): build.ts fills them in each page once
+  // it is laid out, so the index text is filled here, or it would hold the placeholders
+  const vars = { ...releaseVars(readRelease(rootDir)), arch_install: escapeHtml(ARCH_INSTALL) };
 
   const nav: NavEntry[] = [START, ...DOC_PAGES.map((p) => ({ ...p, nav: p.nav ?? p.title }))];
 
@@ -442,7 +434,8 @@ ${pager(nav, i, root)}
       sources: [introFile, ...fromGuide, ...(hasKeys ? ["data/bindings.json"] : [])],
       body,
     });
-    index.push(...indexPage(title, entry.slug, page ? content : sections.replace(/^[\s\S]*?(?=<h1)/, "")));
+    const indexed = page ? content : sections.replace(/^[\s\S]*?(?=<h1)/, "");
+    index.push(...indexPage(title, entry.slug, fill(indexed, vars, `docs index: ${entry.slug || "start-here"}`)));
   });
 
   return { pages, index, source, markdown: fullMarkdown(guideMd, limitsMd, ids, source) };
