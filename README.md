@@ -227,8 +227,8 @@ hourly run picks the release up.
   Cloudflare's builders, which share GitHub's unauthenticated rate limit, cannot fail it. It
   fails if `data/release.json` is missing or malformed.
 - `.github/workflows/release-sync.yml` runs the sync on Vimma's `vimma-release` dispatch, every
-  hour as a fallback, and by hand (Actions → release-sync → Run workflow, with an optional tag). When `data/` changes, a read-only job builds
-  and checks the site, and a second job, which holds the write token and runs no npm code, opens
+  hour as a fallback, and by hand (Actions → release-sync → Run workflow, with an optional tag). When `data/` changes, a read-only job runs
+  the gates of `ci.yml`'s `build` check (the build, `npm test` and `npm run check`), and a second job, which holds the write token and runs no npm code, opens
   or updates the pull request `release-sync/<tag>`. A push made with the
   workflow's own token starts no workflows, so it starts `ci.yml` on the branch itself
   (`workflow_dispatch`). The pull request's own `ci` run waits for approval, since

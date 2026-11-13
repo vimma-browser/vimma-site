@@ -294,3 +294,14 @@ test("report: a good run closes the open issue", () => {
   assert.deepEqual(issueCalls(r).map((c) => c.split(" ").slice(0, 4).join(" ")), ["gh issue close 7"]);
   assert.match(r.body, /\(?https:\/\/github\.com\/vimma-browser\/vimma-site\/actions\/runs\/123 \(/);
 });
+
+test("build and check: the sync runs every gate of ci.yml's required build check", () => {
+  // A sync whose pull request then fails `build` says it is good and sets auto-merge, and only
+  // the report's issue tells (v0.1.19). npm run wording leaves data/docs/ out, so a sync cannot
+  // change its result.
+  const ci = readFileSync(".github/workflows/ci.yml", "utf8");
+  const gates = [...ci.matchAll(/run: (npm (?:test|run [\w:-]+))\s*$/gm)].map((m) => m[1] ?? "").filter((c) => c !== "npm run wording");
+  assert.deepEqual(gates.sort(), ["npm run build", "npm run check", "npm test"]);
+  const script = stepScript("Build and check");
+  for (const gate of gates) assert.match(script, new RegExp(`\\b${gate}\\b`), gate);
+});

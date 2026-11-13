@@ -134,16 +134,17 @@ jobs:
         id: build
         if: steps.sync.outputs.changed == 'true'
         run: |
+          # The gates of ci.yml's required `build` check (its wording check leaves data/docs/ out).
           # A failure is reported in the pull request, which then stays red and does not merge;
           # it does not stop the workflow.
-          if { npm run build && npm run check; } > build.log 2>&1; then
+          if { npm run build && npm test && npm run check; } > build.log 2>&1; then
             echo "ok=true" >> "$GITHUB_OUTPUT"
           else
             echo "ok=false" >> "$GITHUB_OUTPUT"
             echo "::warning::the site does not build with this release; see the pull request"
           fi
           cat build.log
-          grep -E '^(Error: |✗ |\(the copy)' build.log > build-errors.log || tail -n 20 build.log > build-errors.log
+          grep -E '^(Error: |✗ |\(the copy)|not ok |✖ |  error: )' build.log > build-errors.log || tail -n 20 build.log > build-errors.log
 
       - if: steps.sync.outputs.changed == 'true'
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -261,8 +262,8 @@ jobs:
             echo "\`docs/bindings.json\` at the tag's commit, vimma-browser/vimma@$commit, into \`data/\`."
             echo
             if [[ "$BUILD_OK" == "true" ]]; then
-              echo "The site builds and passes \`npm run check\` with it. Auto-merge (squash) is on: it"
-              echo "merges once the required checks pass."
+              echo "The site builds and passes \`npm test\` and \`npm run check\` with it. Auto-merge"
+              echo "(squash) is on: it merges once the required checks pass."
             else
               echo "**The site does not build with this release, so this pull request stays red and is"
               echo "not set to merge.** Usually a guide heading, paragraph or limits section that"

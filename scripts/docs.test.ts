@@ -80,7 +80,10 @@ test("the help page carries the guide's FAQ, its links pointing at the docs page
   assert.match(docs.faq, /coredumpctl/);
   // the help page sits one level down, so a docs link starts with ../docs/
   assert.match(docs.faq, /href="\.\.\/docs\/tabs\/#tab-search-and-tab-rename"/);
-  assert.doesNotMatch(docs.faq, /href="#(?!faq)/);
+  // a same-page link stays only for a heading of the FAQ itself (its "Reporting a crash", say);
+  // a link to any other guide heading goes to the docs page that shows it
+  const own = new Set([...docs.faq.matchAll(/ id="([^"]+)"/g)].map((m) => m[1]));
+  for (const m of docs.faq.matchAll(/href="#([^"]*)"/g)) assert.ok(own.has(m[1]), `#${m[1]} is not a heading of the FAQ`);
 });
 
 test("a guide link to the FAQ points at the help page, from a docs page, the help page and llms-full.txt", () => {
