@@ -312,7 +312,9 @@ Keep the tone fair: no project is put down.
 - Search: the build writes `assets/js/docs-index.js` (each section's heading, a snippet and its
   distinct words; no full URLs, only paths under `docs/`), which the docs pages import on first
   use. It covers the help, install and about pages too (`SITE_PAGES` in `scripts/docs.ts`), so a
-  search for "update", "uninstall" or "bug" finds them. No server, no third party.
+  search for "update", "uninstall" or "bug" finds them. Where a docs section and one of those
+  pages score the same, the page comes first (`rank` in `src/ts/search.ts`), so a new release's
+  guide that mentions the word once more does not push it down. No server, no third party.
 - The help page (`/support/`) shows the guide's "FAQ and troubleshooting" section in full
   (`{{faq}}`), and a guide link to it points there.
 - `assets/img/` holds the logo (with its tagline) as AVIF, WebP and PNG at 256 and 512 px, and

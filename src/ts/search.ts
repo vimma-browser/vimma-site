@@ -40,12 +40,17 @@ export function score(e: SearchEntry, terms: string[]): number {
   return n;
 }
 
-/** The entries that hold every term, best first, at most `limit` of them. */
+/** Whether an entry is on the help, install or about page (its URL leaves docs/). */
+const sitePage = (e: SearchEntry): number => (e.u.startsWith("../") ? 1 : 0);
+
+/** The entries that hold every term, best first, at most `limit` of them. On a tie, the help,
+ * install and about pages come first: the index lists them after every docs page, so in index
+ * order one more guide paragraph with the word, from a synced release, would push them down. */
 export function rank(index: SearchEntry[], terms: string[], limit = 12): SearchEntry[] {
   return index
     .map((e) => [e, score(e, terms)] as const)
     .filter(([, n]) => n > 0)
-    .sort((a, b) => b[1] - a[1])
+    .sort((a, b) => b[1] - a[1] || sitePage(b[0]) - sitePage(a[0]))
     .slice(0, limit)
     .map(([e]) => e);
 }
