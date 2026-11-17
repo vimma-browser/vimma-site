@@ -11,7 +11,6 @@
     "rpm": "vimma-0.1.20-1.x86_64.rpm",
     "appimage": "vimma-0.1.20-x86_64.AppImage",
     "tarball": "vimma-0.1.20-linux-x86_64.tar.xz",
-    "dmg": "vimma-0.1.18-macos-aarch64.dmg"
-  },
-  "dmg_from": "v0.1.18"
+    "dmg": "vimma-0.1.20-macos-aarch64.dmg"
+  }
 }
