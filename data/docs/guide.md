@@ -1251,7 +1251,7 @@ keys. A `[panel]` after a key means it works only in that mode.
 
 | Keys                                                                                    | What it does                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `j` / `k`, `h` / `l`                                                                    | Normal mode: scroll down / up, left / right by a step. A count repeats: `3j`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `j` / `k`, `h` / `l`                                                                    | Normal mode: scroll down / up, left / right by a step, 60 CSS pixels unless `[scroll] step` in [config.toml](#configtoml) sets another. A count repeats: `3j`.                                                                                                                                                                                                                                                                                                                                                                                                           |
 | `d` / `u`, `ctrl+d` / `ctrl+u`                                                          | Normal mode: scroll half a page down / up, as in Vimium and Vim. `ctrl+e` / `ctrl+y` scroll a step down / up, as `j` / `k`. In insert mode the page gets them; in a text field `ctrl+u` deletes to the line's start.                                                                                                                                                                                                                                                                                                                                                     |
 | `gg` / `G`                                                                              | Normal mode: go to the top / bottom of the page.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | `H` / `L`, `ctrl+o` / `ctrl+i`, `alt+left` / `alt+right`, `ctrl+[` / `ctrl+]`           | Back / forward in the page's history (in a split, the focused pane's), `ctrl+o` / `ctrl+i` as Vim's jump list. `H`, `L`, `ctrl+o`, `ctrl+i`, `ctrl+[` and `ctrl+]` in normal mode; Firefox's `alt+left` / `alt+right` in every mode, the address bar too. On macOS these two are Firefox's `cmd+left` / `cmd+right` and `cmd+[` / `cmd+]`, in every mode ([On macOS](#on-macos-the-alt-keys-are-cmd-keys)). A count moves that many pages, stopping at the first or last: `3H`.                                                                                          |
@@ -1336,8 +1336,14 @@ restart. To show the tab you are on beside others, start another split from the 
 ([Several splits](#several-splits)).
 
 A new tab you open while the split shows (`ctrl+t`, `ctrl+b c`, `t`, `:tabnew`, `P`, a link
-opened in a new foreground tab, also with `f`, or a link from another app) opens in the focused
-pane instead: the split stays, and the tab that pane showed stays open in the workspace.
+opened in a new foreground tab, also with `f`, or a link from another app) shows alone too, right
+after the split's tabs, so the split you arranged is never broken up: it waits hidden, with its
+panes, sizes and focused pane, until `]s`, `ctrl+b S` or any of its tabs brings it back. A tab
+opened from a link on one of the split's pages goes where Firefox puts it, after the split and
+after the tabs already opened from that page, and a closed tab you reopen with `ctrl+shift+t`
+goes back to its old place. To open new tabs in the focused pane instead, set
+`[panes] new_tab = "pane"` in [config.toml](#configtoml): the new tab then takes that pane's
+place, the split stays, and the tab that pane showed stays open in the workspace.
 
 A split made outside Vimma (Firefox's own split-view command, an extension, or a restored
 Firefox session) becomes the workspace's panes: its tabs side by side in its order, at the
@@ -1354,10 +1360,10 @@ panes.
 A workspace can keep several splits, up to 9, and shows one at a time: an editor beside its
 docs, and a second comparison of two pages, without breaking up the first.
 
-- **Starting another split.** Go to a tab that is in no split, so it shows alone and the split
-  waits hidden. Open the side panel (`ctrl+b b`): on a tab shown alone nothing starts marked.
-  Mark two or more tabs with `space` or `V` and press `Enter`; they become a new split, shown at
-  once, and the split you had before waits hidden. A marked tab that was in another split leaves
+- **Starting another split.** Go to a tab that is in no split, or open a new one, so it shows
+  alone and the split waits hidden. Open the side panel (`ctrl+b b`): on a tab shown alone
+  nothing starts marked. Mark two or more tabs with `space` or `V` and press `Enter`; they become
+  a new split, shown at once, and the split you had before waits hidden. A marked tab that was in another split leaves
   it, as `ctrl+b x` would close its pane there; a split left with one pane ends.
 - **Numbers and colours.** Each split has a number, `S1` to `S9`, which it keeps while it exists,
   and the colour of that number from the theme. In the side panel each split's tabs carry a
@@ -1452,8 +1458,9 @@ and it matches a `{` binding (copy mode's `{` and `}`) the same as on a US layou
 a character typed with AltGr or Option as that character, the way `shift` is already part of
 `?` or `G`. A real `alt` chord stays one: `alt+1` is still `alt+1`, and a `ctrl` or `ctrl+alt`
 chord on a key that types its own character (`ctrl+w`, `ctrl+alt+]` on a US layout) keeps its
-modifiers. Windows' `ctrl+alt` stand-in for AltGr counts as AltGr when it types another
-character.
+modifiers. A letter is always its key's own, so `ctrl+alt+letter` works on AZERTY, QWERTZ and
+Dvorak too (`ctrl+alt+z` shows Firefox's sidebar wherever the z is). Windows' `ctrl+alt` stand-in
+for AltGr counts as AltGr when it types another character.
 
 A dead key (`^`, `¨`, `´` on a Finnish layout) types nothing by itself, so it matches no
 binding: GTK reports it as `Dead`. Bindings that use one have a second key for those layouts,
@@ -3326,6 +3333,14 @@ Ubuntu, `clamav-daemon` or `clamd` on others), Vimma asks it through `clamdscan`
 is fast. It does so only when `/etc/clamav/clamd.conf` is root's, clamd listens on a local socket
 (`LocalSocket`, no `TCPSocket`) owned by root or `clamav`, and the config has
 `AlertEncrypted yes` and `AlertExceedsMax yes`, so clamd reports what it cannot look inside.
+clamd must also scan no less than `clamscan` does with ClamAV's defaults: no `Scan*`,
+`Phishing*`, `HeuristicAlerts` or `Bytecode` option may be off, and `OfficialDatabaseOnly` and
+`DisableCertCheck` may not be on. No `Max*` or `PCRE*` limit may be set. Debian's generated
+config sets several (`MaxFileSize 25M`, for one): delete those lines, which is simplest, or set
+the size limits and `MaxScanTime`, `MaxRecursion` and `MaxFiles` to 0 (no limit).
+`BytecodeTimeout` must be at least 10000, `ExcludePath` only `^/proc/` or `^/sys/`, and
+`DatabaseDirectory`, if set, `/var/lib/clamav`; `CVDCertsDirectory` and the `Dev*` options may
+not be set. Then restart clamd (`sudo systemctl restart clamav-daemon`).
 Otherwise, or if clamd fails or its definitions are old, Vimma uses `clamscan`.
 
 On macOS the same rules apply. Vimma looks for `clamscan` and `clamdscan` only in `/usr/bin`
@@ -4215,7 +4230,9 @@ Refresh for the current state. It is an ordinary page, so `j` / `k` scroll it.
 
 **Copy redacted report** (or `:bug`) copies all of that as text, without the binding table's
 defaults, with every URL replaced by `<url>` and your home directory by `~`. It never contains
-page titles or addresses.
+page titles or addresses. Read it before you paste it in a public issue: your user name can still
+be in a path outside your home or in a workspace name
+([what it redacts and its limits](security/22-bug-report.md)).
 
 The licences of Firefox's third-party code are in `about:license`; the third-party code Vimma
 adds (the smol-toml TOML parser, BSD-3-Clause) is listed there too, under Vimma. `vimma-ctl` is
@@ -4290,7 +4307,9 @@ accent = "#ff9e64"
 - **What applies live:** `[keys]`, `[modal]` (leader, `timeout_ms`, per-mode keys, `hint_chars`)
   and `[unbind]`; `[panes] max` (most panes in a workspace, 1 to 16, default 8; it limits new
   splits), `[panes] max_splits` (most splits in a workspace, 1 to 9, default 9;
-  [Several splits](#several-splits)), `[panes] layout` (`"dwindle"` or `"manual"`: where `ctrl+b enter` puts a new pane) and
+  [Several splits](#several-splits)), `[panes] new_tab` (`"alone"`, the default, or `"pane"`:
+  whether a new tab opened during a split shows alone beside it or opens in the focused pane;
+  [Picking a tab during a split](#picking-a-tab-during-a-split)), `[panes] layout` (`"dwindle"` or `"manual"`: where `ctrl+b enter` puts a new pane) and
   `[panes] main_size` (the main-\* presets' main pane, 20 to 80%, default 60); `[sites."<host>"] insert` (`auto`, `never` or `always`: whether a text field on that
   site and its subdomains takes insert mode); `[theme]` `source` (`omarchy` or `file`, the
   built-in palette), `name` (`vimma`, the default, or `tokyo-night`: the built-in palette),
@@ -4303,6 +4322,8 @@ accent = "#ff9e64"
   default: the current workspace's folder; `"toolbar"`; or `"all"`: what the
   [bookmarks panel](#bookmarks) lists and where paths start); `[panel] numbers` (`"absolute"`, the
   default, `"relative"` or `"hybrid"`: the [side panel](#side-panel)'s row numbers);
+  `[scroll] step` (how far `j`, `k`, `h` and `l` scroll, 1 to 2000 CSS pixels, default 60; the
+  next scroll in every tab uses it);
   `[private] placement` (`"swap"`, the
   default: on Hyprland and macOS the [private workspace](#private-workspace) takes the Vimma
   window's place;
@@ -4323,7 +4344,7 @@ accent = "#ff9e64"
   (`true`, the default, or `false`: no [update check](#updates) at all).
 - **Schema:** `schema = 2` at the top enables `[panes]`, `[sites]`, `[[routes]]`, `[routing]`,
   `[firefox]`,
-  `[bookmarks]`, `[panel]`, `[private]`, `[mcp]`, `[search]`, `[ui]`, `[updates]`, `[agent]`,
+  `[bookmarks]`, `[panel]`, `[scroll]`, `[private]`, `[mcp]`, `[search]`, `[ui]`, `[updates]`, `[agent]`,
   `hint_chars`, `insert_editing`, `[theme] name` and `appearance`. Every key is in the template
   `:config` writes, with its default commented out (the same as
   [`defaults.toml`](../packages/vimma-core/defaults.toml) in the source).
