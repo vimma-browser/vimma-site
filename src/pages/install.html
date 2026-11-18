@@ -66,5 +66,5 @@
 <pre class="code"><span class="p">$ </span>npm start               <span class="c"># your build, with its own profile</span>
 <span class="p">$ </span>npm start -- --fresh    <span class="c"># a throwaway profile instead</span></pre>
 <p><code>npm start</code> runs Vimma with a profile of its own (<code>~/.cache/vimma-dev-profile</code>), so your Firefox profile is never touched. Press <kbd>ctrl+b</kbd> <kbd>?</kbd> to see every binding.</p>
-<p>To update a source build, pull the latest <code>main</code>, then run <code>npm run import</code> and <code>npm run build</code> again. When the pull moves Vimma to a new Firefox release, <code>npm run import</code> refuses the old source: run <code>npx surfer download</code> and <code>npm run verify-source</code> first.</p>
+<p>To update a source build, pull the latest <code>main</code>, then run <code>npm run import</code> and <code>npm run build</code> again. When the pull moves Vimma to a new Firefox release, <code>npm run import</code> refuses the old source: run <code>npx surfer download --force</code> and <code>npm run verify-source</code> first. <code>--force</code> deletes <code>engine/</code> with its build, so the next <code>npm run build</code> is a full one.</p>
 
