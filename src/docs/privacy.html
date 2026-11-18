@@ -20,11 +20,11 @@
 
 <h2 id="still-contacts">Still contacts Mozilla</h2>
 
-<p>Very little. Firefox's updater, which the tarball uses to update itself, asks Vimma's own server, <code>updates.vimma.dev</code>, and system add-on updates are off, so Vimma never asks Mozilla's update server for a Firefox build. Vimma's update check fetches a small file from the same server and refuses it unless it is signed with a key built into Vimma. The one request left there is for the OpenH264 and Widevine plugins, which video calls and DRM video need.</p>
+<p>Very little. Firefox's updater, which the tarball uses to update itself, asks Vimma's own server, <code>updates.vimma.dev</code>, and system add-on updates are off, so Vimma never asks Mozilla's update server for a Firefox build. Vimma's update check fetches a small file from the same server and refuses it unless it is signed with a key built into Vimma. The one request left to Mozilla's update server is for the OpenH264 and Widevine plugins, which video calls and DRM video need. The services kept as in Firefox above (Remote Settings with CRLite, the add-on blocklist, Sync and addons.mozilla.org) still reach Mozilla.</p>
 
 <h2 id="sites-see-firefox">Sites see Firefox</h2>
 
-<p>Vimma sends Firefox's user agent, byte for byte, and add-ons see Firefox's version, so nothing treats it as a different browser.</p>
+<p>Vimma sends Firefox's user agent, byte for byte, and add-ons see Firefox's version number, so sites treat it as Firefox. An add-on that asks for the browser's name gets <code>Vimma</code>.</p>
 
 <h2 id="change-it-back">Change any of it back</h2>
 

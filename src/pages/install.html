@@ -1,7 +1,7 @@
 <!--{"title": "Install Vimma · Linux x86_64, Arch Linux and macOS", "short": "install", "out": "install/", "description": "Install Vimma on Linux x86_64: one command on Arch Linux, or a .deb, .rpm, AppImage or tarball from the latest release. On a Mac with Apple Silicon: Homebrew or a .dmg. Or build it from source."}-->
 <p class="eyebrow">Vimma {{version}} · Linux x86_64 · macOS</p>
 <h1>Install</h1>
-<p>Vimma <code>{{version}}</code>, on Firefox {{firefox}}, is released for <strong>Linux x86_64</strong> and for <strong>macOS on Apple Silicon</strong> (M1 or later). There is no build for Intel Macs or Windows.</p>
+<p>Vimma <code>{{version}}</code>, on Firefox {{firefox}}, is released for <strong>Linux x86_64</strong> and for <strong>macOS 15 (Sequoia) or later on Apple Silicon</strong> (M1 or later). There is no build for Intel Macs or Windows.</p>
 
 <h2 id="arch">Arch Linux</h2>
 <p>Run as your normal user, from any directory. The same command installs and updates:</p>
@@ -23,7 +23,7 @@
 
 <h2 id="macos">macOS</h2>
 {{dmg_note}}
-<p>For Macs with Apple Silicon. With <a href="https://brew.sh/">Homebrew</a>, install the cask from Vimma's own tap:</p>
+<p>For Macs with Apple Silicon, on macOS 15 (Sequoia) or later; Homebrew refuses the cask on an older macOS. With <a href="https://brew.sh/">Homebrew</a>, install the cask from Vimma's own tap:</p>
 <div class="cmdbox">
   <pre class="code wrap" id="brew-cmd"><span class="p">$ </span>brew install --cask vimma-browser/tap/vimma</pre>
   <button type="button" class="copy" data-copy="brew-cmd" aria-live="polite" data-js-only hidden>copy</button>
@@ -31,7 +31,7 @@
 <p>Homebrew checks the download against the checksum the cask pins, puts Vimma in Applications and <code>vimma</code> on your <code>PATH</code>. <code>brew upgrade --cask vimma</code> updates it, <code>brew uninstall --cask vimma</code> removes it and keeps your profile, and <code>brew uninstall --zap --cask vimma</code> removes your profiles, caches and preferences as well; your <code>~/.config/vimma/</code> stays.</p>
 <p>Without Homebrew, download <code>{{dmg}}</code> from the <a href="https://github.com/vimma-browser/vimma/releases/tag/{{dmg_tag}}">Vimma {{dmg_version}} release</a>, open it and drag Vimma into Applications. Its checksum is in <code>SHA256SUMS-macos</code>, signed like the Linux files.</p>
 <p>Vimma is signed with its Apple Developer ID and notarised by Apple, so it opens like any other app: the first time, macOS only asks whether to open an app downloaded from the internet.</p>
-<p>On a Mac, passkeys do not work yet, and your profile lives in <code>~/Library/Application Support/Vimma/</code>.</p>
+<p>On a Mac, passkeys stored in macOS (iCloud Keychain) do not work yet, and your profile lives in <code>~/Library/Application Support/Vimma/</code>.</p>
 
 <h2 id="updating">Updates</h2>
 <p>Since 0.1.2, Vimma checks for a new release every 12 hours, or at once with <code>:update</code>. When one is out, the status bar shows <code>⇡</code> and its version (in red for a security release), and <code>:update</code> shows the command for how you installed Vimma; each update file is checked with SHA-512. The AppImage and the tarball update themselves: the AppImage replaces its own file with the new release, the tarball installs it through Firefox's updater, and either runs the new version from the next start. The other packages only tell you, so run that command: on Arch Linux, the command above again; otherwise, install the newer <code>.deb</code> or <code>.rpm</code> over the old one (there is no Vimma repository for apt, dnf or zypper, so a system upgrade does not update it). A 0.1.1 install has no update check, so update it this way by hand once.</p>
@@ -46,7 +46,7 @@
 <ul>
   <li>Linux x86_64, for the macOS build too: it is cross-compiled on Linux (<a href="https://github.com/vimma-browser/vimma/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a> has the steps).</li>
   <li>About 35 GB of free disk: the Firefox source and full build take 27 GB, the compiler cache 6.8 GB, Mozilla's toolchains 3.1 GB and the source download 0.8 GB.</li>
-  <li>Node.js 20 or later, Python 3, git.</li>
+  <li>Node.js 22.18 or later in the 22 line, or 24.3 or later (<code>^22.18.0 || &gt;=24.3.0</code>); Python 3.10 to 3.14; git; and <code>gpgv</code>, which checks the Firefox source against Mozilla's signature.</li>
   <li>Time: about 40 minutes for the first full build on a 16-thread machine, plus the Firefox source download.</li>
 </ul>
 
@@ -54,16 +54,17 @@
 <pre class="code"><span class="p">$ </span>git clone https://github.com/vimma-browser/vimma.git &amp;&amp; cd vimma
 <span class="p">$ </span>npm ci                  <span class="c"># dev tools, including Surfer</span>
 <span class="p">$ </span>npx surfer download     <span class="c"># Firefox source into engine/</span>
+<span class="p">$ </span>npm run verify-source   <span class="c"># check it against Mozilla's signed checksums</span>
 <span class="p">$ </span>npx surfer bootstrap    <span class="c"># Mozilla's toolchains into ~/.mozbuild (once)</span>
 <span class="p">$ </span>npm run import          <span class="c"># apply Vimma's files and patches</span>
-<span class="p">$ </span>npx surfer build        <span class="c"># full build</span></pre>
+<span class="p">$ </span>npm run build           <span class="c"># full build</span></pre>
 
 <h3 id="safebrowsing">Google Safe Browsing</h3>
-<p>Google Safe Browsing (phishing and malware protection) needs an API key, which is not in the repository. A build without one works, but Safe Browsing is off. To turn it on, get a free key from Google and save it as <code>~/.config/vimma/keys/safebrowsing</code> before building (<a href="https://github.com/vimma-browser/vimma/blob/main/docs/runbook.md#google-safe-browsing-key-spec-m0-safebrowsing-key">the runbook</a> has the steps).</p>
+<p>Google Safe Browsing (phishing and malware protection) needs an API key, which is not in the repository. A build without one works, but Safe Browsing is off. To turn it on, get a free key from Google and save it as <code>~/.config/vimma/keys/safebrowsing</code> before building (<a href="https://github.com/vimma-browser/vimma/blob/main/docs/runbook/ci-google-safe-browsing-key.md">the runbook</a> has the steps).</p>
 
 <h3 id="run">Run</h3>
 <pre class="code"><span class="p">$ </span>npm start               <span class="c"># your build, with its own profile</span>
 <span class="p">$ </span>npm start -- --fresh    <span class="c"># a throwaway profile instead</span></pre>
 <p><code>npm start</code> runs Vimma with a profile of its own (<code>~/.cache/vimma-dev-profile</code>), so your Firefox profile is never touched. Press <kbd>ctrl+b</kbd> <kbd>?</kbd> to see every binding.</p>
-<p>To update a source build, pull the latest <code>main</code>, then run <code>npm run import</code> and <code>npx surfer build</code> again.</p>
+<p>To update a source build, pull the latest <code>main</code>, then run <code>npm run import</code> and <code>npm run build</code> again. When the pull moves Vimma to a new Firefox release, <code>npm run import</code> refuses the old source: run <code>npx surfer download --force</code> and <code>npm run verify-source</code> first. <code>--force</code> deletes <code>engine/</code> with its build, so the next <code>npm run build</code> is a full one.</p>
 

@@ -1,5 +1,5 @@
 <!-- Hand-written guide for the install page; the build adds the keys table and the details from guide.md. -->
-<p class="lead">Install Vimma from a release on Linux x86_64 or on a Mac with Apple Silicon, or build it from source, then start it with a profile of its own, so your Firefox profile is never touched.</p>
+<p class="lead">Install Vimma from a release on Linux x86_64 or on a Mac with Apple Silicon and macOS 15 or later, or build it from source, then start it with a profile of its own, so your Firefox profile is never touched.</p>
 
 <h2 id="install-it">Install it</h2>
 
@@ -9,7 +9,7 @@
 
 <p>On other distributions, the <a href="https://github.com/vimma-browser/vimma/releases/latest">latest release</a> has a <code>.deb</code>, an <code>.rpm</code>, an AppImage and a tarball. Vimma tells you in the status bar when a newer release is out, and <code>:update</code> shows the command to install it; only the AppImage and the tarball update themselves. The <a href="{{root}}install/">install page</a> has the details, and <a href="#installing">Installing</a>, below, explains how to verify a download.</p>
 
-<p>On a Mac with Apple Silicon, install it with Homebrew, or open the release's <code>.dmg</code> and drag Vimma into Applications:</p>
+<p>On a Mac with Apple Silicon and macOS 15 (Sequoia) or later, install it with Homebrew, or open the release's <code>.dmg</code> and drag Vimma into Applications:</p>
 
 <pre class="code wrap">brew install --cask vimma-browser/tap/vimma</pre>
 
@@ -19,7 +19,7 @@
 
 <h2 id="build-it">Or build it</h2>
 
-<p>The commands, requirements and timings are on the <a href="{{root}}install/#source">install page</a>. In short: Linux x86_64, about 35 GB of free disk, Node.js, Python 3 and git, and about 40 minutes for the first build.</p>
+<p>The commands, requirements and timings are on the <a href="{{root}}install/#source">install page</a>. In short: Linux x86_64, about 35 GB of free disk, Node.js 22.18 or later in the 22 line or 24.3 or later, Python 3.10 to 3.14, git and <code>gpgv</code>, and about 40 minutes for the first build.</p>
 
 <h2 id="start-it">Start a source build</h2>
 

@@ -35,20 +35,21 @@
 
 <h2 id="vim-keys-in-fields">Vim's keys in text fields</h2>
 
-<p>While you type, in a page's field, the URL bar, the <kbd>:</kbd> line or a filter, <kbd>ctrl+w</kbd> deletes the word before the caret, <kbd>ctrl+u</kbd> the rest of the line before it, and <kbd>ctrl+h</kbd> one character. <kbd>ctrl+z</kbd> undoes them. A page with its own use for the key, such as a web terminal, keeps it. Turn them off with <code>insert_editing = false</code> under <code>[modal]</code>.</p>
+<p>While you type, in a page's field, the URL bar, the <kbd>:</kbd> line or a filter, <kbd>ctrl+w</kbd> deletes the word before the caret, <kbd>ctrl+u</kbd> the rest of the line before it, and <kbd>ctrl+h</kbd> one character. <kbd>ctrl+z</kbd> undoes them. <kbd>ctrl+j</kbd> and <kbd>ctrl+m</kbd> are <kbd>Enter</kbd> there, except in the side panel's filters; in normal mode they stay web search and mute. A page with its own use for the key, such as a web terminal, keeps it. Turn them off with <code>insert_editing = false</code> under <code>[modal]</code>.</p>
 
 <h2 id="choose-your-own">Choose your own</h2>
 
 <p>The list is yours in <a href="{{root}}docs/config/">config.toml</a>. Give a shortcut back to Firefox, or switch off every Firefox shortcut except a few:</p>
 
-<pre class="code">[firefox]
+<pre class="code">schema = 2<span class="c">                  # the first line; [firefox] needs it</span>
+
+[firefox]
 enable = [&quot;ctrl+w&quot;]<span class="c">        # ctrl+w closes the tab again, even in a text field</span>
 
-<span class="c"># or: only ctrl+t, ctrl+l (and ctrl+q) stay Firefox's</span>
-<span class="c"># disable = &quot;all&quot;</span>
+<span class="c"># or: give back only ctrl+t and ctrl+l</span>
 <span class="c"># enable = [&quot;ctrl+t&quot;, &quot;ctrl+l&quot;]</span></pre>
 
-<p><code>about:vimma</code> lists every Firefox shortcut that is off right now.</p>
+<p><code>about:vimma</code> lists the Firefox shortcuts that are on right now, under "Firefox shortcuts on"; with none on, it gives the number that are off.</p>
 
 <h2 id="your-add-ons">Your add-ons</h2>
 
