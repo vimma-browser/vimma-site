@@ -54,6 +54,8 @@ export const LIMIT_SECTIONS = [
   "Add-ons",
   "Panes",
   "Privacy, security and services",
+  "Agents (MCP)",
+  "Vimma's own agent",
   "Compatibility and versions",
   "Platforms and packaging",
 ];
@@ -63,10 +65,7 @@ export const LIMIT_SECTIONS = [
  * matched by their opening words. Each one is reported at build time. Empty while limits.md and
  * the guide agree.
  */
-export const STALE_LIMITS: string[] = [
-  // Pending notarisation and no macOS update notices: the guide says otherwise since 0.1.11.
-  "A macOS release is signed with Vimma's Developer ID and notarised only once",
-];
+export const STALE_LIMITS: string[] = [];
 
 /** limits.md bullet prefixes that are out of date upstream and are dropped from the text. */
 export const STALE_PREFIXES: string[] = [];
@@ -227,12 +226,13 @@ export const DOC_PAGES: DocPage[] = [
     title: "Agents and vimma-ctl",
     headTitle: "Agents and vimma-ctl: local AI agents in a workspace of their own, with your consent",
     group: "Use it with AI agents",
-    description: "Let Vimma's own agent or a local AI agent through MCP use one workspace of its own, asking you first and again before it pays or sends a form; and script Vimma with vimma-ctl.",
+    description: "Let Vimma's own agent or a local AI agent through MCP use one workspace of its own, asking you first and again at checkpoints such as paying and sending a form; and script Vimma with vimma-ctl.",
     blocks: [
       { guide: "Agent workspace", only: true },
       { guide: "What a grant covers" },
       { guide: "What Vimma protects, and what it does not" },
       { keys: ["Agents"] },
+      { limits: ["Agents (MCP)", "Vimma's own agent"] },
     ],
     anchors: [
       "vimmas-own-agent",
@@ -259,7 +259,7 @@ export const DOC_PAGES: DocPage[] = [
     title: "Known limits",
     headTitle: "Known limits of pre-alpha Vimma",
     group: "Trust and limits",
-    description: "Every known gap in Vimma today, one line each: features, panes, add-ons, privacy, compatibility and platforms.",
+    description: "Every known gap in Vimma today, one line each: features, panes, add-ons, privacy, agents, compatibility and platforms.",
     blocks: [],
   },
 ];
