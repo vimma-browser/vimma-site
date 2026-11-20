@@ -224,9 +224,9 @@ export const DOC_PAGES: DocPage[] = [
   {
     slug: "agent-workspace",
     title: "Agents and vimma-ctl",
-    headTitle: "Agents and vimma-ctl: local AI agents in a workspace of their own, with your consent",
+    headTitle: "Agents and vimma-ctl: AI agents in a workspace of their own, with your consent",
     group: "Use it with AI agents",
-    description: "Let Vimma's own agent or a local AI agent through MCP use one workspace of its own, asking you first and again at checkpoints such as paying and sending a form; and script Vimma with vimma-ctl.",
+    description: "Let Vimma's own agent, or an AI agent such as Claude Code through MCP, use one workspace of its own, asking you first and again at checkpoints such as paying and sending a form; and script Vimma with vimma-ctl.",
     blocks: [
       { guide: "Agent workspace", only: true },
       { guide: "What a grant covers" },
