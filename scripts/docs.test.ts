@@ -201,7 +201,8 @@ test("the agent page stays short: the deep material is linked in the guide", () 
   const agents = docs.pages.find((p) => p.slug === "agent-workspace")?.body ?? "";
   const article = /<article[\s\S]*<\/article>/.exec(agents)?.[0] ?? "";
   const words = textOf(article).split(/\s+/).filter(Boolean).length;
-  assert.ok(words <= 4500, `${words} words`);
+  // 5000, not 4500: v0.1.22's guide grew the three sections the page copies under Details.
+  assert.ok(words <= 5000, `${words} words`);
   for (const id of ["choosing-a-model-for-the-agent-chat", "using-an-agent-cli-in-the-chat-window", "running-an-agent-cli-headless", "when-to-use-playwright-instead", "timeouts-in-agent-tools", "downloads-from-the-agent-workspace", "virus-scanning-with-clamav", "moving-around-a-page"]) {
     assert.match(agents, new RegExp(`href="https://github\\.com/vimma-browser/vimma/blob/[^"]+/docs/guide\\.md#${id}"`), id);
   }
