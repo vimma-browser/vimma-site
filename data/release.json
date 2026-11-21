@@ -1,16 +1,16 @@
 {
   "repo": "https://github.com/vimma-browser/vimma",
-  "tag": "v0.1.21",
-  "version": "0.1.21",
-  "firefox": "160.0",
-  "commit": "bb3ce4dd0b8542cf9ea68086af4cacd659829e9f",
-  "published": "2026-11-17",
-  "url": "https://github.com/vimma-browser/vimma/releases/tag/v0.1.21",
+  "tag": "v0.1.22",
+  "version": "0.1.22",
+  "firefox": "160.0.1",
+  "commit": "1134cbe30012eeac0beae0c721ee7a60b3a1fd9d",
+  "published": "2026-11-20",
+  "url": "https://github.com/vimma-browser/vimma/releases/tag/v0.1.22",
   "assets": {
-    "deb": "vimma_0.1.21_amd64.deb",
-    "rpm": "vimma-0.1.21-1.x86_64.rpm",
-    "appimage": "vimma-0.1.21-x86_64.AppImage",
-    "tarball": "vimma-0.1.21-linux-x86_64.tar.xz",
-    "dmg": "vimma-0.1.21-macos-aarch64.dmg"
+    "deb": "vimma_0.1.22_amd64.deb",
+    "rpm": "vimma-0.1.22-1.x86_64.rpm",
+    "appimage": "vimma-0.1.22-x86_64.AppImage",
+    "tarball": "vimma-0.1.22-linux-x86_64.tar.xz",
+    "dmg": "vimma-0.1.22-macos-aarch64.dmg"
   }
 }

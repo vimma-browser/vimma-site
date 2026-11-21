@@ -312,7 +312,7 @@
         },
         {
           "name": "select_tab_9",
-          "description": "Jump to tab 9 in this workspace",
+          "description": "Jump to tab 9 in this workspace; tab 10 and above: {N}gt or :tab N",
           "keys": [
             {
               "keys": "ctrl+b 9",
@@ -408,6 +408,23 @@
               ]
             }
           ]
+        },
+        {
+          "name": "tabline_hint",
+          "description": "Jump to a tab by its label in the tab line (with a count: tab N)",
+          "keys": [
+            {
+              "keys": "gb",
+              "chords": [
+                "gb"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "toggle_tabline",
+          "description": "Show / hide the tab line",
+          "keys": []
         }
       ]
     },
@@ -1486,7 +1503,7 @@
         },
         {
           "name": "suggestion_next",
-          "description": "Next suggestion in the page's list",
+          "description": "Next suggestion in an open list",
           "keys": [
             {
               "keys": "ctrl+n",
@@ -1494,17 +1511,31 @@
                 "ctrl+n"
               ],
               "mode": "insert"
+            },
+            {
+              "keys": "ctrl+j",
+              "chords": [
+                "ctrl+j"
+              ],
+              "mode": "insert"
             }
           ]
         },
         {
           "name": "suggestion_prev",
-          "description": "Previous suggestion in the page's list",
+          "description": "Previous suggestion in an open list",
           "keys": [
             {
               "keys": "ctrl+p",
               "chords": [
                 "ctrl+p"
+              ],
+              "mode": "insert"
+            },
+            {
+              "keys": "ctrl+k",
+              "chords": [
+                "ctrl+k"
               ],
               "mode": "insert"
             }
@@ -3077,6 +3108,11 @@
           ]
         },
         {
+          "name": "panel_close_active_tab",
+          "description": "Close the tab the window shows, not the highlighted row's; the panel stays open",
+          "keys": []
+        },
+        {
           "name": "panel_select_1",
           "description": "Select row 1",
           "keys": []
@@ -3151,6 +3187,16 @@
               ]
             }
           ]
+        },
+        {
+          "name": "open_bookmark",
+          "description": "Open a bookmark by title (picker; runs a bookmarklet)",
+          "keys": []
+        },
+        {
+          "name": "open_bookmark_tab",
+          "description": "Open a bookmark by title in a new tab (picker)",
+          "keys": []
         },
         {
           "name": "bookmarks_collapse",
@@ -3323,6 +3369,16 @@
         {
           "name": "theme_appearance",
           "description": "Built-in theme: dark, light or the system's (:theme)",
+          "keys": []
+        },
+        {
+          "name": "site_unbind",
+          "description": "Give keys to this site's page (:siteunbind)",
+          "keys": []
+        },
+        {
+          "name": "site_bind",
+          "description": "Give keys back to Vimma on this site (:sitebind)",
           "keys": []
         }
       ]
