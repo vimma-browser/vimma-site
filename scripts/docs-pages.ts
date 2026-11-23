@@ -197,13 +197,10 @@ export const DOC_PAGES: DocPage[] = [
     group: "Make it yours",
     description: "Options, key bindings, workspaces and colours in one TOML file, reloaded as you save; your Omarchy theme, followed live.",
     blocks: [
-      { guide: "config.toml" },
-      { guide: "Colours and themes" },
-      { guide: "Settings (about:config)" },
-      { guide: "about:vimma" },
       { keys: ["Config"] },
       { limits: ["Features"] },
     ],
+    anchors: ["configtoml", "search-engines", "aboutvimma", "settings-aboutconfig", "colours-and-themes"],
   },
   {
     slug: "firefox-shortcuts",

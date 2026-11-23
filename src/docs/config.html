@@ -1,31 +1,33 @@
-<!-- Hand-written guide for the config page; the build adds the keys table and the details from guide.md. -->
-<p class="lead">Everything you can change about Vimma's keys, behaviour and colours lives in one file: <code>~/.config/vimma/config.toml</code>. Until you change something in it, you get the defaults.</p>
+<!-- Hand-written guide for the config page; the build adds the keys table and the limits. -->
+<p class="lead" id="configtoml"><code>~/.config/vimma/config.toml</code>. Created on a profile's first run with every default commented out. Save, and it applies within 2 s. <code>:config</code> opens it.</p>
 
 <h2 id="edit-the-file">Edit the file</h2>
 
-<ol class="steps-list">
-  <li>On a profile's first launch Vimma creates the file with every default written out and commented, so at first it changes nothing. The status bar reports <code>created ~/.config/vimma/config.toml</code> once. A file you already have is never touched, and <code>:config</code> shows it in a tab.</li>
-  <li>Open it in your editor, uncomment or add what you want to change, and save.</li>
-  <li>Vimma picks it up within two seconds, in every window. There is nothing to restart. <code>:source</code> reloads it at once.</li>
-</ol>
+<ul>
+  <li>Uncomment a line, change its value, save.</li>
+  <li>Every window picks it up within 2 s, with no restart. <code>:source</code> reloads it at once.</li>
+  <li><code>:source work.toml</code> loads another file instead, until <code>config.toml</code> changes.</li>
+  <li>No file means the defaults. Vimma never rewrites a file you have; <code>:route add</code> only appends.</li>
+</ul>
 
 <h2 id="remap-a-key">Remap a key</h2>
 
-<p>The keys in these docs are defaults, not decisions: every binding, the <kbd>ctrl+b</kbd> prefix and the <kbd>space</kbd> leader can be remapped. Bindings go under <code>[keys]</code>, by the action names in the <em>Name</em> column of the <a href="{{root}}keys/">keys page</a>. <code>prefix+</code> means after the prefix, and <code>&lt;leader&gt;</code> after the leader, which has no default bindings: it is there for your own. A new binding replaces the default.</p>
+<p>Every key, the <kbd>ctrl+b</kbd> prefix and the <kbd>space</kbd> leader can be remapped. Use the action names in the <em>Name</em> column of the <a href="{{root}}keys/">keys page</a>; a new binding replaces the default.</p>
 
 <pre class="code">[keys]
-prefix = &quot;ctrl+a&quot;<span class="c">                        # the prefix itself, as tmux users often remap it</span>
-new_tab = [&quot;prefix+t&quot;]<span class="c">                   # ctrl+a t opens a tab, instead of ctrl+a c and ctrl+t</span>
-toggle_sidebar = [&quot;prefix+b&quot;, &quot;&lt;leader&gt;n&quot;]<span class="c"> # the side panel: prefix b, and now also leader n</span>
+prefix = &quot;ctrl+a&quot;<span class="c">        # ctrl+b by default, as in tmux</span>
+new_tab = [&quot;prefix+t&quot;]<span class="c">   # instead of prefix c and ctrl+t</span>
+<span class="c"># the side panel: prefix b, and now also leader n</span>
+toggle_sidebar = [&quot;prefix+b&quot;, &quot;&lt;leader&gt;n&quot;]
 
 [modal]
-leader = &quot;,&quot;<span class="c">                             # the leader, space by default</span></pre>
+leader = &quot;,&quot;<span class="c">             # space by default; no keys of its own</span></pre>
 
-<p>Firefox's own keys, such as <kbd>ctrl+t</kbd> and <kbd>F5</kbd>, are bindings too and are remapped the same way (<a href="{{root}}docs/firefox-shortcuts/#firefox-keys-are-bindings">Firefox's keys are Vimma bindings</a>).</p>
+<p>Firefox's own keys, such as <kbd>ctrl+t</kbd> and <kbd>F5</kbd>, are remapped the same way (<a href="{{root}}docs/firefox-shortcuts/#firefox-keys-are-bindings">Firefox's keys are Vimma bindings</a>).</p>
 
 <h2 id="other-settings">Other things you can set</h2>
 
-<p>Each block below is part of <code>config.toml</code> with its defaults written out, the way the file itself reads: <code>key = default</code>, and after <code>#</code> the values it takes and what changing it does. Copy a line into your file and change its value. A line that starts with <code>#</code> has no default, or adds something new: remove the <code>#</code> to use it. Every key is optional; one you leave out keeps its default.</p>
+<p>Each block shows the defaults as <code>key = default  # what it takes</code>. A line starting with <code>#</code> has no default: remove the <code>#</code> to use it.</p>
 
 <h3 id="set-keys-and-modes">Keys, modes and sites</h3>
 
@@ -108,23 +110,27 @@ placement = &quot;swap&quot;<span class="c">        # private workspace: &quot;s
 
 <p>More: <a href="{{root}}docs/workspaces/">workspaces</a> · <a href="{{root}}docs/workspaces/#send-sites">routing</a> · <a href="{{root}}docs/workspaces/#private">private workspace</a></p>
 
-<h3 id="set-bookmarks">Bookmarks, search and updates</h3>
+<h3 id="set-bookmarks">Bookmarks and updates</h3>
 
 <pre class="code">[bookmarks]
 root = &quot;workspace&quot;<span class="c">        # panel lists: &quot;workspace&quot;, &quot;toolbar&quot; or &quot;all&quot;</span>
 bookmarklets = &quot;none&quot;<span class="c">     # who may run bookmarklets: &quot;none&quot;, &quot;user&quot;, &quot;agent&quot;</span>
 write_back = &quot;all&quot;<span class="c">        # what reaches bookmarks.toml: &quot;all&quot;, &quot;vimma&quot;, &quot;none&quot;</span>
 
-<span class="c"># [search]</span>
-<span class="c"># default = &quot;DuckDuckGo&quot;  # an installed engine, or &quot;@alias&quot; of a URL below</span>
-<span class="c"># [search.aliases]</span>
-<span class="c"># gh = &quot;https://github.com/search?q=%s&quot;  # @gh vimma searches GitHub</span>
-<span class="c"># w = &quot;Wikipedia (en)&quot;    # @w for an installed engine</span>
-
 [updates]
 check = true<span class="c">              # false: stops the check every 12 hours</span></pre>
 
-<p>More: <a href="{{root}}docs/bookmarks/">bookmarks panel</a> · <a href="{{root}}docs/bookmarks/#bookmarks-in-a-file"><code>bookmarks.toml</code></a> · <a href="#search-engines">search engines</a></p>
+<p>More: <a href="{{root}}docs/bookmarks/">bookmarks panel</a> · <a href="{{root}}docs/bookmarks/#bookmarks-in-a-file"><code>bookmarks.toml</code></a></p>
+
+<h3 id="search-engines">Search engines</h3>
+
+<pre class="code"><span class="c"># [search]</span>
+<span class="c"># default = &quot;DuckDuckGo&quot;  # an installed engine, or &quot;@alias&quot; of a URL below</span>
+<span class="c"># [search.aliases]</span>
+<span class="c"># gh = &quot;https://github.com/search?q=%s&quot;  # @gh vimma searches GitHub</span>
+<span class="c"># w = &quot;Wikipedia (en)&quot;    # @w for an installed engine</span></pre>
+
+<p>Type <code>@gh vimma</code> in the address bar or after <code>:open</code>. The file's <code>default</code> wins over Settings.</p>
 
 <h3 id="set-agents">AI agents</h3>
 
@@ -158,44 +164,71 @@ max_cost = 2<span class="c">              # cost a task stops at, with prices se
 
 <p>More: <a href="{{root}}docs/agent-workspace/">agents</a> · <a href="{{root}}docs/agent-workspace/#vimmas-own-agent">Vimma's own agent</a></p>
 
-<p>An older file may start with a <code>schema</code> line. Vimma ignores it, so you can keep it or delete it.</p>
+<p>An older file's <code>schema</code> line is ignored: keep it or delete it.</p>
 
 <h2 id="mistakes">If you make a mistake</h2>
 
-<p>A file with an error is not applied at all, so your last working setup keeps working. The status bar shows the first error in red, with its line number, for example <code>config.toml:3: keys.new_tabb: unknown action "new_tabb" (did you mean "new_tab"?)</code>. Fix the line and save; the message goes away. <code>about:vimma</code> lists every error.</p>
+<ul>
+  <li>A file with an error is not applied; your last working setup keeps working.</li>
+  <li>The status bar shows the first error in red, with its line: <code>config.toml:3: keys.new_tabb: unknown action "new_tabb" (did you mean "new_tab"?)</code></li>
+  <li>Fix the line and save. <code>about:vimma</code> lists every error.</li>
+</ul>
 
-<h2 id="about-pages">about:config and about:vimma</h2>
+<h2 id="aboutvimma">about:vimma</h2>
 
-<p>A few switches live in <code>about:config</code> instead, such as <code>vimma.ui.tabstrip.hidden</code> to bring Firefox's tab strip back; they are listed under Details. <code>about:vimma</code> (or <code>:about</code>) shows what Vimma is doing: its version, your config and its errors, the theme, the workspaces, and the last keys it saw.</p>
+<ul>
+  <li><code>about:vimma</code> (or <code>:about</code>): version, updates, your config and its errors, the theme, workspaces, and the last keys Vimma saw. <kbd>r</kbd> refreshes it.</li>
+  <li><code>:bug</code> copies it as a report with URLs and your home directory redacted. Read it before you post it.</li>
+</ul>
+
+<h2 id="settings-aboutconfig">about:config</h2>
+
+<p>A few switches live in <code>about:config</code>, with these defaults:</p>
+
+<pre class="code">vimma.ui.tabstrip.hidden = true<span class="c">      # false: Firefox's tab strip again</span>
+vimma.ui.toolbar.hidden = true<span class="c">       # Firefox's toolbar; ctrl+b u sets it</span>
+vimma.ui.pdf_outline.hidden = false<span class="c">  # true: PDFs open without the outline</span>
+vimma.startpage.newtab = true<span class="c">        # false: Firefox's new tab page</span>
+vimma.update.enabled = true<span class="c">          # false: no update checks</span>
+vimma.control.enabled = false<span class="c">        # true: the socket for vimma-ctl</span>
+vimma.theme.source = &quot;omarchy&quot;<span class="c">       # &quot;builtin&quot;: Vimma's palette</span>
+vimma.theme.appearance = &quot;system&quot;<span class="c">    # what :theme sets</span>
+vimma.theme.omarchyHook = true<span class="c">       # false: removes Vimma's theme hook</span>
+vimma.config.pollMs = 2000<span class="c">           # how often config.toml is checked</span>
+<span class="c"># vimma.config.path = &quot;…&quot;            # another file instead of config.toml</span>
+<span class="c"># vimma.debug.keys = true            # log keys to the Browser Console</span></pre>
 
 <h2 id="colours">Colours and Omarchy</h2>
 
-<p>Vimma's and Firefox's own parts of the window share one colour theme: Vimma's status bar, command line, pickers, link hints, pane borders and start page, and Firefox's toolbar, address bar, menus, dialogs and Settings pages. Out of the box it is Vimma's own palette, the aqua, magenta and teal-black of this site, in a dark and a light variant.</p>
+<p id="colours-and-themes">One theme colours Vimma's bars, pickers and hints, and Firefox's toolbar, menus, dialogs and Settings pages.</p>
 
 <div class="table-wrap"><table class="plain"><thead><tr><th scope="col">Source</th><th scope="col">What you get</th></tr></thead><tbody>
-<tr><td>Omarchy, if you use it</td><td>Your current <a href="https://omarchy.org/">Omarchy</a> theme, followed live. This is the default whenever Omarchy is installed.</td></tr>
-<tr><td>Built in</td><td>Vimma's palette, dark or light to match your system. The default when Omarchy is not installed.</td></tr>
-<tr><td>Your config.toml</td><td>Single colours of your choice, on top of either one.</td></tr>
+<tr><td>Omarchy</td><td>Your current <a href="https://omarchy.org/">Omarchy</a> theme, followed live. The default where Omarchy is installed.</td></tr>
+<tr><td>Built in</td><td>Vimma's palette, dark or light like your system. The default elsewhere.</td></tr>
+<tr><td>config.toml</td><td>Single colours of your own, over either one.</td></tr>
 </tbody></table></div>
 
 <h3 id="dark-or-light">Dark or light</h3>
 
-<p>The built-in palette follows your system's dark or light setting and switches the moment it changes. <code>:theme dark</code> or <code>:theme light</code> keeps it one way, <code>:theme system</code> follows the system again, and a bare <code>:theme</code> switches to the other one. Vimma remembers the choice across restarts. On Omarchy, your Omarchy theme decides, and <code>:theme</code> applies only to the built-in palette. <code>appearance</code> under <code>[theme]</code> sets the same in the file, and then the file wins over <code>:theme</code>.</p>
+<ul>
+  <li><code>:theme dark</code> or <code>:theme light</code>: the built-in palette stays that way.</li>
+  <li><code>:theme system</code>: follow the system again (the default).</li>
+  <li><code>:theme</code>: switch to the other one. Vimma remembers the choice across restarts.</li>
+  <li>On Omarchy, your Omarchy theme decides.</li>
+</ul>
 
 <h3 id="your-own-colours">Your own colours</h3>
 
-<p>Change single colours of either source under <code>[theme.colors]</code>, with the keys of Omarchy's <code>colors.toml</code>. Save, and every window recolours within two seconds:</p>
-
 <pre class="code">[theme]
-source = &quot;file&quot;<span class="c">       # on Omarchy: the built-in palette instead of your Omarchy theme</span>
-appearance = &quot;dark&quot;<span class="c">   # the dark variant, whatever the system says</span>
+source = &quot;file&quot;<span class="c">      # on Omarchy: the built-in palette instead</span>
+appearance = &quot;dark&quot;<span class="c">  # or &quot;light&quot;, &quot;system&quot;; wins over :theme</span>
 [theme.colors]
-accent = &quot;#ff9e64&quot;<span class="c">    # one colour of your own, over the palette</span></pre>
-
-<p>To use the built-in palette on Omarchy without a config file, set <code>vimma.theme.source</code> to <code>builtin</code> in <code>about:config</code>.</p>
+accent = &quot;#ff9e64&quot;<span class="c">   # any key of Omarchy's colors.toml</span></pre>
 
 <h3 id="with-omarchy">With Omarchy</h3>
 
-<p>There is nothing to set up. Switch themes with <code>omarchy-theme-set</code> or the Omarchy menu, and every Vimma window follows, without a restart.</p>
-
-<p>So that it changes at the same moment as the rest of your desktop, Vimma installs a small hook, <code>vimma-theme-reload.sh</code>, in <code>~/.config/omarchy/hooks/theme-set.d/</code> the first time it starts. If you edit the hook, Vimma leaves it alone; if you delete it, Vimma does not recreate it. Without the hook, Vimma still notices a new theme within two seconds. Without Omarchy, Vimma looks for it once at startup and then reads nothing more.</p>
+<ul>
+  <li>Nothing to set up: <code>omarchy-theme-set</code> or the Omarchy menu recolours every window, with no restart.</li>
+  <li>Vimma installs a hook in <code>~/.config/omarchy/hooks/theme-set.d/</code> so it changes with your desktop. Edit or delete it, and Vimma leaves it that way.</li>
+  <li>Without the hook, Vimma still follows within 2 s.</li>
+</ul>
