@@ -70,15 +70,13 @@
 
 <ol class="steps-list">
   <li>Go to a site that belongs in a workspace, such as <code>github.com</code>.</li>
-  <li>Type <code>:route add work</code> and press <kbd>Enter</kbd>. Vimma appends a rule for the site to <code>config.toml</code> (which needs <code>schema = 2</code> and no errors).</li>
+  <li>Type <code>:route add work</code> and press <kbd>Enter</kbd>. Vimma appends a rule for the site to <code>config.toml</code>, as long as the file has no errors.</li>
   <li>From now on, an address you type, a bookmark or a link from another app on that site opens in <code>work</code>.</li>
 </ol>
 
 <p>Or write the rules yourself in <a href="{{root}}docs/config/">config.toml</a>. The first rule that matches, top to bottom, wins:</p>
 
-<pre class="code">schema = 2
-
-[[routes]]
+<pre class="code">[[routes]]
 domain = &quot;github.com&quot;<span class="c">   # the site and its subdomains</span>
 workspace = &quot;work&quot;
 
