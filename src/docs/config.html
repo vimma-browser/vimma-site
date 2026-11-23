@@ -13,9 +13,7 @@
 
 <p>The keys in these docs are defaults, not decisions: every binding, the <kbd>ctrl+b</kbd> prefix and the <kbd>space</kbd> leader can be remapped. Bindings go under <code>[keys]</code>, by the action names in the <em>Name</em> column of the <a href="{{root}}keys/">keys page</a>. <code>prefix+</code> means after the prefix, and <code>&lt;leader&gt;</code> after the leader, which has no default bindings: it is there for your own. A new binding replaces the default.</p>
 
-<pre class="code">schema = 2
-
-[keys]
+<pre class="code">[keys]
 prefix = &quot;ctrl+a&quot;<span class="c">                        # the prefix itself, as tmux users often remap it</span>
 new_tab = [&quot;prefix+t&quot;]<span class="c">                   # ctrl+a t opens a tab, instead of ctrl+a c and ctrl+t</span>
 toggle_sidebar = [&quot;prefix+b&quot;, &quot;&lt;leader&gt;n&quot;]<span class="c"> # the side panel: prefix b, and now also leader n</span>
@@ -27,23 +25,56 @@ leader = &quot;,&quot;<span class="c">                             # the leader,
 
 <h2 id="other-settings">Other things you can set</h2>
 
-<div class="table-wrap"><table class="plain"><thead><tr><th scope="col">Section</th><th scope="col">What it changes</th></tr></thead><tbody>
-<tr><td><code>[panes]</code></td><td><code>max</code>: how many panes a split can have (1 to 16, default 8); <code>layout</code>: what <kbd>ctrl+b</kbd> <kbd>enter</kbd> does; <code>main_size</code>: the main pane's share in the <code>main-*</code> layouts; <code>max_splits</code>: how many splits a workspace keeps (1 to 9, default 9).</td></tr>
-<tr><td><code>[sites."example.com"]</code></td><td><code>insert</code>: <code>auto</code>, <code>never</code> or <code>always</code>: whether text fields on that site put you in insert mode.</td></tr>
-<tr><td><code>[theme]</code></td><td><code>name</code>: the built-in palette, <code>"vimma"</code> or <code>"tokyo-night"</code>; <code>appearance</code>: dark, light or the system's; <code>source = "file"</code> for the built-in palette instead of your Omarchy theme; <code>[theme.colors]</code> to change single colours (<a href="#colours">colours</a>).</td></tr>
-<tr><td><code>[workspaces]</code></td><td>Workspaces that always exist (<a href="{{root}}docs/workspaces/">workspaces</a>).</td></tr>
-<tr><td><code>[[routes]]</code></td><td>Send a site, or every link an app opens, to a workspace (<a href="{{root}}docs/workspaces/#send-sites">routing</a>).</td></tr>
-<tr><td><code>[search]</code></td><td><code>default</code>: the default search engine; <code>[search.aliases]</code>: short <code>@aliases</code> such as <code>@gh</code>, for an installed engine or any search URL.</td></tr>
-<tr><td><code>[bookmarks]</code></td><td><code>root</code>: what the bookmarks panel lists, the workspace's folder, the toolbar or everything (<a href="{{root}}docs/bookmarks/">bookmarks</a>).</td></tr>
-<tr><td><code>[private]</code></td><td><code>placement</code>: on Hyprland and macOS, whether the private workspace takes your window's place or opens beside it (<a href="{{root}}docs/workspaces/#private">private workspace</a>).</td></tr>
-<tr><td><code>[mcp]</code></td><td>AI agents: whether they may ask, their workspace's name, how long a question waits, how long a bare <kbd>a</kbd> lasts (<a href="{{root}}docs/agent-workspace/">agent workspace</a>).</td></tr>
-<tr><td><code>[ui]</code></td><td><code>toolbar</code> and <code>bookmarks_toolbar</code>: whether Firefox's toolbar and Bookmarks Toolbar show.</td></tr>
-<tr><td><code>[updates]</code></td><td><code>check = false</code>: no update check at all.</td></tr>
-<tr><td><code>[firefox]</code></td><td><code>disable</code> and <code>enable</code>: which of Firefox's own shortcuts are off (<a href="{{root}}docs/firefox-shortcuts/#what-moved">Firefox's shortcuts</a>).</td></tr>
-<tr><td><code>[modal]</code></td><td><code>insert_editing = false</code> turns off <kbd>ctrl+w</kbd>, <kbd>ctrl+u</kbd> and <kbd>ctrl+h</kbd> in text fields, and <kbd>ctrl+j</kbd> and <kbd>ctrl+m</kbd> as <kbd>Enter</kbd>.</td></tr>
+<p>Each row is one setting: its section and key, what changing it does for you, and the values it takes, with the default. Every key is optional; one you leave out keeps its default. The details below and the linked pages say more.</p>
+
+<div class="table-wrap"><table class="plain"><thead><tr><th scope="col">Setting</th><th scope="col">What it changes</th></tr></thead><tbody>
+<tr><td><code>[modal]</code> <code>leader</code></td><td>The key that starts your own <code>&lt;leader&gt;</code> bindings. Default <code>space</code>.</td></tr>
+<tr><td><code>[modal]</code> <code>timeout_ms</code></td><td>How long Vimma waits for the next key of a sequence such as <kbd>g</kbd> <kbd>g</kbd>, in milliseconds. Default <code>800</code>.</td></tr>
+<tr><td><code>[modal]</code> <code>hint_chars</code></td><td>The characters <a href="{{root}}docs/modes/#link-hints">link hint</a> labels are made of, the first ones used most. Default <code>"asdfghjkl"</code>.</td></tr>
+<tr><td><code>[modal]</code> <code>insert_editing</code></td><td><code>false</code> turns off <kbd>ctrl+w</kbd>, <kbd>ctrl+u</kbd> and <kbd>ctrl+h</kbd> in text fields, and <kbd>ctrl+j</kbd> and <kbd>ctrl+m</kbd> as <kbd>Enter</kbd>. Default <code>true</code>.</td></tr>
+<tr><td><code>[unbind]</code> <code>normal</code>, <code>insert</code>, <code>pdf</code>, …</td><td>Takes default bindings off in that mode: <code>insert = ["&lt;C-j&gt;"]</code> gives <kbd>ctrl+j</kbd> back to <kbd>Enter</kbd> alone. Lists of keys, empty by default.</td></tr>
+<tr><td><code>[firefox]</code> <code>disable</code>, <code>enable</code></td><td>Which of Firefox's own shortcuts are off. <code>enable = ["ctrl+w"]</code> gives one back exactly as Firefox runs it (<a href="{{root}}docs/firefox-shortcuts/#what-moved">Firefox's shortcuts</a>). Default <code>disable = "all"</code>, <code>enable = []</code>.</td></tr>
+<tr><td><code>[sites."host"]</code> <code>insert</code></td><td>Whether a text field on that site and its subdomains puts you in insert mode: <code>"auto"</code> (the default) when one is detected, <code>"never"</code> or <code>"always"</code>.</td></tr>
+<tr><td><code>[sites."host"]</code> <code>unbind</code></td><td>Keys that site gets instead of Vimma, such as a web app's own <kbd>t</kbd> (<a href="{{root}}docs/firefox-shortcuts/#keys-a-site-keeps">keys a site keeps</a>). A list of keys; none by default.</td></tr>
+<tr><td><code>[scroll]</code> <code>step</code></td><td>How far <kbd>j</kbd>, <kbd>k</kbd>, <kbd>h</kbd> and <kbd>l</kbd> scroll: 1 to 2000 CSS pixels, default <code>60</code>.</td></tr>
+<tr><td><code>[panes]</code> <code>max</code></td><td>The most panes a workspace shows at once: 1 to 16, default <code>8</code>.</td></tr>
+<tr><td><code>[panes]</code> <code>max_splits</code></td><td>The most <a href="{{root}}docs/panes/#several-splits">splits</a> a workspace keeps: 1 to 9, default <code>9</code>.</td></tr>
+<tr><td><code>[panes]</code> <code>layout</code></td><td>Where <kbd>ctrl+b</kbd> <kbd>enter</kbd> puts a new pane: <code>"dwindle"</code> (the default) splits the focused pane along its longer side, <code>"manual"</code> splits it to the right as <kbd>ctrl+b</kbd> <kbd>v</kbd> does.</td></tr>
+<tr><td><code>[panes]</code> <code>main_size</code></td><td>The main pane's share in the main-vertical and main-horizontal layouts: 20 to 80 percent, default <code>60</code>.</td></tr>
+<tr><td><code>[panes]</code> <code>new_tab</code></td><td>Where a new tab opened while a split shows goes: <code>"alone"</code> (the default) by itself beside the split, or <code>"pane"</code> in the focused pane (<a href="{{root}}docs/panes/#picking-a-tab-during-a-split">tabs during a split</a>).</td></tr>
+<tr><td><code>[panel]</code> <code>numbers</code></td><td>The <a href="{{root}}docs/tabs/#side-panel">side panel</a>'s row numbers: <code>"absolute"</code> (the default) tab numbers, <code>"relative"</code> distances for counts such as <kbd>4</kbd><kbd>j</kbd>, or <code>"hybrid"</code> both.</td></tr>
+<tr><td><code>[ui]</code> <code>tabline</code></td><td>The <a href="{{root}}docs/tabs/#tab-line">tab line</a> above the page: <code>"auto"</code> (the default) with two or more tabs, <code>"always"</code> or <code>"off"</code>.</td></tr>
+<tr><td><code>[ui]</code> <code>tabline_width</code></td><td>How many columns each tab's name gets in the tab line: 4 to 60, default <code>14</code>.</td></tr>
+<tr><td><code>[statusbar]</code> <code>tab</code></td><td><code>false</code> leaves the tab number and title out of the status bar while the tab line shows them. Default <code>true</code>.</td></tr>
+<tr><td><code>[ui]</code> <code>toolbar</code></td><td>Firefox's toolbar, the address bar and add-on buttons, in every window: <code>"hidden"</code> (the default) or <code>"shown"</code>. Hidden, <kbd>ctrl+l</kbd> still shows the address bar to type in.</td></tr>
+<tr><td><code>[ui]</code> <code>bookmarks_toolbar</code></td><td><a href="{{root}}docs/bookmarks/#firefoxs-bookmarks-toolbar">Firefox's Bookmarks Toolbar</a>: <code>"shown"</code>, <code>"hidden"</code> or <code>"newtab"</code> (new tabs only). Unset by default: hidden until you show it.</td></tr>
+<tr><td><code>[ui]</code> <code>pdf_outline</code></td><td>Whether the <a href="{{root}}docs/pdf/">PDF viewer</a>'s outline is <code>"shown"</code> (the default) when a PDF opens, or <code>"hidden"</code> until you press <kbd>Tab</kbd>.</td></tr>
+<tr><td><code>[theme]</code> <code>source</code></td><td><code>"omarchy"</code> (the default) follows your Omarchy theme where Omarchy is installed; <code>"file"</code> always uses the built-in palette (<a href="#colours">colours</a>).</td></tr>
+<tr><td><code>[theme]</code> <code>name</code></td><td>The built-in palette: <code>"vimma"</code>, dark and light, the default and only one.</td></tr>
+<tr><td><code>[theme]</code> <code>appearance</code></td><td>The built-in palette's variant: <code>"system"</code>, <code>"dark"</code> or <code>"light"</code>. Unset by default, so <code>:theme</code> decides and remembers; set, the file wins.</td></tr>
+<tr><td><code>[theme]</code> <code>font</code></td><td>The font of Vimma's status bar and pickers. Default <code>"monospace"</code>.</td></tr>
+<tr><td><code>[theme.colors]</code></td><td>Single colours over either source, with the keys of Omarchy's <code>colors.toml</code> (<a href="#your-own-colours">your own colours</a>). None by default.</td></tr>
+<tr><td><code>[workspaces]</code></td><td>Workspaces that always exist, in this order, each with its colour, icon and home page (<a href="{{root}}docs/workspaces/">workspaces</a>). None by default.</td></tr>
+<tr><td><code>[[routes]]</code></td><td>The workspace a site, or every link an app opens, goes to: a <code>domain</code>, <code>url</code> or <code>app</code>, and a <code>workspace</code>. The first rule that matches wins (<a href="{{root}}docs/workspaces/#send-sites">routing</a>). None by default.</td></tr>
+<tr><td><code>[routing]</code> <code>default_workspace</code></td><td>Where links from other programs open when no rule matches. Unset by default: Firefox picks from your open tabs.</td></tr>
+<tr><td><code>[private]</code> <code>placement</code></td><td>On Hyprland and macOS, whether the <a href="{{root}}docs/workspaces/#private">private workspace</a> takes your window's place (<code>"swap"</code>, the default) or opens beside it (<code>"window"</code>).</td></tr>
+<tr><td><code>[bookmarks]</code> <code>root</code></td><td>What the <a href="{{root}}docs/bookmarks/">bookmarks panel</a> lists: <code>"workspace"</code> (the default) the workspace's folder, <code>"toolbar"</code> the Bookmarks Toolbar, or <code>"all"</code> every bookmark.</td></tr>
+<tr><td><code>[bookmarks]</code> <code>bookmarklets</code></td><td>Who may run <code>javascript:</code> bookmarks: <code>"none"</code> (the default), <code>"user"</code> you from the bookmarks panel, or <code>"agent"</code> an agent too, asking you each time.</td></tr>
+<tr><td><code>[bookmarks]</code> <code>write_back</code></td><td>Which changes reach <a href="{{root}}docs/bookmarks/#bookmarks-in-a-file"><code>bookmarks.toml</code></a>: <code>"all"</code> (the default), <code>"vimma"</code> only Vimma's keys', or <code>"none"</code>, so the file is the only way to edit them.</td></tr>
+<tr><td><code>[search]</code> <code>default</code>, <code>[search.aliases]</code></td><td>The default search engine, and short <code>@aliases</code> such as <code>@gh</code> for an installed engine or any search URL (<a href="#search-engines">search engines</a>). Unset by default.</td></tr>
+<tr><td><code>[mcp]</code> <code>enabled</code></td><td>Whether AI agents may connect (<a href="{{root}}docs/agent-workspace/">agents</a>). Unset by default, so <code>:mcp on</code> and <code>:mcp off</code> decide; set, the file wins.</td></tr>
+<tr><td><code>[mcp]</code> <code>workspace</code>, <code>ask_timeout</code>, <code>notify</code></td><td>The agent workspace's name (default <code>"agent"</code>), how many seconds an agent's question waits for your answer (10 to 300, default <code>50</code>), and whether a desktop notification says an agent is asking (default <code>true</code>).</td></tr>
+<tr><td><code>[mcp]</code> <code>grant_minutes</code>, <code>grant_max_minutes</code></td><td>How long a bare <kbd>a</kbd> allows an agent (default <code>0</code>: until it quits), and the most minutes a count before <kbd>a</kbd> can allow (1 to 1440, default <code>480</code>).</td></tr>
+<tr><td><code>[mcp]</code> <code>max_read_chars</code></td><td>The most page text one read gives an agent: 1,000 to 500,000 characters, default <code>200000</code>.</td></tr>
+<tr><td><code>[mcp]</code> <code>download_dir</code>, <code>download_max_mb</code>, <code>clamav_max_age_days</code></td><td>Where downloads from the agent workspace are saved (default <code>"~/Downloads/vimma-agent"</code>), the largest one allowed (1 to 4096 MB, default <code>200</code>), and how old ClamAV's definitions may be for a scan to count as clean (1 to 90 days, default <code>7</code>).</td></tr>
+<tr><td><code>[agent]</code> <code>default</code>, <code>[[agent.providers]]</code></td><td>The models <a href="{{root}}docs/agent-workspace/#vimmas-own-agent">Vimma's own agent</a> can use, each with a name, kind, endpoint and model, and the one new conversations start with. A key is never written here. None by default.</td></tr>
+<tr><td><code>[agent]</code> <code>local_only</code></td><td><code>true</code> refuses every model that is not on this machine. Default <code>false</code>.</td></tr>
+<tr><td><code>[agent]</code> <code>max_running</code>, <code>max_steps</code>, <code>max_tokens</code>, <code>max_cost</code></td><td>How many tasks run at once (default <code>3</code>), and where a task stops: tool calls (default <code>100</code>), tokens (default <code>2000000</code>) and, for a provider with prices set, cost (unset by default).</td></tr>
+<tr><td><code>[agent]</code> <code>keep_days</code>, <code>keep_results</code></td><td>Delete conversations unused for that many days, and how many recent tool results the agent sends whole. Both unset by default.</td></tr>
+<tr><td><code>[updates]</code> <code>check</code></td><td><code>false</code> stops the update check Vimma otherwise makes every 12 hours. Default <code>true</code>.</td></tr>
 </tbody></table></div>
 
-<p>Keep <code>schema = 2</code> as the first line: it enables <code>[panes]</code>, <code>[sites]</code>, <code>[[routes]]</code>, <code>[routing]</code>, <code>[firefox]</code>, <code>[bookmarks]</code>, <code>[private]</code>, <code>[mcp]</code>, <code>[search]</code>, <code>[ui]</code>, <code>[updates]</code>, <code>[agent]</code>, <code>[panel]</code>, <code>[scroll]</code>, <code>insert_editing</code>, hint characters and the theme's <code>name</code> and <code>appearance</code>.</p>
+<p>An older file may start with a <code>schema</code> line. Vimma ignores it, so you can keep it or delete it.</p>
 
 <h2 id="mistakes">If you make a mistake</h2>
 
@@ -59,7 +90,7 @@ leader = &quot;,&quot;<span class="c">                             # the leader,
 
 <div class="table-wrap"><table class="plain"><thead><tr><th scope="col">Source</th><th scope="col">What you get</th></tr></thead><tbody>
 <tr><td>Omarchy, if you use it</td><td>Your current <a href="https://omarchy.org/">Omarchy</a> theme, followed live. This is the default whenever Omarchy is installed.</td></tr>
-<tr><td>Built in</td><td>Vimma's palette, dark or light to match your system, or Tokyo Night. The default when Omarchy is not installed.</td></tr>
+<tr><td>Built in</td><td>Vimma's palette, dark or light to match your system. The default when Omarchy is not installed.</td></tr>
 <tr><td>Your config.toml</td><td>Single colours of your choice, on top of either one.</td></tr>
 </tbody></table></div>
 
@@ -69,15 +100,13 @@ leader = &quot;,&quot;<span class="c">                             # the leader,
 
 <h3 id="your-own-colours">Your own colours</h3>
 
-<p>Choose the built-in palette, or change single colours of either one, under <code>[theme]</code>. Save, and every window recolours within two seconds:</p>
+<p>Change single colours of either source under <code>[theme.colors]</code>, with the keys of Omarchy's <code>colors.toml</code>. Save, and every window recolours within two seconds:</p>
 
-<pre class="code">schema = 2
-
-[theme]
-name = &quot;tokyo-night&quot;<span class="c">  # the built-in palette: &quot;vimma&quot; (the default) or &quot;tokyo-night&quot;</span>
+<pre class="code">[theme]
 source = &quot;file&quot;<span class="c">       # on Omarchy: the built-in palette instead of your Omarchy theme</span>
+appearance = &quot;dark&quot;<span class="c">   # the dark variant, whatever the system says</span>
 [theme.colors]
-accent = &quot;#ff9e64&quot;</pre>
+accent = &quot;#ff9e64&quot;<span class="c">    # one colour of your own, over the palette</span></pre>
 
 <p>To use the built-in palette on Omarchy without a config file, set <code>vimma.theme.source</code> to <code>builtin</code> in <code>about:config</code>.</p>
 
