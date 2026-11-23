@@ -478,7 +478,7 @@ ${html}`;
           if ("keys" in b) {
             const secs = b.keys.map((t) => keys.sections.find((s) => s.title === t) ?? fail(`bindings.json has no group "${t}"`));
             return `<h2 id="default-keys">All the keys for this page</h2>
-<p>The default bindings, as Vimma's own <kbd>ctrl+b</kbd> <kbd>?</kbd> overlay lists them. <em>Name</em> is the action's name, which you use to <a href="${root}docs/config/">remap it</a> or to run it as a <code>:</code> command. Every key is on the <a href="${root}keys/">keys page</a>.</p>
+<p>The default bindings, as Vimma's own <kbd>ctrl+b</kbd> <kbd>?</kbd> overlay lists them. <em>Name</em> is the action's name, which you use to <a href="${root}docs/config/#remap-a-key">remap it</a> or to run it as a <code>:</code> command. Every key is on the <a href="${root}keys/">keys page</a>.</p>
 ${keysTables(secs, { level: 3, idPrefix: "keys-", filterable: false })}`;
           }
           return limitsLinks(b.limits, limits, root);
@@ -490,8 +490,13 @@ ${keysTables(secs, { level: 3, idPrefix: "keys-", filterable: false })}`;
     const head = page ? `<h1>${escapeHtml(title)}</h1>\n${intro}` : "";
     const content = page ? `${head}\n${sections}` : sections;
     const hasKeys = !!page?.blocks.some((b) => "keys" in b);
+    const keysFrom = `<code>docs/bindings.json</code> at <a href="${VIMMA_REPO}/commit/${escapeHtml(keys.commitFull)}"><code>${escapeHtml(keys.commit)}</code></a> (${escapeHtml(keys.date)})`;
+    // a page with no guide.md text (config) is all hand-written but its keys table
+    const hasGuide = page?.slug === "limits" || !!page?.blocks.some((b) => "guide" in b || "guideParas" in b);
     const src = page && !page.handWritten
-      ? `<p class="source">The guide at the top is written for this site; the details are built from Vimma's <code>docs/${page.slug === "limits" ? "limits" : "guide"}.md</code> at <a href="${VIMMA_REPO}/commit/${escapeHtml(source.commit)}"><code>${escapeHtml(source.commit)}</code></a> (${escapeHtml(source.date)})${hasKeys ? `, and the keys from <code>docs/bindings.json</code> at <a href="${VIMMA_REPO}/commit/${escapeHtml(keys.commitFull)}"><code>${escapeHtml(keys.commit)}</code></a> (${escapeHtml(keys.date)})` : ""}.</p>`
+      ? hasGuide
+        ? `<p class="source">The guide at the top is written for this site; the details are built from Vimma's <code>docs/${page.slug === "limits" ? "limits" : "guide"}.md</code> at <a href="${VIMMA_REPO}/commit/${escapeHtml(source.commit)}"><code>${escapeHtml(source.commit)}</code></a> (${escapeHtml(source.date)})${hasKeys ? `, and the keys from ${keysFrom}` : ""}.</p>`
+        : `<p class="source">This page is written for this site${hasKeys ? `; the keys are built from Vimma's ${keysFrom}` : ""}.</p>`
       : "";
     const body = `<div class="docs">
 ${sidebar(nav, entry.slug, root)}
