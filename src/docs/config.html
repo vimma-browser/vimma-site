@@ -25,54 +25,138 @@ leader = &quot;,&quot;<span class="c">                             # the leader,
 
 <h2 id="other-settings">Other things you can set</h2>
 
-<p>Each row is one setting: its section and key, what changing it does for you, and the values it takes, with the default. Every key is optional; one you leave out keeps its default. The details below and the linked pages say more.</p>
+<p>Each block below is part of <code>config.toml</code> with its defaults written out, the way the file itself reads: <code>key = default</code>, and after <code>#</code> the values it takes and what changing it does. Copy a line into your file and change its value. A line that starts with <code>#</code> has no default, or adds something new: remove the <code>#</code> to use it. Every key is optional; one you leave out keeps its default.</p>
 
-<div class="table-wrap"><table class="plain"><thead><tr><th scope="col">Setting</th><th scope="col">What it changes</th></tr></thead><tbody>
-<tr><td><code>[modal]</code> <code>leader</code></td><td>The key that starts your own <code>&lt;leader&gt;</code> bindings. Default <code>space</code>.</td></tr>
-<tr><td><code>[modal]</code> <code>timeout_ms</code></td><td>How long Vimma waits for the next key of a sequence such as <kbd>g</kbd> <kbd>g</kbd>, in milliseconds. Default <code>800</code>.</td></tr>
-<tr><td><code>[modal]</code> <code>hint_chars</code></td><td>The characters <a href="{{root}}docs/modes/#link-hints">link hint</a> labels are made of, the first ones used most. Default <code>"asdfghjkl"</code>.</td></tr>
-<tr><td><code>[modal]</code> <code>insert_editing</code></td><td><code>false</code> turns off <kbd>ctrl+w</kbd>, <kbd>ctrl+u</kbd> and <kbd>ctrl+h</kbd> in text fields, and <kbd>ctrl+j</kbd> and <kbd>ctrl+m</kbd> as <kbd>Enter</kbd>. Default <code>true</code>.</td></tr>
-<tr><td><code>[unbind]</code> <code>normal</code>, <code>insert</code>, <code>pdf</code>, …</td><td>Takes default bindings off in that mode: <code>insert = ["&lt;C-j&gt;"]</code> gives <kbd>ctrl+j</kbd> back to <kbd>Enter</kbd> alone. Lists of keys, empty by default.</td></tr>
-<tr><td><code>[firefox]</code> <code>disable</code>, <code>enable</code></td><td>Which of Firefox's own shortcuts are off. <code>enable = ["ctrl+w"]</code> gives one back exactly as Firefox runs it (<a href="{{root}}docs/firefox-shortcuts/#what-moved">Firefox's shortcuts</a>). Default <code>disable = "all"</code>, <code>enable = []</code>.</td></tr>
-<tr><td><code>[sites."host"]</code> <code>insert</code></td><td>Whether a text field on that site and its subdomains puts you in insert mode: <code>"auto"</code> (the default) when one is detected, <code>"never"</code> or <code>"always"</code>.</td></tr>
-<tr><td><code>[sites."host"]</code> <code>unbind</code></td><td>Keys that site gets instead of Vimma, such as a web app's own <kbd>t</kbd> (<a href="{{root}}docs/firefox-shortcuts/#keys-a-site-keeps">keys a site keeps</a>). A list of keys; none by default.</td></tr>
-<tr><td><code>[scroll]</code> <code>step</code></td><td>How far <kbd>j</kbd>, <kbd>k</kbd>, <kbd>h</kbd> and <kbd>l</kbd> scroll: 1 to 2000 CSS pixels, default <code>60</code>.</td></tr>
-<tr><td><code>[panes]</code> <code>max</code></td><td>The most panes a workspace shows at once: 1 to 16, default <code>8</code>.</td></tr>
-<tr><td><code>[panes]</code> <code>max_splits</code></td><td>The most <a href="{{root}}docs/panes/#several-splits">splits</a> a workspace keeps: 1 to 9, default <code>9</code>.</td></tr>
-<tr><td><code>[panes]</code> <code>layout</code></td><td>Where <kbd>ctrl+b</kbd> <kbd>enter</kbd> puts a new pane: <code>"dwindle"</code> (the default) splits the focused pane along its longer side, <code>"manual"</code> splits it to the right as <kbd>ctrl+b</kbd> <kbd>v</kbd> does.</td></tr>
-<tr><td><code>[panes]</code> <code>main_size</code></td><td>The main pane's share in the main-vertical and main-horizontal layouts: 20 to 80 percent, default <code>60</code>.</td></tr>
-<tr><td><code>[panes]</code> <code>new_tab</code></td><td>Where a new tab opened while a split shows goes: <code>"alone"</code> (the default) by itself beside the split, or <code>"pane"</code> in the focused pane (<a href="{{root}}docs/panes/#picking-a-tab-during-a-split">tabs during a split</a>).</td></tr>
-<tr><td><code>[panel]</code> <code>numbers</code></td><td>The <a href="{{root}}docs/tabs/#side-panel">side panel</a>'s row numbers: <code>"absolute"</code> (the default) tab numbers, <code>"relative"</code> distances for counts such as <kbd>4</kbd><kbd>j</kbd>, or <code>"hybrid"</code> both.</td></tr>
-<tr><td><code>[ui]</code> <code>tabline</code></td><td>The <a href="{{root}}docs/tabs/#tab-line">tab line</a> above the page: <code>"auto"</code> (the default) with two or more tabs, <code>"always"</code> or <code>"off"</code>.</td></tr>
-<tr><td><code>[ui]</code> <code>tabline_width</code></td><td>How many columns each tab's name gets in the tab line: 4 to 60, default <code>14</code>.</td></tr>
-<tr><td><code>[statusbar]</code> <code>tab</code></td><td><code>false</code> leaves the tab number and title out of the status bar while the tab line shows them. Default <code>true</code>.</td></tr>
-<tr><td><code>[ui]</code> <code>toolbar</code></td><td>Firefox's toolbar, the address bar and add-on buttons, in every window: <code>"hidden"</code> (the default) or <code>"shown"</code>. Hidden, <kbd>ctrl+l</kbd> still shows the address bar to type in.</td></tr>
-<tr><td><code>[ui]</code> <code>bookmarks_toolbar</code></td><td><a href="{{root}}docs/bookmarks/#firefoxs-bookmarks-toolbar">Firefox's Bookmarks Toolbar</a>: <code>"shown"</code>, <code>"hidden"</code> or <code>"newtab"</code> (new tabs only). Unset by default: hidden until you show it.</td></tr>
-<tr><td><code>[ui]</code> <code>pdf_outline</code></td><td>Whether the <a href="{{root}}docs/pdf/">PDF viewer</a>'s outline is <code>"shown"</code> (the default) when a PDF opens, or <code>"hidden"</code> until you press <kbd>Tab</kbd>.</td></tr>
-<tr><td><code>[theme]</code> <code>source</code></td><td><code>"omarchy"</code> (the default) follows your Omarchy theme where Omarchy is installed; <code>"file"</code> always uses the built-in palette (<a href="#colours">colours</a>).</td></tr>
-<tr><td><code>[theme]</code> <code>name</code></td><td>The built-in palette: <code>"vimma"</code>, dark and light, the default and only one.</td></tr>
-<tr><td><code>[theme]</code> <code>appearance</code></td><td>The built-in palette's variant: <code>"system"</code>, <code>"dark"</code> or <code>"light"</code>. Unset by default, so <code>:theme</code> decides and remembers; set, the file wins.</td></tr>
-<tr><td><code>[theme]</code> <code>font</code></td><td>The font of Vimma's status bar and pickers. Default <code>"monospace"</code>.</td></tr>
-<tr><td><code>[theme.colors]</code></td><td>Single colours over either source, with the keys of Omarchy's <code>colors.toml</code> (<a href="#your-own-colours">your own colours</a>). None by default.</td></tr>
-<tr><td><code>[workspaces]</code></td><td>Workspaces that always exist, in this order, each with its colour, icon and home page (<a href="{{root}}docs/workspaces/">workspaces</a>). None by default.</td></tr>
-<tr><td><code>[[routes]]</code></td><td>The workspace a site, or every link an app opens, goes to: a <code>domain</code>, <code>url</code> or <code>app</code>, and a <code>workspace</code>. The first rule that matches wins (<a href="{{root}}docs/workspaces/#send-sites">routing</a>). None by default.</td></tr>
-<tr><td><code>[routing]</code> <code>default_workspace</code></td><td>Where links from other programs open when no rule matches. Unset by default: Firefox picks from your open tabs.</td></tr>
-<tr><td><code>[private]</code> <code>placement</code></td><td>On Hyprland and macOS, whether the <a href="{{root}}docs/workspaces/#private">private workspace</a> takes your window's place (<code>"swap"</code>, the default) or opens beside it (<code>"window"</code>).</td></tr>
-<tr><td><code>[bookmarks]</code> <code>root</code></td><td>What the <a href="{{root}}docs/bookmarks/">bookmarks panel</a> lists: <code>"workspace"</code> (the default) the workspace's folder, <code>"toolbar"</code> the Bookmarks Toolbar, or <code>"all"</code> every bookmark.</td></tr>
-<tr><td><code>[bookmarks]</code> <code>bookmarklets</code></td><td>Who may run <code>javascript:</code> bookmarks: <code>"none"</code> (the default), <code>"user"</code> you from the bookmarks panel, or <code>"agent"</code> an agent too, asking you each time.</td></tr>
-<tr><td><code>[bookmarks]</code> <code>write_back</code></td><td>Which changes reach <a href="{{root}}docs/bookmarks/#bookmarks-in-a-file"><code>bookmarks.toml</code></a>: <code>"all"</code> (the default), <code>"vimma"</code> only Vimma's keys', or <code>"none"</code>, so the file is the only way to edit them.</td></tr>
-<tr><td><code>[search]</code> <code>default</code>, <code>[search.aliases]</code></td><td>The default search engine, and short <code>@aliases</code> such as <code>@gh</code> for an installed engine or any search URL (<a href="#search-engines">search engines</a>). Unset by default.</td></tr>
-<tr><td><code>[mcp]</code> <code>enabled</code></td><td>Whether AI agents may connect (<a href="{{root}}docs/agent-workspace/">agents</a>). Unset by default, so <code>:mcp on</code> and <code>:mcp off</code> decide; set, the file wins.</td></tr>
-<tr><td><code>[mcp]</code> <code>workspace</code>, <code>ask_timeout</code>, <code>notify</code></td><td>The agent workspace's name (default <code>"agent"</code>), how many seconds an agent's question waits for your answer (10 to 300, default <code>50</code>), and whether a desktop notification says an agent is asking (default <code>true</code>).</td></tr>
-<tr><td><code>[mcp]</code> <code>grant_minutes</code>, <code>grant_max_minutes</code></td><td>How long a bare <kbd>a</kbd> allows an agent (default <code>0</code>: until it quits), and the most minutes a count before <kbd>a</kbd> can allow (1 to 1440, default <code>480</code>).</td></tr>
-<tr><td><code>[mcp]</code> <code>max_read_chars</code></td><td>The most page text one read gives an agent: 1,000 to 500,000 characters, default <code>200000</code>.</td></tr>
-<tr><td><code>[mcp]</code> <code>download_dir</code>, <code>download_max_mb</code>, <code>clamav_max_age_days</code></td><td>Where downloads from the agent workspace are saved (default <code>"~/Downloads/vimma-agent"</code>), the largest one allowed (1 to 4096 MB, default <code>200</code>), and how old ClamAV's definitions may be for a scan to count as clean (1 to 90 days, default <code>7</code>).</td></tr>
-<tr><td><code>[agent]</code> <code>default</code>, <code>[[agent.providers]]</code></td><td>The models <a href="{{root}}docs/agent-workspace/#vimmas-own-agent">Vimma's own agent</a> can use, each with a name, kind, endpoint and model, and the one new conversations start with. A key is never written here. None by default.</td></tr>
-<tr><td><code>[agent]</code> <code>local_only</code></td><td><code>true</code> refuses every model that is not on this machine. Default <code>false</code>.</td></tr>
-<tr><td><code>[agent]</code> <code>max_running</code>, <code>max_steps</code>, <code>max_tokens</code>, <code>max_cost</code></td><td>How many tasks run at once (default <code>3</code>), and where a task stops: tool calls (default <code>100</code>), tokens (default <code>2000000</code>) and, for a provider with prices set, cost (unset by default).</td></tr>
-<tr><td><code>[agent]</code> <code>keep_days</code>, <code>keep_results</code></td><td>Delete conversations unused for that many days, and how many recent tool results the agent sends whole. Both unset by default.</td></tr>
-<tr><td><code>[updates]</code> <code>check</code></td><td><code>false</code> stops the update check Vimma otherwise makes every 12 hours. Default <code>true</code>.</td></tr>
-</tbody></table></div>
+<h3 id="set-keys-and-modes">Keys, modes and sites</h3>
+
+<pre class="code">[modal]
+leader = &quot; &quot;<span class="c">              # the &lt;leader&gt; key: space</span>
+timeout_ms = 800<span class="c">          # ms to wait for a sequence's next key (0–10000)</span>
+hint_chars = &quot;asdfghjkl&quot;<span class="c">  # link hint labels, first ones most often</span>
+insert_editing = true<span class="c">     # false: no ctrl+w, ctrl+u … editing in text fields</span>
+
+[unbind]
+normal = []<span class="c">               # default keys to take off in normal mode</span>
+<span class="c"># insert = [&quot;&lt;C-j&gt;&quot;]      # per mode (insert, pdf, …): ctrl+j is Enter again</span>
+
+[firefox]
+disable = &quot;all&quot;<span class="c">           # Firefox's shortcuts that are off, or a list</span>
+enable = []<span class="c">               # ones given back, such as [&quot;ctrl+w&quot;]</span>
+
+<span class="c"># [sites.&quot;github.com&quot;]    # a site and its subdomains; none by default</span>
+<span class="c"># insert = &quot;auto&quot;         # &quot;auto&quot;, &quot;never&quot; or &quot;always&quot; insert mode</span>
+<span class="c"># unbind = [&quot;t&quot;]          # keys the site gets instead of Vimma</span></pre>
+
+<p>More: <a href="#remap-a-key">remapping keys</a> · <a href="{{root}}docs/modes/#link-hints">link hints</a> · <a href="{{root}}docs/firefox-shortcuts/#what-moved">Firefox's shortcuts</a> · <a href="{{root}}docs/firefox-shortcuts/#keys-a-site-keeps">keys a site keeps</a></p>
+
+<h3 id="set-panes">Scrolling, panes and the side panel</h3>
+
+<pre class="code">[scroll]
+step = 60<span class="c">             # CSS pixels that j, k, h and l scroll (1–2000)</span>
+
+[panes]
+max = 8<span class="c">               # most panes a workspace shows at once (1–16)</span>
+max_splits = 9<span class="c">        # most splits a workspace keeps (1–9)</span>
+layout = &quot;dwindle&quot;<span class="c">    # ctrl+b enter's new pane: &quot;dwindle&quot; or &quot;manual&quot;</span>
+main_size = 60<span class="c">        # main pane of the main-* layouts, in percent (20–80)</span>
+new_tab = &quot;alone&quot;<span class="c">     # a tab opened during a split: &quot;alone&quot; or &quot;pane&quot;</span>
+
+[panel]
+numbers = &quot;absolute&quot;<span class="c">  # side panel rows: &quot;absolute&quot;, &quot;relative&quot; or &quot;hybrid&quot;</span></pre>
+
+<p>More: <a href="{{root}}docs/panes/#several-splits">several splits</a> · <a href="{{root}}docs/panes/#picking-a-tab-during-a-split">tabs during a split</a> · <a href="{{root}}docs/tabs/#side-panel">side panel</a></p>
+
+<h3 id="set-window">The window and the theme</h3>
+
+<pre class="code">[ui]
+toolbar = &quot;hidden&quot;<span class="c">        # Firefox's toolbar: &quot;hidden&quot; or &quot;shown&quot;</span>
+<span class="c"># bookmarks_toolbar = &quot;shown&quot;  # &quot;shown&quot;, &quot;hidden&quot;, &quot;newtab&quot;</span>
+pdf_outline = &quot;shown&quot;<span class="c">     # outline when a PDF opens: &quot;shown&quot; or &quot;hidden&quot;</span>
+tabline = &quot;auto&quot;<span class="c">          # tab line: &quot;auto&quot; (2+ tabs), &quot;always&quot; or &quot;off&quot;</span>
+tabline_width = 14<span class="c">        # columns for each tab's name (4–60)</span>
+
+[statusbar]
+tab = true<span class="c">                # false: no tab title while the tab line shows</span>
+
+[theme]
+source = &quot;omarchy&quot;<span class="c">        # your Omarchy theme where installed, or &quot;file&quot;</span>
+name = &quot;vimma&quot;<span class="c">            # the built-in palette (the only one)</span>
+<span class="c"># appearance = &quot;system&quot;   # &quot;system&quot;, &quot;dark&quot;, &quot;light&quot;; unset: :theme</span>
+font = &quot;monospace&quot;<span class="c">        # the status bar's and pickers' font</span>
+
+[theme.colors]
+<span class="c"># accent = &quot;#7aa2f7&quot;      # any key of Omarchy's colors.toml</span></pre>
+
+<p>More: <a href="{{root}}docs/tabs/#tab-line">tab line</a> · <a href="{{root}}docs/bookmarks/#firefoxs-bookmarks-toolbar">Bookmarks Toolbar</a> · <a href="{{root}}docs/pdf/">PDF viewer</a> · <a href="#colours">colours</a> · <a href="#your-own-colours">your own colours</a></p>
+
+<h3 id="set-workspaces">Workspaces and where links open</h3>
+
+<pre class="code"><span class="c"># [workspaces.work]       # a workspace that always exists, in file order</span>
+<span class="c"># color = &quot;blue&quot;          # a Firefox container colour; default &quot;gray&quot;</span>
+<span class="c"># icon = &quot;briefcase&quot;      # a container icon; default &quot;circle&quot;</span>
+<span class="c"># home = &quot;https://intranet.example&quot;  # its home page</span>
+
+<span class="c"># [[routes]]              # the first rule that matches wins</span>
+<span class="c"># domain = &quot;github.com&quot;   # or url = &quot;https://…&quot;, or app = &quot;slack&quot;</span>
+<span class="c"># workspace = &quot;work&quot;</span>
+
+<span class="c"># [routing]</span>
+<span class="c"># default_workspace = &quot;work&quot;  # links from other programs no rule matches</span>
+
+[private]
+placement = &quot;swap&quot;<span class="c">        # private workspace: &quot;swap&quot; (in place) or &quot;window&quot;</span></pre>
+
+<p>More: <a href="{{root}}docs/workspaces/">workspaces</a> · <a href="{{root}}docs/workspaces/#send-sites">routing</a> · <a href="{{root}}docs/workspaces/#private">private workspace</a></p>
+
+<h3 id="set-bookmarks">Bookmarks, search and updates</h3>
+
+<pre class="code">[bookmarks]
+root = &quot;workspace&quot;<span class="c">        # panel lists: &quot;workspace&quot;, &quot;toolbar&quot; or &quot;all&quot;</span>
+bookmarklets = &quot;none&quot;<span class="c">     # who may run bookmarklets: &quot;none&quot;, &quot;user&quot;, &quot;agent&quot;</span>
+write_back = &quot;all&quot;<span class="c">        # what reaches bookmarks.toml: &quot;all&quot;, &quot;vimma&quot;, &quot;none&quot;</span>
+
+<span class="c"># [search]</span>
+<span class="c"># default = &quot;DuckDuckGo&quot;  # an installed engine, or &quot;@alias&quot; of a URL below</span>
+<span class="c"># [search.aliases]</span>
+<span class="c"># gh = &quot;https://github.com/search?q=%s&quot;  # @gh vimma searches GitHub</span>
+<span class="c"># w = &quot;Wikipedia (en)&quot;    # @w for an installed engine</span>
+
+[updates]
+check = true<span class="c">              # false: stops the check every 12 hours</span></pre>
+
+<p>More: <a href="{{root}}docs/bookmarks/">bookmarks panel</a> · <a href="{{root}}docs/bookmarks/#bookmarks-in-a-file"><code>bookmarks.toml</code></a> · <a href="#search-engines">search engines</a></p>
+
+<h3 id="set-agents">AI agents</h3>
+
+<pre class="code">[mcp]
+<span class="c"># enabled = false         # agents may connect; unset: :mcp on|off</span>
+workspace = &quot;agent&quot;<span class="c">       # the agent workspace's name</span>
+ask_timeout = 50<span class="c">          # seconds a question waits for you (10–300)</span>
+notify = true<span class="c">             # a desktop notification when an agent asks</span>
+grant_minutes = 0<span class="c">         # minutes a bare a allows; 0: until it quits</span>
+grant_max_minutes = 480<span class="c">   # most minutes a count before a allows (1–1440)</span>
+max_read_chars = 200000<span class="c">   # most page text one read gives (1000–500000)</span>
+download_dir = &quot;~/Downloads/vimma-agent&quot;<span class="c">  # where agent downloads go</span>
+download_max_mb = 200<span class="c">     # largest agent download, in MB (1–4096)</span>
+clamav_max_age_days = 7<span class="c">   # oldest ClamAV definitions a scan trusts (1–90)</span>
+
+[agent]
+<span class="c"># default = &quot;ollama&quot;      # the provider new conversations start with</span>
+local_only = false<span class="c">        # true: refuse every model not on this machine</span>
+max_running = 3<span class="c">           # tasks running at once (1–10)</span>
+max_steps = 100<span class="c">           # tool calls before a task stops (1–1000)</span>
+max_tokens = 2000000<span class="c">      # tokens before a task stops (1000–100000000)</span>
+max_cost = 2<span class="c">              # cost a task stops at, with prices set (≤ 1000)</span>
+<span class="c"># keep_days = 30          # delete conversations unused this long (1–3650)</span>
+<span class="c"># keep_results = 6        # recent tool results sent whole (0–1000)</span>
+
+<span class="c"># [[agent.providers]]     # a model the agent can use; never a key here</span>
+<span class="c"># name = &quot;ollama&quot;</span>
+<span class="c"># kind = &quot;openai&quot;         # &quot;openai&quot; (OpenAI-compatible) or &quot;anthropic&quot;</span>
+<span class="c"># endpoint = &quot;http://127.0.0.1:11434/v1&quot;</span>
+<span class="c"># model = &quot;qwen3:14b&quot;</span></pre>
+
+<p>More: <a href="{{root}}docs/agent-workspace/">agents</a> · <a href="{{root}}docs/agent-workspace/#vimmas-own-agent">Vimma's own agent</a></p>
 
 <p>An older file may start with a <code>schema</code> line. Vimma ignores it, so you can keep it or delete it.</p>
 
