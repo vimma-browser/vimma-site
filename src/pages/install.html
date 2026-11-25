@@ -4,45 +4,25 @@
 <p>Vimma <code>{{version}}</code>, on Firefox {{firefox}}, is released for <strong>Linux x86_64</strong> and for <strong>macOS 15 (Sequoia) or later on Apple Silicon</strong> (M1 or later). There is no build for Intel Macs or Windows.</p>
 
 <h2 id="arch">Arch Linux</h2>
-<p>One command adds Vimma's signed pacman repository and installs Vimma, and from then on updates come with your system upgrade, <code>sudo pacman -Syu</code>. It imports the key that signs the repository, trusts it, adds the repository to the end of <code>/etc/pacman.conf</code> unless it is already there, and installs the package; it stops at the first step that fails, and running it again is harmless:</p>
+<p>Three steps add Vimma's signed pacman repository and install Vimma, the same on Arch Linux and on <a href="https://omarchy.org/">Omarchy</a>, and from then on Vimma updates with your system.</p>
+<ol>
+<li><p>Add the repository. This imports the key that signs it, trusts it, and adds the repository to the end of <code>/etc/pacman.conf</code> unless it is already there; it stops at the first step that fails, and running it again is harmless:</p>
 <div class="cmdbox">
-  <pre class="code wrap" id="arch-cmd"><span class="p">$ </span>curl -fsSL https://updates.vimma.dev/vimma-packages.asc | <span class="nw">sudo pacman-key --add - \</span>
+  <pre class="code wrap" id="arch-repo"><span class="p">$ </span>curl -fsSL https://updates.vimma.dev/vimma-packages.asc | <span class="nw">sudo pacman-key --add - \</span>
     &amp;&amp; <span class="nw">sudo pacman-key --lsign-key</span> 110649CB2BC11400828DD0D497FD3D2B24AD4390 \
-    &amp;&amp; { grep -q '^\[vimma\]' /etc/pacman.conf || printf '\n[vimma]\nSigLevel = Required\nServer = https://updates.vimma.dev/arch/$arch\n' | <span class="nw">sudo tee -a /etc/pacman.conf</span> <span class="nw">&gt;/dev/null; } \</span>
-    &amp;&amp; <span class="nw">sudo pacman -Syu vimma-bin</span></pre>
-  <button type="button" class="copy" data-copy="arch-cmd" aria-live="polite" data-js-only hidden>copy</button>
+    &amp;&amp; { grep -q '^\[vimma\]' /etc/pacman.conf || printf '\n[vimma]\nSigLevel = Required\nServer = https://updates.vimma.dev/arch/$arch\n' | <span class="nw">sudo tee -a /etc/pacman.conf</span> <span class="nw">&gt;/dev/null; }</span></pre>
+  <button type="button" class="copy" data-copy="arch-repo" aria-live="polite" data-js-only hidden>copy</button>
 </div>
-<p>The key's fingerprint is <code>1106 49CB 2BC1 1400 828D D0D4 97FD 3D2B 24AD 4390</code>; the second step trusts only the key with that fingerprint, and fails if the key you imported has another. <code>SigLevel = Required</code> makes pacman refuse the repository's package list, not only its packages, unless it is signed.</p>
-<p id="omarchy">On <a href="https://omarchy.org/">Omarchy</a>, use this command instead. Omarchy upgrades the system through <code>omarchy update</code> and stops a direct <code>pacman -Syu</code> that would upgrade other packages, so the last step uses it, then installs Vimma. From then on, <code>omarchy update</code> upgrades Vimma with the rest of the system:</p>
+<p>The key's fingerprint is <code>1106 49CB 2BC1 1400 828D D0D4 97FD 3D2B 24AD 4390</code>; the second part trusts only the key with that fingerprint, and fails if the key you imported has another. <code>SigLevel = Required</code> makes pacman refuse the repository's package list, not only its packages, unless it is signed.</p></li>
+<li id="omarchy"><p>Update your system as you usually do, which also reads the new repository: <code>sudo pacman -Syu</code>, or on Omarchy, <code>omarchy update</code>.</p></li>
+<li><p>Install Vimma:</p>
 <div class="cmdbox">
-  <pre class="code wrap" id="omarchy-cmd"><span class="p">$ </span>curl -fsSL https://updates.vimma.dev/vimma-packages.asc | <span class="nw">sudo pacman-key --add - \</span>
-    &amp;&amp; <span class="nw">sudo pacman-key --lsign-key</span> 110649CB2BC11400828DD0D497FD3D2B24AD4390 \
-    &amp;&amp; { grep -q '^\[vimma\]' /etc/pacman.conf || printf '\n[vimma]\nSigLevel = Required\nServer = https://updates.vimma.dev/arch/$arch\n' | <span class="nw">sudo tee -a /etc/pacman.conf</span> <span class="nw">&gt;/dev/null; } \</span>
-    &amp;&amp; <span class="nw">omarchy update</span> &amp;&amp; <span class="nw">sudo pacman -S --needed vimma-bin</span></pre>
-  <button type="button" class="copy" data-copy="omarchy-cmd" aria-live="polite" data-js-only hidden>copy</button>
-</div>
-<details class="steps">
-<summary>Step by step</summary>
-<p>Import the key and trust it:</p>
-<div class="cmdbox">
-  <pre class="code wrap" id="arch-key"><span class="p">$ </span>curl -fsSL https://updates.vimma.dev/vimma-packages.asc | <span class="nw">sudo pacman-key --add -</span>
-<span class="p">$ </span><span class="nw">sudo pacman-key --lsign-key</span> 110649CB2BC11400828DD0D497FD3D2B24AD4390</pre>
-  <button type="button" class="copy" data-copy="arch-key" aria-live="polite" data-js-only hidden>copy</button>
-</div>
-<p>add the repository to the end of <code>/etc/pacman.conf</code>:</p>
-<div class="cmdbox">
-  <pre class="code wrap" id="arch-conf">[vimma]
-SigLevel = Required
-Server = https://updates.vimma.dev/arch/$arch</pre>
-  <button type="button" class="copy" data-copy="arch-conf" aria-live="polite" data-js-only hidden>copy</button>
-</div>
-<p>and install Vimma:</p>
-<div class="cmdbox">
-  <pre class="code wrap" id="arch-install"><span class="p">$ </span>sudo pacman -Syu vimma-bin</pre>
+  <pre class="code wrap" id="arch-install"><span class="p">$ </span>sudo pacman -S --needed vimma-bin</pre>
   <button type="button" class="copy" data-copy="arch-install" aria-live="polite" data-js-only hidden>copy</button>
 </div>
-<p>On Omarchy, install it with <code>omarchy update &amp;&amp; sudo pacman -S --needed vimma-bin</code> instead.</p>
-</details>
+<p>It has no <code>-y</code> or <code>-u</code>, so it never makes a partial upgrade, and Omarchy's update guard lets it through.</p></li>
+</ol>
+<p>From then on, your usual system update upgrades Vimma too: <code>sudo pacman -Syu</code>, or <code>omarchy update</code> on Omarchy.</p>
 <p>The <code>vimma-bin</code> package is built and signed with each release, so nothing is built on your machine. It installs Vimma to <code>/opt/vimma</code> with <code>vimma</code> on your <code>PATH</code>, a desktop entry and icons. pacman checks the signatures of the repository and of the package. <code>sudo pacman -R vimma-bin</code> removes Vimma; your profile stays in your home directory.</p>
 <p>Or build the same package yourself from the release's <code>PKGBUILD</code>, as your normal user, from any directory:</p>
 <div class="cmdbox">

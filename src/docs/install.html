@@ -3,19 +3,15 @@
 
 <h2 id="install-it">Install it</h2>
 
-<p>On Linux, one command adds Vimma's signed package repository and installs Vimma, and from then on updates come with your system upgrade. Each stops at the first step that fails, and running it again is harmless. The key that signs the repositories has the fingerprint <code>1106 49CB 2BC1 1400 828D D0D4 97FD 3D2B 24AD 4390</code>. On Arch Linux:</p>
+<p>On Linux, Vimma's signed package repository brings Vimma and, from then on, its updates with your system upgrade. The commands stop at the first step that fails, and running them again is harmless. The key that signs the repositories has the fingerprint <code>1106 49CB 2BC1 1400 828D D0D4 97FD 3D2B 24AD 4390</code>. On Arch Linux and Omarchy, add the repository:</p>
 
 <pre class="code wrap">curl -fsSL https://updates.vimma.dev/vimma-packages.asc | <span class="nw">sudo pacman-key --add - \</span>
     &amp;&amp; <span class="nw">sudo pacman-key --lsign-key</span> 110649CB2BC11400828DD0D497FD3D2B24AD4390 \
-    &amp;&amp; { grep -q '^\[vimma\]' /etc/pacman.conf || printf '\n[vimma]\nSigLevel = Required\nServer = https://updates.vimma.dev/arch/$arch\n' | <span class="nw">sudo tee -a /etc/pacman.conf</span> <span class="nw">&gt;/dev/null; } \</span>
-    &amp;&amp; <span class="nw">sudo pacman -Syu vimma-bin</span></pre>
+    &amp;&amp; { grep -q '^\[vimma\]' /etc/pacman.conf || printf '\n[vimma]\nSigLevel = Required\nServer = https://updates.vimma.dev/arch/$arch\n' | <span class="nw">sudo tee -a /etc/pacman.conf</span> <span class="nw">&gt;/dev/null; }</span></pre>
 
-<p>On Omarchy, which upgrades the system through <code>omarchy update</code>, the last step uses it, and from then on <code>omarchy update</code> upgrades Vimma with the rest of the system:</p>
+<p>update your system as you usually do, <code>sudo pacman -Syu</code> or, on Omarchy, <code>omarchy update</code>, and install Vimma:</p>
 
-<pre class="code wrap">curl -fsSL https://updates.vimma.dev/vimma-packages.asc | <span class="nw">sudo pacman-key --add - \</span>
-    &amp;&amp; <span class="nw">sudo pacman-key --lsign-key</span> 110649CB2BC11400828DD0D497FD3D2B24AD4390 \
-    &amp;&amp; { grep -q '^\[vimma\]' /etc/pacman.conf || printf '\n[vimma]\nSigLevel = Required\nServer = https://updates.vimma.dev/arch/$arch\n' | <span class="nw">sudo tee -a /etc/pacman.conf</span> <span class="nw">&gt;/dev/null; } \</span>
-    &amp;&amp; <span class="nw">omarchy update</span> &amp;&amp; <span class="nw">sudo pacman -S --needed vimma-bin</span></pre>
+<pre class="code wrap">sudo pacman -S --needed vimma-bin</pre>
 
 <p>On Debian 12+ and Ubuntu 22.04+, where the repository's file holds the same key and trusts it for this repository only:</p>
 
