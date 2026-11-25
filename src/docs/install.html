@@ -3,21 +3,29 @@
 
 <h2 id="install-it">Install it</h2>
 
-<p>On Linux, add Vimma's signed package repository once, and updates come with your system upgrade. On Arch Linux, import and trust the key, whose fingerprint is <code>1106 49CB 2BC1 1400 828D D0D4 97FD 3D2B 24AD 4390</code>:</p>
+<p>On Linux, one command adds Vimma's signed package repository and installs Vimma, and from then on updates come with your system upgrade. Each stops at the first step that fails, and running it again is harmless. The key that signs the repositories has the fingerprint <code>1106 49CB 2BC1 1400 828D D0D4 97FD 3D2B 24AD 4390</code>. On Arch Linux:</p>
 
-<pre class="code wrap">curl -fsSL https://updates.vimma.dev/vimma-packages.asc | sudo pacman-key --add -
-sudo pacman-key --lsign-key 110649CB2BC11400828DD0D497FD3D2B24AD4390</pre>
+<pre class="code wrap">curl -fsSL https://updates.vimma.dev/vimma-packages.asc | <span class="nw">sudo pacman-key --add - \</span>
+    &amp;&amp; <span class="nw">sudo pacman-key --lsign-key</span> 110649CB2BC11400828DD0D497FD3D2B24AD4390 \
+    &amp;&amp; { grep -q '^\[vimma\]' /etc/pacman.conf || printf '\n[vimma]\nSigLevel = Required\nServer = https://updates.vimma.dev/arch/$arch\n' | <span class="nw">sudo tee -a /etc/pacman.conf</span> <span class="nw">&gt;/dev/null; } \</span>
+    &amp;&amp; <span class="nw">sudo pacman -Syu vimma-bin</span></pre>
 
-<p>add the repository to the end of <code>/etc/pacman.conf</code>, then run <code>sudo pacman -Syu vimma-bin</code>:</p>
+<p>On Debian 12+ and Ubuntu 22.04+, where the repository's file holds the same key and trusts it for this repository only:</p>
 
-<pre class="code wrap">[vimma]
-Server = https://updates.vimma.dev/arch/$arch</pre>
+<pre class="code wrap">curl -fsSL https://updates.vimma.dev/apt/vimma.sources | <span class="nw">sudo tee</span> /etc/apt/sources.list.d/vimma.sources <span class="nw">&gt;/dev/null \</span>
+    &amp;&amp; sudo apt update &amp;&amp; sudo apt install vimma</pre>
 
-<p>On Debian and Ubuntu, the setup is one file that holds the same key, then <code>sudo apt update &amp;&amp; sudo apt install vimma</code>:</p>
+<p>On Fedora:</p>
 
-<pre class="code wrap">curl -fsSL https://updates.vimma.dev/apt/vimma.sources | sudo tee /etc/apt/sources.list.d/vimma.sources</pre>
+<pre class="code wrap"><span class="nw">sudo dnf config-manager addrepo</span> --overwrite --from-repofile=https://updates.vimma.dev/rpm/vimma.repo \
+    &amp;&amp; sudo dnf install vimma</pre>
 
-<p>On Fedora, <code>sudo dnf config-manager addrepo --from-repofile=https://updates.vimma.dev/rpm/vimma.repo</code>, then <code>sudo dnf install vimma</code>; on openSUSE, <code>sudo zypper addrepo --refresh --gpgcheck-strict https://updates.vimma.dev/rpm/vimma.repo</code>, then <code>sudo zypper refresh &amp;&amp; sudo zypper install vimma</code>. dnf and zypper show the key's fingerprint, the one above, and ask once before they trust it. The <a href="{{root}}install/">install page</a> has each step.</p>
+<p>On openSUSE:</p>
+
+<pre class="code wrap">{ zypper lr vimma &gt;/dev/null 2&gt;&amp;1 || <span class="nw">sudo zypper addrepo</span> <span class="nw">--refresh --gpgcheck-strict</span> https://updates.vimma.dev/rpm/<span class="nw">vimma.repo; } \</span>
+    &amp;&amp; sudo zypper refresh &amp;&amp; sudo zypper install vimma</pre>
+
+<p>dnf and zypper show the key's fingerprint, the one above, and ask once before they trust it. The <a href="{{root}}install/">install page</a> has each command with copy buttons, and the same steps one at a time.</p>
 
 <p>Without a repository, the <a href="https://github.com/vimma-browser/vimma/releases/latest">latest release</a> has an AppImage and a tarball, which update themselves, and a <code>.deb</code> and an <code>.rpm</code>. Vimma tells you in the status bar when a newer release is out, and <code>:update</code> shows the command to install it. <a href="#installing">Installing</a>, below, explains how to verify a download.</p>
 

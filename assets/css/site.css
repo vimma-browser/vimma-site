@@ -783,6 +783,20 @@ main > :first-child {
   user-select: none;
 }
 
+/* the separate steps under a one-command install, folded away */
+details.steps {
+  margin: 0 0 var(--s2);
+}
+
+details.steps > summary {
+  margin-bottom: var(--s2);
+  cursor: pointer;
+}
+
+details.steps:not([open]) > summary {
+  margin-bottom: 0;
+}
+
 /* a one-line command that is longer than the column wraps instead of scrolling, so all of it is
    in view before it is copied; the wrap is soft, so a copy is still one line */
 .code.wrap {
