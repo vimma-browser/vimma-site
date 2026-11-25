@@ -175,7 +175,7 @@ function limitsLinks(titles: string[], limits: MdSection, root: string): string 
     return `<li><a href="${root}docs/limits/#${LIMIT_ID(t)}">${escapeHtml(t.replace(/\s*\(.*\)$/, ""))}</a></li>`;
   });
   return `<h2 id="known-limits">Known limits</h2>
-<p>Vimma is pre-alpha. What does not work yet, or works with a catch, is listed on the known limits page:</p>
+<p>Vimma is alpha. What does not work yet, or works with a catch, is listed on the known limits page:</p>
 <ul class="limit-links">${items.join("")}</ul>`;
 }
 

@@ -92,7 +92,7 @@ export const DOC_PAGES: DocPage[] = [
     slug: "install",
     title: "Install and first launch",
     group: "Get started",
-    description: "Install Vimma on Linux x86_64 from a release, on Arch Linux with one command, or on a Mac with Homebrew, and start it with a profile of its own.",
+    description: "Install Vimma on Linux x86_64 from its signed pacman, apt, dnf and zypper repositories or a release, or on a Mac with Homebrew, and start it with a profile of its own.",
     blocks: [
       { guide: "Installing" },
       { guide: "First launch, with its own profile" },
@@ -254,7 +254,7 @@ export const DOC_PAGES: DocPage[] = [
   {
     slug: "limits",
     title: "Known limits",
-    headTitle: "Known limits of pre-alpha Vimma",
+    headTitle: "Known limits of alpha Vimma",
     group: "Trust and limits",
     description: "Every known gap in Vimma today, one line each: features, panes, add-ons, privacy, agents, compatibility and platforms.",
     blocks: [],

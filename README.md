@@ -25,7 +25,7 @@ in a minute or two. See [Deploying](#deploying).
 | `/`        | `src/pages/index.html`   | Headline and buttons, facts, the promo video, features, closing   |
 | `/docs/`   | `src/docs/`, `data/docs/`| Start here, Why Vimma, then pages from the guide                   |
 | `/keys/`   | `src/pages/keys.html`    | Every default binding, filterable, from `data/bindings.json`       |
-| `/install/`| `src/pages/install.html` | Arch Linux command, release packages, build from source            |
+| `/install/`| `src/pages/install.html` | Package repositories, release packages, build from source          |
 | `/about/`  | `src/pages/about.html`   | Name, Firefox base, maker, licence, source, site privacy, accessibility, links, thanks |
 | `/support/`| `src/pages/support.html` | Help: where to start, first checks, the guide's FAQ, Vimma's topics, Firefox's help, reporting a bug, where to ask |
 | `404.html` | `src/pages/404.html`     | Not found (links are root-absolute: it assumes the site is at `/`) |
@@ -93,7 +93,7 @@ npm run release:sync -- v0.1.2     # … of a given release tag
   `{{version}}`, `{{firefox}}` (`158.0`), `{{firefox_major}}` (`158`), `{{release_tag}}`, `{{deb}}`,
   `{{appimage}}`, `{{tarball}}`, `{{rpm}}`, and `{{dmg}}` with `{{dmg_version}}`, `{{dmg_tag}}`
   and `{{dmg_note}}` (the macOS `.dmg`, which can come from an older release; see below) come from
-  `data/release.json` (see [Keeping up with releases](#keeping-up-with-releases)), and `{{arch_install}}` is the Arch Linux command
+  `data/release.json` (see [Keeping up with releases](#keeping-up-with-releases)), and `{{arch_install}}` is the command that builds the Arch package from the release's `PKGBUILD`
   (`ARCH_INSTALL` in `scripts/release.ts`), so the install page and the docs show
   the same line.
 - `src/ts/site.ts` is the one script every page loads (an ES module): the keys (`j k d u gg G / ? [ ]

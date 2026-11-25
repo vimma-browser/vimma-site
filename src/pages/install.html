@@ -1,25 +1,71 @@
-<!--{"title": "Install Vimma · Linux x86_64, Arch Linux and macOS", "short": "install", "out": "install/", "description": "Install Vimma on Linux x86_64: one command on Arch Linux, or a .deb, .rpm, AppImage or tarball from the latest release. On a Mac with Apple Silicon: Homebrew or a .dmg. Or build it from source."}-->
+<!--{"title": "Install Vimma · Linux x86_64, Arch Linux and macOS", "short": "install", "out": "install/", "description": "Install Vimma on Linux x86_64 from its signed pacman, apt, dnf and zypper repositories, so it updates with your system, or as an AppImage, tarball, .deb or .rpm from the latest release. On a Mac with Apple Silicon: Homebrew or a .dmg. Or build it from source."}-->
 <p class="eyebrow">Vimma {{version}} · Linux x86_64 · macOS</p>
 <h1>Install</h1>
 <p>Vimma <code>{{version}}</code>, on Firefox {{firefox}}, is released for <strong>Linux x86_64</strong> and for <strong>macOS 15 (Sequoia) or later on Apple Silicon</strong> (M1 or later). There is no build for Intel Macs or Windows.</p>
 
 <h2 id="arch">Arch Linux</h2>
-<p>Run as your normal user, from any directory. The same command installs and updates:</p>
+<p>Add Vimma's signed pacman repository once, and updates come with your system upgrade, <code>sudo pacman -Syu</code>. First import the key that signs the repository and trust it:</p>
 <div class="cmdbox">
-  <pre class="code wrap" id="arch-cmd"><span class="p">$ </span>{{arch_install}}</pre>
+  <pre class="code wrap" id="arch-key"><span class="p">$ </span>curl -fsSL https://updates.vimma.dev/vimma-packages.asc | <span class="nw">sudo pacman-key --add -</span>
+<span class="p">$ </span><span class="nw">sudo pacman-key --lsign-key</span> 110649CB2BC11400828DD0D497FD3D2B24AD4390</pre>
+  <button type="button" class="copy" data-copy="arch-key" aria-live="polite" data-js-only hidden>copy</button>
+</div>
+<p>The key's fingerprint is <code>1106 49CB 2BC1 1400 828D D0D4 97FD 3D2B 24AD 4390</code>; the second command trusts only the key with that fingerprint, and fails if the key you imported has another. Then add the repository to the end of <code>/etc/pacman.conf</code>:</p>
+<div class="cmdbox">
+  <pre class="code wrap" id="arch-conf">[vimma]
+Server = https://updates.vimma.dev/arch/$arch</pre>
+  <button type="button" class="copy" data-copy="arch-conf" aria-live="polite" data-js-only hidden>copy</button>
+</div>
+<p>and install Vimma:</p>
+<div class="cmdbox">
+  <pre class="code wrap" id="arch-cmd"><span class="p">$ </span>sudo pacman -Syu vimma-bin</pre>
   <button type="button" class="copy" data-copy="arch-cmd" aria-live="polite" data-js-only hidden>copy</button>
 </div>
-<p>It builds in <code>~/.cache/vimma-build</code>, which you can delete at any time: it downloads the release's <code>PKGBUILD</code> for the <code>vimma-bin</code> package, which installs Vimma to <code>/opt/vimma</code> with <code>vimma</code> on your <code>PATH</code>, a desktop entry and icons. <code>makepkg -si</code> asks for your password to install the package and refuses to run as root. To update, run the same command again. <code>sudo pacman -R vimma-bin</code> removes Vimma; your profile stays in your home directory.</p>
+<p>The <code>vimma-bin</code> package is built and signed with each release, so nothing is built on your machine. It installs Vimma to <code>/opt/vimma</code> with <code>vimma</code> on your <code>PATH</code>, a desktop entry and icons. pacman checks the signatures of the repository and of the package. <code>sudo pacman -R vimma-bin</code> removes Vimma; your profile stays in your home directory.</p>
+<p>Or build the same package yourself from the release's <code>PKGBUILD</code>, as your normal user, from any directory:</p>
+<div class="cmdbox">
+  <pre class="code wrap" id="arch-build"><span class="p">$ </span>{{arch_install}}</pre>
+  <button type="button" class="copy" data-copy="arch-build" aria-live="polite" data-js-only hidden>copy</button>
+</div>
+<p>It builds in <code>~/.cache/vimma-build</code>, about 450 MB while it builds, which you can delete at any time. <code>makepkg -si</code> asks for your password to install the package and refuses to run as root. Without the repository, a system upgrade does not update Vimma: run the same command again for each release. A package built this way moves to the repository on the next <code>sudo pacman -Syu</code> after you add it, since both are <code>vimma-bin</code>.</p>
 
-<h2 id="other">Other distributions</h2>
+<h2 id="debian">Debian and Ubuntu</h2>
+<p>On Debian 12 or later and Ubuntu 22.04 or later, add Vimma's signed apt repository once, and updates come with your system upgrade, <code>sudo apt upgrade</code>. The setup is one file, which holds the key and trusts it for this repository only, never for the rest of the system:</p>
+<div class="cmdbox">
+  <pre class="code wrap" id="apt-setup"><span class="p">$ </span>curl -fsSL https://updates.vimma.dev/apt/vimma.sources | <span class="nw">sudo tee</span> /etc/apt/sources.list.d/vimma.sources</pre>
+  <button type="button" class="copy" data-copy="apt-setup" aria-live="polite" data-js-only hidden>copy</button>
+</div>
+<p>The key in it has the fingerprint <code>1106 49CB 2BC1 1400 828D D0D4 97FD 3D2B 24AD 4390</code>. Then install Vimma:</p>
+<div class="cmdbox">
+  <pre class="code wrap" id="apt-cmd"><span class="p">$ </span>sudo apt update &amp;&amp; sudo apt install vimma</pre>
+  <button type="button" class="copy" data-copy="apt-cmd" aria-live="polite" data-js-only hidden>copy</button>
+</div>
+<p>apt checks the repository's signature and each package's checksum against it. <code>sudo apt remove vimma</code> removes Vimma; your profile stays in your home directory.</p>
+
+<h2 id="fedora">Fedora and openSUSE</h2>
+<p>Add Vimma's signed rpm repository once, and updates come with your system upgrade, <code>sudo dnf upgrade</code> or <code>sudo zypper up</code>. On Fedora:</p>
+<div class="cmdbox">
+  <pre class="code wrap" id="dnf-cmd"><span class="p">$ </span><span class="nw">sudo dnf config-manager addrepo</span> --from-repofile=https://updates.vimma.dev/rpm/vimma.repo
+<span class="p">$ </span>sudo dnf install vimma</pre>
+  <button type="button" class="copy" data-copy="dnf-cmd" aria-live="polite" data-js-only hidden>copy</button>
+</div>
+<p>On openSUSE:</p>
+<div class="cmdbox">
+  <pre class="code wrap" id="zypper-cmd"><span class="p">$ </span><span class="nw">sudo zypper addrepo</span> <span class="nw">--refresh --gpgcheck-strict</span> https://updates.vimma.dev/rpm/vimma.repo
+<span class="p">$ </span>sudo zypper refresh &amp;&amp; sudo zypper install vimma</pre>
+  <button type="button" class="copy" data-copy="zypper-cmd" aria-live="polite" data-js-only hidden>copy</button>
+</div>
+<p>dnf and zypper show the key's fingerprint and ask once before they trust it: accept it only if it is <code>1106 49CB 2BC1 1400 828D D0D4 97FD 3D2B 24AD 4390</code>. They then check the signatures of the repository and of each package. <code>sudo dnf remove vimma</code> or <code>sudo zypper remove vimma</code> removes Vimma; your profile stays in your home directory.</p>
+
+<h2 id="other">Other distributions and direct downloads</h2>
 <p>The <a href="https://github.com/vimma-browser/vimma/releases/latest">latest release</a> has, for Linux x86_64:</p>
 <ul>
-  <li>a <code>.deb</code> for Debian 12+ and Ubuntu 22.04+: <code>sudo apt install ./{{deb}}</code></li>
-  <li>an <code>.rpm</code> for Fedora and openSUSE: <code>sudo dnf install ./{{rpm}}</code>, or <code>sudo zypper install --allow-unsigned-rpm ./{{rpm}}</code> (the package has no OpenPGP signature; the release's signed <code>SHA256SUMS</code> vouches for it)</li>
   <li>an AppImage, <code>{{appimage}}</code>: make it executable and run it; it updates itself</li>
   <li>a tarball, <code>{{tarball}}</code>: unpack it and run <code>vimma/vimma</code>; it updates itself</li>
+  <li>a <code>.deb</code> for Debian 12+ and Ubuntu 22.04+: <code>sudo apt install ./{{deb}}</code></li>
+  <li>an <code>.rpm</code> for Fedora and openSUSE: <code>sudo dnf install ./{{rpm}}</code>, or <code>sudo zypper install --allow-unsigned-rpm ./{{rpm}}</code> (zypper refuses a package file whose key it has not imported; the release's signed <code>SHA256SUMS</code> vouches for it)</li>
 </ul>
-<p>Next to them are <code>SHA256SUMS</code>, an SBOM and cosign signatures. <a href="https://github.com/vimma-browser/vimma/blob/{{release_tag}}/docs/guide.md#installing">Installing</a>, in the guide, explains how to check them.</p>
+<p>A <code>.deb</code> or <code>.rpm</code> installed from a file is not updated by a system upgrade: install the next release's file over it, or add the repository above. Next to the files are <code>SHA256SUMS</code>, an SBOM and cosign signatures. <a href="https://github.com/vimma-browser/vimma/blob/{{release_tag}}/docs/guide.md#installing">Installing</a>, in the guide, explains how to check them.</p>
 
 <h2 id="macos">macOS</h2>
 {{dmg_note}}
@@ -34,7 +80,7 @@
 <p>On a Mac, passkeys stored in macOS (iCloud Keychain) do not work yet, and your profile lives in <code>~/Library/Application Support/Vimma/</code>.</p>
 
 <h2 id="updating">Updates</h2>
-<p>Since 0.1.2, Vimma checks for a new release every 12 hours, or at once with <code>:update</code>. When one is out, the status bar shows <code>⇡</code> and its version (in red for a security release), and <code>:update</code> shows the command for how you installed Vimma; each update file is checked with SHA-512. The AppImage and the tarball update themselves: the AppImage replaces its own file with the new release, the tarball installs it through Firefox's updater, and either runs the new version from the next start. The other packages only tell you, so run that command: on Arch Linux, the command above again; otherwise, install the newer <code>.deb</code> or <code>.rpm</code> over the old one (there is no Vimma repository for apt, dnf or zypper, so a system upgrade does not update it). A 0.1.1 install has no update check, so update it this way by hand once.</p>
+<p>Since 0.1.2, Vimma checks for a new release every 12 hours, or at once with <code>:update</code>. When one is out, the status bar shows <code>⇡</code> and its version (in red for a security release), and <code>:update</code> shows the command for how you installed Vimma; each update file is checked with SHA-512. From a package repository, updates come with your system upgrade: <code>sudo pacman -Syu</code>, <code>sudo apt update &amp;&amp; sudo apt upgrade</code>, <code>sudo dnf upgrade</code> or <code>sudo zypper up</code>. The AppImage and the tarball update themselves: the AppImage replaces its own file with the new release, the tarball installs it through Firefox's updater, and either runs the new version from the next start. A <code>.deb</code> or <code>.rpm</code> installed from a file, or a package built with <code>makepkg</code>, only tells you: install the newer release the same way, or add the repository for your distribution above. A 0.1.1 install has no update check, so update it by hand once.</p>
 <p>On a Mac, the notice and <code>:update</code> work the same way: run <code>brew upgrade --cask vimma</code>, or install the newer <code>.dmg</code> over the old one.</p>
 
 <p>Next: <a href="{{root}}docs/#what-you-see">what you see first</a> and <a href="{{root}}docs/#first-five-minutes">your first five minutes</a>, then the rest of the <a href="{{root}}docs/">docs</a>.</p>
