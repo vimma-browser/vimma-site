@@ -13,6 +13,14 @@
   <button type="button" class="copy" data-copy="arch-cmd" aria-live="polite" data-js-only hidden>copy</button>
 </div>
 <p>The key's fingerprint is <code>1106 49CB 2BC1 1400 828D D0D4 97FD 3D2B 24AD 4390</code>; the second step trusts only the key with that fingerprint, and fails if the key you imported has another. <code>SigLevel = Required</code> makes pacman refuse the repository's package list, not only its packages, unless it is signed.</p>
+<p id="omarchy">On <a href="https://omarchy.org/">Omarchy</a>, use this command instead. Omarchy upgrades the system through <code>omarchy update</code> and stops a direct <code>pacman -Syu</code> that would upgrade other packages, so the last step uses it, then installs Vimma. From then on, <code>omarchy update</code> upgrades Vimma with the rest of the system:</p>
+<div class="cmdbox">
+  <pre class="code wrap" id="omarchy-cmd"><span class="p">$ </span>curl -fsSL https://updates.vimma.dev/vimma-packages.asc | <span class="nw">sudo pacman-key --add - \</span>
+    &amp;&amp; <span class="nw">sudo pacman-key --lsign-key</span> 110649CB2BC11400828DD0D497FD3D2B24AD4390 \
+    &amp;&amp; { grep -q '^\[vimma\]' /etc/pacman.conf || printf '\n[vimma]\nSigLevel = Required\nServer = https://updates.vimma.dev/arch/$arch\n' | <span class="nw">sudo tee -a /etc/pacman.conf</span> <span class="nw">&gt;/dev/null; } \</span>
+    &amp;&amp; <span class="nw">omarchy update</span> &amp;&amp; <span class="nw">sudo pacman -S --needed vimma-bin</span></pre>
+  <button type="button" class="copy" data-copy="omarchy-cmd" aria-live="polite" data-js-only hidden>copy</button>
+</div>
 <details class="steps">
 <summary>Step by step</summary>
 <p>Import the key and trust it:</p>
@@ -33,6 +41,7 @@ Server = https://updates.vimma.dev/arch/$arch</pre>
   <pre class="code wrap" id="arch-install"><span class="p">$ </span>sudo pacman -Syu vimma-bin</pre>
   <button type="button" class="copy" data-copy="arch-install" aria-live="polite" data-js-only hidden>copy</button>
 </div>
+<p>On Omarchy, install it with <code>omarchy update &amp;&amp; sudo pacman -S --needed vimma-bin</code> instead.</p>
 </details>
 <p>The <code>vimma-bin</code> package is built and signed with each release, so nothing is built on your machine. It installs Vimma to <code>/opt/vimma</code> with <code>vimma</code> on your <code>PATH</code>, a desktop entry and icons. pacman checks the signatures of the repository and of the package. <code>sudo pacman -R vimma-bin</code> removes Vimma; your profile stays in your home directory.</p>
 <p>Or build the same package yourself from the release's <code>PKGBUILD</code>, as your normal user, from any directory:</p>
@@ -40,7 +49,7 @@ Server = https://updates.vimma.dev/arch/$arch</pre>
   <pre class="code wrap" id="arch-build"><span class="p">$ </span>{{arch_install}}</pre>
   <button type="button" class="copy" data-copy="arch-build" aria-live="polite" data-js-only hidden>copy</button>
 </div>
-<p>It builds in <code>~/.cache/vimma-build</code>, about 450 MB while it builds, which you can delete at any time. <code>makepkg -si</code> asks for your password to install the package and refuses to run as root. Without the repository, a system upgrade does not update Vimma: run the same command again for each release. A package built this way moves to the repository on the next <code>sudo pacman -Syu</code> after you add it, since both are <code>vimma-bin</code>.</p>
+<p>It builds in <code>~/.cache/vimma-build</code>, about 450 MB while it builds, which you can delete at any time. <code>makepkg -si</code> asks for your password to install the package and refuses to run as root. Without the repository, a system upgrade does not update Vimma: run the same command again for each release. A package built this way moves to the repository on the next <code>sudo pacman -Syu</code> after you add it (<code>omarchy update</code> on Omarchy), since both are <code>vimma-bin</code>.</p>
 
 <h2 id="debian">Debian and Ubuntu</h2>
 <p>On Debian 12 or later and Ubuntu 22.04 or later, one command adds Vimma's signed apt repository and installs Vimma, and from then on updates come with your system upgrade, <code>sudo apt upgrade</code>. The repository's setup is one file, which holds the key and trusts it for this repository only, never for the rest of the system:</p>
@@ -146,7 +155,7 @@ Server = https://updates.vimma.dev/arch/$arch</pre>
 <p>Step by step, download the file from the release page instead and run the last part of its command. A <code>.deb</code> or <code>.rpm</code> installed from a file is not updated by a system upgrade: install the next release's file over it, or add the repository above. Next to the files are <code>SHA256SUMS</code>, an SBOM and cosign signatures. <a href="https://github.com/vimma-browser/vimma/blob/{{release_tag}}/docs/guide.md#installing">Installing</a>, in the guide, explains how to check them.</p>
 
 <h2 id="updating">Updates</h2>
-<p>Since 0.1.2, Vimma checks for a new release every 12 hours, or at once with <code>:update</code>. When one is out, the status bar shows <code>⇡</code> and its version (in red for a security release), and <code>:update</code> shows the command for how you installed Vimma; each update file is checked with SHA-512. From a package repository, updates come with your system upgrade: <code>sudo pacman -Syu</code>, <code>sudo apt update &amp;&amp; sudo apt upgrade</code>, <code>sudo dnf upgrade</code> or <code>sudo zypper up</code>. The AppImage and the tarball update themselves: the AppImage replaces its own file with the new release, the tarball installs it through Firefox's updater, and either runs the new version from the next start. A <code>.deb</code> or <code>.rpm</code> installed from a file, or a package built with <code>makepkg</code>, only tells you: install the newer release the same way, or add the repository for your distribution above. A 0.1.1 install has no update check, so update it by hand once.</p>
+<p>Since 0.1.2, Vimma checks for a new release every 12 hours, or at once with <code>:update</code>. When one is out, the status bar shows <code>⇡</code> and its version (in red for a security release), and <code>:update</code> shows the command for how you installed Vimma; each update file is checked with SHA-512. From a package repository, updates come with your system upgrade: <code>sudo pacman -Syu</code> (on Omarchy, <code>omarchy update</code>), <code>sudo apt update &amp;&amp; sudo apt upgrade</code>, <code>sudo dnf upgrade</code> or <code>sudo zypper up</code>. The AppImage and the tarball update themselves: the AppImage replaces its own file with the new release, the tarball installs it through Firefox's updater, and either runs the new version from the next start. A <code>.deb</code> or <code>.rpm</code> installed from a file, or a package built with <code>makepkg</code>, only tells you: install the newer release the same way, or add the repository for your distribution above. A 0.1.1 install has no update check, so update it by hand once.</p>
 <p>On a Mac, the notice and <code>:update</code> work the same way: run <code>brew upgrade --cask vimma</code>, or install the newer <code>.dmg</code> over the old one.</p>
 
 <p>Next: <a href="{{root}}docs/#what-you-see">what you see first</a> and <a href="{{root}}docs/#first-five-minutes">your first five minutes</a>, then the rest of the <a href="{{root}}docs/">docs</a>.</p>

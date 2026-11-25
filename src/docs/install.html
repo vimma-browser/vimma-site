@@ -10,6 +10,13 @@
     &amp;&amp; { grep -q '^\[vimma\]' /etc/pacman.conf || printf '\n[vimma]\nSigLevel = Required\nServer = https://updates.vimma.dev/arch/$arch\n' | <span class="nw">sudo tee -a /etc/pacman.conf</span> <span class="nw">&gt;/dev/null; } \</span>
     &amp;&amp; <span class="nw">sudo pacman -Syu vimma-bin</span></pre>
 
+<p>On Omarchy, which upgrades the system through <code>omarchy update</code>, the last step uses it, and from then on <code>omarchy update</code> upgrades Vimma with the rest of the system:</p>
+
+<pre class="code wrap">curl -fsSL https://updates.vimma.dev/vimma-packages.asc | <span class="nw">sudo pacman-key --add - \</span>
+    &amp;&amp; <span class="nw">sudo pacman-key --lsign-key</span> 110649CB2BC11400828DD0D497FD3D2B24AD4390 \
+    &amp;&amp; { grep -q '^\[vimma\]' /etc/pacman.conf || printf '\n[vimma]\nSigLevel = Required\nServer = https://updates.vimma.dev/arch/$arch\n' | <span class="nw">sudo tee -a /etc/pacman.conf</span> <span class="nw">&gt;/dev/null; } \</span>
+    &amp;&amp; <span class="nw">omarchy update</span> &amp;&amp; <span class="nw">sudo pacman -S --needed vimma-bin</span></pre>
+
 <p>On Debian 12+ and Ubuntu 22.04+, where the repository's file holds the same key and trusts it for this repository only:</p>
 
 <pre class="code wrap">curl -fsSL https://updates.vimma.dev/apt/vimma.sources | <span class="nw">sudo tee</span> /etc/apt/sources.list.d/vimma.sources <span class="nw">&gt;/dev/null \</span>
