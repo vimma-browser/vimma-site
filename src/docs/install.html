@@ -3,7 +3,7 @@
 
 <h2 id="install-it">Install it</h2>
 
-<p>On Linux, Vimma's signed package repository brings Vimma and, from then on, its updates with your system upgrade. The commands stop at the first step that fails, and running them again is harmless. The key that signs the repositories has the fingerprint <code>1106 49CB 2BC1 1400 828D D0D4 97FD 3D2B 24AD 4390</code>. On Arch Linux and Omarchy, add the repository:</p>
+<p>On Linux, Vimma's signed package repository brings Vimma and, from then on, its updates with your system upgrade. The commands stop at the first step that fails, and running them again is harmless. On Arch Linux, add the repository:</p>
 
 <pre class="code wrap">curl -fsSL https://updates.vimma.dev/vimma-packages.asc | <span class="nw">sudo pacman-key --add - \</span>
     &amp;&amp; <span class="nw">sudo pacman-key --lsign-key</span> 110649CB2BC11400828DD0D497FD3D2B24AD4390 \

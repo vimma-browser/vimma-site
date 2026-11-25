@@ -13,7 +13,7 @@
     &amp;&amp; { grep -q '^\[vimma\]' /etc/pacman.conf || printf '\n[vimma]\nSigLevel = Required\nServer = https://updates.vimma.dev/arch/$arch\n' | <span class="nw">sudo tee -a /etc/pacman.conf</span> <span class="nw">&gt;/dev/null; }</span></pre>
   <button type="button" class="copy" data-copy="arch-repo" aria-live="polite" data-js-only hidden>copy</button>
 </div>
-<p>The key's fingerprint is <code>1106 49CB 2BC1 1400 828D D0D4 97FD 3D2B 24AD 4390</code>; the second part trusts only the key with that fingerprint, and fails if the key you imported has another. <code>SigLevel = Required</code> makes pacman refuse the repository's package list, not only its packages, unless it is signed.</p></li>
+<p><code>SigLevel = Required</code> makes pacman refuse the repository's package list, not only its packages, unless it is signed.</p></li>
 <li id="omarchy"><p>Update your system as you usually do, which also reads the new repository: <code>sudo pacman -Syu</code>, or on Omarchy, <code>omarchy update</code>.</p></li>
 <li><p>Install Vimma:</p>
 <div class="cmdbox">
@@ -38,7 +38,7 @@
     &amp;&amp; sudo apt update &amp;&amp; sudo apt install vimma</pre>
   <button type="button" class="copy" data-copy="apt-cmd" aria-live="polite" data-js-only hidden>copy</button>
 </div>
-<p>The key in it has the fingerprint <code>1106 49CB 2BC1 1400 828D D0D4 97FD 3D2B 24AD 4390</code>. apt checks the repository's signature and each package's checksum against it. <code>sudo apt remove vimma</code> removes Vimma; your profile stays in your home directory.</p>
+<p>apt checks the repository's signature and each package's checksum against it. <code>sudo apt remove vimma</code> removes Vimma; your profile stays in your home directory.</p>
 <details class="steps">
 <summary>Step by step</summary>
 <p>Add the repository's file:</p>
@@ -125,7 +125,7 @@
     &amp;&amp; sudo dnf install /tmp/{{rpm}}</pre>
   <button type="button" class="copy" data-copy="rpm-cmd" aria-live="polite" data-js-only hidden>copy</button>
 </div>
-<p>and on openSUSE, where the command first imports the key that signs Vimma's packages, the one with the fingerprint <code>1106 49CB 2BC1 1400 828D D0D4 97FD 3D2B 24AD 4390</code>, because zypper refuses a package file whose key it has not imported; zypper then checks the file's signature:</p>
+<p>and on openSUSE, where the command first imports the key that signs Vimma's packages, because zypper refuses a package file whose key it has not imported; zypper then checks the file's signature:</p>
 <div class="cmdbox">
   <pre class="code wrap" id="rpm-zypper-cmd"><span class="p">$ </span>curl -fL -o /tmp/{{rpm}} https://github.com/vimma-browser/vimma/releases/download/{{release_tag}}/{{rpm}} \
     &amp;&amp; sudo rpm --import https://updates.vimma.dev/vimma-packages.asc \
