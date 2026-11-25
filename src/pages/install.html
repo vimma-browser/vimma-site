@@ -4,7 +4,7 @@
 <p>Vimma <code>{{version}}</code>, on Firefox {{firefox}}, is released for <strong>Linux x86_64</strong> and for <strong>macOS 15 (Sequoia) or later on Apple Silicon</strong> (M1 or later). There is no build for Intel Macs or Windows.</p>
 
 <h2 id="arch">Arch Linux</h2>
-<p>Three steps add Vimma's signed pacman repository and install Vimma, the same on Arch Linux and on <a href="https://omarchy.org/">Omarchy</a>, and from then on Vimma updates with your system.</p>
+<p>Three steps add Vimma's signed pacman repository and install Vimma, and from then on Vimma updates with your system.</p>
 <ol>
 <li><p>Add the repository. This imports the key that signs it, trusts it, and adds the repository to the end of <code>/etc/pacman.conf</code> unless it is already there; it stops at the first step that fails, and running it again is harmless:</p>
 <div class="cmdbox">
@@ -20,16 +20,16 @@
   <pre class="code wrap" id="arch-install"><span class="p">$ </span>sudo pacman -S --needed vimma-bin</pre>
   <button type="button" class="copy" data-copy="arch-install" aria-live="polite" data-js-only hidden>copy</button>
 </div>
-<p>It has no <code>-y</code> or <code>-u</code>, so it never makes a partial upgrade, and Omarchy's update guard lets it through.</p></li>
+<p>It has no <code>-y</code> or <code>-u</code>, so it never makes a partial upgrade.</p></li>
 </ol>
-<p>From then on, your usual system update upgrades Vimma too: <code>sudo pacman -Syu</code>, or <code>omarchy update</code> on Omarchy.</p>
+<p>From then on, your usual system update upgrades Vimma too.</p>
 <p>The <code>vimma-bin</code> package is built and signed with each release, so nothing is built on your machine. It installs Vimma to <code>/opt/vimma</code> with <code>vimma</code> on your <code>PATH</code>, a desktop entry and icons. pacman checks the signatures of the repository and of the package. <code>sudo pacman -R vimma-bin</code> removes Vimma; your profile stays in your home directory.</p>
 <p>Or build the same package yourself from the release's <code>PKGBUILD</code>, as your normal user, from any directory:</p>
 <div class="cmdbox">
   <pre class="code wrap" id="arch-build"><span class="p">$ </span>{{arch_install}}</pre>
   <button type="button" class="copy" data-copy="arch-build" aria-live="polite" data-js-only hidden>copy</button>
 </div>
-<p>It builds in <code>~/.cache/vimma-build</code>, about 450 MB while it builds, which you can delete at any time. <code>makepkg -si</code> asks for your password to install the package and refuses to run as root. Without the repository, a system upgrade does not update Vimma: run the same command again for each release. A package built this way moves to the repository on the next <code>sudo pacman -Syu</code> after you add it (<code>omarchy update</code> on Omarchy), since both are <code>vimma-bin</code>.</p>
+<p>It builds in <code>~/.cache/vimma-build</code>, about 450 MB while it builds, which you can delete at any time. <code>makepkg -si</code> asks for your password to install the package and refuses to run as root. Without the repository, a system upgrade does not update Vimma: run the same command again for each release. A package built this way moves to the repository on the next <code>sudo pacman -Syu</code> after you add it, since both are <code>vimma-bin</code>.</p>
 
 <h2 id="debian">Debian and Ubuntu</h2>
 <p>On Debian 12 or later and Ubuntu 22.04 or later, one command adds Vimma's signed apt repository and installs Vimma, and from then on updates come with your system upgrade, <code>sudo apt upgrade</code>. The repository's setup is one file, which holds the key and trusts it for this repository only, never for the rest of the system:</p>
