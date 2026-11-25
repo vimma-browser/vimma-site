@@ -236,7 +236,7 @@ function main(): void {
     join(DIST, "llms.txt"),
     llmsTxt(
       `${TAGLINE}. Vimma is a Firefox fork for Linux and macOS: Vim modes on every page, a tmux-style ctrl+b prefix for tabs, split panes and workspaces, and one config.toml for every key.`,
-      `Vimma is pre-alpha and open source (MPL-2.0): releases for Linux x86_64 and macOS (Apple Silicon) are on GitHub; on Arch Linux it installs with one command, and on a Mac with Homebrew (brew install --cask vimma-browser/tap/vimma). Source: ${VIMMA_REPO}. The whole user guide as one Markdown file: https://vimma.dev/llms-full.txt`,
+      `Vimma is alpha and open source (MPL-2.0): releases for Linux x86_64 and macOS (Apple Silicon) are on GitHub; on Linux it installs from signed pacman, apt, dnf and zypper repositories at updates.vimma.dev, so it updates with the system, and on a Mac with Homebrew (brew install --cask vimma-browser/tap/vimma). Source: ${VIMMA_REPO}. The whole user guide as one Markdown file: https://vimma.dev/llms-full.txt`,
       [
         ["Start", [link(home, "Vimma"), ...docsOf("Get started"), link(install, "Install Vimma"), link(keysPage, "Key bindings")]],
         [
